@@ -1,0 +1,175 @@
+:root {
+  --vp-font-family-base: montserrat, -apple-system,blinkmacsystemfont,"Segoe UI",roboto,oxygen,ubuntu,cantarell,"Open Sans","Helvetica Neue",sans-serif;
+  --vp-c-brand-1: #319B42;
+  --vp-c-brand-2: var(--vp-c-brand-1);
+  --vp-button-brand-bg: #319B42;
+  --vp-button-brand-hover-bg: #2a8039;
+  --vp-home-hero-image-background-image: linear-gradient(-45deg,  var(--vp-c-brand-1) 30%, #070a3080);
+  --vp-home-hero-image-filter: blur(30px);
+  --vp-badge-tip-bg: var(--vp-c-green-soft);
+  --vp-custom-block-tip-bg: var(--vp-c-green-soft);
+  --vp-custom-block-tip-code-bg: var(--vp-c-green-soft);
+}
+
+html.dark {
+  --vp-c-brand-1: #50c463;
+  --vp-c-brand-2: #50c463;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --vp-home-hero-image-filter: blur(56px);
+  }
+}
+
+@media (min-width: 960px) {
+  :root {
+    --vp-home-hero-image-filter: blur(72px);
+  }
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: var(--accent);
+}
+
+*::-webkit-scrollbar-thumb {
+  height: 56px;
+  border-radius: 8px;
+  border: 0 solid transparent;
+  background-clip: content-box;
+  background-color: var(--vp-c-brand-1);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--vp-c-brand-1);
+}
+
+::selection {
+  background: var(--vp-c-brand-1);
+  color: var(--vp-sidebar-bg-color);
+}
+
+.vp-doc[class*="_modules"] ul li > span.VPBadge {
+  transform: translateY(0);
+}
+
+.vp-doc[class*="_modules"] ul li > code + code:has(+ span.VPBadge),
+.result[href*="/modules"] .vp-doc ul li > code + code:has(+ span.VPBadge, + badge) {
+  color: var(--vp-c-important-1);
+}
+
+.vp-doc[class*="_modules"] ul ul ul li > ul {
+  display: block;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-2px);
+  margin-top: 0;
+  pointer-events: none;
+  transition:
+    max-height 0.5s ease,
+    opacity 0.3s ease,
+    transform 0.5s ease,
+    margin-top 0.5s ease;
+  will-change: max-height, opacity, transform;
+}
+
+.vp-doc[class*="_modules"] ul ul ul li:hover > ul,
+.vp-doc[class*="_modules"] ul ul ul li:focus-within > ul {
+  max-height: 1000px;
+  opacity: 1;
+  transform: translateY(0);
+  margin-top: 0.25rem;
+  pointer-events: auto;
+}
+
+.vp-doc[class*="_modules"] ul,
+.result[href*="/modules"] .vp-doc ul {
+  margin-left: calc(-0.82rem - 1px);
+  padding-left: calc(2.07rem + 1px);
+}
+
+.vp-doc[class*="_modules"] li > ul,
+.result[href*="/modules"] .vp-doc li > ul {
+  border-left: 1px solid;
+  border-color: var(--vp-c-divider);
+  margin-left: calc(-0.82rem - 2px);
+  transition: border-left 0.5s ease;
+}
+
+.vp-doc[class*="_modules"] li:hover > ul {
+  border-color: var(--vp-button-brand-hover-bg);
+}
+
+.vp-doc[class*="_modules"] li:hover::marker,
+.vp-doc[class*="_modules"] li:focus-within::marker {
+  color: var(--vp-c-brand-1);
+}
+
+.changelog-list p {
+  margin: 0;
+}
+
+.changelog-list > ul {
+  list-style: none;
+  padding-left: 1.5rem;
+}
+
+.changelog-list > ul > li {
+  position: relative;
+}
+
+.changelog-list > ul > li::before,
+.changelog-list > ul > li::after {
+  content: '';
+  position: absolute;
+}
+
+.changelog-list > ul > li::before {
+  left: -26px;
+  top: 2px;
+  width: 24px;
+  height: 24px;
+  background: var(--vp-code-bg);
+  border-radius: 50%;
+}
+
+.changelog-list > ul > li::after {
+  left: -20px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--vp-c-text-2);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z'/%3E%3Ccircle cx='7.5' cy='7.5' r='.5' fill='black'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.changelog-list > ul > li > ul {
+  margin-block: 0.5rem;
+  padding-left: calc(1.07rem + 1px) !important;
+  font-size: smaller;
+  list-style: none;
+}
+
+.changelog-list > ul > li > ul > li {
+  margin: 0;
+}
+
+.VPHomeFeatures .box {
+  position: relative;
+}
+
+.VPHomeFeatures .VPBadge {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+}
+
+.VPHomeFeatures .VPFeature:hover .VPBadge {
+  border-color: var(--vp-badge-tip-border);
+  color: var(--vp-badge-tip-text);
+  background-color: var(--vp-badge-tip-bg);
+}

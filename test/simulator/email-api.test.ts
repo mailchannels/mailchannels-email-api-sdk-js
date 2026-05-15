@@ -1,0 +1,264 @@
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { MailChannels } from "~/mailchannels";
+import { createSimulator } from "~/simulator";
+
+type Simulator = {
+  close: () => Promise<void>;
+  listen: (listenOptions?: { host?: string, port?: number }) => Promise<string | null>;
+};
+
+describe("Email API simulator", () => {
+  const parentApiKey = "local-parent-key";
+  const webhookEndpoint = "http://127.0.0.1:9999/webhooks/mailchannels";
+
+  let baseUrl = "";
+  let simulator: Simulator;
+
+  beforeAll(async () => {
+    simulator = createSimulator({ port: 0, silent: true });
+    const simulatorUrl = await simulator.listen();
+    if (!simulatorUrl) throw new Error("Expected the email API simulator to return a listening URL.");
+    baseUrl = simulatorUrl;
+  });
+
+  afterAll(async () => {
+    await simulator.close();
+  });
+
+  it("should support the primary email and webhook flows against a local server", async () => {
+    const mailchannels = new MailChannels(parentApiKey, { baseUrl });
+
+    const dkimKey = await mailchannels.domains.dkim.create("example.com", {
+      selector: "mailchannels"
+    });
+    expect(dkimKey.error).toBeNull();
+    expect(dkimKey.data?.selector).toBe("mailchannels");
+
+    const sendResult = await mailchannels.emails.send({
+      campaignId: "welcome-campaign",
+      dkim: {
+        domain: "example.com",
+        selector: "mailchannels"
+      },
+      from: "sender@example.com",
+      html: "<p>Hello {{name}}</p>",
+      personalizations: [{
+        headers: {
+          "X-Customer": "simulator"
+        },
+        template: {
+          data: {
+            name: "Alice"
+          }
+        },
+        subject: "Welcome Alice",
+        to: "alice@example.com"
+      }],
+      subject: "Welcome",
+      template: { type: "mustache" }
+    });
+
+    expect(sendResult.data?.requestId).toBeTruthy();
+    expect(sendResult.data?.results?.[0]?.status).toBe("sent");
+
+    const dryRunResult = await mailchannels.emails.send({
+      from: "sender@example.com",
+      html: "<p>Hello {{name}}</p>",
+      personalizations: [{
+        template: {
+          data: {
+            name: "Bob"
+          }
+        },
+        to: "bob@example.com"
+      }],
+      subject: "Dry Run",
+      template: { type: "mustache" }
+    }, true);
+
+    expect(dryRunResult.data?.rendered?.[0]).toContain("Hello Bob");
+
+    const sendAsyncResult = await mailchannels.emails.sendAsync({
+      from: "sender@example.com",
+      html: "<p>Queued</p>",
+      to: "queued@example.com",
+      subject: "Queued"
+    });
+    expect(sendAsyncResult.error).toBeNull();
+    expect(sendAsyncResult.data?.queuedAt).toBeTruthy();
+
+    const checkDomainResult = await mailchannels.domains.check({
+      domain: "example.com"
+    });
+    expect(checkDomainResult.error).toBeNull();
+    expect(checkDomainResult.data?.spf.verdict).toBe("passed");
+    expect(checkDomainResult.data?.spf.spfRecord).toBe("v=spf1 a mx include:relay.mailchannels.local ~all");
+
+    const getDkimKeysResult = await mailchannels.domains.dkim.list("example.com", {
+      includeDnsRecord: true
+    });
+    expect(getDkimKeysResult.error).toBeNull();
+    expect(getDkimKeysResult.data?.length || 0).toBeGreaterThan(0);
+
+    const rotateDkimKeyResult = await mailchannels.domains.dkim.rotate("example.com", "mailchannels", {
+      newKey: {
+        selector: "mailchannels-next"
+      }
+    });
+    expect(rotateDkimKeyResult.error).toBeNull();
+    expect(rotateDkimKeyResult.data?.new.selector).toBe("mailchannels-next");
+    expect(rotateDkimKeyResult.data?.rotated.status).toBe("rotated");
+
+    const updateDkimKeyResult = await mailchannels.domains.dkim.update("example.com", {
+      selector: "mailchannels-next",
+      status: "revoked"
+    });
+    expect(updateDkimKeyResult).toEqual({
+      success: true,
+      error: null
+    });
+
+    const enrollResult = await mailchannels.webhooks.enroll(webhookEndpoint);
+    expect(enrollResult).toEqual({
+      success: true,
+      error: null
+    });
+
+    const listWebhooksResult = await mailchannels.webhooks.list();
+    expect(listWebhooksResult.data).toContainEqual({ webhook: webhookEndpoint });
+
+    const signingKeyResult = await mailchannels.webhooks.getSigningKey("simulator-default");
+    expect(signingKeyResult.data?.key).toBe("SIMULATOR_PUBLIC_SIGNING_KEY");
+
+    const validateWebhooksResult = await mailchannels.webhooks.validate("sim-test-request");
+    expect(validateWebhooksResult.data?.allPassed).toBe(true);
+    expect(validateWebhooksResult.data?.results[0]?.response?.status).toBe(200);
+
+    const batchesResult = await mailchannels.webhooks.batches({
+      limit: 10,
+      statuses: ["2xx"]
+    });
+    expect(batchesResult.error).toBeNull();
+    expect(batchesResult.data?.length || 0).toBeGreaterThan(0);
+    expect(batchesResult.data?.[0]?.status).toBe("2xx_response");
+
+    const firstBatchId = batchesResult.data?.[0]?.batchId;
+    if (!firstBatchId) throw new Error("Expected at least one webhook batch to resend.");
+
+    const resendBatchResult = await mailchannels.webhooks.resendBatch(firstBatchId);
+    expect(resendBatchResult.error).toBeNull();
+    expect(resendBatchResult.data?.batchId).toBe(firstBatchId);
+    expect(resendBatchResult.data?.statusCode).toBe(200);
+    expect(resendBatchResult.data?.eventCount).toBeGreaterThan(0);
+
+    const deleteWebhooksResult = await mailchannels.webhooks.delete();
+    expect(deleteWebhooksResult.success).toBe(true);
+  });
+
+  it("should support sub-account, metrics, and suppression workflows against a local server", async () => {
+    const mailchannels = new MailChannels(parentApiKey, { baseUrl });
+
+    const parentSendResult = await mailchannels.emails.send({
+      campaignId: "welcome-campaign",
+      from: "sender@example.com",
+      html: "<p>Parent campaign</p>",
+      to: "parent@example.com",
+      subject: "Parent campaign"
+    });
+    expect(parentSendResult.data?.requestId).toBeTruthy();
+
+    const createSubAccountResult = await mailchannels.subAccounts.create("Simulator Company", "simacct");
+    expect(createSubAccountResult.data?.handle).toBe("simacct");
+
+    const listSubAccountsResult = await mailchannels.subAccounts.list();
+    expect(listSubAccountsResult.data?.some(account => account.handle === "simacct")).toBe(true);
+
+    const createApiKeyResult = await mailchannels.subAccounts.createApiKey("simacct");
+    expect(createApiKeyResult.data?.key).toBeTruthy();
+    const createdApiKey = createApiKeyResult.data;
+    if (!createdApiKey) throw new Error("Expected the simulator to create a sub-account API key.");
+
+    const listApiKeysResult = await mailchannels.subAccounts.listApiKeys("simacct");
+    expect(listApiKeysResult.data?.length).toBe(1);
+    const apiKey = listApiKeysResult.data?.at(0);
+    expect(apiKey).toBeDefined();
+    if (!apiKey) throw new Error("Expected an API key for the simulator sub-account.");
+
+    const createSmtpPasswordResult = await mailchannels.subAccounts.createSmtpPassword("simacct");
+    expect(createSmtpPasswordResult.data?.smtpPassword).toBeTruthy();
+
+    const listSmtpPasswordsResult = await mailchannels.subAccounts.listSmtpPasswords("simacct");
+    expect(listSmtpPasswordsResult.data?.length).toBe(1);
+    const smtpPassword = listSmtpPasswordsResult.data?.at(0);
+    expect(smtpPassword).toBeDefined();
+    if (!smtpPassword) throw new Error("Expected an SMTP password for the simulator sub-account.");
+
+    const getLimitBeforeResult = await mailchannels.subAccounts.getLimit("simacct");
+    expect(getLimitBeforeResult.data?.sends).toBe(-1);
+
+    const setLimitResult = await mailchannels.subAccounts.setLimit("simacct", { sends: 42 });
+    expect(setLimitResult.success).toBe(true);
+
+    const getLimitAfterResult = await mailchannels.subAccounts.getLimit("simacct");
+    expect(getLimitAfterResult.data?.sends).toBe(42);
+
+    const subAccountClient = new MailChannels(createdApiKey.key, { baseUrl });
+    const subAccountSendResult = await subAccountClient.emails.send({
+      campaignId: "sub-account-campaign",
+      from: "sender@example.com",
+      html: "<p>Sub-account mail</p>",
+      to: "child@example.com",
+      subject: "Sub-account"
+    });
+    expect(subAccountSendResult.data?.requestId).toBeTruthy();
+
+    const usageResult = await mailchannels.metrics.usage();
+    expect((usageResult.data?.total || 0) >= 1).toBe(true);
+
+    const engagementResult = await mailchannels.metrics.engagement({
+      campaignId: "welcome-campaign"
+    });
+    expect(engagementResult.data?.openTrackingDelivered).toBeDefined();
+
+    const performanceResult = await mailchannels.metrics.performance();
+    expect(performanceResult.data?.processed).toBeDefined();
+
+    const recipientBehaviourResult = await mailchannels.metrics.recipientBehaviour();
+    expect(recipientBehaviourResult.data?.unsubscribeDelivered).toBeDefined();
+
+    const volumeResult = await mailchannels.metrics.volume();
+    expect(volumeResult.data?.delivered).toBeDefined();
+
+    const senderCampaignsResult = await mailchannels.metrics.senders("campaigns");
+    expect(senderCampaignsResult.data?.senders.some(sender => sender.name === "welcome-campaign")).toBe(true);
+
+    const senderSubAccountsResult = await mailchannels.metrics.senders("sub-accounts");
+    expect(senderSubAccountsResult.data?.senders.some(sender => sender.name === "simacct")).toBe(true);
+
+    const createSuppressionResult = await mailchannels.suppressions.create({
+      entries: [{
+        notes: "local simulator",
+        recipient: "suppressed@example.com"
+      }]
+    });
+    expect(createSuppressionResult.success).toBe(true);
+
+    const listSuppressionsResult = await mailchannels.suppressions.list({
+      recipient: "suppressed@example.com"
+    });
+    expect(listSuppressionsResult.data).toHaveLength(1);
+
+    const deleteSuppressionResult = await mailchannels.suppressions.delete("suppressed@example.com", "all");
+    expect(deleteSuppressionResult.success).toBe(true);
+
+    const subAccountUsageResult = await mailchannels.subAccounts.getUsage("simacct");
+    expect((subAccountUsageResult.data?.total || 0) >= 1).toBe(true);
+
+    expect((await mailchannels.subAccounts.suspend("simacct")).success).toBe(true);
+    expect((await mailchannels.subAccounts.activate("simacct")).success).toBe(true);
+    expect((await mailchannels.subAccounts.deleteLimit("simacct")).success).toBe(true);
+    expect((await mailchannels.subAccounts.deleteApiKey("simacct", apiKey.id)).success).toBe(true);
+    expect((await mailchannels.subAccounts.deleteSmtpPassword("simacct", smtpPassword.id)).success).toBe(true);
+    expect((await mailchannels.subAccounts.delete("simacct")).success).toBe(true);
+  });
+});

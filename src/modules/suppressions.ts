@@ -1,0 +1,140 @@
+import type { MailChannelsClient } from "../client";
+import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
+import { clean } from "../utils/helpers";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
+import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
+import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../types/suppressions/internal";
+
+export class Suppressions {
+  constructor (protected mailchannels: MailChannelsClient) {}
+
+  /**
+   * Creates suppression entries for the specified account. Parent accounts can create suppression entries for all associated sub-accounts. If `types` is not provided, it defaults to `non-transactional`. The operation is atomic, meaning all entries are successfully added or none are added if an error occurs.
+   * @param options - The details of the suppression entries to create.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success, error } = await mailchannels.suppressions.create({
+   * // ...
+   * });
+   */
+  async create (options: SuppressionsCreateOptions): Promise<SuccessResponse> {
+    let error: ErrorResponse | null = null;
+
+    const { addToSubAccounts, entries } = options;
+
+    if (entries.length > 1000) {
+      error = createError("The number of suppression entries must not exceed 1000.");
+      return { success: false, error };
+    }
+
+    const payload: SuppressionsCreatePayload = {
+      add_to_sub_accounts: addToSubAccounts,
+      suppression_entries: entries.map(entry => ({
+        notes: entry.notes,
+        recipient: entry.recipient,
+        // Default to non-transactional when caller omits types
+        suppression_types: Array.from(new Set(entry.types || ["non-transactional"]))
+      }))
+    };
+
+    await this.mailchannels.post("/tx/v1/suppression-list", {
+      body: payload,
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.Conflict]: "Conflict. One or more suppression entries in the request already exist and cannot be created again.",
+          [ErrorCode.PayloadTooLarge]: "Payload too large. The request exceeds the maximum allowed total of 1000 suppression entries for the parent account and/or its sub-accounts."
+        });
+      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to create suppression entries.");
+    });
+
+    return { success: !error, error };
+  }
+
+  /**
+   * Deletes suppression entry associated with the account based on the specified recipient and source.
+   * @param recipient - The email address of the suppression entry to delete.
+   * @param source - The source of the suppression entry to be deleted. If source is not provided, it defaults to `api`. If source is set to `all`, all suppression entries related to the specified recipient will be deleted.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success, error } = await mailchannels.suppressions.delete('name@example.com', 'api');
+   * ```
+   */
+  async delete (recipient: string, source?: SuppressionsSource): Promise<SuccessResponse> {
+    let error: ErrorResponse | null = null;
+
+    await this.mailchannels.delete(`/tx/v1/suppression-list/recipients/${recipient}`, {
+      query: {
+        source
+      },
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request."
+        });
+      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete suppression entry.");
+    });
+
+    return { success: !error, error };
+  }
+
+  /**
+   * Retrieve suppression entries associated with the specified account. Supports filtering by recipient, source and creation date range. The response is paginated, with a default limit of `1000` entries per page and an offset of `0`.
+   * @param options - Options to filter and customize the suppression entries retrieval.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { data, error } = await mailchannels.suppressions.list();
+   * ```
+   */
+  async list (options?: SuppressionsListOptions): Promise<SuppressionsListResponse> {
+    let error: ErrorResponse | null = null;
+
+    if (options?.recipient && options.recipient.length > 255) {
+      error = createError("The recipient must not exceed 255 characters.");
+      return { data: null, error };
+    }
+
+    error = validatePagination({ ...options, max: 1000 });
+    if (error) return { data: null, error };
+
+    const payload: SuppressionsListPayload = {
+      recipient: options?.recipient,
+      source: options?.source,
+      created_before: options?.createdBefore,
+      created_after: options?.createdAfter,
+      limit: options?.limit,
+      offset: options?.offset
+    };
+
+    const response = await this.mailchannels.get<SuppressionsListApiResponse>("/tx/v1/suppression-list", {
+      query: payload,
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request."
+        });
+      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch suppression entries.");
+      return null;
+    });
+
+    if (!response) return { data: null, error: error! };
+
+    const data = clean(response.suppression_list.map(entry => ({
+      createdAt: entry.created_at,
+      notes: entry.notes,
+      recipient: entry.recipient,
+      sender: entry.sender,
+      source: entry.source,
+      types: entry.suppression_types
+    })));
+
+    return { data, error: null };
+  }
+}

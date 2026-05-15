@@ -1,0 +1,75 @@
+{
+  "name": "mailchannels-sdk",
+  "version": "0.8.0-0",
+  "description": "Node.js SDK to integrate MailChannels Email API into your JavaScript or TypeScript server-side applications.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "mailchannels",
+    "javascript",
+    "typescript",
+    "node",
+    "sdk",
+    "email"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yizack/mailchannels.git"
+  },
+  "homepage": "https://mailchannels.yizack.com",
+  "author": {
+    "name": "Yizack Rangel",
+    "email": "yizackr@gmail.com",
+    "url": "https://yizack.com"
+  },
+  "main": "./dist/mailchannels.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/mailchannels.d.mts",
+      "default": "./dist/mailchannels.mjs"
+    }
+  },
+  "types": "./dist/mailchannels.d.mts",
+  "bin": {
+    "mailchannels-sdk": "./dist/cli.mjs",
+    "mailchannels": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "obuild",
+    "parity:fixtures": "node scripts/generate-parity-fixtures.mjs",
+    "prepack": "pnpm build",
+    "release": "pnpm lint && pnpm test && pnpm build && changelogen --release && git push --follow-tags",
+    "simulate": "node src/cli.ts simulate",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "test": "vitest run --reporter=verbose --coverage",
+    "test:types": "tsc --noEmit",
+    "test:watch": "vitest watch",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "(git fetch --unshallow -q || git fetch --all -q) && vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "docs:snippets": "node docs/scripts/snippets.ts"
+  },
+  "dependencies": {
+    "ofetch": "^2.0.0-alpha.3"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^25.8.0",
+    "@vitest/coverage-v8": "^4.1.6",
+    "changelogen": "^0.6.2",
+    "obuild": "^0.4.35",
+    "oxlint": "^1.65.0",
+    "scule": "^1.3.0",
+    "typescript": "^6.0.3",
+    "vitepress": "^2.0.0-alpha.17",
+    "vitepress-plugin-group-icons": "^1.7.5",
+    "vitepress-plugin-llms": "^1.12.2",
+    "vitest": "^4.1.6"
+  },
+  "packageManager": "pnpm@11.1.2"
+}

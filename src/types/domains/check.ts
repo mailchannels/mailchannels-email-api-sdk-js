@@ -1,0 +1,102 @@
+import type { DataResponse } from "../responses";
+import type { DomainsDkimKey } from "./dkim-create";
+
+interface DomainsCheck {
+  /**
+   * Domain used for DKIM signing.
+   */
+  domain?: string;
+  /**
+   * DKIM private key encoded in Base64.
+   */
+  privateKey?: string;
+  /**
+   * DKIM selector in the domain DNS records.
+   */
+  selector?: string;
+}
+
+export interface DomainsCheckOptions {
+  /**
+   * Each item may include DKIM `domain`, `selector` and `privateKey`. Up to 10 items are allowed. The absence or presence of these fields affects how DKIM settings are validated:
+   * 1. If `domain`, `selector`, and `privateKey` are all present, verify using the provided domain, selector, and key.
+   * 2. If `domain` and `selector` are present, use the stored private key for the given domain and selector.
+   * 3. If only `domain` is present, use all stored keys for the given domain.
+   * 4. If none are present, use all stored keys for the `domain` provided in the domain field of the request.
+   * 5. If `privateKey` is present, `selector` must be present.
+   * 6. If `selector` is present and `domain` is not, the domain will be taken from the domain field of the request.
+   */
+  dkim?: DomainsCheck[] | DomainsCheck;
+  /**
+   * Domain used for sending emails. If `dkim` settings are not provided, or `dkim` settings are provided with no `domain`, the stored dkim settings for this domain will be used.
+   */
+  domain: string;
+  /**
+   * Used exclusively for [Domain Lockdown](https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field. The corresponding value is included in the `X-MailChannels-SenderId` header of emails sent via MailChannels.
+   */
+  senderId?: string;
+}
+
+export type DomainsCheckVerdict = "passed" | "failed" | "soft failed" | "temporary error" | "permanent error" | "neutral" | "none" | "unknown";
+
+export type DomainsCheckResponse = DataResponse<{
+  dkim: {
+    domain: string;
+    /**
+     * The human readable status of the DKIM key used for verification.
+     */
+    keyStatus?: DomainsDkimKey["status"] | "provided";
+    selector: string;
+    /**
+     * A human-readable explanation of DKIM check.
+     */
+    reason?: string;
+    verdict: Extract<DomainsCheckVerdict, "passed" | "failed">;
+  }[];
+  domainLockdown: {
+    /**
+     * A human-readable explanation of Domain Lockdown check.
+     */
+    reason?: string;
+    verdict: Extract<DomainsCheckVerdict, "passed" | "failed">;
+  };
+  /**
+   * These results are here to help avoid [SDNF](https://support.mailchannels.com/hc/en-us/articles/203155500-550-5-2-1-SDNF-Sender-Domain-Not-Found) (Sender Domain Not Found) blocks. For messages not to get blocked by SDNF, we require either an MX or A record to exist for the sender domain.
+   */
+  senderDomain: {
+    a: {
+      /**
+       * A human-readable explanation of A record check.
+       */
+      reason?: string;
+      verdict: Extract<DomainsCheckVerdict, "passed" | "failed">;
+    };
+    mx: {
+      /**
+       * A human-readable explanation of MX record check.
+       */
+      reason?: string;
+      verdict: Extract<DomainsCheckVerdict, "passed" | "failed">;
+    };
+    /**
+     * Overall verdict. Passed if either A or MX record check passed.
+     */
+    verdict: Extract<DomainsCheckVerdict, "passed" | "failed">;
+  };
+  spf: {
+    /**
+     * A human-readable explanation of SPF check.
+     */
+    reason?: string;
+    /**
+     * The SPF record that was used for the check.
+     */
+    spfRecord?: string;
+    /**
+     * Error message if the SPF record lookup failed.
+     */
+    spfRecordError?: string;
+    verdict: DomainsCheckVerdict;
+  };
+  references?: string[];
+}>;

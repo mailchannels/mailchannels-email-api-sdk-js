@@ -1,0 +1,149 @@
+import { describe, expect, it, vi } from "vitest";
+import { $fetch } from "ofetch";
+import { MailChannelsClient } from "~/client";
+import { version } from "../package.json";
+
+const fake = {
+  baseURL: "https://api.mailchannels.net",
+  customBaseURL: "http://127.0.0.1:8787",
+  path: "/test",
+  apiKey: "test-api-key",
+  headers: {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "User-Agent": `mailchannels-node/${version}`
+  }
+};
+
+vi.mock("ofetch", () => ({
+  $fetch: vi.fn()
+}));
+
+describe("MailChannelsClient", () => {
+  it("should throw an error if no API key is provided", () => {
+    // @ts-expect-error Testing missing API key
+    const client = () => new MailChannelsClient();
+    expect(client).toThrow("Missing MailChannels API key.");
+  });
+
+  it("should handle GET method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey);
+    await client.get(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      method: "GET",
+      baseURL: fake.baseURL,
+      retry: false,
+      headers: {
+        ...fake.headers,
+        "X-API-Key": fake.apiKey
+      }
+    });
+  });
+
+  it("should handle POST method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey);
+    await client.post(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      method: "POST",
+      baseURL: fake.baseURL,
+      retry: false,
+      headers: {
+        ...fake.headers,
+        "X-API-Key": fake.apiKey
+      }
+    });
+  });
+
+  it("should handle DELETE method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey);
+    await client.delete(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      method: "DELETE",
+      baseURL: fake.baseURL,
+      retry: false,
+      headers: {
+        ...fake.headers,
+        "X-API-Key": fake.apiKey
+      }
+    });
+  });
+
+  it("should handle PUT method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey);
+    await client.put(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      method: "PUT",
+      baseURL: fake.baseURL,
+      retry: false,
+      headers: {
+        ...fake.headers,
+        "X-API-Key": fake.apiKey
+      }
+    });
+  });
+
+  it("should handle PATCH method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey);
+    await client.patch(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      method: "PATCH",
+      baseURL: fake.baseURL,
+      retry: false,
+      headers: {
+        ...fake.headers,
+        "X-API-Key": fake.apiKey
+      }
+    });
+  });
+
+  it("should allow overriding the base url", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey, {
+      baseUrl: fake.customBaseURL
+    });
+    await client.get(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      method: "GET",
+      baseURL: fake.customBaseURL,
+      retry: false,
+      headers: {
+        ...fake.headers,
+        "X-API-Key": fake.apiKey
+      }
+    });
+  });
+
+  it("should allow overriding the retry count", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey, { retry: 3 });
+    await client.get(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      method: "GET",
+      baseURL: fake.baseURL,
+      retry: 3,
+      headers: {
+        ...fake.headers,
+        "X-API-Key": fake.apiKey
+      }
+    });
+  });
+});
