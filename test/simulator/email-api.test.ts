@@ -151,7 +151,7 @@ describe("Email API simulator", () => {
     expect(resendBatchResult.data?.statusCode).toBe(200);
     expect(resendBatchResult.data?.eventCount).toBeGreaterThan(0);
 
-    const deleteWebhooksResult = await mailchannels.webhooks.delete();
+    const deleteWebhooksResult = await mailchannels.webhooks.deleteAll();
     expect(deleteWebhooksResult.success).toBe(true);
   });
 

@@ -42,7 +42,7 @@ const emailMethodMap = {
   "GET /suppression-list": { module: "suppressions", method: "list" },
   "DELETE /suppression-list/recipients/{recipient}": { module: "suppressions", method: "delete" },
   "GET /usage": { module: "metrics", method: "usage" },
-  "DELETE /webhook": { module: "webhooks", method: "delete" },
+  "DELETE /webhook": { module: "webhooks", method: "deleteAll" },
   "GET /webhook": { module: "webhooks", method: "list" },
   "POST /webhook": { module: "webhooks", method: "enroll" },
   "GET /webhook-batch": { module: "webhooks", method: "batches" },

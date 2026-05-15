@@ -27,7 +27,7 @@ This page provides a mapping between the MailChannels SDK module methods and the
   | --- | --- |
   | [`Webhooks.enroll()`](/modules/webhooks/enroll) | [Enroll for Webhook Notifications](https://docs.mailchannels.net/email-api/api-reference/enroll-for-webhook-notifications) |
   | [`Webhooks.list()`](/modules/webhooks/list) | [Retrieve Customer Webhooks](https://docs.mailchannels.net/email-api/api-reference/retrieve-customer-webhooks) |
-  | [`Webhooks.delete()`](/modules/webhooks/delete) | [Delete Customer Webhooks](https://docs.mailchannels.net/email-api/api-reference/delete-customer-webhooks) |
+  | [`Webhooks.deleteAll()`](/modules/webhooks/delete-all) | [Delete Customer Webhooks](https://docs.mailchannels.net/email-api/api-reference/delete-customer-webhooks) |
   | [`Webhooks.getSigningKey()`](/modules/webhooks/get-signing-key) | [Retrieve Webhook Signing Key](https://docs.mailchannels.net/email-api/api-reference/retrieve-webhook-signing-key) |
   | [`Webhooks.validate()`](/modules/webhooks/validate) | [Validate Enrolled Webhook](https://docs.mailchannels.net/email-api/api-reference/validate-enrolled-webhook) |
   | [`Webhooks.verify()`](/modules/webhooks/verify) | SDK only |

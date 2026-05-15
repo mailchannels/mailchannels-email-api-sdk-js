@@ -189,7 +189,7 @@
     },
     {
       "module": "webhooks",
-      "method": "delete",
+      "method": "deleteAll",
       "httpMethod": "DELETE",
       "path": "/webhook"
     },

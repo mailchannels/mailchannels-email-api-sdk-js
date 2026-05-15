@@ -86,10 +86,10 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success, error } = await mailchannels.webhooks.delete()
+   * const { success, error } = await mailchannels.webhooks.deleteAll()
    * ```
    */
-  async delete (): Promise<SuccessResponse> {
+  async deleteAll (): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
     await this.mailchannels.delete<void>("/tx/v1/webhook", {
