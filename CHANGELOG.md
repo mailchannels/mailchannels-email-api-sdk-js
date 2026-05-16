@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v0.8.0-1
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.8.0-0...v0.8.0-1)
+
+### 💅 Refactors
+
+- ⚠️  Rename `webhooks.delete` to `webhooks.deleteAll` ([#170](https://github.com/Yizack/mailchannels/pull/170))
+- ⚠️  Return structured response from `webhooks.verify` ([#171](https://github.com/Yizack/mailchannels/pull/171))
+
+### 🏡 Chore
+
+- Use relative paths in src imports ([254842a](https://github.com/Yizack/mailchannels/commit/254842a))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Rename `webhooks.delete` to `webhooks.deleteAll` ([#170](https://github.com/Yizack/mailchannels/pull/170))
+- ⚠️  Return structured response from `webhooks.verify` ([#171](https://github.com/Yizack/mailchannels/pull/171))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.8.0-0
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.11...v0.8.0-0)
