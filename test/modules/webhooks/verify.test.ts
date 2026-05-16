@@ -6,7 +6,8 @@ import type { MailChannelsClient } from "~/client";
 import { Webhooks } from "~/modules/webhooks";
 import { stripPemHeaders } from "~/utils/helpers";
 import { DEFAULT_TOLERANCE, ED25519, HMAC_SHA256, encoder } from "~/utils/webhooks-validator";
-import type { WebhooksVerifyOptions } from "~/types/webhooks/verify";
+import type { WebhooksVerifyOptions, WebhooksVerifyResponse } from "~/types/webhooks/verify";
+import type { WebhookEventDelivered, WebhookEventProcessed } from "~/types/webhooks/events";
 
 const generateTestingKeys = () => {
   const ed25519Keys = generateKeyPairSync("ed25519", {
@@ -17,35 +18,63 @@ const generateTestingKeys = () => {
   return { ed25519Keys };
 };
 
-const body = [{ test: "testBody" }];
+const body = [
+  {
+    email: "test@mailchannels.com",
+    event: "processed",
+    customer_handle: "test_handle",
+    timestamp: 1778959788
+  } satisfies WebhookEventProcessed,
+  {
+    email: "test@mailchannels.com",
+    event: "delivered",
+    customer_handle: "test_handle",
+    timestamp: 1778959788
+  } satisfies WebhookEventDelivered
+];
+
 const rawBody = JSON.stringify(body);
 const { ed25519Keys } = generateTestingKeys();
+
 const privateKeyBuffer = Buffer.from(stripPemHeaders(ed25519Keys.privateKey), "base64");
 const privateKey = await subtle.importKey("pkcs8", privateKeyBuffer, ED25519, false, ["sign"]);
-
 const timestamp = Math.floor(Date.now() / 1000);
-const bodyBuffer = await subtle.digest(HMAC_SHA256.hash, Buffer.from(rawBody));
-const bodyHash = Buffer.from(bodyBuffer).toString("base64");
-const contentDigest = `sha-256=:${bodyHash}:`;
 
-const signatureInputValues = `("content-digest");created=${timestamp};alg="ed25519";keyid="mckey"`;
-const signatureInput = `sig_123456=${signatureInputValues}`;
-const signingString = `"content-digest": ${contentDigest}
+const getHeaders = async (body: string) => {
+  const bodyBuffer = await subtle.digest(HMAC_SHA256.hash, Buffer.from(body));
+  const bodyHash = Buffer.from(bodyBuffer).toString("base64");
+  const contentDigest = `sha-256=:${bodyHash}:`;
+
+  const signatureInputValues = `("content-digest");created=${timestamp};alg="ed25519";keyid="mckey"`;
+  const signatureInput = `sig_123456=${signatureInputValues}`;
+  const signingString = `"content-digest": ${contentDigest}
 "@signature-params": ${signatureInputValues}`;
 
-const signatureBuffer = await subtle.sign(ED25519.name, privateKey, encoder.encode(signingString));
-const signature = `sig_123456=:${Buffer.from(signatureBuffer).toString("base64")}:`;
+  const signatureBuffer = await subtle.sign(ED25519.name, privateKey, encoder.encode(signingString));
+  const signature = `sig_123456=:${Buffer.from(signatureBuffer).toString("base64")}:`;
+
+  return { contentDigest, signature, signatureInput };
+};
+
+const headers = await getHeaders(rawBody);
 
 const fake = {
   options: {
     payload: rawBody,
     headers: {
-      "content-digest": contentDigest,
-      "signature": signature,
-      "signature-input": signatureInput
+      "content-digest": headers.contentDigest,
+      "signature": headers.signature,
+      "signature-input": headers.signatureInput
     },
     publicKey: ed25519Keys.publicKey
-  } satisfies WebhooksVerifyOptions
+  } satisfies WebhooksVerifyOptions,
+  expectedResponse: {
+    data: [
+      { event: "processed" },
+      { event: "delivered" }
+    ] satisfies WebhooksVerifyResponse["data"],
+    error: null
+  }
 };
 
 vi.mock("ofetch", () => ({
@@ -57,20 +86,20 @@ describe("verify", () => {
     vi.clearAllMocks();
   });
 
-  it("should return true for valid webhook request", async () => {
+  it("should successfully verify the webhook and return event types for valid webhook request", async () => {
     const mockClient = {} as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const isValidFromClient = await webhooks.verify(fake.options);
 
-    const isValidFromStatic = await Webhooks.verify(fake.options);
+    const { data: dataFromClient } = await webhooks.verify(fake.options);
+    const { data: dataFromStatic } = await Webhooks.verify(fake.options);
 
-    expect(isValidFromStatic).toBe(true);
-    expect(isValidFromClient).toBe(true);
+    expect(dataFromStatic).toStrictEqual(fake.expectedResponse.data);
+    expect(dataFromClient).toStrictEqual(fake.expectedResponse.data);
   });
 
-  it("should return false for invalid content digest", async () => {
-    const isValid = await Webhooks.verify({
+  it("should contain error on invalid content digest", async () => {
+    const { data, error } = await Webhooks.verify({
       ...fake.options,
       headers: {
         ...fake.options.headers,
@@ -78,11 +107,12 @@ describe("verify", () => {
       }
     });
 
-    expect(isValid).toBe(false);
+    expect(data).toBeNull();
+    expect(error).toStrictEqual({ message: "Invalid webhook signature.", statusCode: null });
   });
 
-  it("should return false for missing content digest hash", async () => {
-    const isValid = await Webhooks.verify({
+  it("should contain error on missing content digest", async () => {
+    const { data, error } = await Webhooks.verify({
       ...fake.options,
       headers: {
         ...fake.options.headers,
@@ -90,11 +120,12 @@ describe("verify", () => {
       }
     });
 
-    expect(isValid).toBe(false);
+    expect(data).toBeNull();
+    expect(error).toStrictEqual({ message: "Invalid webhook signature.", statusCode: null });
   });
 
-  it("should return false for wrong content digest hash name", async () => {
-    const isValid = await Webhooks.verify({
+  it("should contain error on unsupported digest algorithm", async () => {
+    const { data, error } = await Webhooks.verify({
       ...fake.options,
       headers: {
         ...fake.options.headers,
@@ -102,11 +133,12 @@ describe("verify", () => {
       }
     });
 
-    expect(isValid).toBe(false);
+    expect(data).toBeNull();
+    expect(error).toStrictEqual({ message: "Invalid webhook signature.", statusCode: null });
   });
 
-  it("should return false for invalid signature", async () => {
-    const isValid = await Webhooks.verify({
+  it("should contain error on invalid signature", async () => {
+    const { data, error } = await Webhooks.verify({
       ...fake.options,
       headers: {
         ...fake.options.headers,
@@ -114,11 +146,12 @@ describe("verify", () => {
       }
     });
 
-    expect(isValid).toBe(false);
+    expect(data).toBeNull();
+    expect(error).toStrictEqual({ message: "Invalid webhook signature.", statusCode: null });
   });
 
-  it("should return false for invalid signature input", async () => {
-    const isValid = await Webhooks.verify({
+  it("should contain error on missing signature input", async () => {
+    const { data, error } = await Webhooks.verify({
       ...fake.options,
       headers: {
         ...fake.options.headers,
@@ -126,19 +159,20 @@ describe("verify", () => {
       }
     });
 
-    expect(isValid).toBe(false);
+    expect(data).toBeNull();
+    expect(error).toStrictEqual({ message: "Invalid webhook signature.", statusCode: null });
   });
 
-  it("should return false for expired timestamp", async () => {
+  it("should contain error on expired timestamp", async () => {
     const pastTimestamp = timestamp - (DEFAULT_TOLERANCE + 1);
     const expiredSignatureInputValues = `("content-digest");created=${pastTimestamp};alg="ed25519";keyid="mckey"`;
     const expiredSignatureInput = `sig_123456=${expiredSignatureInputValues}`;
-    const expiredSigningString = `"content-digest": ${contentDigest}
+    const expiredSigningString = `"content-digest": ${headers.contentDigest}
 "@signature-params": ${expiredSignatureInputValues}`;
     const expiredSignatureBuffer = await subtle.sign(ED25519.name, privateKey, encoder.encode(expiredSigningString));
     const expiredSignature = `sig_123456=:${Buffer.from(expiredSignatureBuffer).toString("base64")}:`;
 
-    const isValid = await Webhooks.verify({
+    const { data, error } = await Webhooks.verify({
       ...fake.options,
       headers: {
         ...fake.options.headers,
@@ -147,34 +181,38 @@ describe("verify", () => {
       }
     });
 
-    expect(isValid).toBe(false);
+    expect(data).toBeNull();
+    expect(error).toStrictEqual({ message: "Invalid webhook signature.", statusCode: null });
   });
 
-  it("should return true for valid webhook request with public key fetch", async () => {
+  it("should return events for valid webhook request with public key fetch", async () => {
     vi.mocked($fetch).mockResolvedValueOnce({
       id: "mckey",
       key: fake.options.publicKey
     });
 
-    const isValid = await Webhooks.verify({
+    const { data, error } = await Webhooks.verify({
       ...fake.options,
       publicKey: undefined,
       cache: false
     });
 
-    expect(isValid).toBe(true);
+    expect(data).toStrictEqual(fake.expectedResponse.data);
+    expect(error).toBeNull();
+    expect($fetch).toHaveBeenCalled();
   });
 
-  it("should return false if public key fetch fails", async () => {
+  it("should contain error when public key fetch fails", async () => {
     vi.mocked($fetch).mockRejectedValueOnce(new Error("Failed to fetch public key"));
 
-    const isValid = await Webhooks.verify({
+    const { data, error } = await Webhooks.verify({
       ...fake.options,
       publicKey: undefined,
       cache: false
     });
 
-    expect(isValid).toBe(false);
+    expect(data).toBeNull();
+    expect(error).toStrictEqual({ message: "Invalid webhook signature.", statusCode: null });
   });
 
   it("should cache signing key by default", async () => {
@@ -183,18 +221,18 @@ describe("verify", () => {
       key: fake.options.publicKey
     });
 
-    const firstResult = await Webhooks.verify({
+    const { data: firstData } = await Webhooks.verify({
       ...fake.options,
       publicKey: undefined
     });
 
-    const secondResult = await Webhooks.verify({
+    const { data: secondData } = await Webhooks.verify({
       ...fake.options,
       publicKey: undefined
     });
 
-    expect(firstResult).toBe(true);
-    expect(secondResult).toBe(true);
+    expect(firstData).toStrictEqual(fake.expectedResponse.data);
+    expect(secondData).toStrictEqual(fake.expectedResponse.data);
     expect($fetch).toHaveBeenCalledTimes(1);
   });
 
@@ -204,40 +242,78 @@ describe("verify", () => {
       key: fake.options.publicKey
     });
 
-    const firstResult = await Webhooks.verify({
+    const { data: firstData } = await Webhooks.verify({
       ...fake.options,
       publicKey: undefined,
       cache: false
     });
 
-    const secondResult = await Webhooks.verify({
+    const { data: secondData } = await Webhooks.verify({
       ...fake.options,
       publicKey: undefined,
       cache: false
     });
 
-    expect(firstResult).toBe(true);
-    expect(secondResult).toBe(true);
+    expect(firstData).toStrictEqual(fake.expectedResponse.data);
+    expect(secondData).toStrictEqual(fake.expectedResponse.data);
     expect($fetch).toHaveBeenCalledTimes(2);
   });
 
-  it("should return false if public key fetch does not return a key", async () => {
+  it("should contain error when public key is not found", async () => {
     vi.mocked($fetch).mockResolvedValueOnce({} as never);
 
-    const isValid = await Webhooks.verify({
+    const { data, error } = await Webhooks.verify({
       ...fake.options,
       publicKey: undefined,
       cache: false
     });
 
-    expect(isValid).toBe(false);
+    expect(data).toBeNull();
+    expect(error).toStrictEqual({ message: "Invalid webhook signature.", statusCode: null });
   });
 
-  it("should return false on error throwing during verification", async () => {
+  it("should contain error when signature verification throws an error", async () => {
     vi.spyOn(subtle, "verify").mockRejectedValueOnce(new Error("Verification error"));
 
-    const isValid = await Webhooks.verify(fake.options);
+    const { data, error } = await Webhooks.verify(fake.options);
 
-    expect(isValid).toBe(false);
+    expect(data).toBeNull();
+    expect(error).toStrictEqual({ message: "Invalid webhook signature.", statusCode: null });
+  });
+
+  it("should contain error when payload is malformed json", async () => {
+    const malformedRawBody = "{invalid-json";
+    const malformedHeaders = await getHeaders(malformedRawBody);
+
+    const { data, error } = await Webhooks.verify({
+      payload: malformedRawBody,
+      headers: {
+        "content-digest": malformedHeaders.contentDigest,
+        "signature": malformedHeaders.signature,
+        "signature-input": malformedHeaders.signatureInput
+      },
+      publicKey: ed25519Keys.publicKey
+    });
+
+    expect(data).toBeNull();
+    expect(error).toStrictEqual({ message: "Invalid webhook payload.", statusCode: null });
+  });
+
+  it("should contain error when payload is not an array", async () => {
+    const objectRawBody = JSON.stringify(body[0]);
+    const objectHeaders = await getHeaders(objectRawBody);
+
+    const { data, error } = await Webhooks.verify({
+      payload: objectRawBody,
+      headers: {
+        "content-digest": objectHeaders.contentDigest,
+        "signature": objectHeaders.signature,
+        "signature-input": objectHeaders.signatureInput
+      },
+      publicKey: ed25519Keys.publicKey
+    });
+
+    expect(data).toBeNull();
+    expect(error).toStrictEqual({ message: "Invalid webhook payload.", statusCode: null });
   });
 });

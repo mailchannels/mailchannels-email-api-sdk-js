@@ -9,13 +9,13 @@ const server = createServer(async (req, res) => {
       req.on("end", () => resolve(body));
     });
 
-    const isValid = await Webhooks.verify({
+    const { data, error } = await Webhooks.verify({
       payload: rawBody,
       headers: req.headers as Record<string, string>
     });
 
-    res.writeHead(isValid ? 200 : 400, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ isValid }));
+    res.writeHead(data ? 200 : 400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ data, error }));
   }
   else {
     res.writeHead(404, { "Content-Type": "application/json" });

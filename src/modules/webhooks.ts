@@ -6,9 +6,10 @@ import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
 import type { WebhooksValidateResponse } from "../types/webhooks/validate";
-import type { WebhooksVerifyOptions } from "../types/webhooks/verify";
+import type { WebhooksVerifyOptions, WebhooksVerifyResponse } from "../types/webhooks/verify";
 import type { WebhooksBatchesOptions, WebhooksBatchesResponse } from "../types/webhooks/batches";
 import type { WebhooksResendBatchResponse } from "../types/webhooks/resend-batch";
+import type { WebhookEvents } from "../types/webhooks/events";
 import type { WebhooksBatchesApiResponse, WebhooksResendBatchApiResponse, WebhooksValidateApiResponse } from "../types/webhooks/internal";
 
 export class Webhooks {
@@ -187,11 +188,37 @@ export class Webhooks {
    * @param options - The options for verifying the webhook.
    * @example
    * ```ts
-   * const isValid = await Webhooks.verify({ payload: rawBody, headers })
+   * const { data, error } = await Webhooks.verify({ payload: rawBody, headers })
    * ```
    */
-  static async verify (options: WebhooksVerifyOptions): Promise<boolean> {
-    return isValidWebhook(options).catch(() => false);
+  static async verify (options: WebhooksVerifyOptions): Promise<WebhooksVerifyResponse> {
+    let error: ErrorResponse | null = null;
+
+    const isValid = await isValidWebhook(options).catch(() => false);
+
+    if (!isValid) {
+      error = createError("Invalid webhook signature.");
+      return { data: null, error };
+    }
+
+    try {
+      const payload = JSON.parse(options.payload) as WebhookEvents;
+
+      if (!Array.isArray(payload)) {
+        error = createError("Invalid webhook payload.");
+        return { data: null, error };
+      }
+
+      const data = clean((payload as WebhookEvents).map(event => ({
+        event: event.event
+      })));
+
+      return { data, error: null };
+    }
+    catch {
+      error = createError("Invalid webhook payload.");
+      return { data: null, error };
+    }
   }
 
   /**
@@ -200,10 +227,10 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const isValid = await mailchannels.webhooks.verify({ payload: rawBody, headers })
+   * const { data, error } = await mailchannels.webhooks.verify({ payload: rawBody, headers })
    * ```
    */
-  async verify (options: WebhooksVerifyOptions): Promise<boolean> {
+  async verify (options: WebhooksVerifyOptions): Promise<WebhooksVerifyResponse> {
     return Webhooks.verify(options);
   }
 

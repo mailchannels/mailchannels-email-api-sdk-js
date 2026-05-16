@@ -1,3 +1,6 @@
+import type { DataResponse } from "../responses";
+import type { WebhookEventType } from "./events";
+
 export interface WebhooksVerifyOptions {
   /**
    * The raw body of the incoming webhook request as a string. This should be the exact payload received from the webhook, without any modifications or parsing, to ensure accurate signature verification.
@@ -21,3 +24,10 @@ export interface WebhooksVerifyOptions {
    */
   cache?: boolean;
 }
+
+export type WebhooksVerifyResponse = DataResponse<{
+  /**
+   * The type of event that occurred.
+   */
+  event: WebhookEventType;
+}[]>;

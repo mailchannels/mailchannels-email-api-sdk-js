@@ -19,7 +19,7 @@ All webhooks are signed by default. There are three HTTP headers to consider dur
 ```ts [static.ts]
 import { Webhooks } from 'mailchannels-sdk'
 
-const isValid = await Webhooks.verify({
+const { data, error } = await Webhooks.verify({
   payload: rawBody,
   headers: {
     'content-digest': req.headers['content-digest'],
@@ -36,7 +36,7 @@ import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const isValid = await webhooks.verify({
+const { data, error } = await webhooks.verify({
   payload: rawBody,
   headers: {
     'content-digest': req.headers['content-digest'],
@@ -52,7 +52,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const isValid = await mailchannels.webhooks.verify({
+const { data, error } = await mailchannels.webhooks.verify({
   payload: rawBody,
   headers: {
     'content-digest': req.headers['content-digest'],
@@ -85,7 +85,12 @@ const isValid = await mailchannels.webhooks.verify({
 
 ## Response
 
-This method returns a `boolean` indicating whether the webhook request is valid or not. A return value of `true` means the webhook request is authentic and can be trusted, while `false` indicates that the signature verification failed, and the request may not be from MailChannels or could have been tampered with.
+- `data` `object[] | null` <Badge type="warning">nullable</Badge>
+  - `event` `WebhookEventType` <Badge>guaranteed</Badge>: The type of event that occurred.
+<!-- @include: ../_parts/error-response.md -->
+
+> [!TIP]
+> This method returns `data` as an array of event types if the webhook request is authentic and valid. If the verification fails, `data` will be `null`, indicating the signature verification failed and the request may not be from MailChannels or could have been tampered with.
 
 ## Type declarations
 
@@ -93,6 +98,16 @@ This method returns a `boolean` indicating whether the webhook request is valid 
 
 <<< @/snippets/webhooks-method-verify.ts
 
+**Response type declarations**
+
+<<< @/snippets/error-response.ts
+<<< @/snippets/data-response.ts
+
+**Event type declarations**
+
+<<< @/snippets/webhook-event-type.ts
+
 **Verify type declarations**
 
 <<< @/snippets/webhooks-verify-options.ts
+<<< @/snippets/webhooks-verify-response.ts
