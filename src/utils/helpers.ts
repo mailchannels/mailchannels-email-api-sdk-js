@@ -1,5 +1,5 @@
-import type { DomainsDkimKey } from "~/types/domains/dkim-create";
-import type { DomainsDkimCreateApiResponse } from "~/types/domains/internal";
+import type { DomainsDkimKey } from "../types/domains/dkim-create";
+import type { DomainsDkimCreateApiResponse } from "../types/domains/internal";
 
 export const stripPemHeaders = (pem: string) => pem.replace(/-----[^-]+-----|\s|#.*$/gm, "");
 
