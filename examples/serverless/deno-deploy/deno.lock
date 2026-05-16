@@ -1,11 +1,11 @@
 {
   "version": "5",
   "specifiers": {
-    "npm:mailchannels-sdk@~0.8.0-0": "0.8.0-0"
+    "npm:mailchannels-sdk@~0.8.0-1": "0.8.0-1"
   },
   "npm": {
-    "mailchannels-sdk@0.8.0-0": {
-      "integrity": "sha512-XVYzph0dJ97ox1EoZY7prhXuD1ElTT+NFxWpePsZygjgEabA0LU1xMcMRA/nayQ8Z9Y3OUpGQuq2FbDDSLWhQw==",
+    "mailchannels-sdk@0.8.0-1": {
+      "integrity": "sha512-pX14/Pr0BgTxcLYyTDS3/5bbme8cGL7jVjRxvurXy4ReNFJJxcQt6Pacivypd1Xu/xdWZoEhQn0vbYYNq3ANtA==",
       "dependencies": [
         "ofetch"
       ],
@@ -17,7 +17,7 @@
   },
   "workspace": {
     "dependencies": [
-      "npm:mailchannels-sdk@~0.8.0-0"
+      "npm:mailchannels-sdk@~0.8.0-1"
     ]
   }
 }
