@@ -1,0 +1,39 @@
+image: node:lts
+
+definitions:
+  caches:
+    pnpm: $BITBUCKET_CLONE_DIR/.pnpm-store
+
+  steps:
+    - step: &setup_and_lint
+        name: Lint
+        caches:
+          - pnpm
+        script:
+          - corepack enable
+          - corepack prepare pnpm@latest --activate
+          - pnpm install
+          - pnpm lint
+
+    - step: &setup_and_test
+        name: Test + Types
+        caches:
+          - pnpm
+        script:
+          - corepack enable
+          - corepack prepare pnpm@latest --activate
+          - pnpm install
+          - pnpm test
+          - pnpm test:types
+
+pipelines:
+  branches:
+    main:
+      - parallel:
+          - step: *setup_and_lint
+          - step: *setup_and_test
+
+  pull-requests:
+    main:
+      - step: *setup_and_lint
+      - step: *setup_and_test
