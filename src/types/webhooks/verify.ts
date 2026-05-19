@@ -1,5 +1,5 @@
 import type { DataResponse } from "../responses";
-import type { WebhookEventType } from "./events";
+import type { WebhookEvent } from "./events";
 
 export interface WebhooksVerifyOptions {
   /**
@@ -25,9 +25,4 @@ export interface WebhooksVerifyOptions {
   cache?: boolean;
 }
 
-export type WebhooksVerifyResponse = DataResponse<{
-  /**
-   * The type of event that occurred.
-   */
-  event: WebhookEventType;
-}[]>;
+export type WebhooksVerifyResponse = DataResponse<WebhookEvent[]>;

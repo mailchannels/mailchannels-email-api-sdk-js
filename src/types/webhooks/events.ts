@@ -19,7 +19,7 @@ interface WebhookEventBase<T extends WebhookEventType> {
    * The MailChannels account ID that generated the webhook.
    * If the message was sent by a sub-account, this field contains the sub-account handle.
    */
-  customer_handle: string;
+  customerHandle: string;
   /**
    * The Unix timestamp (in seconds) when the event occurred; the timezone is always UTC
    */
@@ -27,7 +27,7 @@ interface WebhookEventBase<T extends WebhookEventType> {
   /**
    * The Message-Id of the message that generated the event
    */
-  smtp_id?: string;
+  smtpId?: string;
   /**
    * The type of event that occurred
    */
@@ -35,11 +35,11 @@ interface WebhookEventBase<T extends WebhookEventType> {
   /**
    * A unique identifier generated to track the original HTTP request
    */
-  request_id?: string;
+  requestId?: string;
   /**
    * The campaign identifier for the message that generated the event
    */
-  campaign_id?: string;
+  campaignId?: string;
   /**
    * The recipients of the message
    */
@@ -54,7 +54,7 @@ interface WebhookEventWithTracking {
   /**
    * The User-Agent header given when the recipient opened the message
    */
-  user_agent?: string;
+  userAgent?: string;
   /**
    * The IP address of the host that made the HTTP request
    */
@@ -91,7 +91,7 @@ export interface WebhookEventComplained extends WebhookEventBase<"complained"> {
 
 export interface WebhookEventUnsubscribed extends WebhookEventBase<"unsubscribed"> {}
 
-export interface WebhookEventTest extends Omit<WebhookEventBase<"test">, "recipients" | "campaign_id"> {}
+export interface WebhookEventTest extends Omit<WebhookEventBase<"test">, "recipients" | "campaignId"> {}
 
 export type WebhookEvent =
   | WebhookEventProcessed
@@ -104,5 +104,3 @@ export type WebhookEvent =
   | WebhookEventComplained
   | WebhookEventUnsubscribed
   | WebhookEventTest;
-
-export type WebhookEvents = WebhookEvent[];

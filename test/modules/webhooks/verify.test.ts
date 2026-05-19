@@ -7,7 +7,7 @@ import { Webhooks } from "~/modules/webhooks";
 import { stripPemHeaders } from "~/utils/helpers";
 import { DEFAULT_TOLERANCE, ED25519, HMAC_SHA256, encoder } from "~/utils/webhooks-validator";
 import type { WebhooksVerifyOptions, WebhooksVerifyResponse } from "~/types/webhooks/verify";
-import type { WebhookEventDelivered, WebhookEventProcessed } from "~/types/webhooks/events";
+import type { WebhookEventReceived } from "~/types/webhooks/internal";
 
 const generateTestingKeys = () => {
   const ed25519Keys = generateKeyPairSync("ed25519", {
@@ -20,18 +20,47 @@ const generateTestingKeys = () => {
 
 const body = [
   {
+    customer_handle: "test_handle",
+    email: "test@mailchannels.com",
+    timestamp: 1779218950,
+    smtp_id: "<test_id=@tx.mailchannels.net>",
+    event: "test",
+    request_id: "test_id"
+  },
+  {
     email: "test@mailchannels.com",
     event: "processed",
     customer_handle: "test_handle",
+    campaign_id: "test_campaign",
+    recipients: ["recipient@test.com"],
     timestamp: 1778959788
-  } satisfies WebhookEventProcessed,
+  },
   {
     email: "test@mailchannels.com",
-    event: "delivered",
+    event: "open",
     customer_handle: "test_handle",
-    timestamp: 1778959788
-  } satisfies WebhookEventDelivered
-];
+    timestamp: 1778959788,
+    user_agent: "Test User Agent",
+    ip: "0.0.0.0"
+  },
+  {
+    email: "test@mailchannels.com",
+    event: "click",
+    customer_handle: "test_handle",
+    timestamp: 1778959788,
+    user_agent: "Test User Agent",
+    ip: "0.0.0.0",
+    url: "https://example.com"
+  },
+  {
+    email: "test@mailchannels.com",
+    event: "hard-bounced",
+    customer_handle: "test_handle",
+    timestamp: 1778959788,
+    status: "5.1.1",
+    reason: "User does not exist"
+  }
+] satisfies WebhookEventReceived[];
 
 const rawBody = JSON.stringify(body);
 const { ed25519Keys } = generateTestingKeys();
@@ -70,8 +99,47 @@ const fake = {
   } satisfies WebhooksVerifyOptions,
   expectedResponse: {
     data: [
-      { event: "processed" },
-      { event: "delivered" }
+      {
+        customerHandle: "test_handle",
+        email: "test@mailchannels.com",
+        timestamp: 1779218950,
+        smtpId: "<test_id=@tx.mailchannels.net>",
+        event: "test",
+        requestId: "test_id"
+      },
+      {
+        customerHandle: "test_handle",
+        email: "test@mailchannels.com",
+        event: "processed",
+        timestamp: 1778959788,
+        campaignId: "test_campaign",
+        recipients: ["recipient@test.com"]
+      },
+      {
+        customerHandle: "test_handle",
+        email: "test@mailchannels.com",
+        event: "open",
+        timestamp: 1778959788,
+        ip: "0.0.0.0",
+        userAgent: "Test User Agent"
+      },
+      {
+        customerHandle: "test_handle",
+        email: "test@mailchannels.com",
+        event: "click",
+        timestamp: 1778959788,
+        ip: "0.0.0.0",
+        userAgent: "Test User Agent",
+        url: "https://example.com"
+      },
+      {
+        customerHandle: "test_handle",
+        email: "test@mailchannels.com",
+        event: "hard-bounced",
+        timestamp: 1778959788,
+        status: "5.1.1",
+        reason: "User does not exist"
+      }
     ] satisfies WebhooksVerifyResponse["data"],
     error: null
   }

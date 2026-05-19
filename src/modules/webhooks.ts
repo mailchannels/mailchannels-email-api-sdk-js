@@ -9,8 +9,7 @@ import type { WebhooksValidateResponse } from "../types/webhooks/validate";
 import type { WebhooksVerifyOptions, WebhooksVerifyResponse } from "../types/webhooks/verify";
 import type { WebhooksBatchesOptions, WebhooksBatchesResponse } from "../types/webhooks/batches";
 import type { WebhooksResendBatchResponse } from "../types/webhooks/resend-batch";
-import type { WebhookEvents } from "../types/webhooks/events";
-import type { WebhooksBatchesApiResponse, WebhooksResendBatchApiResponse, WebhooksValidateApiResponse } from "../types/webhooks/internal";
+import type { WebhookEventReceived, WebhooksBatchesApiResponse, WebhooksResendBatchApiResponse, WebhooksValidateApiResponse } from "../types/webhooks/internal";
 
 export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -202,15 +201,27 @@ export class Webhooks {
     }
 
     try {
-      const payload = JSON.parse(options.payload) as WebhookEvents;
+      const payload = JSON.parse(options.payload) as WebhookEventReceived[];
 
       if (!Array.isArray(payload)) {
         error = createError("Invalid webhook payload.");
         return { data: null, error };
       }
 
-      const data = clean((payload as WebhookEvents).map(event => ({
-        event: event.event
+      const data = clean((payload as WebhookEventReceived[]).map(event => ({
+        email: event.email,
+        customerHandle: event.customer_handle,
+        timestamp: event.timestamp,
+        smtpId: event.smtp_id,
+        event: event.event,
+        requestId: event.request_id,
+        campaignId: "campaign_id" in event ? event.campaign_id : undefined,
+        recipients: "recipients" in event ? event.recipients : undefined,
+        userAgent: "user_agent" in event ? event.user_agent : undefined,
+        ip: "ip" in event ? event.ip : undefined,
+        url: "url" in event ? event.url : undefined,
+        status: "status" in event ? event.status : undefined,
+        reason: "reason" in event ? event.reason : undefined
       })));
 
       return { data, error: null };

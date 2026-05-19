@@ -85,12 +85,24 @@ const { data, error } = await mailchannels.webhooks.verify({
 
 ## Response
 
-- `data` `object[] | null` <Badge type="warning">nullable</Badge>
+- `data` `WebhookEvent[] | null` <Badge type="warning">nullable</Badge>
   - `event` `WebhookEventType` <Badge>guaranteed</Badge>: The type of event that occurred.
+  - `customerHandle` `string` <Badge>guaranteed</Badge>: The MailChannels account ID that generated the webhook. If the message was sent by a sub-account, this field contains the sub-account handle.
+  - `timestamp` `number` <Badge>guaranteed</Badge>: The Unix timestamp (in seconds) when the event occurred; the timezone is always UTC.
+  - `email` `string` <Badge type="info">optional</Badge>: The sender's email address.
+  - `smtpId` `string` <Badge type="info">optional</Badge>: The Message-Id of the message that generated the event.
+  - `requestId` `string` <Badge type="info">optional</Badge>: A unique identifier generated to track the original HTTP request.
+  - `campaignId` `string` <Badge type="info">optional</Badge>: The campaign identifier for the message that generated the event.
+  - `recipients` `string[]` <Badge type="info">optional</Badge>: The recipients of the message.
+  - `userAgent` `string` <Badge type="info">optional</Badge>: The User-Agent header given when the recipient opened the message. This field is only present for `open` and `click` events.
+  - `ip` `string` <Badge type="info">optional</Badge>: The IP address of the host that made the HTTP request. This field is only present for `open` and `click` events.
+  - `url` `string` <Badge type="info">optional</Badge>: The URL that was clicked by the recipient. This field is only present for `click` events.
+  - `status` `string` <Badge type="info">optional</Badge>: The SMTP status code that caused the bounce. This field is only present for `hard-bounced`, `soft-bounced`, and `dropped` events.
+  - `reason` `string` <Badge type="info">optional</Badge>: A human-readable explanation of why the message bounced or was dropped. This field is only present for `hard-bounced`, `soft-bounced`, and `dropped` events.
 <!-- @include: ../_parts/error-response.md -->
 
 > [!TIP]
-> This method returns `data` as an array of event types if the webhook request is authentic and valid. If the verification fails, `data` will be `null`, indicating the signature verification failed and the request may not be from MailChannels or could have been tampered with.
+> This method returns `data` as an array of events if the webhook request is authentic and valid. If the verification fails, `data` will be `null`, indicating the signature verification failed and the request may not be from MailChannels or could have been tampered with.
 
 ## Type declarations
 
@@ -106,6 +118,17 @@ const { data, error } = await mailchannels.webhooks.verify({
 **Event type declarations**
 
 <<< @/snippets/webhook-event-type.ts
+<<< @/snippets/webhook-event-processed.ts
+<<< @/snippets/webhook-event-delivered.ts
+<<< @/snippets/webhook-event-open.ts
+<<< @/snippets/webhook-event-click.ts
+<<< @/snippets/webhook-event-hard-bounced.ts
+<<< @/snippets/webhook-event-soft-bounced.ts
+<<< @/snippets/webhook-event-dropped.ts
+<<< @/snippets/webhook-event-complained.ts
+<<< @/snippets/webhook-event-unsubscribed.ts
+<<< @/snippets/webhook-event-test.ts
+<<< @/snippets/webhook-event.ts
 
 **Verify type declarations**
 
