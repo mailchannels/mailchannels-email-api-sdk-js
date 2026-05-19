@@ -3380,17 +3380,17 @@ paths:
 
         '
       parameters:
-      - in: header
-        name: X-Customer-Handle
-        required: true
-        schema:
-          type: string
       - description: the ID of the batch
         in: path
         name: batch_id
         required: true
         schema:
           type: integer
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           content:
