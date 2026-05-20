@@ -5,8 +5,8 @@ definitions:
     pnpm: $BITBUCKET_CLONE_DIR/.pnpm-store
 
   steps:
-    - step: &setup_and_lint
-        name: Lint
+    - step: &checks
+        name: Lint, Types, Tests
         caches:
           - pnpm
         script:
@@ -14,26 +14,17 @@ definitions:
           - corepack prepare pnpm@latest --activate
           - pnpm install
           - pnpm lint
-
-    - step: &setup_and_test
-        name: Test + Types
-        caches:
-          - pnpm
-        script:
-          - corepack enable
-          - corepack prepare pnpm@latest --activate
-          - pnpm install
-          - pnpm test
           - pnpm test:types
+          - pnpm test
 
 pipelines:
+  default:
+    - step: *checks
+
   branches:
     main:
-      - parallel:
-          - step: *setup_and_lint
-          - step: *setup_and_test
+      - step: *checks
 
   pull-requests:
     main:
-      - step: *setup_and_lint
-      - step: *setup_and_test
+      - step: *checks
