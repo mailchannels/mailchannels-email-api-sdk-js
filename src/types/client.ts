@@ -1,5 +1,3 @@
-import type { FetchOptions } from "ofetch";
-
 export interface MailChannelsClientOptions {
   /**
    * Override the MailChannels API base URL.
@@ -26,9 +24,9 @@ export interface MailChannelsClientOptions {
    * Set to `false` or `0` to disable timeout handling.
    * @default 30000
    */
-  timeout?: FetchOptions["timeout"] | false;
+  timeout?: number | false;
   /**
    * Abort signal applied to requests made by the client.
    */
-  signal?: FetchOptions["signal"];
+  signal?: AbortSignal;
 }
