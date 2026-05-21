@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { $fetch } from "ofetch";
 import { MailChannelsClient } from "~/client";
 import { version } from "../package.json";
@@ -8,11 +8,14 @@ const fake = {
   path: "/test",
   options: {
     baseUrl: "http://127.0.0.1:8787",
-    retry: 3
+    retry: 3,
+    timeout: 10000
   },
   defaults: {
     baseURL: "https://api.mailchannels.net",
     retry: false,
+    timeout: 30000,
+    signal: undefined,
     headers: {
       "X-API-Key": "test-api-key",
       "Accept": "application/json",
@@ -27,6 +30,10 @@ vi.mock("ofetch", () => ({
 }));
 
 describe("MailChannelsClient", () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("should throw an error if no API key is provided", () => {
     // @ts-expect-error Testing missing API key
     const client = () => new MailChannelsClient();
@@ -118,6 +125,60 @@ describe("MailChannelsClient", () => {
       ...fake.defaults,
       method: "GET",
       retry: fake.options.retry
+    });
+  });
+
+  it("should allow overriding the timeout", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey, { timeout: fake.options.timeout });
+    await client.get(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      ...fake.defaults,
+      method: "GET",
+      timeout: fake.options.timeout
+    });
+  });
+
+  it("should allow disabling the timeout", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey, { timeout: false });
+    await client.get(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      ...fake.defaults,
+      method: "GET",
+      timeout: undefined
+    });
+  });
+
+  it("should allow setting an abort signal", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const signal = new AbortController().signal;
+    const client = new MailChannelsClient(fake.apiKey, { signal });
+    await client.get(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      ...fake.defaults,
+      method: "GET",
+      signal
+    });
+  });
+
+  it("should inherit the client's abort signal if per-request signal is not provided", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const signal = new AbortController().signal;
+    const client = new MailChannelsClient(fake.apiKey, { signal });
+    await client.get(fake.path, { signal: undefined });
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      ...fake.defaults,
+      method: "GET",
+      signal
     });
   });
 });

@@ -4,6 +4,7 @@ import { version } from "../package.json";
 
 export class MailChannelsClient {
   private static readonly DEFAULT_BASE_URL = "https://api.mailchannels.net";
+  private static readonly DEFAULT_TIMEOUT = 30000; // 30 seconds
   private readonly options: MailChannelsClientOptions;
   #headers: Record<string, string>;
 
@@ -14,7 +15,9 @@ export class MailChannelsClient {
 
     this.options = {
       baseUrl: options.baseUrl || MailChannelsClient.DEFAULT_BASE_URL,
-      retry: options.retry ?? false
+      retry: options.retry ?? false,
+      signal: options.signal,
+      timeout: options.timeout ?? MailChannelsClient.DEFAULT_TIMEOUT
     };
 
     this.#headers = {
@@ -25,14 +28,18 @@ export class MailChannelsClient {
     };
   }
 
-  protected async _fetch<T>(path: string, options?: FetchOptions<"json">) {
+  protected async _fetch<T>(path: string, options: FetchOptions<"json">) {
+    const { signal = this.options.signal, headers, ...fetchOptions } = options;
+
     return $fetch<T>(path, {
       baseURL: this.options.baseUrl,
       retry: this.options.retry,
-      ...options,
+      signal,
+      timeout: this.options.timeout === false ? undefined : this.options.timeout,
+      ...fetchOptions,
       headers: {
         ...this.#headers,
-        ...options?.headers
+        ...headers
       }
     });
   }
