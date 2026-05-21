@@ -201,14 +201,14 @@ export class Webhooks {
     }
 
     try {
-      const payload = JSON.parse(options.payload) as WebhookEventReceived[];
+      const payload: WebhookEventReceived[] = JSON.parse(options.payload);
 
       if (!Array.isArray(payload)) {
         error = createError("Invalid webhook payload.");
         return { data: null, error };
       }
 
-      const data = clean((payload as WebhookEventReceived[]).map(event => ({
+      const data = clean(payload.map(event => ({
         email: event.email,
         customerHandle: event.customer_handle,
         timestamp: event.timestamp,
