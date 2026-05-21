@@ -4,14 +4,21 @@ import { MailChannelsClient } from "~/client";
 import { version } from "../package.json";
 
 const fake = {
-  baseURL: "https://api.mailchannels.net",
-  customBaseURL: "http://127.0.0.1:8787",
-  path: "/test",
   apiKey: "test-api-key",
-  headers: {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-    "User-Agent": `mailchannels-node/${version}`
+  path: "/test",
+  options: {
+    baseUrl: "http://127.0.0.1:8787",
+    retry: 3
+  },
+  defaults: {
+    baseURL: "https://api.mailchannels.net",
+    retry: false,
+    headers: {
+      "X-API-Key": "test-api-key",
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "User-Agent": `mailchannels-node/${version}`
+    }
   }
 };
 
@@ -33,13 +40,8 @@ describe("MailChannelsClient", () => {
     await client.get(fake.path);
 
     expect($fetch).toHaveBeenCalledWith(fake.path, {
-      method: "GET",
-      baseURL: fake.baseURL,
-      retry: false,
-      headers: {
-        ...fake.headers,
-        "X-API-Key": fake.apiKey
-      }
+      ...fake.defaults,
+      method: "GET"
     });
   });
 
@@ -50,13 +52,8 @@ describe("MailChannelsClient", () => {
     await client.post(fake.path);
 
     expect($fetch).toHaveBeenCalledWith(fake.path, {
-      method: "POST",
-      baseURL: fake.baseURL,
-      retry: false,
-      headers: {
-        ...fake.headers,
-        "X-API-Key": fake.apiKey
-      }
+      ...fake.defaults,
+      method: "POST"
     });
   });
 
@@ -67,13 +64,8 @@ describe("MailChannelsClient", () => {
     await client.delete(fake.path);
 
     expect($fetch).toHaveBeenCalledWith(fake.path, {
-      method: "DELETE",
-      baseURL: fake.baseURL,
-      retry: false,
-      headers: {
-        ...fake.headers,
-        "X-API-Key": fake.apiKey
-      }
+      ...fake.defaults,
+      method: "DELETE"
     });
   });
 
@@ -84,13 +76,8 @@ describe("MailChannelsClient", () => {
     await client.put(fake.path);
 
     expect($fetch).toHaveBeenCalledWith(fake.path, {
-      method: "PUT",
-      baseURL: fake.baseURL,
-      retry: false,
-      headers: {
-        ...fake.headers,
-        "X-API-Key": fake.apiKey
-      }
+      ...fake.defaults,
+      method: "PUT"
     });
   });
 
@@ -101,13 +88,8 @@ describe("MailChannelsClient", () => {
     await client.patch(fake.path);
 
     expect($fetch).toHaveBeenCalledWith(fake.path, {
-      method: "PATCH",
-      baseURL: fake.baseURL,
-      retry: false,
-      headers: {
-        ...fake.headers,
-        "X-API-Key": fake.apiKey
-      }
+      ...fake.defaults,
+      method: "PATCH"
     });
   });
 
@@ -115,35 +97,27 @@ describe("MailChannelsClient", () => {
     vi.mocked($fetch).mockResolvedValueOnce({});
 
     const client = new MailChannelsClient(fake.apiKey, {
-      baseUrl: fake.customBaseURL
+      baseUrl: fake.options.baseUrl
     });
     await client.get(fake.path);
 
     expect($fetch).toHaveBeenCalledWith(fake.path, {
+      ...fake.defaults,
       method: "GET",
-      baseURL: fake.customBaseURL,
-      retry: false,
-      headers: {
-        ...fake.headers,
-        "X-API-Key": fake.apiKey
-      }
+      baseURL: fake.options.baseUrl
     });
   });
 
   it("should allow overriding the retry count", async () => {
     vi.mocked($fetch).mockResolvedValueOnce({});
 
-    const client = new MailChannelsClient(fake.apiKey, { retry: 3 });
+    const client = new MailChannelsClient(fake.apiKey, { retry: fake.options.retry });
     await client.get(fake.path);
 
     expect($fetch).toHaveBeenCalledWith(fake.path, {
+      ...fake.defaults,
       method: "GET",
-      baseURL: fake.baseURL,
-      retry: 3,
-      headers: {
-        ...fake.headers,
-        "X-API-Key": fake.apiKey
-      }
+      retry: fake.options.retry
     });
   });
 });
