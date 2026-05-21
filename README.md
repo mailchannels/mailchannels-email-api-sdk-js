@@ -212,7 +212,7 @@ pnpm parity:fixtures
 pnpm simulate
 
 # Run a playground script
-npx jiti playground/emails/send.ts
+pnpx jiti playground/emails/send.ts
 
 # Release new version
 pnpm release
