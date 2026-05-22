@@ -14,7 +14,7 @@ const fake = {
   defaults: {
     baseURL: "https://api.mailchannels.net",
     retry: false,
-    timeout: 30000,
+    timeout: 120000,
     signal: undefined,
     headers: {
       "X-API-Key": "test-api-key",

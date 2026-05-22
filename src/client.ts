@@ -4,7 +4,7 @@ import { version } from "../package.json";
 
 export class MailChannelsClient {
   private static readonly DEFAULT_BASE_URL = "https://api.mailchannels.net";
-  private static readonly DEFAULT_TIMEOUT = 30000; // 30 seconds
+  private static readonly DEFAULT_TIMEOUT = 120000; // 120 seconds (2 minutes)
   private readonly options: MailChannelsClientOptions;
   #headers: Record<string, string>;
 

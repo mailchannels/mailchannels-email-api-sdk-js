@@ -101,7 +101,7 @@ import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key', {
   baseUrl: 'http://localhost:8787', // default: 'https://api.mailchannels.net'
   retry: 1, // default: false (no retries)
-  timeout: 10000, // default: 30000 (30 seconds)
+  timeout: 30000, // default: 120000 (120 seconds)
   signal: undefined // default: undefined (no abort signal)
 })
 ```
@@ -115,7 +115,7 @@ const mailchannels = new MailChannels('your-api-key', {
   > `408`, `409`, `425`, `429`, `500`, `502`, `503`, `504`.
   >
   > See [ofetch](https://github.com/unjs/ofetch) documentation for more details on retry behavior.
-- `timeout` `number | false` <Badge type="info">optional</Badge>: Request timeout in milliseconds. Set to `false` or `0` to disable timeout handling. Default is `30000` (30 seconds).
+- `timeout` `number | false` <Badge type="info">optional</Badge>: Request timeout in milliseconds. Set to `false` or `0` to disable timeout handling. Default is `120000` (120 seconds/2 minutes).
 - `signal` `AbortSignal` <Badge type="info">optional</Badge>: Abort signal applied to requests made by the client.
 
 </div>
