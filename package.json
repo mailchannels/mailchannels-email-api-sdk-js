@@ -54,6 +54,7 @@
     "docs:snippets": "node docs/scripts/snippets.ts"
   },
   "dependencies": {
+    "mime": "^4.1.0",
     "ofetch": "^2.0.0-alpha.3"
   },
   "devDependencies": {

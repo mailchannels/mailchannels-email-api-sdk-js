@@ -40,6 +40,57 @@ const { data, error } = await mailchannels.emails.send({
 ```
 :::
 
+### Send Attachments
+
+To include attachments in your email, add an `attachments` array property to your send request.
+
+```ts [send-attachments.ts]
+import { MailChannels } from 'mailchannels-sdk'
+
+const mailchannels = new MailChannels('your-api-key')
+
+const { data, error } = await mailchannels.emails.send({
+  from: 'Name <from@example.com>',
+  to: 'to@example.com',
+  subject: 'Test email',
+  html: '<p>Hello World</p>',
+  attachments: [
+    {
+      type: "image/png",
+      filename: "logo.png",
+      content: "iVBORw0KGgoAAAANSUhEUgAAAKIAAA... (truncated for brevity)"
+    }
+  ]
+})
+```
+
+Alternatively, the SDK provides `Attachment` helper functions to create attachments from local files or remote URLs.
+
+| Function                | Description                                    |
+| ----------------------- | ---------------------------------------------- |
+| `Attachment.fromBytes`  | Creates an attachment from a byte array        |
+| `Attachment.fromUrl`    | Creates an attachment from a remote URL        |
+| `Attachment.fromFile`   | Creates an attachment from a local file        |
+| `Attachment.inlineFile` | Creates an inline attachment from a local file |
+
+For example, to send an email with an attachment from a remote URL:
+
+```ts [attachment-remote.ts]
+import { Attachment, MailChannels } from 'mailchannels-sdk'
+
+const mailchannels = new MailChannels('your-api-key')
+
+const { data, error } = await mailchannels.emails.send({
+  from: 'Name <from@example.com>',
+  to: 'to@example.com',
+  subject: 'Test email',
+  html: '<p>Hello World</p>',
+  attachments: [
+    Attachment.fromUrl("https://picsum.photos/id/1/50/50", { filename: "test-image-1.jpg" })
+  ]
+})
+```
+
 ## Params
 
 <!-- @include: ../_parts/emails-send-params.md -->

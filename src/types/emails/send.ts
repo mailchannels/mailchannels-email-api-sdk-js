@@ -23,7 +23,15 @@ export interface EmailsSendAttachment {
   /**
    * The MIME type of the attachment.
    */
-  type: string;
+  type?: string;
+  /**
+   * The `Content-ID` header value for inline attachments, referenced from HTML with `cid:`.
+   */
+  contentId?: string;
+  /**
+   * The `Content-Disposition` header value for the attachment.
+   */
+  disposition?: "attachment" | "inline";
 }
 
 export interface EmailsSendTracking {
@@ -145,7 +153,7 @@ interface EmailsSendOptionsBase {
   /**
    * An array of attachments to be sent with the email.
    */
-  attachments?: EmailsSendAttachment[];
+  attachments?: (EmailsSendAttachment | Promise<EmailsSendAttachment>)[];
   /**
    * The campaign identifier. If specified, this ID will be included in all relevant webhooks. It can be up to 48 UTF-8 characters long and must not contain spaces.
    */
