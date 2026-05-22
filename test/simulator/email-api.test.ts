@@ -109,7 +109,7 @@ describe("Email API simulator", () => {
     expect(rotateDkimKeyResult.data?.new.selector).toBe("mailchannels-next");
     expect(rotateDkimKeyResult.data?.rotated.status).toBe("rotated");
 
-    const updateDkimKeyResult = await mailchannels.domains.dkim.update("example.com", {
+    const updateDkimKeyResult = await mailchannels.domains.dkim.updateStatus("example.com", {
       selector: "mailchannels-next",
       status: "revoked"
     });
@@ -118,8 +118,8 @@ describe("Email API simulator", () => {
       error: null
     });
 
-    const enrollResult = await mailchannels.webhooks.enroll(webhookEndpoint);
-    expect(enrollResult).toEqual({
+    const createWebhookResult = await mailchannels.webhooks.create(webhookEndpoint);
+    expect(createWebhookResult).toEqual({
       success: true,
       error: null
     });

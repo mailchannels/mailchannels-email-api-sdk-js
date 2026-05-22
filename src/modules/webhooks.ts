@@ -20,10 +20,10 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success, error } = mailchannels.webhooks.enroll('https://example.com/api/webhooks/mailchannels')
+   * const { success, error } = await mailchannels.webhooks.create('https://example.com/api/webhooks/mailchannels')
    * ```
    */
-  async enroll (endpoint: string): Promise<SuccessResponse> {
+  async create (endpoint: string): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
     if (!endpoint) {
@@ -46,7 +46,7 @@ export class Webhooks {
         });
       }
     }).catch((e) => {
-      error ||= getResultError(e, "Failed to enroll webhook.");
+      error ||= getResultError(e, "Failed to create webhook.");
     });
 
     return { success: !error, error };

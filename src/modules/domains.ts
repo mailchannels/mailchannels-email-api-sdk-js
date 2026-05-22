@@ -6,7 +6,7 @@ import type { DomainsCheckApiResponse, DomainsCheckPayload, DomainsDkimCreateApi
 import type { DomainsCheckOptions, DomainsCheckResponse } from "../types/domains/check";
 import type { DomainsDkimCreateOptions, DomainsDkimCreateResponse } from "../types/domains/dkim-create";
 import type { DomainsDkimListOptions, DomainsDkimListResponse } from "../types/domains/dkim-list";
-import type { DomainsDkimUpdateOptions } from "../types/domains/dkim-update";
+import type { DomainsDkimUpdateStatusOptions } from "../types/domains/dkim-update-status";
 import type { DomainsDkimRotateOptions, DomainsDkimRotateResponse } from "../types/domains/dkim-rotate";
 
 export class Domains {
@@ -199,12 +199,12 @@ class DomainsDkim {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success, error } = await mailchannels.domains.dkim.update('example.com', {
+   * const { success, error } = await mailchannels.domains.dkim.updateStatus('example.com', {
    *   selector: 'mailchannels',
    *   status: 'retired'
    * })
    */
-  async update (domain: string, options: DomainsDkimUpdateOptions): Promise<SuccessResponse> {
+  async updateStatus (domain: string, options: DomainsDkimUpdateStatusOptions): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
     if (!options.selector || options.selector.length > 63) {
@@ -225,7 +225,7 @@ class DomainsDkim {
         });
       }
     }).catch((e) => {
-      error ||= getResultError(e, "Failed to update DKIM key.");
+      error ||= getResultError(e, "Failed to update status of DKIM key.");
     });
 
     return { success: !error, error };

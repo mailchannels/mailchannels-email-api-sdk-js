@@ -1,9 +1,9 @@
 ---
-title: Enroll
+title: Create
 titleTemplate: 📢 Webhooks
 ---
 
-# Enroll<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/webhooks">📢 Webhooks</a></Badge></llm-exclude>
+# Create<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/webhooks">📢 Webhooks</a></Badge></llm-exclude>
 
 Enrolls the user to receive event notifications via webhooks.
 
@@ -16,7 +16,7 @@ import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const { success, error } = await webhooks.enroll("https://example.com/api/webhooks/mailchannels")
+const { success, error } = await webhooks.create("https://example.com/api/webhooks/mailchannels")
 ```
 
 ```ts [full.ts]
@@ -24,7 +24,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success, error } = await mailchannels.webhooks.enroll("https://example.com/api/webhooks/mailchannels")
+const { success, error } = await mailchannels.webhooks.create("https://example.com/api/webhooks/mailchannels")
 ```
 :::
 
@@ -41,7 +41,7 @@ const { success, error } = await mailchannels.webhooks.enroll("https://example.c
 
 **Signature**
 
-<<< @/snippets/webhooks-method-enroll.ts
+<<< @/snippets/webhooks-method-create.ts
 
 **Response type declarations**
 
