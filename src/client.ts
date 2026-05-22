@@ -29,7 +29,7 @@ export class MailChannelsClient {
   }
 
   protected async _fetch<T>(path: string, options: FetchOptions<"json">) {
-    const { signal = this.options.signal, headers, ...fetchOptions } = options;
+    const { headers, signal = this.options.signal, ...fetchOptions } = options;
 
     return $fetch<T>(path, {
       baseURL: this.options.baseUrl,
