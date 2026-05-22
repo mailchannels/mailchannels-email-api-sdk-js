@@ -17,6 +17,20 @@ definitions:
           - pnpm test:types
           - pnpm test
 
+    - step: &release
+        name: Publish to npm
+        caches:
+          - pnpm
+        script:
+          - corepack enable
+          - corepack prepare pnpm@latest --activate
+          - pnpm install
+          # Atlassian npm publish pipe
+          - pipe: atlassian/npm-publish:0.2.0
+            variables:
+              NPM_TOKEN: $NPM_TOKEN
+
+
 pipelines:
   default:
     - step: *checks
@@ -28,3 +42,8 @@ pipelines:
   pull-requests:
     main:
       - step: *checks
+
+  tags:
+    'v*':
+      - step: *checks
+      - step: *release

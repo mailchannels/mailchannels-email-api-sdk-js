@@ -4,7 +4,6 @@
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![codecov][codecov-coverage-src]][codecov-coverage-href]
 
 > Built and tested against Email API `0.21.1`
 
@@ -109,7 +108,7 @@ This package includes a local MailChannels simulator you can run via the CLI. It
 
 | API         | Source                                                                                                         |
 | ----------- | -------------------------------------------------------------------------------------------------------------- |
-| Email API   | [`src/simulator/email-api.mjs`](https://github.com/Yizack/mailchannels/blob/main/src/simulator/email-api.mjs)  |
+| Email API   | [`src/simulator/email-api.mjs`](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/src/main/src/simulator/email-api.mjs)  |
 
 > [!IMPORTANT]
 > The simulator approximates the MailChannels service for local development and testing. It is not a production implementation and may differ from the live service.
@@ -226,6 +225,3 @@ pnpm release
 
 [npm-downloads-src]: https://img.shields.io/npm/dm/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
 [npm-downloads-href]: https://npmjs.com/package/mailchannels-sdk
-
-[codecov-coverage-src]: https://img.shields.io/codecov/c/github/yizack/mailchannels?style=flat&colorA=070a30&token=HTSBRHSJ5M
-[codecov-coverage-href]: https://codecov.io/gh/Yizack/mailchannels
