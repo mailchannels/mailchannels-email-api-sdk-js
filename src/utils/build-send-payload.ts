@@ -1,5 +1,5 @@
-import { parseArrayRecipients, parseRecipient } from "./recipients";
-import { stripPemHeaders } from "./helpers";
+import { parseArrayRecipients, parseRecipient } from "./parse-recipients";
+import { stripPemHeaders } from "./strip-pem-headers";
 import type { EmailsSendDkim, EmailsSendOptions, EmailsSendPersonalization, EmailsSendTemplate } from "../types/emails/send";
 import type { EmailsSendPayload, EmailsSendPayloadPersonalization } from "../types/emails/internal";
 

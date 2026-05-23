@@ -4,8 +4,8 @@ import { generateKeyPairSync, subtle } from "node:crypto";
 import { Buffer } from "node:buffer";
 import type { MailChannelsClient } from "~/client";
 import { Webhooks } from "~/modules/webhooks";
-import { stripPemHeaders } from "~/utils/helpers";
-import { DEFAULT_TOLERANCE, ED25519, HMAC_SHA256, encoder } from "~/utils/webhooks-validator";
+import { stripPemHeaders } from "~/utils/strip-pem-headers";
+import { DEFAULT_TOLERANCE, ED25519, HMAC_SHA256, encoder } from "~/utils/webhook-validator";
 import type { WebhooksVerifyOptions, WebhooksVerifyResponse } from "~/types/webhooks/verify";
 import type { WebhookEventReceived } from "~/types/webhooks/internal";
 

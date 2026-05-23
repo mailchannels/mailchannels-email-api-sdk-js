@@ -1,6 +1,8 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
-import { clean, mapDkimKey, stripPemHeaders } from "../utils/helpers";
+import { clean } from "../utils/clean";
+import { stripPemHeaders } from "../utils/strip-pem-headers";
+import { mapDkimKey } from "../utils/map-dkim-key";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { DomainsCheckApiResponse, DomainsCheckPayload, DomainsDkimCreateApiResponse, DomainsDkimCreatePayload, DomainsDkimListPayload, DomainsDkimRotateApiResponse } from "../types/domains/internal";
 import type { DomainsCheckOptions, DomainsCheckResponse } from "../types/domains/check";

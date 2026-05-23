@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
-import { clean } from "../utils/helpers";
-import { isValidWebhook } from "../utils/webhooks-validator";
+import { clean } from "../utils/clean";
+import { isValidWebhook } from "../utils/webhook-validator";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";

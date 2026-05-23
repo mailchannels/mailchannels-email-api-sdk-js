@@ -1,6 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getResultError, getStatusError, validatePagination } from "../utils/errors";
-import { clean, mapBuckets } from "../utils/helpers";
+import { clean } from "../utils/clean";
+import { mapBucket } from "../utils/map-bucket";
 import type { ErrorResponse } from "../types/responses";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
@@ -47,10 +48,10 @@ export class Metrics {
 
     const data = clean({
       buckets: {
-        click: mapBuckets(response.buckets.click),
-        clickTrackingDelivered: mapBuckets(response.buckets.click_tracking_delivered),
-        open: mapBuckets(response.buckets.open),
-        openTrackingDelivered: mapBuckets(response.buckets.open_tracking_delivered)
+        click: response.buckets.click.map(mapBucket),
+        clickTrackingDelivered: response.buckets.click_tracking_delivered.map(mapBucket),
+        open: response.buckets.open.map(mapBucket),
+        openTrackingDelivered: response.buckets.open_tracking_delivered.map(mapBucket)
       },
       click: response.click,
       clickTrackingDelivered: response.click_tracking_delivered,
@@ -97,9 +98,9 @@ export class Metrics {
     const data = clean({
       bounced: response.bounced,
       buckets: {
-        bounced: mapBuckets(response.buckets.bounced),
-        delivered: mapBuckets(response.buckets.delivered),
-        processed: mapBuckets(response.buckets.processed)
+        bounced: response.buckets.bounced.map(mapBucket),
+        delivered: response.buckets.delivered.map(mapBucket),
+        processed: response.buckets.processed.map(mapBucket)
       },
       delivered: response.delivered,
       endTime: response.end_time,
@@ -143,8 +144,8 @@ export class Metrics {
 
     const data = clean({
       buckets: {
-        unsubscribeDelivered: mapBuckets(response.buckets.unsubscribe_delivered),
-        unsubscribed: mapBuckets(response.buckets.unsubscribed)
+        unsubscribeDelivered: response.buckets.unsubscribe_delivered.map(mapBucket),
+        unsubscribed: response.buckets.unsubscribed.map(mapBucket)
       },
       endTime: response.end_time,
       startTime: response.start_time,
@@ -188,9 +189,9 @@ export class Metrics {
 
     const data = clean({
       buckets: {
-        delivered: mapBuckets(response.buckets.delivered),
-        dropped: mapBuckets(response.buckets.dropped),
-        processed: mapBuckets(response.buckets.processed)
+        delivered: response.buckets.delivered.map(mapBucket),
+        dropped: response.buckets.dropped.map(mapBucket),
+        processed: response.buckets.processed.map(mapBucket)
       },
       delivered: response.delivered,
       dropped: response.dropped,

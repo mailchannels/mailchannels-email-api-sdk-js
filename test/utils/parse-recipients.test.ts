@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseArrayRecipients, parseRecipient } from "~/utils/recipients";
+import { parseArrayRecipients, parseRecipient } from "~/utils/parse-recipients";
 
 const fake = {
   pair: "Example <name@example.com>",

@@ -1,6 +1,6 @@
 import { subtle } from "node:crypto";
 import { Buffer } from "node:buffer";
-import { stripPemHeaders } from "./helpers";
+import { stripPemHeaders } from "./strip-pem-headers";
 import type { WebhooksVerifyOptions } from "../types/webhooks/verify";
 import { $fetch } from "ofetch";
 
