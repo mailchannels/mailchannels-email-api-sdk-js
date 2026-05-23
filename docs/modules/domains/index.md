@@ -43,7 +43,7 @@ This module allows you to check a domain's email authentication and manage DKIM 
 
   **Update DKIM Key type declarations**
 
-  <<< @/snippets/domains-dkim-update-options.ts
+  <<< @/snippets/domains-dkim-update-status-options.ts
 
   **Rotate DKIM Key type declarations**
 
