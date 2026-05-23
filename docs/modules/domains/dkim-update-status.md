@@ -1,9 +1,9 @@
 ---
-title: Update DKIM Key
+title: Update DKIM Key Status
 titleTemplate: 🌐 Domains
 ---
 
-# Update DKIM Key<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
+# Update DKIM Key Status<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Update fields of an existing DKIM key pair for the specified domain and selector, for the current customer. Currently, only the `status` field can be updated.
 
@@ -16,7 +16,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { success, error } = await domains.dkim.update('example.com', {
+const { success, error } = await domains.dkim.updateStatus('example.com', {
   selector: 'mailchannels',
   status: 'retired'
 })
@@ -27,7 +27,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success, error } = await mailchannels.domains.dkim.update('example.com', {
+const { success, error } = await mailchannels.domains.dkim.updateStatus('example.com', {
   selector: 'mailchannels',
   status: 'retired'
 })
@@ -37,7 +37,7 @@ const { success, error } = await mailchannels.domains.dkim.update('example.com',
 ## Params
 
 - `domain` `string` <Badge type="danger">required</Badge>: The domain of the DKIM key to update.
-- `options` `DomainsDkimUpdateOptions` <Badge type="danger">required</Badge>: Update DKIM key options.
+- `options` `DomainsDkimUpdateStatusOptions` <Badge type="danger">required</Badge>: Update DKIM key options.
   - `selector` `string` <Badge type="danger">required</Badge>: Selector of the DKIM key to update. Must be a maximum of 63 characters.
   - `status` `"revoked" | "retired" | "rotated"` <Badge type="danger">required</Badge>: New status of the DKIM key pair.
     > [!TIP]
@@ -55,7 +55,7 @@ const { success, error } = await mailchannels.domains.dkim.update('example.com',
 
 **Signature**
 
-<<< @/snippets/domains-dkim-method-update.ts
+<<< @/snippets/domains-dkim-method-update-status.ts
 
 **Response type declarations**
 
@@ -68,4 +68,4 @@ const { success, error } = await mailchannels.domains.dkim.update('example.com',
 
 **Update DKIM Key type declarations**
 
-<<< @/snippets/domains-dkim-update-options.ts
+<<< @/snippets/domains-dkim-update-status-options.ts

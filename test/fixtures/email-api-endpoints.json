@@ -21,7 +21,7 @@
     },
     {
       "module": "domains",
-      "method": "dkim.update",
+      "method": "dkim.updateStatus",
       "httpMethod": "PATCH",
       "path": "/domains/{domain}/dkim-keys/{selector}"
     },
@@ -201,7 +201,7 @@
     },
     {
       "module": "webhooks",
-      "method": "enroll",
+      "method": "create",
       "httpMethod": "POST",
       "path": "/webhook"
     },

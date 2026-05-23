@@ -3,14 +3,14 @@ import type { MailChannelsClient } from "~/client";
 import { Domains } from "~/modules/domains";
 import { ErrorCode } from "~/utils/errors";
 
-describe("dkim.update", () => {
+describe("dkim.updateStatus", () => {
   it("should successfully update a DKIM key", async () => {
     const mockClient = {
       patch: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { success, error } = await domains.dkim.update("example.com", {
+    const { success, error } = await domains.dkim.updateStatus("example.com", {
       selector: "mailchannels_test",
       status: "retired"
     });
@@ -28,7 +28,7 @@ describe("dkim.update", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { success, error } = await domains.dkim.update("example.com", {
+    const { success, error } = await domains.dkim.updateStatus("example.com", {
       selector: "mailchannels_test",
       status: "retired"
     });
@@ -42,7 +42,7 @@ describe("dkim.update", () => {
     const mockClient = { patch: vi.fn() } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { success, error } = await domains.dkim.update("example.com", {
+    const { success, error } = await domains.dkim.updateStatus("example.com", {
       selector: "a".repeat(64),
       status: "retired"
     });
@@ -58,7 +58,7 @@ describe("dkim.update", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { success, error } = await domains.dkim.update("example.com", {
+    const { success, error } = await domains.dkim.updateStatus("example.com", {
       selector: "mailchannels",
       status: "retired"
     });
@@ -74,12 +74,12 @@ describe("dkim.update", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { success, error } = await domains.dkim.update("example.com", {
+    const { success, error } = await domains.dkim.updateStatus("example.com", {
       selector: "mailchannels",
       status: "retired"
     });
 
-    expect(error).toStrictEqual({ message: "Failed to update DKIM key.", statusCode: null });
+    expect(error).toStrictEqual({ message: "Failed to update status of DKIM key.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.patch).toHaveBeenCalled();
   });

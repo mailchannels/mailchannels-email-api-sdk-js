@@ -43,7 +43,7 @@ export default [
               { text: "Check Domain", link: "/modules/domains/check" },
               { text: "Create DKIM Key", link: "/modules/domains/dkim-create" },
               { text: "List DKIM Keys", link: "/modules/domains/dkim-list" },
-              { text: "Update DKIM Key", link: "/modules/domains/dkim-update" },
+              { text: "Update DKIM Key Status", link: "/modules/domains/dkim-update-status" },
               { text: "Rotate DKIM Key", link: "/modules/domains/dkim-rotate" }
             ]
           },
@@ -52,7 +52,7 @@ export default [
             collapsed: true,
             link: "/modules/webhooks",
             items: [
-              { text: "Enroll for Webhook", link: "/modules/webhooks/enroll" },
+              { text: "Create Webhook", link: "/modules/webhooks/create" },
               { text: "List Webhooks", link: "/modules/webhooks/list" },
               { text: "Delete All Webhooks", link: "/modules/webhooks/delete-all" },
               { text: "Get Signing Key", link: "/modules/webhooks/get-signing-key" },

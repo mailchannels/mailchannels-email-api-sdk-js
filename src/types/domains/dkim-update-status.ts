@@ -1,6 +1,6 @@
 import type { DomainsDkimKey } from "./dkim-create";
 
-export interface DomainsDkimUpdateOptions {
+export interface DomainsDkimUpdateStatusOptions {
   /**
    * Selector of the DKIM key pair to update. Must be a maximum of 63 characters.
    */

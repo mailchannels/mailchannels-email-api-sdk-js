@@ -7,14 +7,14 @@ const fake = {
   endpoint: "https://example.com/webhook"
 };
 
-describe("enroll", () => {
-  it("should successfully enroll a webhook endpoint", async () => {
+describe("create", () => {
+  it("should successfully create a webhook endpoint", async () => {
     const mockClient = {
       post: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { success, error } = await webhooks.enroll(fake.endpoint);
+    const { success, error } = await webhooks.create(fake.endpoint);
 
     expect(success).toBe(true);
     expect(error).toBeNull();
@@ -25,7 +25,7 @@ describe("enroll", () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
     const webhooks = new Webhooks(mockClient);
     // @ts-expect-error Testing missing endpoint error
-    const { success, error } = await webhooks.enroll();
+    const { success, error } = await webhooks.create();
 
     expect(error).toStrictEqual({ message: "No endpoint provided.", statusCode: null });
     expect(success).toBe(false);
@@ -38,7 +38,7 @@ describe("enroll", () => {
     const webhooks = new Webhooks(mockClient);
     const longEndpoint = "https://example.com/" + "a".repeat(7990);
 
-    const { success, error } = await webhooks.enroll(longEndpoint);
+    const { success, error } = await webhooks.create(longEndpoint);
 
     expect(error).toStrictEqual({ message: "The endpoint exceeds the maximum length of 8000 characters.", statusCode: null });
     expect(success).toBe(false);
@@ -53,7 +53,7 @@ describe("enroll", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { success, error } = await webhooks.enroll(fake.endpoint);
+    const { success, error } = await webhooks.create(fake.endpoint);
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
@@ -66,7 +66,7 @@ describe("enroll", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { success, error } = await webhooks.enroll(fake.endpoint);
+    const { success, error } = await webhooks.create(fake.endpoint);
 
     expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
@@ -79,9 +79,9 @@ describe("enroll", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { success, error } = await webhooks.enroll(fake.endpoint);
+    const { success, error } = await webhooks.create(fake.endpoint);
 
-    expect(error).toStrictEqual({ message: "Failed to enroll webhook.", statusCode: null });
+    expect(error).toStrictEqual({ message: "Failed to create webhook.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });

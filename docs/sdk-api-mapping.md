@@ -18,14 +18,14 @@ This page provides a mapping between the MailChannels SDK module methods and the
   | [`Domains.check()`](/modules/domains/check) | [DKIM, SPF & Domain Lockdown Check](https://docs.mailchannels.net/email-api/api-reference/dkim-spf-domain-lockdown-check) |
   | [`Domains.dkim.create()`](/modules/domains/dkim-create) | [Create DKIM Key Pair](https://docs.mailchannels.net/email-api/api-reference/create-dkim-key-pair) |
   | [`Domains.dkim.list()`](/modules/domains/dkim-list) | [Retrieve DKIM Keys](https://docs.mailchannels.net/email-api/api-reference/retrieve-dkim-keys) |
-  | [`Domains.dkim.update()`](/modules/domains/dkim-update) | [Update DKIM Key Status](https://docs.mailchannels.net/email-api/api-reference/update-dkim-key-status) |
+  | [`Domains.dkim.updateStatus()`](/modules/domains/dkim-update-status) | [Update DKIM Key Status](https://docs.mailchannels.net/email-api/api-reference/update-dkim-key-status) |
   | [`Domains.dkim.rotate()`](/modules/domains/dkim-rotate) | [Rotate DKIM Key Pair](https://docs.mailchannels.net/email-api/api-reference/rotate-dkim-key-pair) |
 
 ### 📢 Webhooks
 
   | SDK Method | API Reference |
   | --- | --- |
-  | [`Webhooks.enroll()`](/modules/webhooks/enroll) | [Enroll for Webhook Notifications](https://docs.mailchannels.net/email-api/api-reference/enroll-for-webhook-notifications) |
+  | [`Webhooks.create()`](/modules/webhooks/create) | [Enroll for Webhook Notifications](https://docs.mailchannels.net/email-api/api-reference/enroll-for-webhook-notifications) |
   | [`Webhooks.list()`](/modules/webhooks/list) | [Retrieve Customer Webhooks](https://docs.mailchannels.net/email-api/api-reference/retrieve-customer-webhooks) |
   | [`Webhooks.deleteAll()`](/modules/webhooks/delete-all) | [Delete Customer Webhooks](https://docs.mailchannels.net/email-api/api-reference/delete-customer-webhooks) |
   | [`Webhooks.getSigningKey()`](/modules/webhooks/get-signing-key) | [Retrieve Webhook Signing Key](https://docs.mailchannels.net/email-api/api-reference/retrieve-webhook-signing-key) |
