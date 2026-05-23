@@ -14,7 +14,7 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { data, error } = await mailchannels.emails.sendAsync({
+const { data, error } = await mailchannels.emails.queue({
   from: "Name From <from@example.com>",
   to: "to@example.com",
   subject: "Test Email Async",

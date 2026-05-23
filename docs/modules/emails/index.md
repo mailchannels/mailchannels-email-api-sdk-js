@@ -38,7 +38,7 @@ This module allows you to send emails.
   <<< @/snippets/emails-send-options.ts
   <<< @/snippets/emails-send-response.ts
 
-  **Send Async type declarations**
+  **Queue type declarations**
 
-  <<< @/snippets/emails-send-async-response.ts
+  <<< @/snippets/emails-queue-response.ts
 </details>

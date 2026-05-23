@@ -1,9 +1,9 @@
 ---
-title: Send Async
+title: Queue Email
 titleTemplate: 📧 Emails
 ---
 
-# Send Async<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/emails">📧 Emails</a></Badge></llm-exclude>
+# Queue Email<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/emails">📧 Emails</a></Badge></llm-exclude>
 
 Queues an email message for asynchronous processing and returns immediately with a request ID.
 
@@ -20,7 +20,7 @@ import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
 
-const { data, error } = await emails.sendAsync({
+const { data, error } = await emails.queue({
   from: 'from@example.com',
   to: 'to@example.com',
   subject: 'Your subject',
@@ -34,7 +34,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { data, error } = await mailchannels.emails.sendAsync({
+const { data, error } = await mailchannels.emails.queue({
   from: 'from@example.com',
   to: 'to@example.com',
   subject: 'Your subject',
@@ -59,7 +59,7 @@ const { data, error } = await mailchannels.emails.sendAsync({
 
 **Signature**
 
-<<< @/snippets/emails-method-send-async.ts
+<<< @/snippets/emails-method-queue.ts
 
 **Response type declarations**
 
@@ -78,4 +78,4 @@ const { data, error } = await mailchannels.emails.sendAsync({
 <<< @/snippets/emails-send-target-options.ts
 <<< @/snippets/emails-send-content.ts
 <<< @/snippets/emails-send-options.ts
-<<< @/snippets/emails-send-async-response.ts
+<<< @/snippets/emails-queue-response.ts

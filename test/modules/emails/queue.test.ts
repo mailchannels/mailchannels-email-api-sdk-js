@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Emails } from "~/modules/emails";
 import type { EmailsSendOptions } from "~/types/emails/send";
-import type { EmailsSendAsyncResponse } from "~/types/emails/send-async";
+import type { EmailsQueueResponse } from "~/types/emails/queue";
 import { ErrorCode } from "~/utils/errors";
-import type { EmailsSendAsyncApiResponse } from "~/types/emails/internal";
+import type { EmailsQueueApiResponse } from "~/types/emails/internal";
 
 const fake = {
   options: {
@@ -25,24 +25,24 @@ const fake = {
   apiResponse: {
     queued_at: "date-time-string",
     request_id: "test-async-request-id"
-  } satisfies EmailsSendAsyncApiResponse,
+  } satisfies EmailsQueueApiResponse,
   expectedResponse: {
     data: {
       queuedAt: "date-time-string",
       requestId: "test-async-request-id"
     },
     error: null
-  } satisfies EmailsSendAsyncResponse
+  } satisfies EmailsQueueResponse
 };
 
-describe("sendAsync", () => {
+describe("queue", () => {
   it("should successfully queue an email", async () => {
     const mockClient = {
       post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { data, error } = await emails.sendAsync(fake.options);
+    const { data, error } = await emails.queue(fake.options);
 
     expect(error).toBeNull();
     expect(data).toStrictEqual(fake.expectedResponse.data);
@@ -55,7 +55,7 @@ describe("sendAsync", () => {
     const options = { ...fake.options };
     // @ts-expect-error Testing missing from in async mode
     delete options.from;
-    const { data, error } = await emails.sendAsync(options);
+    const { data, error } = await emails.queue(options);
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -71,7 +71,7 @@ describe("sendAsync", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { error } = await emails.sendAsync(fake.options);
+    const { error } = await emails.queue(fake.options);
 
     expect(error).toBeTruthy();
     expect(mockClient.post).toHaveBeenCalled();
@@ -83,7 +83,7 @@ describe("sendAsync", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { error } = await emails.sendAsync(fake.options);
+    const { error } = await emails.queue(fake.options);
 
     expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(mockClient.post).toHaveBeenCalled();
@@ -95,9 +95,22 @@ describe("sendAsync", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { error } = await emails.sendAsync(fake.options);
+    const { error } = await emails.queue(fake.options);
 
     expect(error).toStrictEqual({ message: "Failed to queue email.", statusCode: null });
     expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should do the same thing as sendAsync", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValue(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const queueResponse = await emails.queue(fake.options);
+    const asyncResponse = await emails.sendAsync(fake.options);
+
+    expect(queueResponse).toStrictEqual(asyncResponse);
+    expect(mockClient.post).toHaveBeenCalledTimes(2);
   });
 });

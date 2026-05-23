@@ -66,7 +66,9 @@ const assertParityFixture = (
       }, {});
 
       for (const [module, methods] of Object.entries(actualByModule)) {
-        expect(fixtureByModule[module]?.sort(), `Fixture mismatch for module ${module}`).toEqual(methods);
+        // Exclude sendAsync which is not in the fixture
+        const comparableMethods = module === "emails" ? methods.filter(method => method !== "sendAsync"): methods;
+        expect(fixtureByModule[module]?.sort(), `Fixture mismatch for module ${module}`).toEqual(comparableMethods);
       }
     });
 

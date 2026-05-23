@@ -69,7 +69,7 @@
     },
     {
       "module": "emails",
-      "method": "sendAsync",
+      "method": "queue",
       "httpMethod": "POST",
       "path": "/send-async"
     },
