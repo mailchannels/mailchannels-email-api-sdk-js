@@ -1,5 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { $fetch } from "ofetch";
+import { describe, expect, it, vi } from "vitest";
 import { generateKeyPairSync, subtle } from "node:crypto";
 import { Buffer } from "node:buffer";
 import type { MailChannelsClient } from "~/client";
@@ -145,15 +144,10 @@ const fake = {
   }
 };
 
-vi.mock("ofetch", () => ({
-  $fetch: vi.fn()
-}));
+const $fetch = vi.hoisted(() => vi.fn());
+vi.mock("ofetch", () => ({ $fetch }));
 
 describe("verify", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it("should successfully verify the webhook and return event types for valid webhook request", async () => {
     const mockClient = {} as MailChannelsClient;
 
@@ -254,7 +248,7 @@ describe("verify", () => {
   });
 
   it("should return events for valid webhook request with public key fetch", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({
+    $fetch.mockResolvedValueOnce({
       id: "mckey",
       key: fake.options.publicKey
     });
@@ -271,7 +265,7 @@ describe("verify", () => {
   });
 
   it("should contain error when public key fetch fails", async () => {
-    vi.mocked($fetch).mockRejectedValueOnce(new Error("Failed to fetch public key"));
+    $fetch.mockRejectedValueOnce(new Error("Failed to fetch public key"));
 
     const { data, error } = await Webhooks.verify({
       ...fake.options,
@@ -284,7 +278,8 @@ describe("verify", () => {
   });
 
   it("should cache signing key by default", async () => {
-    vi.mocked($fetch).mockResolvedValue({
+    vi.clearAllMocks();
+    $fetch.mockResolvedValue({
       id: "mckey",
       key: fake.options.publicKey
     });
@@ -305,7 +300,8 @@ describe("verify", () => {
   });
 
   it("should not use cache when cache is disabled", async () => {
-    vi.mocked($fetch).mockResolvedValue({
+    vi.resetAllMocks();
+    $fetch.mockResolvedValue({
       id: "mckey",
       key: fake.options.publicKey
     });
@@ -328,7 +324,7 @@ describe("verify", () => {
   });
 
   it("should contain error when public key is not found", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({} as never);
+    $fetch.mockResolvedValueOnce({} as never);
 
     const { data, error } = await Webhooks.verify({
       ...fake.options,

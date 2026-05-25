@@ -1,5 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { $fetch } from "ofetch";
+import { describe, expect, it, vi } from "vitest";
 import { MailChannelsClient } from "~/client";
 import { version } from "../package.json";
 
@@ -25,15 +24,10 @@ const fake = {
   }
 };
 
-vi.mock("ofetch", () => ({
-  $fetch: vi.fn()
-}));
+const $fetch = vi.hoisted(() => vi.fn());
+vi.mock("ofetch", () => ({ $fetch }));
 
 describe("MailChannelsClient", () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
   it("should throw an error if no API key is provided", () => {
     // @ts-expect-error Testing missing API key
     const client = () => new MailChannelsClient();
@@ -41,7 +35,7 @@ describe("MailChannelsClient", () => {
   });
 
   it("should handle GET method correctly", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    $fetch.mockResolvedValueOnce({});
 
     const client = new MailChannelsClient(fake.apiKey);
     await client.get(fake.path);
@@ -53,7 +47,7 @@ describe("MailChannelsClient", () => {
   });
 
   it("should handle POST method correctly", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    $fetch.mockResolvedValueOnce({});
 
     const client = new MailChannelsClient(fake.apiKey);
     await client.post(fake.path);
@@ -65,7 +59,7 @@ describe("MailChannelsClient", () => {
   });
 
   it("should handle DELETE method correctly", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    $fetch.mockResolvedValueOnce({});
 
     const client = new MailChannelsClient(fake.apiKey);
     await client.delete(fake.path);
@@ -77,7 +71,7 @@ describe("MailChannelsClient", () => {
   });
 
   it("should handle PUT method correctly", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    $fetch.mockResolvedValueOnce({});
 
     const client = new MailChannelsClient(fake.apiKey);
     await client.put(fake.path);
@@ -89,7 +83,7 @@ describe("MailChannelsClient", () => {
   });
 
   it("should handle PATCH method correctly", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    $fetch.mockResolvedValueOnce({});
 
     const client = new MailChannelsClient(fake.apiKey);
     await client.patch(fake.path);
@@ -101,7 +95,7 @@ describe("MailChannelsClient", () => {
   });
 
   it("should allow overriding the base url", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    $fetch.mockResolvedValueOnce({});
 
     const client = new MailChannelsClient(fake.apiKey, {
       baseUrl: fake.options.baseUrl
@@ -116,7 +110,7 @@ describe("MailChannelsClient", () => {
   });
 
   it("should allow overriding the retry count", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    $fetch.mockResolvedValueOnce({});
 
     const client = new MailChannelsClient(fake.apiKey, { retry: fake.options.retry });
     await client.get(fake.path);
@@ -129,7 +123,7 @@ describe("MailChannelsClient", () => {
   });
 
   it("should allow overriding the timeout", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    $fetch.mockResolvedValueOnce({});
 
     const client = new MailChannelsClient(fake.apiKey, { timeout: fake.options.timeout });
     await client.get(fake.path);
@@ -142,7 +136,7 @@ describe("MailChannelsClient", () => {
   });
 
   it("should allow disabling the timeout", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    $fetch.mockResolvedValueOnce({});
 
     const client = new MailChannelsClient(fake.apiKey, { timeout: false });
     await client.get(fake.path);
@@ -155,7 +149,7 @@ describe("MailChannelsClient", () => {
   });
 
   it("should allow setting an abort signal", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    $fetch.mockResolvedValueOnce({});
 
     const signal = new AbortController().signal;
     const client = new MailChannelsClient(fake.apiKey, { signal });
@@ -169,7 +163,7 @@ describe("MailChannelsClient", () => {
   });
 
   it("should inherit the client's abort signal if per-request signal is not provided", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    $fetch.mockResolvedValueOnce({});
 
     const signal = new AbortController().signal;
     const client = new MailChannelsClient(fake.apiKey, { signal });
