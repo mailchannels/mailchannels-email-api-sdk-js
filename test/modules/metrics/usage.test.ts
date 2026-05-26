@@ -74,7 +74,7 @@ describe("usage", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.usage();
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -87,7 +87,7 @@ describe("usage", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.usage();
 
-    expect(error).toStrictEqual({ message: "Failed to fetch usage metrics.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

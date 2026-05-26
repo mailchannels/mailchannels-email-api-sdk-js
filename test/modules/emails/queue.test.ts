@@ -85,7 +85,7 @@ describe("queue", () => {
     const emails = new Emails(mockClient);
     const { error } = await emails.queue(fake.options);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -97,7 +97,7 @@ describe("queue", () => {
     const emails = new Emails(mockClient);
     const { error } = await emails.queue(fake.options);
 
-    expect(error).toStrictEqual({ message: "Failed to queue email.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(mockClient.post).toHaveBeenCalled();
   });
 

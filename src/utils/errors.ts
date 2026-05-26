@@ -1,5 +1,5 @@
 import type { FetchResponse } from "ofetch";
-import type { ErrorResponse } from "../types/responses";
+import type { ErrorResponse, ErrorType } from "../types/responses";
 
 export const enum ErrorCode {
   BadRequest = 400,
@@ -8,18 +8,39 @@ export const enum ErrorCode {
   NotFound = 404,
   Conflict = 409,
   PayloadTooLarge = 413,
-  UnprocessableEntity = 422
+  UnprocessableEntity = 422,
+  TooManyRequests = 429,
+  InternalServerError = 500
 }
 
-type MailChannelsErrorResponse = { message?: string, errors?: string[] } | string;
+const STATUS_ERROR_TYPE_MAP: Record<number, ErrorType> = {
+  [ErrorCode.BadRequest]: "invalid_request_error",
+  [ErrorCode.Unauthorized]: "authentication_error",
+  [ErrorCode.Forbidden]: "permission_error",
+  [ErrorCode.NotFound]: "not_found",
+  [ErrorCode.Conflict]: "conflict_error",
+  [ErrorCode.PayloadTooLarge]: "payload_too_large_error",
+  [ErrorCode.UnprocessableEntity]: "unprocessable_entity_error",
+  [ErrorCode.TooManyRequests]: "rate_limit_error",
+  [ErrorCode.InternalServerError]: "internal_server_error"
+};
 
-export const createError = (message: string, statusCode: number | null = null): ErrorResponse => {
+/** Create a standardized error response object. */
+const createError = (
+  message: string,
+  statusCode: number | null = null,
+  type: ErrorType
+): ErrorResponse => {
   return {
     message,
-    statusCode
+    statusCode,
+    type
   };
 };
 
+type MailChannelsErrorResponse = { message?: string, errors?: string[] } | string;
+
+/** Create an error response based on the HTTP response status code and payload. */
 export const getStatusError = (
   response: FetchResponse<MailChannelsErrorResponse>,
   errors: Record<number, string> = {}
@@ -40,13 +61,28 @@ export const getStatusError = (
     details = payload.errors.join(", ");
   }
 
-  return createError(details ? `${statusText} ${details}` : statusText, response.status ?? null);
+  return createError(
+    details ? `${statusText} ${details}` : statusText,
+    response.status ?? null,
+    STATUS_ERROR_TYPE_MAP[response.status] || "api_error"
+  );
 };
 
+/** Extract error message from exceptions. */
 export const getResultError = (e: unknown, fallback: string) => {
-  return createError(e instanceof Error ? e.message : fallback);
+  return createError(
+    e instanceof Error ? e.message : fallback,
+    null,
+    "application_error"
+  );
 };
 
+/** Create an error response with `validation_error` type. */
+export const createValidationError = (message: string): ErrorResponse => {
+  return createError(message, null, "validation_error");
+};
+
+/** Validate pagination parameters and return an error response if invalid. */
 export const validatePagination = (pagination: Partial<{
   limit: number;
   max: number;
@@ -54,10 +90,10 @@ export const validatePagination = (pagination: Partial<{
 }> = {}) => {
   const { limit, offset, max } = pagination;
   if (typeof limit === "number" && (limit < 1 || (max && limit > max))) {
-    return createError("The limit value " + (max ? `must be between 1 and ${max}.` : "is invalid. Only positive values are allowed."));
+    return createValidationError("The limit value " + (max ? `must be between 1 and ${max}.` : "is invalid. Only positive values are allowed."));
   }
   if (typeof offset === "number" && offset < 0) {
-    return createError("Offset must be greater than or equal to 0.");
+    return createValidationError("Offset must be greater than or equal to 0.");
   }
   return null;
 };

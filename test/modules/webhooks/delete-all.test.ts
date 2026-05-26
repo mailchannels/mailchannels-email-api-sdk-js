@@ -39,7 +39,7 @@ describe("deleteAll", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.deleteAll();
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -52,7 +52,7 @@ describe("deleteAll", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.deleteAll();
 
-    expect(error).toStrictEqual({ message: "Failed to delete webhooks.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });

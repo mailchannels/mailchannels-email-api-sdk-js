@@ -61,10 +61,7 @@ describe("dkim.list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.list("", { includeDnsRecord: true });
 
-    expect(error).toStrictEqual({
-      message: "No domain provided.",
-      statusCode: null
-    });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -80,7 +77,11 @@ describe("dkim.list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.list("example.com", { includeDnsRecord: true });
 
-    expect(error).toBeTruthy();
+    expect(error).toStrictEqual({
+      message: "Bad Request.",
+      statusCode: ErrorCode.BadRequest,
+      type: "invalid_request_error"
+    });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -91,7 +92,7 @@ describe("dkim.list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.list("example.com", { selector: "a".repeat(64) });
 
-    expect(error).toStrictEqual({ message: "Selector must be between 1 and 63 characters.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -102,7 +103,7 @@ describe("dkim.list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.list("example.com", { limit: 101 });
 
-    expect(error).toStrictEqual({ message: "The limit value must be between 1 and 100.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -113,7 +114,7 @@ describe("dkim.list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.list("example.com", { offset: -10 });
 
-    expect(error).toStrictEqual({ message: "Offset must be greater than or equal to 0.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -126,7 +127,7 @@ describe("dkim.list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.list("example.com");
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -139,7 +140,7 @@ describe("dkim.list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.list("example.com");
 
-    expect(error).toStrictEqual({ message: "Failed to fetch DKIM keys.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

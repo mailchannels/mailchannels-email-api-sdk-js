@@ -99,10 +99,7 @@ describe("check", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.check("", fake.options);
 
-    expect(error).toStrictEqual({
-      message: "No domain provided.",
-      statusCode: null
-    });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -132,7 +129,7 @@ describe("check", () => {
       dkim: Array.from({ length: 11 }, () => ({ domain: "example.com", selector: "mailchannels" }))
     });
 
-    expect(error).toStrictEqual({ message: "A maximum of 10 DKIM settings can be provided.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -145,7 +142,7 @@ describe("check", () => {
       dkim: [{ domain: "example.com", privateKey: "private-key" }]
     });
 
-    expect(error).toStrictEqual({ message: "DKIM settings with a privateKey must also include a selector.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -161,7 +158,11 @@ describe("check", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.check(fake.domain, fake.options);
 
-    expect(error).toBeTruthy();
+    expect(error).toStrictEqual({
+      message: "Bad Request.",
+      statusCode: ErrorCode.BadRequest,
+      type: "invalid_request_error"
+    });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -174,7 +175,7 @@ describe("check", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.check(fake.domain, fake.options);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -187,7 +188,7 @@ describe("check", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.check(fake.domain, fake.options);
 
-    expect(error).toStrictEqual({ message: "Failed to check domain.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

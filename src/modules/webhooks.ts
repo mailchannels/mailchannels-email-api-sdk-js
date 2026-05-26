@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
+import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../utils/errors";
 import { clean } from "../utils/clean";
 import { isValidWebhook } from "../utils/webhook-validator";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
@@ -27,12 +27,12 @@ export class Webhooks {
     let error: ErrorResponse | null = null;
 
     if (!endpoint) {
-      error = createError("No endpoint provided.");
+      error = createValidationError("No endpoint provided.");
       return { success: false, error };
     }
 
     if (endpoint.length > 8000) {
-      error = createError("The endpoint exceeds the maximum length of 8000 characters.");
+      error = createValidationError("The endpoint exceeds the maximum length of 8000 characters.");
       return { success: false, error };
     }
 
@@ -153,7 +153,7 @@ export class Webhooks {
     let error: ErrorResponse | null = null;
 
     if (requestId && requestId.length > 28) {
-      error = createError("The request id should not exceed 28 characters.");
+      error = createValidationError("The request id should not exceed 28 characters.");
       return { data: null, error };
     }
 
@@ -196,7 +196,7 @@ export class Webhooks {
     const isValid = await isValidWebhook(options).catch(() => false);
 
     if (!isValid) {
-      error = createError("Invalid webhook signature.");
+      error = createValidationError("Invalid webhook signature.");
       return { data: null, error };
     }
 
@@ -204,7 +204,7 @@ export class Webhooks {
       const payload: WebhookEventReceived[] = JSON.parse(options.payload);
 
       if (!Array.isArray(payload)) {
-        error = createError("Invalid webhook payload.");
+        error = createValidationError("Invalid webhook payload.");
         return { data: null, error };
       }
 
@@ -227,7 +227,7 @@ export class Webhooks {
       return { data, error: null };
     }
     catch {
-      error = createError("Invalid webhook payload.");
+      error = createValidationError("Invalid webhook payload.");
       return { data: null, error };
     }
   }
@@ -261,19 +261,19 @@ export class Webhooks {
     if (error) return { data: null, error };
 
     if (options?.statuses && options.statuses.length > 6) {
-      return { data: null, error: createError("A maximum of 6 status filters can be provided.") };
+      return { data: null, error: createValidationError("A maximum of 6 status filters can be provided.") };
     }
 
     if (options?.statuses && new Set(options.statuses).size !== options.statuses.length) {
-      return { data: null, error: createError("Status filters must be unique.") };
+      return { data: null, error: createValidationError("Status filters must be unique.") };
     }
 
     if (options?.createdAfter && Number.isNaN(Date.parse(options.createdAfter))) {
-      return { data: null, error: createError("createdAfter must be a valid date string.") };
+      return { data: null, error: createValidationError("createdAfter must be a valid date string.") };
     }
 
     if (options?.createdBefore && Number.isNaN(Date.parse(options.createdBefore))) {
-      return { data: null, error: createError("createdBefore must be a valid date string.") };
+      return { data: null, error: createValidationError("createdBefore must be a valid date string.") };
     }
 
     if (options?.createdAfter && options?.createdBefore) {
@@ -282,11 +282,11 @@ export class Webhooks {
       const maxRangeMs = 31 * 24 * 60 * 60 * 1000;
 
       if (createdBefore <= createdAfter) {
-        return { data: null, error: createError("createdBefore must be later than createdAfter.") };
+        return { data: null, error: createValidationError("createdBefore must be later than createdAfter.") };
       }
 
       if ((createdBefore - createdAfter) > maxRangeMs) {
-        return { data: null, error: createError("The time range between createdAfter and createdBefore must not exceed 31 days.") };
+        return { data: null, error: createValidationError("The time range between createdAfter and createdBefore must not exceed 31 days.") };
       }
     }
 

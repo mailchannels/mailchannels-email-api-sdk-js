@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
+import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../utils/errors";
 import { clean } from "../utils/clean";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../types/sub-accounts/internal";
@@ -30,14 +30,14 @@ export class SubAccounts {
 
     const isValidCompany = SubAccounts.COMPANY_PATTERN.test(companyName);
     if (!isValidCompany) {
-      error = createError("Invalid company name. Company name must be between 3 and 128 characters.");
+      error = createValidationError("Invalid company name. Company name must be between 3 and 128 characters.");
       return { data: null, error };
     }
 
     if (handle) {
       const isValidHandle = SubAccounts.HANDLE_PATTERN.test(handle);
       if (!isValidHandle) {
-        error = createError("Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.");
+        error = createValidationError("Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.");
         return { data: null, error };
       }
     }
@@ -118,7 +118,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { success: false, error };
     }
 
@@ -146,7 +146,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { success: false, error };
     }
 
@@ -176,7 +176,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { success: false, error };
     }
 
@@ -207,7 +207,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { data: null, error };
     }
 
@@ -245,7 +245,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { data: null, error };
     }
 
@@ -287,7 +287,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { success: false, error };
     }
 
@@ -317,7 +317,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { data: null, error };
     }
 
@@ -358,7 +358,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { data: null, error };
     }
 
@@ -398,7 +398,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { success: false, error };
     }
 
@@ -428,7 +428,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { data: null, error };
     }
 
@@ -464,12 +464,12 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { success: false, error };
     }
 
     if (limit.sends < 0) {
-      error = createError("The sends value must be at least 0.");
+      error = createValidationError("The sends value must be at least 0.");
       return { success: false, error };
     }
 
@@ -501,7 +501,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { success: false, error };
     }
 
@@ -531,7 +531,7 @@ export class SubAccounts {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
-      error = createError("No handle provided.");
+      error = createValidationError("No handle provided.");
       return { data: null, error };
     }
 

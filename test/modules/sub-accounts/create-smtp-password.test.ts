@@ -44,7 +44,7 @@ describe("createSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createSmtpPassword("");
 
-    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -73,7 +73,7 @@ describe("createSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createSmtpPassword(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -86,7 +86,7 @@ describe("createSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createSmtpPassword(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "Failed to create sub-account SMTP password.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

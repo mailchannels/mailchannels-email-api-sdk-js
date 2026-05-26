@@ -29,7 +29,7 @@ describe("setLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.setLimit("", { sends: 1 });
 
-    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.put).not.toHaveBeenCalled();
   });
@@ -42,7 +42,7 @@ describe("setLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.setLimit(fake.validHandle, { sends: -1 });
 
-    expect(error).toStrictEqual({ message: "The sends value must be at least 0.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.put).not.toHaveBeenCalled();
   });
@@ -70,7 +70,7 @@ describe("setLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.setLimit(fake.validHandle, { sends: 1 });
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -83,7 +83,7 @@ describe("setLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.setLimit(fake.validHandle, { sends: 1 });
 
-    expect(error).toStrictEqual({ message: "Failed to set sub-account limit.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });

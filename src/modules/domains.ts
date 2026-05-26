@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
+import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../utils/errors";
 import { clean } from "../utils/clean";
 import { stripPemHeaders } from "../utils/strip-pem-headers";
 import { mapDkimKey } from "../utils/map-dkim-key";
@@ -39,20 +39,20 @@ export class Domains {
     let error: ErrorResponse | null = null;
 
     if (!domain) {
-      error = createError("No domain provided.");
+      error = createValidationError("No domain provided.");
       return { data: null, error };
     }
 
     const dkimOptions = options?.dkim ? Array.isArray(options.dkim) ? options.dkim: [options.dkim]: undefined;
 
     if (dkimOptions && dkimOptions.length > 10) {
-      error = createError("A maximum of 10 DKIM settings can be provided.");
+      error = createValidationError("A maximum of 10 DKIM settings can be provided.");
       return { data: null, error };
     }
 
     const invalidDkimSetting = dkimOptions?.find(({ privateKey, selector }) => privateKey && !selector);
     if (invalidDkimSetting) {
-      error = createError("DKIM settings with a privateKey must also include a selector.");
+      error = createValidationError("DKIM settings with a privateKey must also include a selector.");
       return { data: null, error };
     }
 
@@ -118,12 +118,12 @@ class DomainsDkim {
     let error: ErrorResponse | null = null;
 
     if (!domain) {
-      error = createError("No domain provided.");
+      error = createValidationError("No domain provided.");
       return { data: null, error };
     }
 
     if (!options.selector || options.selector.length > 63) {
-      error = createError("Selector must be between 1 and 63 characters.");
+      error = createValidationError("Selector must be between 1 and 63 characters.");
       return { data: null, error };
     }
 
@@ -169,12 +169,12 @@ class DomainsDkim {
     let error: ErrorResponse | null = null;
 
     if (!domain) {
-      error = createError("No domain provided.");
+      error = createValidationError("No domain provided.");
       return { data: null, error };
     }
 
     if (options?.selector && options.selector.length > 63) {
-      error = createError("Selector must be between 1 and 63 characters.");
+      error = createValidationError("Selector must be between 1 and 63 characters.");
       return { data: null, error };
     }
 
@@ -224,12 +224,12 @@ class DomainsDkim {
     let error: ErrorResponse | null = null;
 
     if (!domain) {
-      error = createError("No domain provided.");
+      error = createValidationError("No domain provided.");
       return { success: false, error };
     }
 
     if (!options.selector || options.selector.length > 63) {
-      error = createError("Selector must be between 1 and 63 characters.");
+      error = createValidationError("Selector must be between 1 and 63 characters.");
       return { success: false, error };
     }
 
@@ -272,17 +272,17 @@ class DomainsDkim {
     let error: ErrorResponse | null = null;
 
     if (!domain) {
-      error = createError("No domain provided.");
+      error = createValidationError("No domain provided.");
       return { data: null, error };
     }
 
     if (!selector || selector.length > 63) {
-      error = createError("Selector must be between 1 and 63 characters.");
+      error = createValidationError("Selector must be between 1 and 63 characters.");
       return { data: null, error };
     }
 
     if (!options.newKey.selector || options.newKey.selector.length > 63) {
-      error = createError("New key selector must be between 1 and 63 characters.");
+      error = createValidationError("New key selector must be between 1 and 63 characters.");
       return { data: null, error };
     }
 

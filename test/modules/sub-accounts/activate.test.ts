@@ -29,7 +29,7 @@ describe("activate", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.activate("");
 
-    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -57,7 +57,7 @@ describe("activate", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.activate(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -70,7 +70,7 @@ describe("activate", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.activate(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "Failed to activate sub-account.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });

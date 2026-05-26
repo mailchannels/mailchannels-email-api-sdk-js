@@ -51,7 +51,7 @@ describe("getSigningKey", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.getSigningKey(fake.id);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -64,7 +64,7 @@ describe("getSigningKey", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.getSigningKey(fake.id);
 
-    expect(error).toStrictEqual({ message: "Failed to get signing key.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

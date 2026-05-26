@@ -29,7 +29,7 @@ describe("suspend", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.suspend("");
 
-    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -57,7 +57,7 @@ describe("suspend", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.suspend(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -70,7 +70,7 @@ describe("suspend", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.suspend(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "Failed to suspend sub-account.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });

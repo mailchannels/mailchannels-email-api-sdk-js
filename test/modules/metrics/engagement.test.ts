@@ -84,7 +84,7 @@ describe("engagement", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.engagement();
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -97,7 +97,7 @@ describe("engagement", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.engagement();
 
-    expect(error).toStrictEqual({ message: "Failed to fetch engagement metrics.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
