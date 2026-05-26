@@ -24,11 +24,11 @@ definitions:
         script:
           - corepack enable
           - corepack prepare pnpm@latest --activate
+          - pnpm config set registry https://registry.npmjs.org
+          - pnpm config set '//registry.npmjs.org/:_authToken' "$NPM_TOKEN"
           - pnpm install
-          # Atlassian npm publish pipe
-          - pipe: atlassian/npm-publish:0.2.0
-            variables:
-              NPM_TOKEN: $NPM_TOKEN
+          - pnpm publish --access public --no-git-checks
+
 
 
 pipelines:
