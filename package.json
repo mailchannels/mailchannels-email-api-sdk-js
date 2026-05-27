@@ -6,21 +6,19 @@
   "license": "MIT",
   "keywords": [
     "mailchannels",
-    "javascript",
     "typescript",
-    "node",
-    "sdk",
-    "email"
+    "email",
+    "transactional-email",
+    "sdk"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Yizack/mailchannels.git"
+    "url": "git+https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js.git"
   },
   "homepage": "https://mailchannels.yizack.com",
   "author": {
-    "name": "Yizack Rangel",
-    "email": "yizackr@gmail.com",
-    "url": "https://yizack.com"
+    "name": "MailChannels",
+    "email": "dev@mailchannels.com"
   },
   "main": "./dist/mailchannels.mjs",
   "exports": {
@@ -71,6 +69,9 @@
     "vitepress-plugin-group-icons": "^1.7.5",
     "vitepress-plugin-llms": "^1.12.2",
     "vitest": "^4.1.6"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "packageManager": "pnpm@11.1.3"
 }

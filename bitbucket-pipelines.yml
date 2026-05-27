@@ -17,6 +17,20 @@ definitions:
           - pnpm test:types
           - pnpm test
 
+    - step: &release
+        name: Publish to npm
+        caches:
+          - pnpm
+        script:
+          - corepack enable
+          - corepack prepare pnpm@latest --activate
+          - pnpm config set registry https://registry.npmjs.org
+          - pnpm config set '//registry.npmjs.org/:_authToken' "$NPM_TOKEN"
+          - pnpm install
+          - pnpm publish --access public --no-git-checks
+
+
+
 pipelines:
   default:
     - step: *checks
@@ -28,3 +42,8 @@ pipelines:
   pull-requests:
     main:
       - step: *checks
+
+  tags:
+    'v*':
+      - step: *checks
+      - step: *release
