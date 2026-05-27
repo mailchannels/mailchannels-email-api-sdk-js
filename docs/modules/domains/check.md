@@ -18,8 +18,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { data, error } = await domains.check({
-  domain: 'example.com',
+const { data, error } = await domains.check('example.com', {
   dkim: {
     domain: 'example.com',
     selector: 'your-dkim-selector',
@@ -34,8 +33,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { data, error } = await mailchannels.domains.check({
-  domain: 'example.com',
+const { data, error } = await mailchannels.domains.check('example.com', {
   dkim: {
     domain: 'example.com',
     selector: 'your-dkim-selector',
@@ -48,7 +46,8 @@ const { data, error } = await mailchannels.domains.check({
 
 ## Params
 
-- `options` `DomainsCheckOptions` <Badge type="danger">required</Badge>: Check domain options.
+- `domain` `string` <Badge type="danger">required</Badge>: Domain used for sending emails. If `dkim` settings are not provided, or `dkim` settings are provided with no `domain`, the stored dkim settings for this domain will be used.
+- `options` `DomainsCheckOptions` <Badge type="info">optional</Badge>: Check domain options.
   - `dkim` `DomainsCheck[] | DomainsCheck` <Badge type="info">optional</Badge>: The DKIM settings for the domain.
     - `domain` `string` <Badge type="info">optional</Badge>: The DKIM domain to sign the email with.
     - `privateKey` `string` <Badge type="info">optional</Badge>: The DKIM private key to sign the email with. Encoded in Base64.
@@ -61,7 +60,6 @@ const { data, error } = await mailchannels.domains.check({
     > 4. If none are present, use all stored keys for the `domain` provided in the domain field of the request.
     > 5. If `privateKey` is present, `selector` must be present.
     > 6. If `selector` is present and `domain` is not, the domain will be taken from the domain field of the request.
-  - `domain` `string` <Badge type="danger">required</Badge>: Domain used for sending emails. If `dkim` settings are not provided, or `dkim` settings are provided with no `domain`, the stored dkim settings for this domain will be used.
   - `senderId` `string` <Badge type="info">optional</Badge>: Used exclusively for [Domain Lockdown](https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field.
     > [!INFO]
     > Your `senderId` is the `X-MailChannels-Sender-Id` header value in emails sent via MailChannels.

@@ -103,6 +103,22 @@ describe("dkim.rotate", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
+  it("should return error if domain is not provided", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.dkim.rotate("", "mailchannels_test", fake.options);
+
+    expect(error).toStrictEqual({
+      message: "No domain provided.",
+      statusCode: null
+    });
+    expect(data).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
   it("should return error if selector is missing or more than 63 characters", async () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
 

@@ -20,26 +20,30 @@ export class Domains {
 
   /**
    * Validates a domain's email authentication setup by retrieving its DKIM, SPF, and Domain Lockdown status. This endpoint checks whether the domain is properly configured for secure email delivery.
+   * @param domain - Domain used for sending emails. If `dkim` settings are not provided, or `dkim` settings are provided with no `domain`, the stored dkim settings for this domain will be used.
    * @param options - The domain options to check.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { data, error } = await mailchannels.domains.check({
+   * const { data, error } = await mailchannels.domains.check('example.com', {
    *   dkim: [{
    *     domain: 'example.com',
    *     privateKey: 'your-private-key',
    *     selector: 'mailchannels'
    *   }],
-   *   domain: 'example.com',
    *   senderId: 'sender-id'
    * })
    * ```
    */
-  async check (options: DomainsCheckOptions): Promise<DomainsCheckResponse> {
+  async check (domain: string, options?: DomainsCheckOptions): Promise<DomainsCheckResponse> {
     let error: ErrorResponse | null = null;
 
-    const { dkim, domain, senderId } = options;
-    const dkimOptions = dkim ? Array.isArray(dkim) ? dkim: [dkim]: undefined;
+    if (!domain) {
+      error = createError("No domain provided.");
+      return { data: null, error };
+    }
+
+    const dkimOptions = options?.dkim ? Array.isArray(options.dkim) ? options.dkim: [options.dkim]: undefined;
 
     if (dkimOptions && dkimOptions.length > 10) {
       error = createError("A maximum of 10 DKIM settings can be provided.");
@@ -53,13 +57,13 @@ export class Domains {
     }
 
     const payload: DomainsCheckPayload = {
-      dkim_settings: dkimOptions?.map(({ domain, privateKey, selector }) => ({
-        dkim_domain: domain,
-        dkim_private_key: privateKey ? stripPemHeaders(privateKey) : undefined,
-        dkim_selector: selector
+      dkim_settings: dkimOptions?.map(dkim => ({
+        dkim_domain: dkim.domain,
+        dkim_private_key: dkim.privateKey ? stripPemHeaders(dkim.privateKey) : undefined,
+        dkim_selector: dkim.selector
       })),
       domain,
-      sender_id: senderId
+      sender_id: options?.senderId
     };
 
     const response = await this.mailchannels.post<DomainsCheckApiResponse>("/tx/v1/check-domain", {
@@ -113,6 +117,11 @@ class DomainsDkim {
   async create (domain: string, options: DomainsDkimCreateOptions): Promise<DomainsDkimCreateResponse> {
     let error: ErrorResponse | null = null;
 
+    if (!domain) {
+      error = createError("No domain provided.");
+      return { data: null, error };
+    }
+
     if (!options.selector || options.selector.length > 63) {
       error = createError("Selector must be between 1 and 63 characters.");
       return { data: null, error };
@@ -158,6 +167,11 @@ class DomainsDkim {
    */
   async list (domain: string, options?: DomainsDkimListOptions): Promise<DomainsDkimListResponse> {
     let error: ErrorResponse | null = null;
+
+    if (!domain) {
+      error = createError("No domain provided.");
+      return { data: null, error };
+    }
 
     if (options?.selector && options.selector.length > 63) {
       error = createError("Selector must be between 1 and 63 characters.");
@@ -209,6 +223,11 @@ class DomainsDkim {
   async updateStatus (domain: string, options: DomainsDkimUpdateStatusOptions): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
+    if (!domain) {
+      error = createError("No domain provided.");
+      return { success: false, error };
+    }
+
     if (!options.selector || options.selector.length > 63) {
       error = createError("Selector must be between 1 and 63 characters.");
       return { success: false, error };
@@ -251,6 +270,11 @@ class DomainsDkim {
    */
   async rotate (domain: string, selector: string, options: DomainsDkimRotateOptions): Promise<DomainsDkimRotateResponse> {
     let error: ErrorResponse | null = null;
+
+    if (!domain) {
+      error = createError("No domain provided.");
+      return { data: null, error };
+    }
 
     if (!selector || selector.length > 63) {
       error = createError("Selector must be between 1 and 63 characters.");
