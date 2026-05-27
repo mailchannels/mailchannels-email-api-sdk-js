@@ -22,7 +22,7 @@ const emailMethodMap = {
   "GET /metrics/senders/{sender_type}": { module: "metrics", method: "senders" },
   "GET /metrics/volume": { module: "metrics", method: "volume" },
   "POST /send": { module: "emails", method: "send" },
-  "POST /send-async": { module: "emails", method: "sendAsync" },
+  "POST /send-async": { module: "emails", method: "queue" },
   "POST /sub-account": { module: "subAccounts", method: "create" },
   "GET /sub-account": { module: "subAccounts", method: "list" },
   "DELETE /sub-account/{handle}": { module: "subAccounts", method: "delete" },

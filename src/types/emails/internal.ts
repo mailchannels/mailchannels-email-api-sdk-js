@@ -54,7 +54,7 @@ export interface EmailsSendApiResponse {
   }[];
 }
 
-export interface EmailsSendAsyncApiResponse {
+export interface EmailsQueueApiResponse {
   queued_at: string;
   request_id: string;
 }

@@ -32,7 +32,7 @@ export default [
             link: "/modules/emails",
             items: [
               { text: "Send Email", link: "/modules/emails/send" },
-              { text: "Send Async Email", link: "/modules/emails/send-async" }
+              { text: "Queue Email", link: "/modules/emails/queue" }
             ]
           },
           {

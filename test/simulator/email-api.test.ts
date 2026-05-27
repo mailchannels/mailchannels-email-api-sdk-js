@@ -78,14 +78,14 @@ describe("Email API simulator", () => {
 
     expect(dryRunResult.data?.rendered?.[0]).toContain("Hello Bob");
 
-    const sendAsyncResult = await mailchannels.emails.sendAsync({
+    const queueResult = await mailchannels.emails.queue({
       from: "sender@example.com",
       html: "<p>Queued</p>",
       to: "queued@example.com",
       subject: "Queued"
     });
-    expect(sendAsyncResult.error).toBeNull();
-    expect(sendAsyncResult.data?.queuedAt).toBeTruthy();
+    expect(queueResult.error).toBeNull();
+    expect(queueResult.data?.queuedAt).toBeTruthy();
 
     const checkDomainResult = await mailchannels.domains.check({
       domain: "example.com"

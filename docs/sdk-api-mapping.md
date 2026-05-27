@@ -9,7 +9,7 @@ This page provides a mapping between the MailChannels SDK module methods and the
   | SDK Method | API Reference |
   | --- | --- |
   | [`Emails.send()`](/modules/emails/send) | [Send an Email](https://docs.mailchannels.net/email-api/api-reference/send-an-email) |
-  | [`Emails.sendAsync()`](/modules/emails/send-async) | [Send an Email Asynchronously](https://docs.mailchannels.net/email-api/api-reference/send-an-email-asynchronously) |
+  | [`Emails.queue()`](/modules/emails/queue) | [Send an Email Asynchronously](https://docs.mailchannels.net/email-api/api-reference/send-an-email-asynchronously) |
 
 ### 🌐 Domains
 

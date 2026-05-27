@@ -2,9 +2,9 @@ import type { MailChannelsClient } from "../client";
 import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/clean";
 import type { ErrorResponse } from "../types/responses";
-import type { EmailsSendApiResponse, EmailsSendAsyncApiResponse } from "../types/emails/internal";
+import type { EmailsQueueApiResponse, EmailsSendApiResponse } from "../types/emails/internal";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
-import type { EmailsSendAsyncResponse } from "../types/emails/send-async";
+import type { EmailsQueueResponse } from "../types/emails/queue";
 import { buildSendPayload } from "../utils/build-send-payload";
 
 export class Emails {
@@ -12,7 +12,7 @@ export class Emails {
 
   private async _sendEmail (options: EmailsSendOptions,
     flags: { async?: boolean, dryRun?: boolean }
-  ): Promise<EmailsSendResponse | EmailsSendAsyncResponse> {
+  ): Promise<EmailsSendResponse | EmailsQueueResponse> {
     let error: ErrorResponse | null = null;
     const payload = buildSendPayload(options);
     if (typeof payload === "string") {
@@ -21,7 +21,7 @@ export class Emails {
     }
 
     const endpoint = flags.async ? "/tx/v1/send-async" : "/tx/v1/send";
-    const response = await this.mailchannels.post<EmailsSendApiResponse | EmailsSendAsyncApiResponse>(endpoint, {
+    const response = await this.mailchannels.post<EmailsSendApiResponse | EmailsQueueApiResponse>(endpoint, {
       query: { "dry-run": flags.dryRun },
       body: payload,
       onResponseError: async ({ response }) => {
@@ -39,7 +39,7 @@ export class Emails {
     if (!response) return { data: null, error: error! };
 
     if (flags.async) {
-      const asyncResponse = response as EmailsSendAsyncApiResponse;
+      const asyncResponse = response as EmailsQueueApiResponse;
       const data = clean({
         queuedAt: asyncResponse.queued_at,
         requestId: asyncResponse.request_id
@@ -92,7 +92,7 @@ export class Emails {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { data, error } = await mailchannels.emails.sendAsync({
+   * const { data, error } = await mailchannels.emails.queue({
    *   to: 'to@example.com',
    *   from: 'from@example.com',
    *   subject: 'Test',
@@ -100,7 +100,14 @@ export class Emails {
    * })
    * ```
    */
-  async sendAsync (options: EmailsSendOptions): Promise<EmailsSendAsyncResponse> {
-    return this._sendEmail(options, { async: true }) as Promise<EmailsSendAsyncResponse>;
+  async queue (options: EmailsSendOptions): Promise<EmailsQueueResponse> {
+    return this._sendEmail(options, { async: true }) as Promise<EmailsQueueResponse>;
+  }
+
+  /**
+   * @deprecated Use `queue` instead.
+   */
+  async sendAsync (options: EmailsSendOptions): Promise<EmailsQueueResponse> {
+    return this.queue(options);
   }
 }
