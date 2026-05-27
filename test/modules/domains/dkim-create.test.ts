@@ -58,6 +58,22 @@ describe("dkim.create", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
+  it("should return error if domain is not provided", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.dkim.create("", fake.options);
+
+    expect(error).toStrictEqual({
+      message: "No domain provided.",
+      statusCode: null
+    });
+    expect(data).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {

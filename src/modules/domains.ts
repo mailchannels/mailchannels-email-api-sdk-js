@@ -39,6 +39,12 @@ export class Domains {
     let error: ErrorResponse | null = null;
 
     const { dkim, domain, senderId } = options;
+
+    if (!domain) {
+      error = createError("No domain provided.");
+      return { data: null, error };
+    }
+
     const dkimOptions = dkim ? Array.isArray(dkim) ? dkim: [dkim]: undefined;
 
     if (dkimOptions && dkimOptions.length > 10) {
@@ -113,6 +119,11 @@ class DomainsDkim {
   async create (domain: string, options: DomainsDkimCreateOptions): Promise<DomainsDkimCreateResponse> {
     let error: ErrorResponse | null = null;
 
+    if (!domain) {
+      error = createError("No domain provided.");
+      return { data: null, error };
+    }
+
     if (!options.selector || options.selector.length > 63) {
       error = createError("Selector must be between 1 and 63 characters.");
       return { data: null, error };
@@ -158,6 +169,11 @@ class DomainsDkim {
    */
   async list (domain: string, options?: DomainsDkimListOptions): Promise<DomainsDkimListResponse> {
     let error: ErrorResponse | null = null;
+
+    if (!domain) {
+      error = createError("No domain provided.");
+      return { data: null, error };
+    }
 
     if (options?.selector && options.selector.length > 63) {
       error = createError("Selector must be between 1 and 63 characters.");
@@ -209,6 +225,11 @@ class DomainsDkim {
   async updateStatus (domain: string, options: DomainsDkimUpdateStatusOptions): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
+    if (!domain) {
+      error = createError("No domain provided.");
+      return { success: false, error };
+    }
+
     if (!options.selector || options.selector.length > 63) {
       error = createError("Selector must be between 1 and 63 characters.");
       return { success: false, error };
@@ -251,6 +272,11 @@ class DomainsDkim {
    */
   async rotate (domain: string, selector: string, options: DomainsDkimRotateOptions): Promise<DomainsDkimRotateResponse> {
     let error: ErrorResponse | null = null;
+
+    if (!domain) {
+      error = createError("No domain provided.");
+      return { data: null, error };
+    }
 
     if (!selector || selector.length > 63) {
       error = createError("Selector must be between 1 and 63 characters.");

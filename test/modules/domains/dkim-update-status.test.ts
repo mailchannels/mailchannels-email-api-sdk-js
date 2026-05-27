@@ -20,6 +20,25 @@ describe("dkim.updateStatus", () => {
     expect(mockClient.patch).toHaveBeenCalled();
   });
 
+  it("should return error if domain is not provided", async () => {
+    const mockClient = {
+      patch: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.dkim.updateStatus("", {
+      selector: "mailchannels_test",
+      status: "retired"
+    });
+
+    expect(error).toStrictEqual({
+      message: "No domain provided.",
+      statusCode: null
+    });
+    expect(success).toBe(false);
+    expect(mockClient.patch).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       patch: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
