@@ -4,6 +4,7 @@ import { Domains, Emails, Metrics, SubAccounts, Suppressions, Webhooks } from ".
 
 export { MailChannelsClient };
 export * from "./modules";
+export * from "./helpers";
 export type * from "./types";
 
 export class MailChannels extends MailChannelsClient {

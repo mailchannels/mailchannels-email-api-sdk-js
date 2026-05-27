@@ -1,7 +1,7 @@
 import { parseArrayRecipients, parseRecipient } from "./parse-recipients";
 import { stripPemHeaders } from "./strip-pem-headers";
-import type { EmailsSendDkim, EmailsSendOptions, EmailsSendPersonalization, EmailsSendTemplate } from "../types/emails/send";
-import type { EmailsSendPayload, EmailsSendPayloadPersonalization } from "../types/emails/internal";
+import type { EmailsSendAttachment, EmailsSendDkim, EmailsSendOptions, EmailsSendPersonalization, EmailsSendTemplate } from "../types/emails/send";
+import type { EmailsSendPayload, EmailsSendPayloadAttachment, EmailsSendPayloadPersonalization } from "../types/emails/internal";
 
 const RESERVED_HEADER_NAMES = new Set([
   "authentication-results",
@@ -82,6 +82,14 @@ const mapDkim = (dkim?: EmailsSendDkim) => ({
   dkim_selector: dkim?.selector
 });
 
+const mapAttachment = (attachment: EmailsSendAttachment): EmailsSendPayloadAttachment => ({
+  content: attachment.content,
+  filename: attachment.filename,
+  type: attachment.type,
+  content_id: attachment.contentId,
+  disposition: attachment.disposition
+});
+
 const mapPersonalization = (personalization: EmailsSendPersonalization, index: number, rootTemplateData?: EmailsSendTemplate["data"]) => {
   const to = parseArrayRecipients(personalization.to);
   if (!to || !to.length) {
@@ -133,7 +141,14 @@ const mapPersonalization = (personalization: EmailsSendPersonalization, index: n
   } satisfies EmailsSendPayloadPersonalization;
 };
 
-export const buildSendPayload = (options: EmailsSendOptions): EmailsSendPayload | string => {
+const resolveAttachments = async (attachments?: (EmailsSendAttachment | Promise<EmailsSendAttachment>)[]) => {
+  if (!attachments) return;
+  return Promise
+    .all(attachments.map(a => Promise.resolve(a)))
+    .catch(e => (e as Error).message);
+};
+
+export const buildSendPayload = async (options: EmailsSendOptions): Promise<EmailsSendPayload | string> => {
   const { from, html, text } = options;
   const contentTypes = options.content ? new Set(options.content.map(item => item.type.toLowerCase())) : undefined;
 
@@ -262,8 +277,13 @@ export const buildSendPayload = (options: EmailsSendOptions): EmailsSendPayload 
     }
   }
 
+  const resolvedAttachments = await resolveAttachments(options.attachments);
+  if (typeof resolvedAttachments === "string") {
+    return resolvedAttachments;
+  }
+
   return {
-    attachments: options.attachments,
+    attachments: resolvedAttachments?.map(a => mapAttachment(a)),
     campaign_id: options.campaignId,
     ...mapDkim(options.dkim),
     envelope_from: parseRecipient(options.envelopeFrom),

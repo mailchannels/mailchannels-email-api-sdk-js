@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      mime:
+        specifier: ^4.1.0
+        version: 4.1.0
       ofetch:
         specifier: ^2.0.0-alpha.3
         version: 2.0.0-alpha.3
@@ -1562,6 +1565,11 @@ packages:
 
   millify@6.1.0:
     resolution: {integrity: sha512-H/E3J6t+DQs/F2YgfDhxUVZz/dF8JXPPKTLHL/yHCcLZLtCXJDUaqvhJXQwqOVBvbyNn4T0WjLpIHd7PAw7fBA==}
+    hasBin: true
+
+  mime@4.1.0:
+    resolution: {integrity: sha512-X5ju04+cAzsojXKes0B/S4tcYtFAJ6tTMuSPBEn9CPGlrWr8Fiw7qYeLT0XyH80HSoAoqWCaz+MWKh22P7G1cw==}
+    engines: {node: '>=16'}
     hasBin: true
 
   minimatch@10.2.5:
@@ -3448,6 +3456,8 @@ snapshots:
   millify@6.1.0:
     dependencies:
       yargs: 17.7.2
+
+  mime@4.1.0: {}
 
   minimatch@10.2.5:
     dependencies:

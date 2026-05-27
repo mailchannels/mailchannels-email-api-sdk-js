@@ -14,7 +14,9 @@ export class Emails {
     flags: { async?: boolean, dryRun?: boolean }
   ): Promise<EmailsSendResponse | EmailsQueueResponse> {
     let error: ErrorResponse | null = null;
-    const payload = buildSendPayload(options);
+
+    const payload = await buildSendPayload(options);
+
     if (typeof payload === "string") {
       error = createError(payload);
       return { data: null, error };

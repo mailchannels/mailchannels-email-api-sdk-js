@@ -1,9 +1,17 @@
 <!-- #region options -->
 - `options` `EmailsSendOptions` <Badge type="danger">required</Badge>: Send options `EmailsSendOptions`.
-  - `attachments` `EmailsSendAttachment[]` <Badge type="info">optional</Badge>: An array of attachments to be sent with the email.
+  - `attachments` `(EmailsSendAttachment | Promise<EmailsSendAttachment>)[]` <Badge type="info">optional</Badge>: An array of attachments to be sent with the email.
     - `content` `string` <Badge type="danger">required</Badge>: The attachment data, encoded in Base64.
     - `filename` `string` <Badge type="danger">required</Badge>: The name of the attachment file.
-    - `type` `string` <Badge type="danger">required</Badge>: The MIME type of the attachment.
+    - `type` `string` <Badge type="info">optional</Badge>: The MIME type of the attachment.
+    - `contentId` `string` <Badge type="info">optional</Badge>: The `Content-ID` header value for inline attachments, referenced from HTML with `cid:`.
+    - `disposition` `"attachment" | "inline"` <Badge type="info">optional</Badge>: The `Content-Disposition` header value for the attachment. Defaults to `attachment`.
+    > [!IMPORTANT]
+    > Usage notes:
+    > - Multiple attachments can be included in a single email.
+    > - Maximum of `1000` attachments per email.
+    > - Combined size limit (attachments + email content) is `30MB`.
+    > - Base64 encoding is required for all attachment content.
   - `campaignId` `string` <Badge type="info">optional</Badge>: The campaign identifier. If specified, this ID will be included in all relevant webhooks. It can be up to 48 UTF-8 characters long and must not contain spaces.
   - `bcc` `EmailsSendRecipient[] | EmailsSendRecipient | string[] | string` <Badge type="info">optional</Badge>: The BCC recipients of the email.
   - `cc` `EmailsSendRecipient[] | EmailsSendRecipient | string[] | string` <Badge type="info">optional</Badge>: The CC recipients of the email.

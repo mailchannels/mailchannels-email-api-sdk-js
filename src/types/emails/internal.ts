@@ -1,4 +1,12 @@
-import type { EmailsSendAttachment, EmailsSendRecipient } from "./send";
+import type { EmailsSendRecipient } from "./send";
+
+export interface EmailsSendPayloadAttachment {
+  content: string;
+  filename: string;
+  type?: string;
+  content_id?: string;
+  disposition?: "attachment" | "inline";
+}
 
 export interface EmailsSendPayloadPersonalization {
   bcc?: EmailsSendRecipient[];
@@ -16,7 +24,7 @@ export interface EmailsSendPayloadPersonalization {
 }
 
 export interface EmailsSendPayload {
-  attachments?: EmailsSendAttachment[];
+  attachments?: EmailsSendPayloadAttachment[];
   campaign_id?: string;
   content: {
     template_type?: string;
