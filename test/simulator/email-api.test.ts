@@ -87,9 +87,7 @@ describe("Email API simulator", () => {
     expect(sendAsyncResult.error).toBeNull();
     expect(sendAsyncResult.data?.queuedAt).toBeTruthy();
 
-    const checkDomainResult = await mailchannels.domains.check({
-      domain: "example.com"
-    });
+    const checkDomainResult = await mailchannels.domains.check("example.com");
     expect(checkDomainResult.error).toBeNull();
     expect(checkDomainResult.data?.spf.verdict).toBe("passed");
     expect(checkDomainResult.data?.spf.spfRecord).toBe("v=spf1 a mx include:relay.mailchannels.local ~all");

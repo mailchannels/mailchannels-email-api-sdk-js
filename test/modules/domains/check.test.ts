@@ -5,6 +5,7 @@ import { ErrorCode } from "~/utils/errors";
 import type { DomainsCheckResponse } from "~/types/domains/check";
 
 const fake = {
+  domain: "example.com",
   apiResponse: {
     check_results: {
       spf: {
@@ -30,7 +31,6 @@ const fake = {
   } satisfies DomainsCheckResponse,
   options: {
     dkim: { domain: "example.com", privateKey: "private-key", selector: "selector" },
-    domain: "example.com",
     senderId: "sender-id"
   },
   payload: expect.objectContaining({
@@ -51,7 +51,7 @@ describe("check", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.check(fake.options);
+    const { data, error } = await domains.check(fake.domain, fake.options);
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
@@ -64,7 +64,7 @@ describe("check", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.check({
+    const { data, error } = await domains.check(fake.domain, {
       ...fake.options,
       dkim: [fake.options.dkim]
     });
@@ -84,7 +84,7 @@ describe("check", () => {
     delete options.dkim;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.check(options);
+    const { data, error } = await domains.check(fake.domain, options);
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
@@ -96,10 +96,8 @@ describe("check", () => {
       post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
     } as unknown as MailChannelsClient;
 
-    const fakeOptions = { ...fake.options, domain: "" };
-
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.check(fakeOptions);
+    const { data, error } = await domains.check("", fake.options);
 
     expect(error).toStrictEqual({
       message: "No domain provided.",
@@ -119,7 +117,7 @@ describe("check", () => {
     delete options.dkim.privateKey;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.check(options);
+    const { data, error } = await domains.check(fake.domain, options);
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
@@ -129,7 +127,7 @@ describe("check", () => {
   it("should contain error when dkim settings exceed 10", async () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.check({
+    const { data, error } = await domains.check(fake.domain, {
       ...fake.options,
       dkim: Array.from({ length: 11 }, () => ({ domain: "example.com", selector: "mailchannels" }))
     });
@@ -142,7 +140,7 @@ describe("check", () => {
   it("should contain error when dkim setting has privateKey without selector", async () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.check({
+    const { data, error } = await domains.check(fake.domain, {
       ...fake.options,
       dkim: [{ domain: "example.com", privateKey: "private-key" }]
     });
@@ -161,7 +159,7 @@ describe("check", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.check(fake.options);
+    const { data, error } = await domains.check(fake.domain, fake.options);
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -174,7 +172,7 @@ describe("check", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.check(fake.options);
+    const { data, error } = await domains.check(fake.domain, fake.options);
 
     expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
@@ -187,7 +185,7 @@ describe("check", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.check(fake.options);
+    const { data, error } = await domains.check(fake.domain, fake.options);
 
     expect(error).toStrictEqual({ message: "Failed to check domain.", statusCode: null });
     expect(data).toBeNull();

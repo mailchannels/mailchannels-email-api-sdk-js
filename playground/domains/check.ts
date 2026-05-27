@@ -15,8 +15,7 @@ if (!apiKey || !dkimDomain) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { data, error } = await mailchannels.domains.check({
-  domain: dkimDomain,
+const { data, error } = await mailchannels.domains.check(dkimDomain, {
   dkim: {
     domain: dkimDomain,
     selector: dkimSelector,

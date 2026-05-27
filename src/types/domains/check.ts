@@ -28,10 +28,6 @@ export interface DomainsCheckOptions {
    */
   dkim?: DomainsCheck[] | DomainsCheck;
   /**
-   * Domain used for sending emails. If `dkim` settings are not provided, or `dkim` settings are provided with no `domain`, the stored dkim settings for this domain will be used.
-   */
-  domain: string;
-  /**
    * Used exclusively for [Domain Lockdown](https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field. The corresponding value is included in the `X-MailChannels-SenderId` header of emails sent via MailChannels.
    */
   senderId?: string;
