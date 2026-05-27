@@ -21,9 +21,7 @@ describe("dkim.updateStatus", () => {
   });
 
   it("should return error if domain is not provided", async () => {
-    const mockClient = {
-      post: vi.fn().mockResolvedValueOnce(void 0)
-    } as unknown as MailChannelsClient;
+    const mockClient = { patch: vi.fn() } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
     const { success, error } = await domains.dkim.updateStatus("", {
@@ -36,7 +34,7 @@ describe("dkim.updateStatus", () => {
       statusCode: null
     });
     expect(success).toBe(false);
-    expect(mockClient.post).not.toHaveBeenCalled();
+    expect(mockClient.patch).not.toHaveBeenCalled();
   });
 
   it("should contain error on api response error", async () => {
