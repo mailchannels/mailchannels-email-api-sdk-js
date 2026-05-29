@@ -9,14 +9,14 @@
     "start": "next start"
   },
   "dependencies": {
-    "mailchannels-sdk": "^0.8.0-1",
+    "mailchannels-sdk": "^0.8.0",
     "next": "^16.2.6",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
   "devDependencies": {
-    "@types/node": "^25.9.0",
-    "@types/react": "^19.2.14",
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
     "typescript": "^6.0.3"
   }

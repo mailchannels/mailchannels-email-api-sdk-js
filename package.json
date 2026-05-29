@@ -67,7 +67,7 @@
     "typescript": "^6.0.3",
     "vitepress": "^2.0.0-alpha.17",
     "vitepress-plugin-group-icons": "^1.7.5",
-    "vitepress-plugin-llms": "^1.13.0",
+    "vitepress-plugin-llms": "^1.13.1",
     "vitest": "^4.1.7"
   },
   "engines": {
