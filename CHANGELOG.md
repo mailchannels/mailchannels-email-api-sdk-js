@@ -1,6 +1,68 @@
 # Changelog
 
 
+## v0.8.0
+
+
+### 🚀 Enhancements
+
+- **client:** ⚠️  Add timeout and abort signal support ([f50eee6](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f50eee6))
+- Add Attachment helpers ([516eda2](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/516eda2))
+
+### 🩹 Fixes
+
+- Validate domain presence in domain methods ([daa8864](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/daa8864))
+
+### 💅 Refactors
+
+- ⚠️  Rename `webhooks.delete` to `webhooks.deleteAll` ([0be7bd6](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/0be7bd6))
+- ⚠️  Return structured response from `webhooks.verify` ([d9d5ba6](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d9d5ba6))
+- **webhooks:** ⚠️  Return full event object in `verify` ([df90058](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/df90058))
+- ⚠️  Rename webhooks enroll and dkim update methods ([bd4c25f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/bd4c25f))
+- Split internal utils into focused modules ([ab66dc1](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/ab66dc1))
+- **emails:** Deprecate `sendAsync` in favor of `queue` ([6b2b981](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/6b2b981))
+- **domains-check:** ⚠️  Accept domain as first argument ([2d13d37](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/2d13d37))
+
+### 📖 Documentation
+
+- Update open api spec ([8e88154](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/8e88154))
+- **readme:** Use pnpx for running playground scripts ([427790e](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/427790e))
+- Fix dkim snippet reference ([fe85929](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/fe85929))
+
+### 🏡 Chore
+
+- Remove replaced webhooks delete files ([f4164bc](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f4164bc))
+- Use relative paths in src imports ([41bde4d](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/41bde4d))
+- **webhooks:** Remove redundant type cast when mapping events payload ([b6afe54](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/b6afe54))
+- **types:** Replace FetchOptions types with primitives ([4feed32](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/4feed32))
+- Increase default client timeout to 120s ([3467239](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/3467239))
+- Adjust options order ([59c8d8d](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/59c8d8d))
+- Update repo metadata and add npm release CI ([189d230](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/189d230))
+
+### ✅ Tests
+
+- Refactor client tests to use fake defaults/options ([d392ec8](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d392ec8))
+- Hoist ofetch mock and manage mocks locally ([13c6a05](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/13c6a05))
+- **domains:** Simplify mockClient object literals ([d5fbc12](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d5fbc12))
+
+### 🤖 CI
+
+- Add lint and test bitbucket pipelines ([d3fdf74](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d3fdf74))
+- Replace atlassian publish pipe with pnpm publish ([c96a121](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/c96a121))
+
+#### ⚠️ Breaking Changes
+
+- **client:** ⚠️  Add timeout and abort signal support ([f50eee6](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f50eee6))
+- ⚠️  Rename `webhooks.delete` to `webhooks.deleteAll` ([0be7bd6](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/0be7bd6))
+- ⚠️  Return structured response from `webhooks.verify` ([d9d5ba6](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d9d5ba6))
+- **webhooks:** ⚠️  Return full event object in `verify` ([df90058](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/df90058))
+- ⚠️  Rename webhooks enroll and dkim update methods ([bd4c25f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/bd4c25f))
+- **domains-check:** ⚠️  Accept domain as first argument ([2d13d37](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/2d13d37))
+
+### ❤️ Contributors
+
+- Yizack Rangel <yizack@mailchannels.com>
+
 ## v0.8.0-1
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.8.0-0...v0.8.0-1)
