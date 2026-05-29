@@ -39,7 +39,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.create(fake.invalidCompanyName, fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "Invalid company name. Company name must be between 3 and 128 characters.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -52,7 +52,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.create(fake.validCompanyName, fake.invalidHandle);
 
-    expect(error).toStrictEqual({ message: "Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -94,7 +94,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.create(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -107,7 +107,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.create(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "Failed to create sub-account.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

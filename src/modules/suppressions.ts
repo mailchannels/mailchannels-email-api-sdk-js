@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
+import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../utils/errors";
 import { clean } from "../utils/clean";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
@@ -24,7 +24,7 @@ export class Suppressions {
     const { addToSubAccounts, entries } = options;
 
     if (entries.length > 1000) {
-      error = createError("The number of suppression entries must not exceed 1000.");
+      error = createValidationError("The number of suppression entries must not exceed 1000.");
       return { success: false, error };
     }
 
@@ -96,7 +96,7 @@ export class Suppressions {
     let error: ErrorResponse | null = null;
 
     if (options?.recipient && options.recipient.length > 255) {
-      error = createError("The recipient must not exceed 255 characters.");
+      error = createValidationError("The recipient must not exceed 255 characters.");
       return { data: null, error };
     }
 

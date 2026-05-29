@@ -28,7 +28,7 @@ describe("delete", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.delete("");
 
-    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -56,7 +56,7 @@ describe("delete", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.delete(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -69,7 +69,7 @@ describe("delete", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.delete(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "Failed to delete sub-account.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });

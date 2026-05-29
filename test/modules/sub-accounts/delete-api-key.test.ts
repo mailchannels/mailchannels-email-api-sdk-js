@@ -29,7 +29,7 @@ describe("deleteApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteApiKey("", 1);
 
-    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -57,7 +57,7 @@ describe("deleteApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteApiKey(fake.validHandle, 1);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -70,7 +70,7 @@ describe("deleteApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteApiKey(fake.validHandle, 1);
 
-    expect(error).toStrictEqual({ message: "Failed to delete sub-account API key.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });

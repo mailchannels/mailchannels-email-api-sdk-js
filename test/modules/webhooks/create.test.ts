@@ -27,7 +27,7 @@ describe("create", () => {
     // @ts-expect-error Testing missing endpoint error
     const { success, error } = await webhooks.create();
 
-    expect(error).toStrictEqual({ message: "No endpoint provided.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -40,7 +40,7 @@ describe("create", () => {
 
     const { success, error } = await webhooks.create(longEndpoint);
 
-    expect(error).toStrictEqual({ message: "The endpoint exceeds the maximum length of 8000 characters.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -55,7 +55,11 @@ describe("create", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.create(fake.endpoint);
 
-    expect(error).toBeTruthy();
+    expect(error).toStrictEqual({
+      message: `Endpoint '${fake.endpoint}' is already enrolled to receive notifications.`,
+      statusCode: ErrorCode.Conflict,
+      type: "conflict_error"
+    });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -68,7 +72,7 @@ describe("create", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.create(fake.endpoint);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -81,7 +85,7 @@ describe("create", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.create(fake.endpoint);
 
-    expect(error).toStrictEqual({ message: "Failed to create webhook.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });

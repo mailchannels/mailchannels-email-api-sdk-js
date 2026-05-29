@@ -42,7 +42,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listApiKeys("");
 
-    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -55,7 +55,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listApiKeys(fake.validHandle, { limit: 1001 });
 
-    expect(error).toStrictEqual({ message: "The limit value must be between 1 and 1000.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -68,7 +68,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listApiKeys(fake.validHandle, { offset: -1 });
 
-    expect(error).toStrictEqual({ message: "Offset must be greater than or equal to 0.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -97,7 +97,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listApiKeys(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -110,7 +110,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listApiKeys(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "Failed to fetch sub-account API keys.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

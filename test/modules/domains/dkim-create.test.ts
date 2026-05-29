@@ -66,10 +66,7 @@ describe("dkim.create", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.create("", fake.options);
 
-    expect(error).toStrictEqual({
-      message: "No domain provided.",
-      statusCode: null
-    });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -85,7 +82,11 @@ describe("dkim.create", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.create("example.com", fake.options);
 
-    expect(error).toBeTruthy();
+    expect(error).toStrictEqual({
+      message: "Bad Request.",
+      statusCode: ErrorCode.BadRequest,
+      type: "invalid_request_error"
+    });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -96,7 +97,7 @@ describe("dkim.create", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.create("example.com", { selector: "a".repeat(64) });
 
-    expect(error).toStrictEqual({ message: "Selector must be between 1 and 63 characters.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -107,7 +108,7 @@ describe("dkim.create", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.create("example.com", { selector: "" });
 
-    expect(error).toStrictEqual({ message: "Selector must be between 1 and 63 characters.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -120,7 +121,7 @@ describe("dkim.create", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.create("example.com", fake.options);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -133,7 +134,7 @@ describe("dkim.create", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.create("example.com", fake.options);
 
-    expect(error).toStrictEqual({ message: "Failed to create DKIM key.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, createValidationError, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/clean";
 import type { ErrorResponse } from "../types/responses";
 import type { EmailsQueueApiResponse, EmailsSendApiResponse } from "../types/emails/internal";
@@ -18,7 +18,7 @@ export class Emails {
     const payload = await buildSendPayload(options);
 
     if (typeof payload === "string") {
-      error = createError(payload);
+      error = createValidationError(payload);
       return { data: null, error };
     }
 

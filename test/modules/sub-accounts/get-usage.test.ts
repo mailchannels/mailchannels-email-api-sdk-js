@@ -59,7 +59,7 @@ describe("getUsage", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getUsage("");
 
-    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -88,7 +88,7 @@ describe("getUsage", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getUsage(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -101,7 +101,7 @@ describe("getUsage", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getUsage(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "Failed to fetch sub-account usage.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

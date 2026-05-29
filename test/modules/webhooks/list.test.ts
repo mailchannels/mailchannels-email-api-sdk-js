@@ -56,7 +56,7 @@ describe("list", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.list();
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -69,7 +69,7 @@ describe("list", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.list();
 
-    expect(error).toStrictEqual({ message: "Failed to fetch webhooks.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

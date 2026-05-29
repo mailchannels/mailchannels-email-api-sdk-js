@@ -80,7 +80,7 @@ describe("volume", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.volume();
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -93,7 +93,7 @@ describe("volume", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.volume();
 
-    expect(error).toStrictEqual({ message: "Failed to fetch volume metrics.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

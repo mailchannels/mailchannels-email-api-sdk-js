@@ -1,3 +1,4 @@
 - `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
   - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
   - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request. This field is intended for diagnostic use only and should not be relied upon.
+  - `type` `string` <Badge>guaranteed</Badge>: A string identifier for the type of error. This field is intended for diagnostic use only and should not be relied upon.

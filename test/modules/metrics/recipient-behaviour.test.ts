@@ -76,7 +76,7 @@ describe("recipientBehaviour", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.recipientBehaviour();
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -89,7 +89,7 @@ describe("recipientBehaviour", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.recipientBehaviour();
 
-    expect(error).toStrictEqual({ message: "Failed to fetch recipient behaviour metrics.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

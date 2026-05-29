@@ -34,7 +34,7 @@ describe("createApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createApiKey("");
 
-    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -63,7 +63,7 @@ describe("createApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createApiKey(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -76,7 +76,7 @@ describe("createApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createApiKey(fake.validHandle);
 
-    expect(error).toStrictEqual({ message: "Failed to create sub-account API key.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

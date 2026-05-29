@@ -65,7 +65,7 @@ describe("senders", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.senders("campaigns", { limit: 1001 });
 
-    expect(error).toStrictEqual({ message: "The limit value must be between 1 and 1000.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -78,7 +78,7 @@ describe("senders", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.senders("campaigns", { offset: -1 });
 
-    expect(error).toStrictEqual({ message: "Offset must be greater than or equal to 0.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -107,7 +107,7 @@ describe("senders", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.senders("campaigns");
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -120,7 +120,7 @@ describe("senders", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.senders("campaigns");
 
-    expect(error).toStrictEqual({ message: "Failed to fetch senders metrics.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

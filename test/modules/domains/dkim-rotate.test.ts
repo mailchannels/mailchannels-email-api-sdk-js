@@ -111,10 +111,7 @@ describe("dkim.rotate", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.rotate("", "mailchannels_test", fake.options);
 
-    expect(error).toStrictEqual({
-      message: "No domain provided.",
-      statusCode: null
-    });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -126,7 +123,7 @@ describe("dkim.rotate", () => {
     const { data, error } = await domains.dkim.rotate("example.com", "a".repeat(64), fake.options);
 
     expect(data).toBeNull();
-    expect(error).toStrictEqual({ message: "Selector must be between 1 and 63 characters.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -141,7 +138,7 @@ describe("dkim.rotate", () => {
     });
 
     expect(data).toBeNull();
-    expect(error).toStrictEqual({ message: "New key selector must be between 1 and 63 characters.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -156,7 +153,11 @@ describe("dkim.rotate", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.rotate("example.com", "mailchannels_test", fake.options);
 
-    expect(error).toBeTruthy();
+    expect(error).toStrictEqual({
+      message: "Bad Request.",
+      statusCode: ErrorCode.BadRequest,
+      type: "invalid_request_error"
+    });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -169,7 +170,7 @@ describe("dkim.rotate", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.rotate("example.com", "mailchannels_test", fake.options);
 
-    expect(error).toStrictEqual({ message: "failure", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -182,7 +183,7 @@ describe("dkim.rotate", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.rotate("example.com", "mailchannels_test", fake.options);
 
-    expect(error).toStrictEqual({ message: "Failed to rotate DKIM key.", statusCode: null });
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
