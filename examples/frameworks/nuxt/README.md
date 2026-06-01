@@ -40,8 +40,25 @@ The application will be available at `http://localhost:3000`.
 ## Pages
 
 - `/` - Home page listing all examples
-- `/send` - Send a predefined email using the API route
+- `/emails/send` - Send a predefined email
+- `/emails/send-form` - Send an email using a form
+- `/emails/send-attachment` - Send an email with an attachment
+- `/emails/send-template` - Send an email with a template engine
+- `/emails/queue` - Queue a predefined email
+- `/domains/check` - Check a domain
+- `/webhooks/create` - Create a webhook
+- `/webhooks/list` - List existing webhooks
+- `/webhooks/delete-all` - Delete all webhooks
 
 ## API Routes
 
-- `POST /api/send` - API route to send a predefined email using MailChannels
+- `POST /api/emails/send` - Send a predefined email
+- `POST /api/emails/send-form` - Send an email based on form input
+- `POST /api/emails/send-attachment` - Send an email with an attachment based on form input
+- `POST /api/emails/send-template` - Send an email using a template engine based on form input
+- `POST /api/emails/queue` - Queue a predefined email
+- `POST /api/domains/check` - Perform a DKIM, SPF & Domain Lockdown Check
+- `POST /api/webhooks/mailchannels` - Handle webhook events
+- `POST /api/webhooks` - Create a webhook based on form input
+- `GET /api/webhooks` - List existing webhooks
+- `DELETE /api/webhooks` - Delete all webhooks

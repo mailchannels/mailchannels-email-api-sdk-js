@@ -4,5 +4,8 @@ export default defineNuxtConfig({
     mailchannels: {
       apiKey: "" // Automatically set from NUXT_MAILCHANNELS_API_KEY
     }
-  }
+  },
+  css: [
+    "~/assets/css/main.css"
+  ]
 });

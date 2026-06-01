@@ -1,4 +1,6 @@
 <template>
   <NuxtLink to="/">Home</NuxtLink>
-  <slot />
+  <div class="container">
+    <slot />
+  </div>
 </template>
