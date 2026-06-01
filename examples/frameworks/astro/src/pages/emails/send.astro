@@ -1,15 +1,15 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from "../../layouts/Layout.astro";
 ---
 
 <Layout>
-  <h1>Send a predefined email using the API route</h1>
+  <h1>Send a predefined email</h1>
 
-  <form id="send-form">
+  <form id="send-form" class="form">
     <button type="submit" id="submit-btn">Send Email</button>
   </form>
 
-  <pre id="result"></pre>
+  <pre id="result" hidden></pre>
 </Layout>
 
 <script>
@@ -19,16 +19,18 @@ const form = document.getElementById("send-form") as HTMLFormElement;
 const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
 const result = document.getElementById("result") as HTMLPreElement;
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
   submitBtn.disabled = true;
   submitBtn.textContent = "Sending...";
+  result.hidden = true;
   result.textContent = "";
 
-  const { data, error } = await actions.send();
+  const { data, error } = await actions.emails.send();
 
   submitBtn.disabled = false;
   submitBtn.textContent = "Send Email";
+  result.hidden = false;
   result.textContent = JSON.stringify(error || data, null, 2);
 });
 </script>
