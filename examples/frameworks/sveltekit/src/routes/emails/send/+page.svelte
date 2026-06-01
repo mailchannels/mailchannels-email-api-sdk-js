@@ -4,18 +4,22 @@ import type { EmailsSendResponse } from "mailchannels-sdk";
 let loading = $state(false);
 let result = $state<EmailsSendResponse["data"]>();
 
-async function handleSubmit (event: SubmitEvent) {
-  event.preventDefault();
+async function sendEmail (e: SubmitEvent) {
+  e.preventDefault();
   loading = true;
-  const res = await fetch("/api/send", { method: "POST" });
-  result = await res.json();
+
+  const response = await fetch("/api/emails/send", {
+    method: "POST"
+  });
+
+  result = await response.json();
   loading = false;
 }
 </script>
 
-<h1>Send a predefined email using the API route</h1>
+<h1>Send a predefined email</h1>
 
-<form onsubmit={handleSubmit}>
+<form class="form" onsubmit={sendEmail}>
   <button type="submit" disabled={loading}>
     {loading ? "Sending..." : "Send Email"}
   </button>
