@@ -64,21 +64,20 @@ const { data, error } = await mailchannels.emails.send({
 })
 ```
 
-Alternatively, the SDK provides `Attachment` helper functions to create attachments from local files or remote URLs.
+Alternatively, the SDK provides `Attachment` helper methods to create attachments from various sources, such as byte arrays and buffers. This can be especially useful when dealing with file uploads or fetching files from remote URLs.
 
-| Function                | Description                                    |
-| ----------------------- | ---------------------------------------------- |
-| `Attachment.fromBytes`  | Creates an attachment from a byte array        |
-| `Attachment.fromUrl`    | Creates an attachment from a remote URL        |
-| `Attachment.fromFile`   | Creates an attachment from a local file        |
-| `Attachment.inlineFile` | Creates an inline attachment from a local file |
+| Function                | Description                                       |
+| ----------------------- | ------------------------------------------------- |
+| `Attachment.fromBytes`  | Creates an attachment from a byte array or buffer |
 
-For example, to send an email with an attachment from a remote URL:
+For example, to send an email with attachments from remote URLs:
 
-```ts [attachment-remote.ts]
+```ts [attachment-remote-array-buffer.ts]
 import { Attachment, MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
+
+const fileData = await fetch("https://picsum.photos/id/1/50/50").then(res => res.arrayBuffer());
 
 const { data, error } = await mailchannels.emails.send({
   from: 'Name <from@example.com>',
@@ -86,7 +85,7 @@ const { data, error } = await mailchannels.emails.send({
   subject: 'Test email',
   html: '<p>Hello World</p>',
   attachments: [
-    Attachment.fromUrl("https://picsum.photos/id/1/50/50", { filename: "test-image-1.jpg" })
+    Attachment.fromBytes(fileData, { filename: "test-image-1.jpg" })
   ]
 })
 ```
