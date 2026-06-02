@@ -1,7 +1,4 @@
 import { Buffer } from "node:buffer";
-import { basename } from "node:path";
-import { readFile } from "node:fs/promises";
-import { $fetch } from "ofetch";
 import mime from "mime";
 import type { EmailsSendAttachment } from "../types/emails/send";
 
@@ -29,46 +26,16 @@ export class Attachment {
     };
   }
 
-  static async fromFile (path: string | URL, options?: Partial<AttachmentOptions>): Promise<EmailsSendAttachment> {
-    try {
-      const data = await readFile(path);
-
-      return Attachment.fromBytes(data, {
-        filename: basename(path.toString()),
-        ...options
-      });
+  static async fromBlob (blob: Blob, options: AttachmentOptions): Promise<EmailsSendAttachment> {
+    if (!(blob instanceof Blob)) {
+      throw new Error("Unable to create attachment: expected a Blob");
     }
-    catch (error) {
-      throw new Error(`Unable to read attachment file: ${path}`, { cause: error });
-    }
-  }
 
-  static async fromUrl (url: string, options?: Partial<AttachmentOptions>): Promise<EmailsSendAttachment> {
-    try {
-      let contentType: string | undefined;
-      const data = await $fetch(url, {
-        responseType: "arrayBuffer",
-        timeout: 120000,
-        onResponse: ({ response }) => {
-          const contentTypeHeader = response.headers.get("content-type");
-          if (contentTypeHeader) {
-            contentType = contentTypeHeader.split(";", 1)[0]?.trim();
-          }
-        }
-      });
+    const bytes = await blob.arrayBuffer();
 
-      return Attachment.fromBytes(data, {
-        type: contentType,
-        filename: basename(new URL(url).pathname),
-        ...options
-      });
-    }
-    catch (error) {
-      throw new Error(`Unable to fetch attachment from URL: ${url}`, { cause: error });
-    }
-  }
-
-  static inlineFile (path: string | URL, options?: Partial<Omit<AttachmentOptions, "disposition">>): Promise<EmailsSendAttachment> {
-    return Attachment.fromFile(path, { ...options, disposition: "inline" });
+    return Attachment.fromBytes(bytes, {
+      type: blob.type,
+      ...options
+    });
   }
 }
