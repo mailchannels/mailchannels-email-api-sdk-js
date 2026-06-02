@@ -25,4 +25,17 @@ export class Attachment {
       disposition
     };
   }
+
+  static async fromBlob (blob: Blob, options: AttachmentOptions): Promise<EmailsSendAttachment> {
+    if (!(blob instanceof Blob)) {
+      throw new Error("Unable to create attachment: expected a Blob");
+    }
+
+    const bytes = await blob.arrayBuffer();
+
+    return Attachment.fromBytes(bytes, {
+      type: blob.type,
+      ...options
+    });
+  }
 }
