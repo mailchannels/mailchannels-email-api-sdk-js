@@ -1,0 +1,48 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout>
+  <h1>Send an email using a form</h1>
+
+  <form id="send-form" class="form">
+    <div class="input">
+      <label for="to">To:</label>
+      <input id="to" name="to" type="email" placeholder="to@example.com" required>
+    </div>
+    <div class="input">
+      <label for="subject">Subject:</label>
+      <input id="subject" name="subject" type="text" placeholder="Your email subject" required>
+    </div>
+    <div class="input">
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" placeholder="Write a message" required></textarea>
+    </div>
+    <button type="submit" id="submit-btn">Send Email</button>
+  </form>
+
+  <pre id="result" hidden></pre>
+</Layout>
+
+<script>
+import { actions } from "astro:actions";
+
+const form = document.getElementById("send-form") as HTMLFormElement;
+const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
+const result = document.getElementById("result") as HTMLPreElement;
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Sending...";
+  result.hidden = true;
+  result.textContent = "";
+
+  const { data, error } = await actions.emails.sendForm(Object.fromEntries(new FormData(form)));
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Send Email";
+  result.hidden = false;
+  result.textContent = JSON.stringify(error || data, null, 2);
+});
+</script>

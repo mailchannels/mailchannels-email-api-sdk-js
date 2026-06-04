@@ -1,0 +1,36 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout>
+  <h1>List webhooks</h1>
+
+  <form id="webhook-form" class="form">
+    <button type="submit" id="submit-btn">Get webhooks</button>
+  </form>
+
+  <pre id="result" hidden></pre>
+</Layout>
+
+<script>
+import { actions } from "astro:actions";
+
+const form = document.getElementById("webhook-form") as HTMLFormElement;
+const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
+const result = document.getElementById("result") as HTMLPreElement;
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Fetching...";
+  result.hidden = true;
+  result.textContent = "";
+
+  const { data, error } = await actions.webhooks.list();
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Get webhooks";
+  result.hidden = false;
+  result.textContent = JSON.stringify(error || data, null, 2);
+});
+</script>

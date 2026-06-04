@@ -1,0 +1,40 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout>
+  <h1>Check a domain</h1>
+
+  <form id="check-form" class="form">
+    <div class="input">
+      <label for="domain">Domain:</label>
+      <input id="domain" name="domain" type="text" placeholder="example.com" required>
+    </div>
+    <button type="submit" id="submit-btn">Check</button>
+  </form>
+
+  <pre id="result" hidden></pre>
+</Layout>
+
+<script>
+import { actions } from "astro:actions";
+
+const form = document.getElementById("check-form") as HTMLFormElement;
+const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
+const result = document.getElementById("result") as HTMLPreElement;
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Checking...";
+  result.hidden = true;
+  result.textContent = "";
+
+  const { data, error } = await actions.domains.check(Object.fromEntries(new FormData(form)));
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Check";
+  result.hidden = false;
+  result.textContent = JSON.stringify(error || data, null, 2);
+});
+</script>
