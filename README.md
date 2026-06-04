@@ -184,12 +184,11 @@ The next planned expansion is outbound webhook delivery so client applications c
 
 ## <a name="license">⚖️ License</a>
 
-[MIT License](LICENSE)
+[MIT License](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/src/HEAD/LICENSE)
 
 ## <a name="development">💻 Development</a>
 
-<details>
-  <summary>Local development</summary>
+Local development
 
 ```sh
 # Install dependencies
@@ -208,7 +207,7 @@ pnpm test:watch
 # Run typecheck
 pnpm test:types
 
-# Refresh API parity fixtures
+# Refresh API parity fixtures, specs, and README version note
 pnpm parity:fixtures
 
 # Run the local simulator
@@ -220,8 +219,6 @@ pnpx jiti playground/emails/send.ts
 # Release new version
 pnpm release
 ```
-
-</details>
 
 <!-- Badges -->
 [npm-version-src]: https://img.shields.io/npm/v/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047

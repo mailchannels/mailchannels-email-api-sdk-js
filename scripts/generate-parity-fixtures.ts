@@ -1,16 +1,15 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const EMAIL_SPEC_URL = "https://docs.mailchannels.net/email-api.yaml";
+const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.resolve(__dirname, "..");
+const SPEC_URL = "https://docs.mailchannels.net/email-api.yaml";
+const SPEC_PATH = join(rootDir, "docs", ".openapi", "email-api.yaml");
+const FIXTURE_PATH = join(rootDir, "test", "fixtures", "email-api-endpoints.json");
+const README_PATH = join(rootDir, "README.md");
 
-const emailSpecPath = path.join(rootDir, "docs/.openapi/email-api.yaml");
-const emailFixturePath = path.join(rootDir, "test/fixtures/email-api-endpoints.json");
-
-const emailMethodMap = {
+const methodMap = {
   "POST /check-domain": { module: "domains", method: "check" },
   "POST /domains/{domain}/dkim-keys": { module: "domains", method: "dkim.create" },
   "GET /domains/{domain}/dkim-keys": { module: "domains", method: "dkim.list" },
@@ -51,21 +50,9 @@ const emailMethodMap = {
   "POST /webhook-batch/{batch_id}/resend": { module: "webhooks", method: "resendBatch" }
 };
 
-const refreshSpecs = process.argv.includes("--refresh-specs");
+const normalizeYamlScalar = (value: string) => value.trim().replace(/^['"]|['"]$/g, "");
 
-const normalizeYamlScalar = value => value
-  .trim()
-  .replace(/^['"]|['"]$/g, "");
-
-const fetchText = async (url) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
-  }
-  return response.text();
-};
-
-const parseYamlOperations = (yaml) => {
+const parseYamlOperations = (yaml: string) => {
   const operations = [];
   const lines = yaml.split(/\r?\n/);
   let activeTopLevel = "";
@@ -82,7 +69,7 @@ const parseYamlOperations = (yaml) => {
     if (activeTopLevel === "info") {
       const match = line.match(/^  version:\s*(.+)$/);
       if (match) {
-        version = normalizeYamlScalar(match[1]);
+        version = normalizeYamlScalar(match[1]!);
       }
     }
 
@@ -99,7 +86,7 @@ const parseYamlOperations = (yaml) => {
     const methodMatch = line.match(/^    (get|post|put|patch|delete):\s*$/);
     if (methodMatch && currentPath) {
       operations.push({
-        httpMethod: methodMatch[1].toUpperCase(),
+        httpMethod: methodMatch[1]!.toUpperCase(),
         path: currentPath
       });
     }
@@ -112,8 +99,15 @@ const parseYamlOperations = (yaml) => {
   return { operations, version };
 };
 
-const mapOperationsToFixture = (operations, methodMap, apiName) => {
-  const missingOperations = [];
+const mapOperationsToFixture = (
+  operations: {
+    httpMethod: string;
+    path: string;
+  }[],
+  methodMap: Record<string, { module: string, method: string }>,
+  apiName: string
+) => {
+  const missingOperations: string[] = [];
   const seenKeys = new Set();
 
   const endpoints = operations.map(({ httpMethod, path: endpointPath }) => {
@@ -153,24 +147,36 @@ const mapOperationsToFixture = (operations, methodMap, apiName) => {
   };
 };
 
-const writeJson = async (filePath, value) => {
-  await mkdir(path.dirname(filePath), { recursive: true });
+const response = await fetch(SPEC_URL);
+if (!response.ok) {
+  throw new Error(`Failed to fetch ${SPEC_URL}: ${response.status} ${response.statusText}`);
+}
+
+const spec = await response.text();
+await writeFile(SPEC_PATH, spec);
+
+const specText = await readFile(SPEC_PATH, "utf8");
+const specOps = parseYamlOperations(specText);
+const fixture = mapOperationsToFixture(specOps.operations, methodMap, "Email API");
+
+const writeJson = async (filePath: string, value: Record<string, unknown>) => {
+  await mkdir(dirname(filePath), { recursive: true });
   await writeFile(filePath, `${JSON.stringify(value, null, 2)}\n`);
 };
 
-if (refreshSpecs) {
-  const emailSpec = await fetchText(EMAIL_SPEC_URL);
-  await writeFile(emailSpecPath, emailSpec);
-}
-
-const emailSpecText = await readFile(emailSpecPath, "utf8");
-const emailSpec = parseYamlOperations(emailSpecText);
-const emailFixture = mapOperationsToFixture(emailSpec.operations, emailMethodMap, "Email API");
-
-await writeJson(emailFixturePath, {
-  version: emailSpec.version,
-  endpoints: emailFixture.endpoints,
-  unmapped: emailFixture.unmapped
+await writeJson(FIXTURE_PATH, {
+  version: specOps.version,
+  endpoints: fixture.endpoints,
+  unmapped: fixture.unmapped
 });
 
-console.info(`Wrote ${path.relative(rootDir, emailFixturePath)}`);
+console.info(`Wrote ${relative(rootDir, FIXTURE_PATH)} with ${fixture.endpoints.length} endpoints (${fixture.unmapped.length} unmapped)`);
+
+const readmeText = await readFile(README_PATH, "utf8");
+const emailApiNote = `> Built and tested against Email API \`${specOps.version}\``;
+const updatedReadme = readmeText.replace(/>\s*Built and tested against Email API\s*`[^`]+`/g, emailApiNote);
+
+if (updatedReadme !== readmeText) {
+  await writeFile(README_PATH, updatedReadme);
+  console.info(`Updated Email API version note in ${relative(rootDir, README_PATH)} to ${specOps.version}`);
+}
