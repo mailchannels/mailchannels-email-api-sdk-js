@@ -31,21 +31,37 @@ console.log(data?.references)             // support links if anything failed
 
 ### With Specific DKIM Settings
 
-If you don't pass `dkim`, MailChannels uses all stored keys for the domain. To target a
-specific selector:
+If you don't pass `dkim`, MailChannels uses all stored keys for the domain. To target
+specific selectors:
 
 ```ts
 const { data, error } = await mc.domains.check('example.com', {
   dkim: [
     {
       domain: 'example.com',
-      selector: 'mcdkim'
+      selector: 'mcdkim-2025'
+    },
+    {
+      domain: 'example.com',
+      selector: 'mcdkim-2026'
     }
   ]
 })
 ```
 
 You can pass up to **10** DKIM settings per call.
+
+If you only need to provide a single DKIM setting, you may pass it as an object instead
+of an array:
+
+```ts
+const { data, error } = await mc.domains.check('example.com', {
+  dkim: {
+    domain: 'example.com',
+    selector: 'mcdkim'
+  }
+})
+```
 
 #### DKIM Settings Resolution Rules
 
