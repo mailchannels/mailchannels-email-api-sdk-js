@@ -1,4 +1,4 @@
-![MailChannels Node.js SDK](./docs/public/images/presentation.png)
+![MailChannels Node.js SDK](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/raw/HEAD/docs/public/images/presentation.png)
 
 # MailChannels Node.js SDK
 
@@ -17,7 +17,7 @@ Node.js SDK to integrate [MailChannels Email API](https://docs.mailchannels.net/
 This library provides a simple way to interact with the [MailChannels Email API](https://docs.mailchannels.net/email-api). It is written in TypeScript and can be used in both JavaScript and TypeScript projects and in different runtimes.
 <!-- #endregion overview -->
 
-- [✨ Release Notes](CHANGELOG.md)
+- [✨ Release Notes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/src/HEAD/CHANGELOG.md)
 - [📖 Documentation](https://mailchannels.yizack.com)
 
 ## Contents
@@ -234,10 +234,10 @@ pnpm release
 [build-status-href]: https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pipelines
 
 [license-src]: https://img.shields.io/npm/l/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
-[license-href]: ./LICENSE
+[license-href]: https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/src/HEAD/LICENSE
 
 [typescript-src]: https://img.shields.io/badge/TypeScript-supported-35a047?style=flat&colorA=070a30
 [typescript-href]: https://www.typescriptlang.org
 
 [node-src]: https://img.shields.io/node/v/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
-[node-href]: ./package.json
+[node-href]: https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/src/HEAD/package.json
