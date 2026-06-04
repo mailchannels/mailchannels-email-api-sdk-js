@@ -154,7 +154,11 @@ export const buildSendPayload = async (options: EmailsSendOptions): Promise<Emai
 
   const parsedFrom = parseRecipient(from);
   if (!parsedFrom || !parsedFrom.email) {
-    return "No sender provided. Use the `from` option to specify a sender";
+    return "No sender provided. Use the 'from' option to specify a sender.";
+  }
+
+  if (!options.subject || typeof options.subject !== "string" || !options.subject.trim()) {
+    return "No subject provided. Use the 'subject' option to specify a subject.";
   }
 
   if (!text && !html && (!options.content || !options.content.length)) {
