@@ -43,11 +43,11 @@ MAILCHANNELS_API_KEY=your-api-key
 
 ## 3. Send email using HTML
 
-Create a [server API route](https://svelte.dev/docs/kit/routing#server) under `src/routes/api/send/+server.ts`.
+Create a [server API route](https://svelte.dev/docs/kit/routing#server) under `src/routes/api/emails/send/+server.ts`.
 
 Use the `html` property to send an email with HTML content.
 
-```ts [src/routes/api/send/+server.ts]
+```ts [src/routes/api/emails/send/+server.ts]
 import { json } from '@sveltejs/kit'
 import { MailChannels } from 'mailchannels-sdk'
 import { MAILCHANNELS_API_KEY } from '$env/static/private'
@@ -64,7 +64,9 @@ export const POST: RequestHandler = async () => {
   })
 
   if (error) {
-    return json(error, { status: error.statusCode || 400 })
+    return json(error, {
+      status: error.statusCode || 500
+    })
   }
 
   return json(data)
@@ -75,25 +77,29 @@ export const POST: RequestHandler = async () => {
 
 Create a form in your SvelteKit app to call the `send` API route.
 
-```svelte [src/routes/+page.svelte]
+```svelte [src/routes/emails/send/+page.svelte]
 <script lang="ts">
+import type { EmailsSendResponse } from 'mailchannels-sdk'
+
 let loading = $state(false)
-let result = $state<{ data?: unknown, error?: unknown } | null>(null)
+let result = $state<EmailsSendResponse['data']>()
 
-async function handleSubmit (event: SubmitEvent) {
-  event.preventDefault()
+async function sendEmail (e: SubmitEvent) {
+  e.preventDefault()
   loading = true
-  result = null
 
-  const response = await fetch('/api/send', { method: 'POST' })
+  const response = await fetch('/api/emails/send', {
+    method: "POST"
+  })
+
   result = await response.json()
   loading = false
 }
 </script>
 
-<h1>MailChannels SvelteKit Example</h1>
+<h1>Send a predefined email</h1>
 
-<form onsubmit={handleSubmit}>
+<form class="form" onsubmit={sendEmail}>
   <button type="submit" disabled={loading}>
     {loading ? 'Sending...' : 'Send Email'}
   </button>
@@ -109,7 +115,42 @@ async function handleSubmit (event: SubmitEvent) {
 <ExampleBoxes :examples="[
   {
     title: 'Send',
-    description: 'Send a predefined email using the API route',
-    path: '/examples/frameworks/sveltekit/src/routes/api/send/+server.ts'
+    description: 'Send a predefined email',
+    path: '/examples/frameworks/sveltekit/src/routes/api/emails/send/+server.ts'
+  },
+  {
+    title: 'Queue email',
+    description: 'Queue a predefined email',
+    path: '/examples/frameworks/sveltekit/src/routes/api/emails/queue/+server.ts'
+  },
+  {
+    title: 'Send with form',
+    description: 'Send an email using a form',
+    path: '/examples/frameworks/sveltekit/src/routes/api/emails/send-form/+server.ts'
+  },
+  {
+    title: 'Send with attachment',
+    description: 'Send an email with an attachment using a form',
+    path: '/examples/frameworks/sveltekit/src/routes/api/emails/send-attachment/+server.ts'
+  },
+  {
+    title: 'Send with template',
+    description: 'Send an email using a template engine with a form',
+    path: '/examples/frameworks/sveltekit/src/routes/api/emails/send-template/+server.ts'
+  },
+  {
+    title: 'Check domain',
+    description: 'Perform a DKIM, SPF & Domain Lockdown Check',
+    path: '/examples/frameworks/sveltekit/src/routes/api/domains/check/+server.ts'
+  },
+  {
+    title: 'Create webhook',
+    description: 'Create a webhook',
+    path: '/examples/frameworks/sveltekit/src/routes/api/webhooks/+server.ts'
+  },
+  {
+    title: 'Webhooks events',
+    description: 'Handle webhook events',
+    path: '/examples/frameworks/sveltekit/src/routes/api/webhooks/mailchannels/+server.ts'
   }
 ]" />
