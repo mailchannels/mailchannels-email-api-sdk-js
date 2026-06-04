@@ -184,7 +184,7 @@ The next planned expansion is outbound webhook delivery so client applications c
 
 ## <a name="license">⚖️ License</a>
 
-[MIT License](LICENSE)
+[MIT License](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/src/HEAD/LICENSE)
 
 ## <a name="development">💻 Development</a>
 
