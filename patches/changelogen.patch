@@ -1,0 +1,12 @@
+diff --git a/dist/shared/changelogen.D-9f3HTX.mjs b/dist/shared/changelogen.D-9f3HTX.mjs
+index dd70b3f4651f1691c1f4e4cb22862079f8c02c05..95777cb792b0a6d84c68e99d20ca404b0471b1d0 100644
+--- a/dist/shared/changelogen.D-9f3HTX.mjs
++++ b/dist/shared/changelogen.D-9f3HTX.mjs
+@@ -203,6 +203,6 @@ const providerToRefSpec = {
+   bitbucket: {
+     "pull-request": "pull-requests",
+-    hash: "commit",
++    hash: "commits",
+     issue: "issues"
+   }
+ };

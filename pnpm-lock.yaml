@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  changelogen: b560be12a67a0a380d5e4abe14da3995d6435a499eb77c68215d32c01e24df0f
+
 importers:
 
   .:
@@ -29,7 +32,7 @@ importers:
         version: 4.1.7(vitest@4.1.7)
       changelogen:
         specifier: ^0.6.2
-        version: 0.6.2(magicast@0.5.3)
+        version: 0.6.2(patch_hash=b560be12a67a0a380d5e4abe14da3995d6435a499eb77c68215d32c01e24df0f)(magicast@0.5.3)
       obuild:
         specifier: ^0.4.36
         version: 0.4.36(chokidar@5.0.0)(dotenv@17.4.2)(giget@3.2.0)(jiti@2.7.0)(magicast@0.5.3)(typescript@6.0.3)
@@ -2841,7 +2844,7 @@ snapshots:
 
   chai@6.2.2: {}
 
-  changelogen@0.6.2(magicast@0.5.3):
+  changelogen@0.6.2(patch_hash=b560be12a67a0a380d5e4abe14da3995d6435a499eb77c68215d32c01e24df0f)(magicast@0.5.3):
     dependencies:
       c12: 3.3.4(magicast@0.5.3)
       confbox: 0.2.4

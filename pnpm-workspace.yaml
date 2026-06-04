@@ -3,3 +3,6 @@ packages:
 
 allowBuilds:
   esbuild: false
+
+patchedDependencies:
+  changelogen: patches/changelogen.patch
