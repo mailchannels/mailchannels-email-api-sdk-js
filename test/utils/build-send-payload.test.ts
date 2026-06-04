@@ -632,4 +632,14 @@ describe("buildSendPayload", async () => {
     expect(typeof payload).toBe("string");
     expect(payload).toBe("Attachment error");
   });
+
+  it("should contain error when subject is missing", async () => {
+    const options = { ...fake.options };
+    // @ts-expect-error Testing missing subject error
+    delete options.subject;
+    const payload = await buildSendPayload(options);
+
+    expect(typeof payload).toBe("string");
+    expect(payload).toBe("No subject provided. Use the 'subject' option to specify a subject");
+  });
 });
