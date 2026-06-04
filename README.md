@@ -24,6 +24,7 @@ This library provides a simple way to interact with the [MailChannels Email API]
 - 📚 [Usage](#usage)
 - 📐 [Naming Conventions](#naming-conventions)
 - 🧪 [Local simulator](#local-simulator)
+- 🤖 [Using with an AI agent](#using-with-an-ai-agent)
 - ⚖️ [License](#license)
 - 💻 [Development](#development)
 
@@ -177,6 +178,66 @@ const { data, error } = await mailchannels.emails.send({
 
 The next planned expansion is outbound webhook delivery so client applications can test webhook ingestion flows against the simulator as well.
 <!-- #endregion simulator -->
+
+## <a name="using-with-an-ai-agent">🤖 Using with an AI agent</a>
+
+This repository ships a complete agent skill at
+[`.agents/skills/mailchannels-js/`](.agents/skills/mailchannels-js/).
+It teaches an AI coding agent how to use the `mailchannels-sdk` package
+correctly by breaking the documentation down into focused
+per-topic files with a decision tree so the agent loads only the
+parts the task actually needs.
+
+Layout:
+
+```
+.agents/skills/mailchannels-js/
+├── SKILL.md              # entry point: scope, decision tree, conventions
+└── resources/            # focused recipes (sending, attachments, webhooks, …)
+```
+
+Every file is plain Markdown. The skill works with any agent that can be
+pointed at a directory of context files — Claude Code, Cursor, Codex CLI,
+Aider, Continue, and similar tools all consume it without modification.
+
+### Install
+
+The skill ships inside the `mailchannels-sdk` npm package. Use `npm pack` to
+download the tarball, extract it, and copy the skill directory wherever your
+agent looks for skills, rules, or context files:
+
+```bash
+# Pin the version to match the SDK you have installed — omit the pin to
+# grab the latest release:
+npm pack mailchannels-sdk
+
+# Extract the tarball:
+tar -xzf mailchannels-sdk-*.tgz
+
+# Replace the destination with your agent's path:
+mkdir -p <your-agent's-skills-dir>
+cp -r package/.agents/skills/mailchannels-js <your-agent's-skills-dir>/
+
+# Clean up:
+rm -rf package mailchannels-sdk-*.tgz
+```
+
+Re-run the same commands when you upgrade the SDK so the skill stays in step
+with the installed version.
+
+Common destinations:
+
+| Agent | Where to put it |
+| --- | --- |
+| Claude Code | `.claude/skills/` (project) or `~/.claude/skills/` (user) |
+| Cursor | `.cursor/rules/` (or attach files inline with `@`) |
+| Codex CLI | referenced from the project's `AGENTS.md` |
+| Aider | referenced from the conventions file in `.aider.conf.yml` |
+| Continue | registered as a custom context provider |
+
+If your tool isn't listed, look for the equivalent of "skill", "rule",
+"context bundle", or "conventions file" — any mechanism that lets the agent
+read a directory of Markdown will work.
 
 ## <a name="license">⚖️ License</a>
 
