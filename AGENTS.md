@@ -33,7 +33,7 @@
   - `<type>` is one of `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`, `ci`, `build`, or `revert`.
   - `<scope>` is optional but can be used to indicate the area of the codebase affected (e.g., `client`, `webhooks`, `metrics`).
   - `<description>` is a concise summary of the change.
-  - Mark braking changes with `!` after the type, e.g., `feat!: <description>`.
+  - Mark breaking changes with `!` after the type, e.g., `feat!: <description>`.
 
 ## Testing Instructions
 
