@@ -104,7 +104,7 @@ If you need to construct one by hand:
 
 ```ts
 const attachment: EmailsSendAttachment = {
-  content: btoa(String.fromCharCode(...new Uint8Array(bytes))),
+  content: Buffer.from(new Uint8Array(bytes)).toString("base64"),
   filename: 'report.pdf',
   type: 'application/pdf'        // recommended but optional
 }

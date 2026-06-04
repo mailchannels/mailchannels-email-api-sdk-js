@@ -27,15 +27,15 @@ matching content type and a plain-text fallback improves deliverability.
 
 ### Recipient Formats
 
-All recipient fields (`to`, `from`, `cc`, `bcc`, `replyTo`) accept multiple formats
-interchangeably:
+All recipient fields (`to`, `from`, `cc`, `bcc`, `replyTo`, `envelopeFrom`) accept multiple formats
+interchangeably. Note: `from`, `replyTo`, `envelopeFrom` must be single
+recipient values (a string or an object) and do NOT accept array:
 
 ```ts
 const r1 = 'recipient@example.net'                                          // string
 const r2 = 'Jane Smith <recipient@example.net>'                             // display-name string
 const r3 = { email: 'recipient@example.net', name: 'Jane Smith' }          // object
 const r4 = ['a@example.net', { email: 'b@example.net', name: 'Bob' }]      // array
-// Any of the above is valid for `to`, `from`, `cc`, `bcc`, `replyTo`.
 ```
 
 ### Per-Recipient Personalization
