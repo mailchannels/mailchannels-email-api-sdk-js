@@ -12,7 +12,7 @@ export async function POST () {
 
   if (error) {
     return Response.json(error, {
-      status: error.statusCode || 400
+      status: error.statusCode || 500
     });
   }
 

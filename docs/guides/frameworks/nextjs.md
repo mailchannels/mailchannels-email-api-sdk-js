@@ -43,12 +43,12 @@ MAILCHANNELS_API_KEY=your-api-key
 
 ## 3. Send email using HTML
 
-Register an [App route handler](https://nextjs.org/docs/app/getting-started/route-handlers) under `app/api/send/route.ts` or a [Pages API route](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) under `pages/api/send.ts`.
+Register an [App route handler](https://nextjs.org/docs/app/getting-started/route-handlers) under `app/api/emails/send/route.ts` or a [Pages API route](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) under `pages/api/emails/send.ts`.
 
 Use the `html` property to send an email with HTML content.
 
 ::: code-group
-```ts [app/api/send/route.ts]
+```ts [app/api/emails/send/route.ts]
 import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY)
@@ -63,7 +63,7 @@ export async function POST () {
 
   if (error) {
     return Response.json(error, {
-      status: error.statusCode || 400
+      status: error.statusCode || 500
     })
   }
 
@@ -90,7 +90,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   })
 
   if (error) {
-    return res.status(error.statusCode || 400).json({ error })
+    return res.status(error.statusCode || 500).json({ error })
   }
 
   return res.status(200).json(data)
@@ -98,12 +98,91 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
 ```
 :::
 
+## 4. Call the API route
+
+Create a form in your Next.js app to call the `send` API route.
+
+```tsx [app/emails/send/page.tsx]
+'use client'
+
+import { useState } from 'react'
+import type { EmailsSendResponse } from 'mailchannels-sdk';
+
+export default function SendEmail () {
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState<EmailsSendResponse['data']>()
+
+  async function sendEmail (e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setLoading(true)
+
+    const response = await fetch('/api/emails/send', {
+      method: 'POST'
+    })
+
+    const data = await response.json()
+
+    setResult(data)
+    setLoading(false)
+  }
+
+  return (
+    <>
+      <h1>Send a predefined email</h1>
+
+      <form className="form" onSubmit={sendEmail}>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Sending...' : 'Send Email'}
+        </button>
+      </form>
+
+      {result ? <pre>{JSON.stringify(result, null, 2)}</pre> : null}
+    </>
+  )
+}
+```
+
 ## Examples
 
 <ExampleBoxes :examples="[
   {
     title: 'Send',
-    description: 'Send a predefined email using the API route',
-    path: '/examples/frameworks/nextjs/src/app/api/send/route.ts'
+    description: 'Send a predefined email',
+    path: '/examples/frameworks/nextjs/src/app/api/emails/send/route.ts'
+  },
+  {
+    title: 'Queue email',
+    description: 'Queue a predefined email',
+    path: '/examples/frameworks/nextjs/src/app/api/emails/queue/route.ts'
+  },
+  {
+    title: 'Send with form',
+    description: 'Send an email using a form',
+    path: '/examples/frameworks/nextjs/src/app/api/emails/send-form/route.ts'
+  },
+  {
+    title: 'Send with attachment',
+    description: 'Send an email with an attachment using a form',
+    path: '/examples/frameworks/nextjs/src/app/api/emails/send-attachment/route.ts'
+  },
+  {
+    title: 'Send with template',
+    description: 'Send an email using a template engine with a form',
+    path: '/examples/frameworks/nextjs/src/app/api/emails/send-template/route.ts'
+  },
+  {
+    title: 'Check domain',
+    description: 'Perform a DKIM, SPF & Domain Lockdown Check',
+    path: '/examples/frameworks/nextjs/src/app/api/domains/check/route.ts'
+  },
+  {
+    title: 'Create webhook',
+    description: 'Create a webhook',
+    path: '/examples/frameworks/nextjs/src/app/api/webhooks/route.ts'
+  },
+  {
+    title: 'Webhooks events',
+    description: 'Handle webhook events',
+    path: '/examples/frameworks/nextjs/src/app/api/webhooks/mailchannels/route.ts'
   }
 ]" />
