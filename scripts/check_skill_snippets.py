@@ -94,9 +94,13 @@ import type { EmailsSendAttachment, ErrorResponse } from 'mailchannels-sdk'
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
-// process and FetchOptions are stubbed rather than imported so the checker
-// works without a full node_modules install (@types/node / ofetch absent).
+// process, Buffer, and FetchOptions are stubbed rather than imported so the
+// checker works without a full node_modules install (@types/node / ofetch absent).
+// TODO: Update this script to work correctly with node install so we don't have to stub
 declare const process: { env: Record<string, string> }
+declare const Buffer: {
+  from(data: Uint8Array | ArrayBuffer | number[] | string, encoding?: string): { toString(encoding?: string): string }
+}
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type FetchOptions<_T = unknown> = Record<string, unknown>
 
