@@ -103,8 +103,7 @@ instance (no API key needed). It is also available as an instance method on
 `verify()` checks all three things in one call:
 
 1. **Content-Digest** — SHA-256 of the raw body matches the header.
-2. **Freshness** — `created` timestamp is within the default replay window (300 s old, 30 s
-   future skew).
+2. **Freshness** — `created` timestamp is within the default replay window (less than 300 s old)
 3. **Signature** — Ed25519 verifies against the public key for the given `keyId`.
 
 **`payload` must be the raw request body string.** Do not pass the parsed JSON object or
@@ -136,18 +135,19 @@ rather than holding a single "current" key.
 After successful verification `data` is typed as an array of webhook events. Common shared
 fields:
 
-| Field | Type | Notes |
-| --- | --- | --- |
+| Field | Type | Notes                                                                                                                                                   |
+| --- | --- |---------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `event` | `string` | `'processed'` / `'delivered'` / `'open'` / `'click'` / `'hard-bounced'` / `'soft-bounced'` / `'dropped'` / `'complained'` / `'unsubscribed'` / `'test'` |
-| `email` | `string` | Recipient address. |
-| `customerHandle` | `string` | Your MailChannels account (or sub-account) handle. |
-| `timestamp` | `number` | Unix timestamp. |
-| `requestId` | `string` | Correlates to the `requestId` from `queue()` / `send()`. |
-| `smtpId` | `string` | SMTP message ID. |
-| `campaignId` | `string?` | Present when `campaignId` was set on the send. |
-| `recipients` | `string[]?` | All recipients in the personalization. |
-| `status` / `reason` | `string?` | Bounce/drop detail. |
-| `url` / `userAgent` / `ip` | `string?` | Present on `click` / `open` events. |
+| `email` | `string` | Sender email address.                                                                                                                                   |
+| `customerHandle` | `string` | Your MailChannels account (or sub-account) handle.                                                                                                      |
+| `timestamp` | `number` | Unix timestamp.                                                                                                                                         |
+| `requestId` | `string` | Correlates to the `requestId` from `queue()` / `send()`.                                                                                                |
+| `smtpId` | `string` | SMTP message ID.                                                                                                                                        |
+| `campaignId` | `string?` | Present when `campaignId` was set on the send.                                                                                                          |
+| `recipients` | `string[]?` | All recipients in the personalization.                                                                                                                  |
+| `status` | `string?` | The SMTP status code received for the message. Use for system logic. Present on `hard-bounced`, `soft-bounced` events.                                  |
+| `reason` | `number?` | A human readable explanation of the status code. Do not use for system logic. Present on `hard-bounced`, `soft-bounced` events.                         |
+| `url` / `userAgent` / `ip` | `string?` | Present on `click` / `open` events.                                                                                                                     |
 
 ### Responding
 

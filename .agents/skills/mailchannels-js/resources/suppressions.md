@@ -35,6 +35,9 @@ Constraints:
 - `types` items must be `'transactional'` or `'non-transactional'`.
 - If any entry already exists, the API returns `conflict_error`.
 
+All entries created via this endpoint have an inherent source of `'api'`.
+The endpoint does not have a field to set the source value.
+
 ### List Entries
 
 ```ts
@@ -60,6 +63,10 @@ Date formats accepted: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
 
 ### Delete An Entry
 
+Warning:
+Do not remove entries from the suppression list if the recipient has not explicitly opted back in.
+This may cause deliverability issues and violate anti-spam laws and our policies.
+
 ```ts
 await mc.suppressions.delete('recipient@example.net', 'api')
 await mc.suppressions.delete('recipient@example.net', 'all')  // all sources
@@ -70,9 +77,9 @@ that recipient regardless of origin.
 
 ### Patterns
 
-- **Preference center opt-out**: write `source: 'api'`, type `'non-transactional'`, with
-  `notes` pointing back to the row in your preference DB.
+- **Preference center opt-out**: set `type` according to the email category, e.g. `non-transactional` for marketing 
+  emails, `transactional` for order updates, and so on. 
+  Configure `addToSubAccounts` depending on whether the preference applies to all sub-accounts or just the parent account.
+  Add a note to indicate the source, e.g. "Opted out via preference center".
 - **Migrating from another ESP**: bulk-create with `addToSubAccounts: true` so every tenant
   inherits the list.
-- **Re-engagement campaign**: list with `source: 'hard_bounce'` and your re-engagement
-  filter; only resurrect recipients you've manually verified.
