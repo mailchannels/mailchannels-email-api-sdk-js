@@ -4,6 +4,10 @@
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![Build Status][build-status-src]][build-status-href]
+[![License][license-src]][license-href]
+[![TypeScript][typescript-src]][typescript-href]
+[![Node.js][node-src]][node-href]
 
 > Built and tested against Email API `0.21.1`
 
@@ -225,3 +229,15 @@ pnpm release
 
 [npm-downloads-src]: https://img.shields.io/npm/dm/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
 [npm-downloads-href]: https://npmjs.com/package/mailchannels-sdk
+
+[build-status-src]: https://img.shields.io/bitbucket/pipelines/mailchannels/mailchannels-email-api-sdk-js/main.svg?style=flat&colorA=070a30
+[build-status-href]: https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pipelines
+
+[license-src]: https://img.shields.io/npm/l/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
+[license-href]: ./LICENSE
+
+[typescript-src]: https://img.shields.io/badge/TypeScript-supported-35a047?style=flat&colorA=070a30
+[typescript-href]: https://www.typescriptlang.org
+
+[node-src]: https://img.shields.io/node/v/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
+[node-href]: ./package.json
