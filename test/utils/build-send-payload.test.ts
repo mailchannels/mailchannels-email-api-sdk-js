@@ -72,7 +72,7 @@ describe("buildSendPayload", async () => {
     const payload = await buildSendPayload(options);
 
     expect(typeof payload).toBe("string");
-    expect(payload).toBe("No sender provided. Use the `from` option to specify a sender");
+    expect(payload).toBe("No sender provided. Use the 'from' option to specify a sender.");
   });
 
   it("should contain error when to field is missing", async () => {
@@ -640,6 +640,6 @@ describe("buildSendPayload", async () => {
     const payload = await buildSendPayload(options);
 
     expect(typeof payload).toBe("string");
-    expect(payload).toBe("No subject provided. Use the 'subject' option to specify a subject");
+    expect(payload).toBe("No subject provided. Use the 'subject' option to specify a subject.");
   });
 });
