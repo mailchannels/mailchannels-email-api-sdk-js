@@ -30,7 +30,7 @@ const { data, error } = await mc.emails.queue({
 
 ### Key Concept: Personalizations
 
-A single `emails.send()` or `emails.queue()` call can produce **many individually messages**. 
+A single `emails.send()` or `emails.queue()` call can produce **many individual messages**. 
 The `personalizations` array is the advanced form: each entry is one
 fully-resolved outgoing message with its own `to` / `cc` / `bcc`, per-recipient template
 variables, header overrides, and so on. The top-level `from` / `subject` / `html` / `text`

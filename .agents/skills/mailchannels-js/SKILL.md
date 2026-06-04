@@ -83,7 +83,7 @@ You're about to write JS/TS SDK code. What does it need to do?
 
 ## Style Conventions In The Resources
 
-- The example code in the resources are largely compatibile with both JavaScript and TypeScript.
+- The example code in the resources are largely compatible with both JavaScript and TypeScript.
   Double check before copying that you don't need to strip type annotations or alter imports.
 - The JS SDK uses a **result-based** error style: every method returns `{ data, error }`
   (`DataResponse<T>`) or `{ success, error }` (`SuccessResponse`). Check `error` before
