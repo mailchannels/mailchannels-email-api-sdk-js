@@ -68,8 +68,8 @@ Do not remove entries from the suppression list if the recipient has not explici
 This may cause deliverability issues and violate anti-spam laws and our policies.
 
 ```ts
-await mc.suppressions.delete('recipient@example.net', 'api')
-await mc.suppressions.delete('recipient@example.net', 'all')  // all sources
+const { error: delApiErr } =  await mc.suppressions.delete('recipient@example.net', 'api')
+const { error: delAllErr } = await mc.suppressions.delete('recipient@example.net', 'all')  // all sources
 ```
 
 If `source` is omitted it defaults to `'api'`. Use `'all'` to remove every suppression for

@@ -10,9 +10,14 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 
-await mc.webhooks.create('https://example.com/mailchannels/events')
-const { data: webhooks } = await mc.webhooks.list()   // enrolled URLs
-await mc.webhooks.deleteAll()                          // removes ALL enrolled webhooks
+const { error: createError } = await mc.webhooks.create('https://example.com/mailchannels/events')
+if (createError) { /*...*/ }
+
+const { data: webhooks, error: listError } = await mc.webhooks.list() // enrolled URLs
+if (listError) { /*...*/ }
+
+const { error: deleteError } = await mc.webhooks.deleteAll() // removes ALL enrolled webhooks
+if (deleteError) { /*...*/ }
 ```
 
 There is no per-URL delete — `deleteAll()` removes every enrolled webhook for the account.
@@ -26,7 +31,11 @@ If the endpoint is already enrolled, `create()` returns `conflict_error`.
 reports each one's response. Useful as a deploy check.
 
 ```ts
-const { data } = await mc.webhooks.validate('deploy-smoke-test')  // requestId optional, max 28 chars
+const { data, error } = await mc.webhooks.validate('deploy-smoke-test')  // requestId optional, max 28 chars
+if (error) {
+    console.error('Webhook validation failed:', error.message)
+    return
+}
 
 if (data?.allPassed) {
   console.log('All webhooks responded with 2xx')
@@ -44,7 +53,7 @@ The test payload carries `event: 'test'` and a hardcoded sender of `test@mailcha
 duration, and event count. Use it to investigate failed deliveries.
 
 ```ts
-const { data } = await mc.webhooks.batches({
+const { data, error } = await mc.webhooks.batches({
   statuses:      ['4xx', '5xx', 'no_response'],  // '1xx' | '2xx' | '3xx' | '4xx' | '5xx' | 'no_response'
   createdAfter:  '2026-05-20',
   createdBefore: '2026-05-25',                   // range cannot exceed 31 days
@@ -59,7 +68,7 @@ If neither `createdAfter` nor `createdBefore` is set, the default range is the l
 ### Resend A Batch
 
 ```ts
-const { data } = await mc.webhooks.resendBatch(12345)
+const { data, error } = await mc.webhooks.resendBatch(12345)
 
 console.log(data?.statusCode, data?.duration)
 ```
@@ -116,7 +125,8 @@ By default `verify()` fetches and caches the public key automatically from MailC
 You can supply it yourself to avoid the outbound call:
 
 ```ts
-const { data: keyData } = await mc.webhooks.getSigningKey(keyId)
+const { data: keyData, error: getKeyErr } = await mc.webhooks.getSigningKey(keyId)
+if (getKeyErr) { /*...*/ }
 
 const { data, error } = await Webhooks.verify({
   payload: rawBody,
@@ -124,6 +134,7 @@ const { data, error } = await Webhooks.verify({
   publicKey: keyData?.key,
   cache: false   // disable built-in caching when you manage the key yourself
 })
+if (error) { /*...*/ }
 ```
 
 Cache the key — it only changes on rotation, and MailChannels may publish multiple active
