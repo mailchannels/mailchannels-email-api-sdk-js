@@ -207,19 +207,22 @@ download the tarball, extract it, and copy the skill directory wherever your
 agent looks for skills, rules, or context files:
 
 ```bash
+# Make a temp directory to hold the tarball and extracted files:
+mkdir /tmp/mc-js-sdk
+
 # Pin the version to match the SDK you have installed — omit the pin to
 # grab the latest release:
-npm pack mailchannels-sdk
+npm pack --pack-destination /tmp/mc-js-sdk mailchannels-sdk
 
 # Extract the tarball:
-tar -xzf mailchannels-sdk-*.tgz
+tar -xzf /tmp/mc-js-sdk/mailchannels-sdk-*.tgz -C /tmp/mc-js-sdk
 
 # Replace the destination with your agent's path:
 mkdir -p <your-agent's-skills-dir>
-cp -r package/.agents/skills/mailchannels-js <your-agent's-skills-dir>/
+cp -r /tmp/mc-js-sdk/package/.agents/skills/mailchannels-js <your-agent's-skills-dir>/
 
 # Clean up:
-rm -rf package mailchannels-sdk-*.tgz
+rm -r /tmp/mc-js-sdk
 ```
 
 Re-run the same commands when you upgrade the SDK so the skill stays in step
