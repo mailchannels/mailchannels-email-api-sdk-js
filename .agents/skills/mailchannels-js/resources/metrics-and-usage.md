@@ -13,17 +13,18 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 
-const { data } = await mc.metrics.volume({
+const { data, error } = await mc.metrics.volume({
   startTime: '2026-04-01',
   endTime:   '2026-05-01T00:00:00Z',
   interval:  'day',        // 'hour' | 'day' | 'week' | 'month' (default 'day')
   campaignId: 'welcome'   // optional filter
 })
+if (error) { /*...*/ }
 
 // Same parameter shape — pass the same options to any of these:
-await mc.metrics.engagement({ interval: 'day' })           // open / click counts
-await mc.metrics.performance({ interval: 'day' })          // delivered / bounced / processed
-await mc.metrics.recipientBehaviour({ interval: 'day' })   // unsubscribes
+const { data: engagement, error: engErr }   = await mc.metrics.engagement({ interval: 'day' })
+const { data: perf,       error: perfErr }  = await mc.metrics.performance({ interval: 'day' })
+const { data: behaviour,  error: behErr }   = await mc.metrics.recipientBehaviour({ interval: 'day' })
 ```
 
 Time formats accepted: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults: `startTime` is
@@ -35,7 +36,8 @@ Each response includes both totals **and** a `buckets` object grouped by metric 
 containing a list of `{ count, periodStart }` rows aligned to `interval`.
 
 ```ts
-const { data } = await mc.metrics.volume({ interval: 'day' })
+const { data, error } = await mc.metrics.volume({ interval: 'day' })
+if (error) { /*...*/ }
 
 for (const bucket of data?.buckets.processed ?? []) {
   console.log(bucket.periodStart, bucket.count)
@@ -63,7 +65,7 @@ for (const bucket of data?.buckets.processed ?? []) {
 `mc.metrics.senders()` lists per-sender totals grouped either by campaign or sub-account.
 
 ```ts
-const { data } = await mc.metrics.senders(
+const { data, error } = await mc.metrics.senders(
   'campaigns',           // required: 'campaigns' | 'sub-accounts'
   {
     startTime:  '2026-04-01',
@@ -73,6 +75,7 @@ const { data } = await mc.metrics.senders(
     sortOrder:  'desc'       // 'asc' | 'desc', default desc (by processed + dropped)
   }
 )
+if (error) { /*...*/ }
 
 for (const sender of data?.senders ?? []) {
   console.log(sender.name, sender.processed, sender.bounced)
@@ -84,7 +87,8 @@ Senders with **zero traffic in the time range are omitted** from the response.
 ### Usage
 
 ```ts
-const { data: usage } = await mc.metrics.usage()
+const { data: usage, error } = await mc.metrics.usage()
+if (error) { /*...*/ }
 
 console.log(usage?.total, usage?.startDate, usage?.endDate)
 ```
