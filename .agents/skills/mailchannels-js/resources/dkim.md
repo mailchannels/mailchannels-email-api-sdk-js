@@ -85,7 +85,7 @@ key will fail DKIM at receiving providers.
 ### Sending With A Hosted Key
 
 ```ts
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'sender@example.com',
   to: 'recipient@example.net',
   subject: 'Signed',
@@ -106,7 +106,7 @@ If you keep the private key yourself, pass it Base64-encoded (PEM headers are st
 automatically):
 
 ```ts
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'sender@example.com',
   to: 'recipient@example.net',
   subject: 'Signed',

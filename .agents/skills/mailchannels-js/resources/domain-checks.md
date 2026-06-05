@@ -79,7 +79,7 @@ const { data, error } = await mc.domains.check('example.com', {
 If your lockdown record uses `senderid=` or `sidw=` fields, pass the sender identity:
 
 ```ts
-const { data } = await mc.domains.check('example.com', {
+const { data, error } = await mc.domains.check('example.com', {
   senderId: 'example|domain|example.com'
 })
 ```
