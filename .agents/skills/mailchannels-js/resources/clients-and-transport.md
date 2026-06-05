@@ -40,9 +40,14 @@ const parent  = new MailChannels(process.env.PARENT_API_KEY)
 const tenantA = new MailChannels(process.env.TENANT_A_API_KEY)
 const tenantB = new MailChannels(process.env.TENANT_B_API_KEY)
 
-await parent.subAccounts.list()
-await tenantA.emails.queue({ ... })
-await tenantB.emails.queue({ ... })
+const { data: accounts, error: listErr } = await parent.subAccounts.list()
+if (listErr) { /*...*/ }
+
+const { data: queueA, error: queueErrA } = await tenantA.emails.queue({ ... })
+if (queueErrA) { /*...*/ }
+
+const { data: queueB, error: queueErrB } = await tenantB.emails.queue({ ... })
+if (queueErrB) { /*...*/ }
 ```
 
 ### Request Cancellation
