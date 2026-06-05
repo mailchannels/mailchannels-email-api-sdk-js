@@ -106,6 +106,32 @@ describe("list", () => {
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
+  it("should contain error for invalid createdBefore date", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const suppressions = new Suppressions(mockClient);
+    const { data, error } = await suppressions.list({ ...fake.options, createdBefore: "invalid-date" });
+
+    expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid createdAfter date", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const suppressions = new Suppressions(mockClient);
+    const { data, error } = await suppressions.list({ ...fake.options, createdAfter: "invalid-date" });
+
+    expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {

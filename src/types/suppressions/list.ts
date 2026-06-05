@@ -13,13 +13,13 @@ export interface SuppressionsListOptions {
    */
   source?: Exclude<SuppressionsSource, "all">;
   /**
-   * The date and/or time before which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
+   * The date and/or time before which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object.
    */
-  createdBefore?: string;
+  createdBefore?: string | Date;
   /**
-   * The date and/or time after which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
+   * The date and/or time after which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object.
    */
-  createdAfter?: string;
+  createdAfter?: string | Date;
   /**
    * The maximum number of suppression entries to return. Must be between `1` and `1000`.
    * @default 1000

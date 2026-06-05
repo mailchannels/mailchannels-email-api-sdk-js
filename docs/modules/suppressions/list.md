@@ -35,8 +35,8 @@ const { data, error } = await mailchannels.suppressions.list()
   - `source` `"api" | "unsubscribe_link" | "list_unsubscribe" | "hard_bounce" | "spam_complaint"` <Badge type="info">optional</Badge>: The source of the suppression entries to filter by. If not provided, suppression entries from all sources will be returned.
     > [!NOTE]
     > Possible values are: `api`, `unsubscribe_link`, `list_unsubscribe`, `hard_bounce`, `spam_complaint`.
-  - `createdBefore` `string` <Badge type="info">optional</Badge>: The date and/or time before which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`
-  - `createdAfter` `string` <Badge type="info">optional</Badge>: The date and/or time after which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`
+  - `createdBefore` `string | Date` <Badge type="info">optional</Badge>: The date and/or time before which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object.
+  - `createdAfter` `string | Date` <Badge type="info">optional</Badge>: The date and/or time after which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object.
   - `limit` `number` <Badge type="info">optional</Badge>: The maximum number of suppression entries to return. Must be between `1` and `1000`. Defaults to `1000`.
   - `offset` `number` <Badge type="info">optional</Badge>: The number of suppression entries to skip before returning results. Defaults to `0`.
 
