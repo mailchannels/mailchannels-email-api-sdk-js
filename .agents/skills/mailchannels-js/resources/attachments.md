@@ -24,7 +24,7 @@ const report = Attachment.fromBytes(
 // Also accepts ArrayBuffer:
 const pdf = Attachment.fromBytes(arrayBuffer, { filename: 'doc.pdf' })
 
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'billing@example.com',
   to: 'recipient@example.net',
   subject: 'Your invoice',
@@ -54,7 +54,7 @@ const logo = Attachment.fromBytes(bytes, {
   contentId: 'company-logo'
 })
 
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'sender@example.com',
   to: 'recipient@example.net',
   subject: 'Inline image',
@@ -80,7 +80,7 @@ The `attachments` field accepts `(EmailsSendAttachment | Promise<EmailsSendAttac
 so you can pass unresolved promises and the SDK will await them before sending:
 
 ```ts
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'sender@example.com',
   to: 'recipient@example.net',
   subject: 'Reports',

@@ -79,7 +79,7 @@ and cannot include `text/plain` when `text` is also set.
 
 ```ts
 // Shorthand — simplest form for most sends
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'sender@example.com',
   to: 'recipient@example.net',
   subject: 'Hello',
@@ -89,7 +89,7 @@ await mc.emails.queue({
 
 // Explicit content array — use when you need a non-standard MIME type
 // or want precise control over part ordering
-await mc.emails.queue({
+const { data: data1, error: err1 } = await mc.emails.queue({
   from: 'sender@example.com',
   to: 'recipient@example.net',
   subject: 'Hello',
@@ -100,7 +100,7 @@ await mc.emails.queue({
 })
 
 // Mixed — shorthand + extra content parts (no type collision)
-await mc.emails.queue({
+const { data: data2, error: err2 } = await mc.emails.queue({
   from: 'sender@example.com',
   to: 'recipient@example.net',
   subject: 'Hello',
@@ -128,6 +128,7 @@ const { data, error } = await mc.emails.send(
   },
   true  // dryRun
 )
+if (error) { /* ... */ }
 
 // data.rendered is a string[] — one rendered message per personalization
 console.log(data?.rendered?.[0])
@@ -147,7 +148,8 @@ console.log(data?.rendered?.[0])
 ### send() Response Details
 
 ```ts
-const { data } = await mc.emails.send({ ... })
+const { data, error } = await mc.emails.send({ ... })
+if (error) { /* ... */ }
 
 data?.results?.forEach(r => {
   console.log(r.messageId, r.status, r.reason)
@@ -178,7 +180,7 @@ data?.results?.forEach(r => {
 ### Tracking
 
 ```ts
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'sender@example.com',
   to: 'recipient@example.net',
   subject: 'Tracked',

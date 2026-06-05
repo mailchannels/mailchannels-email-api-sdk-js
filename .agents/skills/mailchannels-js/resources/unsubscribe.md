@@ -16,7 +16,7 @@ Use the literal placeholder string `{{mc-unsubscribe-url}}` inside a mustache HT
 MailChannels substitutes a hosted one-click unsubscribe URL at render time.
 
 ```ts
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'sender@example.com',
   to: 'recipient@example.net',
   subject: 'Newsletter',
@@ -40,7 +40,7 @@ to render their "Unsubscribe" button next to the sender name.
 on both surfaces:
 
 ```ts
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'sender@example.com',
   to: 'recipient@example.net',
   subject: 'Marketing message',

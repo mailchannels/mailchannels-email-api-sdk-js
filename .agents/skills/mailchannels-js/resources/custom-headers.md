@@ -10,7 +10,7 @@ custom `X-…` header.
 - **If the same header appears in both, the personalization value wins.**
 
 ```ts
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'sender@example.com',
   subject: 'Hello',
   text: 'Hello',

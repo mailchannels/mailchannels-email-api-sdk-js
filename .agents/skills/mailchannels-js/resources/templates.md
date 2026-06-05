@@ -15,7 +15,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'sender@example.com',
   to: 'jane@example.net',
   subject: 'Hello {{name}}',
@@ -35,7 +35,7 @@ Each personalization renders independently with its own variables. Root-level
 (personalization wins on conflict):
 
 ```ts
-await mc.emails.queue({
+const { data, error } = await mc.emails.queue({
   from: 'sender@example.com',
   subject: 'Hi {{name}}',
   text: 'Hi {{name}}, you are on the {{plan}} plan.',
