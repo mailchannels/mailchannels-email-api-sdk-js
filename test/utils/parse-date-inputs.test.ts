@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDateInput } from "~/utils/format-date-input";
+import { formatDateInput, parseDateInputs } from "~/utils/parse-date-inputs";
 
 const fake = {
   date: new Date("2026-01-01T12:00:00Z"),
@@ -62,5 +62,17 @@ describe("formatDateInput", () => {
   it("should return null for non-standard date string", () => {
     const result = formatDateInput(fake.invalidDateString);
     expect(result).toBeNull();
+  });
+});
+
+describe("parseDateInputs", () => {
+  it("should return formatted dates for valid inputs", () => {
+    const options = {
+      createdBefore: fake.date
+    };
+
+    const { dates, error } = parseDateInputs(options);
+    expect(error).toBeNull();
+    expect(dates.createdBefore).toBe(fake.date.toISOString());
   });
 });
