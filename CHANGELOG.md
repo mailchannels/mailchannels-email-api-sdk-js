@@ -1,6 +1,48 @@
 # Changelog
 
 
+## v1.0.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.0.0%0Dv0.8.0)
+
+### 🚀 Enhancements
+
+- **errors:** Introduce error type keys ([f49c49f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f49c49f))
+- **attachment:** Add `Attachment.fromBlob` helper ([c4cee9b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/c4cee9b))
+
+### 🩹 Fixes
+
+- Validate email subject in send payload ([c05f91b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/c05f91b))
+
+### 💅 Refactors
+
+- **attachment:** ⚠️  Remove file/url helpers ([af3f954](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/af3f954))
+- Use single quotes in missing sender message ([15f4b17](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/15f4b17))
+
+### 📖 Documentation
+
+- **examples:** Expand nextjs app examples ([df7e437](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/df7e437))
+- **examples:** Expand astro app examples ([f1f53ad](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f1f53ad))
+- **examples:** Expand sveltekit app examples ([7174e1c](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7174e1c))
+- Add license, TypeScript, and Node.js version badges to README ([8e3a569](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/8e3a569))
+- **readme:** Use absolute Bitbucket URLs in README ([f4bded4](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f4bded4))
+- **readme:** Fix missing absolute license link ([d71e805](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d71e805))
+- Bump Email API version to 1.0.0 ([2991b6e](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/2991b6e))
+
+### 🏡 Chore
+
+- Refactor parity fixture generator, cover readme version note, and update info ([e9458bc](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/e9458bc))
+- Patch changelogen for Bitbucket hash ref bug ([acbecf1](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/acbecf1))
+
+#### ⚠️ Breaking Changes
+
+- **attachment:** ⚠️  Remove file/url helpers ([af3f954](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/af3f954))
+
+### ❤️ Contributors
+
+- Yizack Rangel <yizack@mailchannels.com>
+- Behrang Sabeghi <behrang.sabeghi@mailchannels.com>
+
 ## v0.8.0
 
 

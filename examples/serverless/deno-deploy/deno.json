@@ -3,6 +3,6 @@
     "dev": "deno run --watch --allow-read --allow-net main.ts"
   },
   "imports": {
-    "mailchannels-sdk": "npm:mailchannels-sdk@^0.8.0"
+    "mailchannels-sdk": "npm:mailchannels-sdk@^1.0.0"
   }
 }

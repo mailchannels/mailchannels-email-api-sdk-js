@@ -64,3 +64,6 @@ docs/snippets
 
 # Examples
 examples/pnpm-lock.yaml
+examples/**/*/deno.lock
+examples/**/*/package-lock.json
+examples/**/*/pnpm-lock.yaml

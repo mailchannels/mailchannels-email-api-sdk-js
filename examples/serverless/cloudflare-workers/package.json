@@ -10,12 +10,12 @@
     "cf-typegen": "wrangler types"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.16.10",
-    "@types/node": "^25.9.1",
+    "@cloudflare/vitest-pool-workers": "^0.16.13",
+    "@types/node": "^25.9.2",
     "typescript": "^6.0.3",
-    "wrangler": "^4.95.0"
+    "wrangler": "^4.98.0"
   },
   "dependencies": {
-    "mailchannels-sdk": "^0.8.0"
+    "mailchannels-sdk": "^1.0.0"
   }
 }

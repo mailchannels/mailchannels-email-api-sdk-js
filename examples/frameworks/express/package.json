@@ -8,11 +8,11 @@
   },
   "dependencies": {
     "express": "^5.2.1",
-    "mailchannels-sdk": "^0.8.0"
+    "mailchannels-sdk": "^1.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
-    "@types/node": "^25.9.1",
+    "@types/node": "^25.9.2",
     "typescript": "^6.0.3"
   }
 }
