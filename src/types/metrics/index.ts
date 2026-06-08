@@ -18,15 +18,15 @@ export interface MetricsBucket {
 
 export interface MetricsOptions {
   /**
-   * The beginning of the time range for retrieving message metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to one month ago if not provided.
+   * The beginning of the time range for retrieving message metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object. Defaults to one month ago if not provided.
    * @example "2025-05-26"
    */
-  startTime?: string;
+  startTime?: string | Date;
   /**
-   * The end of the time range for retrieving message metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to the current time if not provided.
+   * The end of the time range for retrieving message metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object. Defaults to the current time if not provided.
    * @example "2025-05-31T15:16:17Z"
    */
-  endTime?: string;
+  endTime?: string | Date;
   /**
    * The ID of the campaign to filter metrics by. If not provided, metrics for all campaigns will be returned.
    */

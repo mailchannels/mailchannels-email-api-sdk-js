@@ -72,7 +72,16 @@ describe("parseDateInputs", () => {
     };
 
     const { dates, error } = parseDateInputs(options);
+    expect(dates?.createdBefore).toBe(fake.date.toISOString());
     expect(error).toBeNull();
-    expect(dates.createdBefore).toBe(fake.date.toISOString());
+  });
+
+  it("should return error for invalid date input", () => {
+    const options = {
+      createdBefore: "invalid-date"
+    };
+    const { dates, error } = parseDateInputs(options);
+    expect(dates).toBeNull();
+    expect(error?.message).toStrictEqual("The 'createdBefore' value is not a valid date.");
   });
 });

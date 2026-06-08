@@ -28,7 +28,7 @@ export const parseDateInputs = <T extends Record<string, string | Date | undefin
   for (const key of keys) {
     const formatted = formatDateInput(options?.[key]);
     if (formatted === null) {
-      return { dates, error: createValidationError(`The '${key}' value is not a valid date.`) };
+      return { dates: null, error: createValidationError(`The '${key}' value is not a valid date.`) };
     }
     dates[key] = formatted;
   }

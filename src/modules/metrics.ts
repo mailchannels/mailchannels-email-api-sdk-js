@@ -2,6 +2,7 @@ import type { MailChannelsClient } from "../client";
 import { ErrorCode, getResultError, getStatusError, validatePagination } from "../utils/errors";
 import { clean } from "../utils/clean";
 import { mapBucket } from "../utils/map-bucket";
+import { parseDateInputs } from "../utils/parse-date-inputs";
 import type { ErrorResponse } from "../types/responses";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
@@ -27,10 +28,17 @@ export class Metrics {
   async engagement (options?: MetricsOptions): Promise<MetricsEngagementResponse> {
     let error: ErrorResponse | null = null;
 
+    const { dates, error: dateError } = parseDateInputs({
+      startTime: options?.startTime,
+      endTime: options?.endTime
+    });
+
+    if (!dates) return { data: null, error: dateError };
+
     const response = await this.mailchannels.get<MetricsEngagementApiResponse>("/tx/v1/metrics/engagement", {
       query: {
-        start_time: options?.startTime,
-        end_time: options?.endTime,
+        start_time: dates.startTime,
+        end_time: dates.endTime,
         campaign_id: options?.campaignId,
         interval: options?.interval
       },
@@ -76,10 +84,17 @@ export class Metrics {
   async performance (options?: MetricsOptions): Promise<MetricsPerformanceResponse> {
     let error: ErrorResponse | null = null;
 
+    const { dates, error: dateError } = parseDateInputs({
+      startTime: options?.startTime,
+      endTime: options?.endTime
+    });
+
+    if (!dates) return { data: null, error: dateError };
+
     const response = await this.mailchannels.get<MetricsPerformanceApiResponse>("/tx/v1/metrics/performance", {
       query: {
-        start_time: options?.startTime,
-        end_time: options?.endTime,
+        start_time: dates.startTime,
+        end_time: dates.endTime,
         campaign_id: options?.campaignId,
         interval: options?.interval
       },
@@ -123,10 +138,17 @@ export class Metrics {
   async recipientBehaviour (options?: MetricsOptions): Promise<MetricsRecipientBehaviourResponse> {
     let error: ErrorResponse | null = null;
 
+    const { dates, error: dateError } = parseDateInputs({
+      startTime: options?.startTime,
+      endTime: options?.endTime
+    });
+
+    if (!dates) return { data: null, error: dateError };
+
     const response = await this.mailchannels.get<MetricsRecipientBehaviourApiResponse>("/tx/v1/metrics/recipient-behaviour", {
       query: {
-        start_time: options?.startTime,
-        end_time: options?.endTime,
+        start_time: dates.startTime,
+        end_time: dates.endTime,
         campaign_id: options?.campaignId,
         interval: options?.interval
       },
@@ -168,10 +190,17 @@ export class Metrics {
   async volume (options?: MetricsOptions): Promise<MetricsVolumeResponse> {
     let error: ErrorResponse | null = null;
 
+    const { dates, error: dateError } = parseDateInputs({
+      startTime: options?.startTime,
+      endTime: options?.endTime
+    });
+
+    if (!dates) return { data: null, error: dateError };
+
     const response = await this.mailchannels.get<MetricsVolumeApiResponse>("/tx/v1/metrics/volume", {
       query: {
-        start_time: options?.startTime,
-        end_time: options?.endTime,
+        start_time: dates.startTime,
+        end_time: dates.endTime,
         campaign_id: options?.campaignId,
         interval: options?.interval
       },
@@ -247,13 +276,20 @@ export class Metrics {
   async senders (type: MetricsSendersType, options?: MetricsSendersOptions): Promise<MetricsSendersResponse> {
     let error: ErrorResponse | null = null;
 
+    const { dates, error: dateError } = parseDateInputs({
+      startTime: options?.startTime,
+      endTime: options?.endTime
+    });
+
+    if (!dates) return { data: null, error: dateError };
+
     error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
 
     const response = await this.mailchannels.get<MetricsSendersApiResponse>(`/tx/v1/metrics/senders/${type}`, {
       query: {
-        start_time: options?.startTime,
-        end_time: options?.endTime,
+        start_time: dates.startTime,
+        end_time: dates.endTime,
         limit: options?.limit,
         offset: options?.offset,
         sort_order: options?.sortOrder

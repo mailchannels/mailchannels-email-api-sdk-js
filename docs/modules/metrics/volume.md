@@ -31,8 +31,8 @@ const { data, error } = await mailchannels.metrics.volume()
 ## Params
 
 - `options` `MetricsOptions` <Badge type="info">optional</Badge>: Optional filter options.
-  - `startTime` `string` <Badge type="info">optional</Badge>: The beginning of the time range for retrieving message volume metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to one month ago if not provided.
-  - `endTime` `string` <Badge type="info">optional</Badge>: The end of the time range for retrieving message volume metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to the current time if not provided.
+  - `startTime` `string | Date` <Badge type="info">optional</Badge>: The beginning of the time range for retrieving message volume metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object. Defaults to one month ago if not provided.
+  - `endTime` `string | Date` <Badge type="info">optional</Badge>: The end of the time range for retrieving message volume metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object. Defaults to the current time if not provided.
   - `campaignId` `string` <Badge type="info">optional</Badge>: The ID of the campaign to filter metrics by. If not provided, metrics for all campaigns will be returned.
   - `interval` `"hour" | "day" | "week" | "month"` <Badge type="info">optional</Badge>: The interval for aggregating metrics data. Defaults to `day`.
 
