@@ -52,6 +52,32 @@ describe("recipientBehaviour", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
+  it("should contain error for invalid startTime date", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { data, error } = await metrics.recipientBehaviour({ ...fake.options, startTime: "invalid-date" });
+
+    expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid endTime date", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { data, error } = await metrics.recipientBehaviour({ ...fake.options, endTime: "invalid-date" });
+
+    expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {

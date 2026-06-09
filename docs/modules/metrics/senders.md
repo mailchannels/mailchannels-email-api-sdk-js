@@ -32,8 +32,8 @@ const { data, error } = await mailchannels.metrics.senders("campaigns")
 
 - `type` `MetricsSendersType` <Badge type="danger">required</Badge>: The type of senders to retrieve metrics for. Can be either `sub-accounts` or `campaigns`.
 - `options` `MetricsSendersOptions` <Badge type="info">optional</Badge>: Optional filter options.
-  - `startTime` `string` <Badge type="info">optional</Badge>: The beginning of the time range for retrieving top senders metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to one month ago if not provided.
-  - `endTime` `string` <Badge type="info">optional</Badge>: The end of the time range for retrieving top senders metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to the current time if not provided.
+  - `startTime` `string | Date` <Badge type="info">optional</Badge>: The beginning of the time range for retrieving top senders metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object. Defaults to one month ago if not provided.
+  - `endTime` `string | Date` <Badge type="info">optional</Badge>: The end of the time range for retrieving top senders metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object. Defaults to the current time if not provided.
   - `limit` `number` <Badge type="info">optional</Badge>: The maximum number of senders to return. Possible values are 1 to 1000. Defaults to 10 if not provided.
   - `offset` `number` <Badge type="info">optional</Badge>: The number of senders to skip before returning results. Defaults to 0 if not provided.
   - `sortOrder` `"asc" | "desc"` <Badge type="info">optional</Badge>: The order in which to sort the results, based on total messages (processed + dropped). Defaults to `desc` if not provided.

@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../utils/errors";
 import { clean } from "../utils/clean";
-import { formatDateInput } from "../utils/format-date-input";
+import { parseDateInputs } from "../utils/parse-date-inputs";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
 import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../types/suppressions/internal";
@@ -101,17 +101,12 @@ export class Suppressions {
       return { data: null, error };
     }
 
-    const createdBefore = formatDateInput(options?.createdBefore);
-    if (createdBefore === null) {
-      error = createValidationError("The 'createdBefore' value is not a valid date.");
-      return { data: null, error };
-    }
+    const { dates, error: dateError } = parseDateInputs({
+      createdBefore: options?.createdBefore,
+      createdAfter: options?.createdAfter
+    });
 
-    const createdAfter = formatDateInput(options?.createdAfter);
-    if (createdAfter === null) {
-      error = createValidationError("The 'createdAfter' value is not a valid date.");
-      return { data: null, error };
-    }
+    if (!dates) return { data: null, error: dateError };
 
     error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
@@ -119,8 +114,8 @@ export class Suppressions {
     const payload: SuppressionsListPayload = {
       recipient: options?.recipient,
       source: options?.source,
-      created_before: createdBefore,
-      created_after: createdAfter,
+      created_before: dates.createdBefore,
+      created_after: dates.createdAfter,
       limit: options?.limit,
       offset: options?.offset
     };
