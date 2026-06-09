@@ -1,6 +1,6 @@
 import { createValidationError } from "./errors";
 
-const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/;
+const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})$/;
 const ISO_DATE_ONLY_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 
 export const formatDateInput = (value?: Date | string) => {
@@ -16,6 +16,10 @@ export const formatDateInput = (value?: Date | string) => {
       return null;
     }
 
+    if (ISO_DATE_REGEX.test(value)) {
+      const date = new Date(value);
+      return date.toISOString();
+    }
   }
 
   return value;

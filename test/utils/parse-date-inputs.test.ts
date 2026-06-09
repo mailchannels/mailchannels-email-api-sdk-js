@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import { formatDateInput, parseDateInputs } from "~/utils/parse-date-inputs";
 
 const fake = {
-  date: new Date("2026-01-01T12:00:00Z"),
-  dateString: "2026-01-01T12:00:00Z",
+  date: new Date("2026-01-01T12:00:00.000Z"),
+  dateString: "2026-01-01T12:00:00.000Z",
   dateOnlyString: "2026-01-01",
+  dateWithTimezone: "2026-01-01T14:00:00+02:00",
+  dateWithSpaces: "2026-01-01 12:00:00Z",
   invalidDateString: "January 01, 2026"
 };
 
@@ -22,6 +24,16 @@ describe("formatDateInput", () => {
   it("should return the same string if it's a valid date-only string", () => {
     const result = formatDateInput(fake.dateOnlyString);
     expect(result).toBe(fake.dateOnlyString);
+  });
+
+  it("should return formatted ISO string for date-time string with timezone", () => {
+    const result = formatDateInput(fake.dateWithTimezone);
+    expect(result).toBe(fake.dateString);
+  });
+
+  it("should return formatted ISO string for date-time string with spaces", () => {
+    const result = formatDateInput(fake.dateWithSpaces);
+    expect(result).toBe(fake.dateString);
   });
 
   it("should return null for invalid date string", () => {
