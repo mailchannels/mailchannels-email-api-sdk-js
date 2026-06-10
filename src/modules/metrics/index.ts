@@ -1,17 +1,17 @@
-import type { MailChannelsClient } from "../client";
-import { ErrorCode, getResultError, getStatusError, validatePagination } from "../utils/errors";
-import { clean } from "../utils/clean";
-import { mapBucket } from "../utils/map-bucket";
-import { parseDateInputs } from "../utils/parse-date-inputs";
-import type { ErrorResponse } from "../types/responses";
-import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
-import type { MetricsOptions } from "../types/metrics";
-import type { MetricsEngagementResponse } from "../types/metrics/engagement";
-import type { MetricsPerformanceResponse } from "../types/metrics/performance";
-import type { MetricsRecipientBehaviourResponse } from "../types/metrics/recipient-behaviour";
-import type { MetricsVolumeResponse } from "../types/metrics/volume";
-import type { MetricsUsageResponse } from "../types/metrics/usage";
-import type { MetricsSendersOptions, MetricsSendersResponse, MetricsSendersType } from "../types/metrics/senders";
+import type { MailChannelsClient } from "../../client";
+import { ErrorCode, getResultError, getStatusError, validatePagination } from "../../utils/errors";
+import { clean } from "../../utils/clean";
+import { mapBucket } from "../../utils/map-bucket";
+import { parseDateInputs } from "../../utils/parse-date-inputs";
+import type { ErrorResponse } from "../../types/responses";
+import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../../types/metrics/internal";
+import type { MetricsOptions } from "../../types/metrics";
+import type { MetricsEngagementResponse } from "../../types/metrics/engagement";
+import type { MetricsPerformanceResponse } from "../../types/metrics/performance";
+import type { MetricsRecipientBehaviourResponse } from "../../types/metrics/recipient-behaviour";
+import type { MetricsVolumeResponse } from "../../types/metrics/volume";
+import type { MetricsUsageResponse } from "../../types/metrics/usage";
+import type { MetricsSendersOptions, MetricsSendersResponse, MetricsSendersType } from "../../types/metrics/senders";
 
 export class Metrics {
   constructor (protected mailchannels: MailChannelsClient) {}

@@ -1,14 +1,14 @@
-import type { MailChannelsClient } from "../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../utils/errors";
-import { clean } from "../utils/clean";
-import type { ErrorResponse, SuccessResponse } from "../types/responses";
-import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../types/sub-accounts/internal";
-import type { SubAccountsCreateResponse } from "../types/sub-accounts/create";
-import type { SubAccountsListOptions, SubAccountsListResponse } from "../types/sub-accounts/list";
-import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyOptions, SubAccountsListApiKeyResponse } from "../types/sub-accounts/api-key";
-import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../types/sub-accounts/smtp-password";
-import type { SubAccountsLimit, SubAccountsLimitResponse } from "../types/sub-accounts/limit";
-import type { SubAccountsUsageResponse } from "../types/sub-accounts/usage";
+import type { MailChannelsClient } from "../../client";
+import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../utils/errors";
+import { clean } from "../../utils/clean";
+import type { ErrorResponse, SuccessResponse } from "../../types/responses";
+import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../../types/sub-accounts/internal";
+import type { SubAccountsCreateResponse } from "../../types/sub-accounts/create";
+import type { SubAccountsListOptions, SubAccountsListResponse } from "../../types/sub-accounts/list";
+import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyOptions, SubAccountsListApiKeyResponse } from "../../types/sub-accounts/api-key";
+import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../../types/sub-accounts/smtp-password";
+import type { SubAccountsLimit, SubAccountsLimitResponse } from "../../types/sub-accounts/limit";
+import type { SubAccountsUsageResponse } from "../../types/sub-accounts/usage";
 
 export class SubAccounts {
   private static readonly COMPANY_PATTERN = /^.{3,128}$/;

@@ -1,15 +1,15 @@
-import type { MailChannelsClient } from "../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../utils/errors";
-import { clean } from "../utils/clean";
-import { isValidWebhook } from "../utils/webhook-validator";
-import type { ErrorResponse, SuccessResponse } from "../types/responses";
-import type { WebhooksListResponse } from "../types/webhooks/list";
-import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
-import type { WebhooksValidateResponse } from "../types/webhooks/validate";
-import type { WebhooksVerifyOptions, WebhooksVerifyResponse } from "../types/webhooks/verify";
-import type { WebhooksBatchesOptions, WebhooksBatchesResponse } from "../types/webhooks/batches";
-import type { WebhooksResendBatchResponse } from "../types/webhooks/resend-batch";
-import type { WebhookEventReceived, WebhooksBatchesApiResponse, WebhooksResendBatchApiResponse, WebhooksValidateApiResponse } from "../types/webhooks/internal";
+import type { MailChannelsClient } from "../../client";
+import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../utils/errors";
+import { clean } from "../../utils/clean";
+import { isValidWebhook } from "../../utils/webhook-validator";
+import type { ErrorResponse, SuccessResponse } from "../../types/responses";
+import type { WebhooksListResponse } from "../../types/webhooks/list";
+import type { WebhooksSigningKeyResponse } from "../../types/webhooks/signing-key";
+import type { WebhooksValidateResponse } from "../../types/webhooks/validate";
+import type { WebhooksVerifyOptions, WebhooksVerifyResponse } from "../../types/webhooks/verify";
+import type { WebhooksBatchesOptions, WebhooksBatchesResponse } from "../../types/webhooks/batches";
+import type { WebhooksResendBatchResponse } from "../../types/webhooks/resend-batch";
+import type { WebhookEventReceived, WebhooksBatchesApiResponse, WebhooksResendBatchApiResponse, WebhooksValidateApiResponse } from "../../types/webhooks/internal";
 
 export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}
