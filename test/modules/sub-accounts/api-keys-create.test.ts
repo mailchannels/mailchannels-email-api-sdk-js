@@ -1,38 +1,28 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { SubAccounts } from "~/modules/sub-accounts";
+import type { SubAccountsCreateApiKeyResponse } from "~/types/sub-accounts/api-key";
 import { ErrorCode } from "~/utils/errors";
-import type { SubAccountsCreateSmtpPasswordResponse } from "~/types/sub-accounts/smtp-password";
-import type { SubAccountsCreateSmtpPasswordApiResponse } from "~/types/sub-accounts/internal";
 
 const fake = {
   validHandle: "validhandle123",
-  apiResponse: {
-    enabled: true,
-    id: 1,
-    smtp_password: "smtp-password-value"
-  } satisfies SubAccountsCreateSmtpPasswordApiResponse,
+  apiResponse: { id: 1, key: "api-key-value" } satisfies { id: number, key: string },
   expectedResponse: {
-    data: {
-      enabled: true,
-      id: 1,
-      smtpPassword: "smtp-password-value"
-    },
+    data: { id: 1, key: "api-key-value" },
     error: null
-  } satisfies SubAccountsCreateSmtpPasswordResponse
+  } satisfies SubAccountsCreateApiKeyResponse
 };
 
-describe("createSmtpPassword", () => {
-  it("should successfully create an SMTP password for a valid sub-account handle", async () => {
+describe("apiKeys.create", () => {
+  it("should successfully create an API key for a valid sub-account handle", async () => {
     const mockClient = {
       post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.createSmtpPassword(fake.validHandle);
+    const result = await subAccounts.apiKeys.create(fake.validHandle);
 
-    expect(data).toStrictEqual(fake.expectedResponse.data);
-    expect(error).toBeNull();
+    expect(result).toStrictEqual(fake.expectedResponse);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -42,14 +32,14 @@ describe("createSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.createSmtpPassword("");
+    const { data, error } = await subAccounts.apiKeys.create("");
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
-  it("should contain error on error", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
         onResponseError({ response: { status: ErrorCode.Forbidden } });
@@ -58,7 +48,7 @@ describe("createSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.createSmtpPassword(fake.validHandle);
+    const { data, error } = await subAccounts.apiKeys.create(fake.validHandle);
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -71,7 +61,7 @@ describe("createSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.createSmtpPassword(fake.validHandle);
+    const { data, error } = await subAccounts.apiKeys.create(fake.validHandle);
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -84,10 +74,23 @@ describe("createSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.createSmtpPassword(fake.validHandle);
+    const { data, error } = await subAccounts.apiKeys.create(fake.validHandle);
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should do the same thing as createApiKey", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValue(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const result = await subAccounts.apiKeys.create(fake.validHandle);
+    const deprecatedResult = await subAccounts.createApiKey(fake.validHandle);
+
+    expect(result).toStrictEqual(deprecatedResult);
+    expect(mockClient.post).toHaveBeenCalledTimes(2);
   });
 });

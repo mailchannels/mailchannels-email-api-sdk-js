@@ -1,33 +1,26 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { SubAccounts } from "~/modules/sub-accounts";
-import type { SubAccountsListApiKeyOptions, SubAccountsListApiKeyResponse } from "~/types/sub-accounts/api-key";
 import { ErrorCode } from "~/utils/errors";
+import type { SubAccountsLimit, SubAccountsLimitResponse } from "~/types/sub-accounts/limit";
 
 const fake = {
   validHandle: "validhandle123",
-  options: { limit: 10, offset: 0 } satisfies SubAccountsListApiKeyOptions,
-  apiResponse: [
-    { id: 1, key: "api-key-1" },
-    { id: 2, key: "api-key-2" }
-  ] satisfies { id: number, key: string }[],
+  apiResponse: { sends: 1 } satisfies SubAccountsLimit,
   expectedResponse: {
-    data: [
-      { id: 1, key: "api-key-1" },
-      { id: 2, key: "api-key-2" }
-    ],
+    data: { sends: 1 },
     error: null
-  } satisfies SubAccountsListApiKeyResponse
+  } satisfies SubAccountsLimitResponse
 };
 
-describe("listApiKeys", () => {
-  it("should retrieve a list of api keys for a handle", async () => {
+describe("limits.get", () => {
+  it("should successfully retrieve the limit of a sub-account with a valid handle", async () => {
     const mockClient = {
       get: vi.fn().mockResolvedValueOnce(fake.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.listApiKeys(fake.validHandle, fake.options);
+    const { data, error } = await subAccounts.limits.get(fake.validHandle);
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
@@ -40,33 +33,7 @@ describe("listApiKeys", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.listApiKeys("");
-
-    expect(error).toBeTruthy();
-    expect(data).toBeNull();
-    expect(mockClient.get).not.toHaveBeenCalled();
-  });
-
-  it("should contain error for invalid limit", async () => {
-    const mockClient = {
-      get: vi.fn()
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.listApiKeys(fake.validHandle, { limit: 1001 });
-
-    expect(error).toBeTruthy();
-    expect(data).toBeNull();
-    expect(mockClient.get).not.toHaveBeenCalled();
-  });
-
-  it("should contain error for invalid offset", async () => {
-    const mockClient = {
-      get: vi.fn()
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.listApiKeys(fake.validHandle, { offset: -1 });
+    const { data, error } = await subAccounts.limits.get("");
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -82,8 +49,7 @@ describe("listApiKeys", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.listApiKeys(fake.validHandle);
-
+    const { data, error } = await subAccounts.limits.get(fake.validHandle);
     expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
@@ -95,8 +61,7 @@ describe("listApiKeys", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.listApiKeys(fake.validHandle);
-
+    const { data, error } = await subAccounts.limits.get(fake.validHandle);
     expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
@@ -108,10 +73,22 @@ describe("listApiKeys", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { data, error } = await subAccounts.listApiKeys(fake.validHandle);
-
+    const { data, error } = await subAccounts.limits.get(fake.validHandle);
     expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should do the same thing as getLimit", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValue(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const result = await subAccounts.limits.get(fake.validHandle);
+    const deprecatedResult = await subAccounts.getLimit(fake.validHandle);
+
+    expect(result).toStrictEqual(deprecatedResult);
+    expect(mockClient.get).toHaveBeenCalledTimes(2);
   });
 });

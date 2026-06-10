@@ -7,14 +7,14 @@ const fake = {
   validHandle: "validhandle123"
 };
 
-describe("deleteApiKey", () => {
-  it("should successfully delete an API key for a valid sub-account handle", async () => {
+describe("smtpPasswords.delete", () => {
+  it("should successfully delete an SMTP password for a valid sub-account handle", async () => {
     const mockClient = {
       delete: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.deleteApiKey(fake.validHandle, 1);
+    const { success, error } = await subAccounts.smtpPasswords.delete(fake.validHandle, 1);
 
     expect(success).toBe(true);
     expect(error).toBeNull();
@@ -27,7 +27,7 @@ describe("deleteApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.deleteApiKey("", 1);
+    const { success, error } = await subAccounts.smtpPasswords.delete("", 1);
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
@@ -42,7 +42,7 @@ describe("deleteApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.deleteApiKey(fake.validHandle, 1);
+    const { success, error } = await subAccounts.smtpPasswords.delete(fake.validHandle, 1);
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
@@ -55,7 +55,7 @@ describe("deleteApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.deleteApiKey(fake.validHandle, 1);
+    const { success, error } = await subAccounts.smtpPasswords.delete(fake.validHandle, 1);
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
@@ -68,10 +68,23 @@ describe("deleteApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.deleteApiKey(fake.validHandle, 1);
+    const { success, error } = await subAccounts.smtpPasswords.delete(fake.validHandle, 1);
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should do the same thing as deleteSmtpPassword", async () => {
+    const mockClient = {
+      delete: vi.fn().mockResolvedValue(void 0)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const result = await subAccounts.smtpPasswords.delete(fake.validHandle, 1);
+    const deprecatedResult = await subAccounts.deleteSmtpPassword(fake.validHandle, 1);
+
+    expect(result).toStrictEqual(deprecatedResult);
+    expect(mockClient.delete).toHaveBeenCalledTimes(2);
   });
 });

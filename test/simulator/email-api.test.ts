@@ -171,33 +171,33 @@ describe("Email API simulator", () => {
     const listSubAccountsResult = await mailchannels.subAccounts.list();
     expect(listSubAccountsResult.data?.some(account => account.handle === "simacct")).toBe(true);
 
-    const createApiKeyResult = await mailchannels.subAccounts.createApiKey("simacct");
+    const createApiKeyResult = await mailchannels.subAccounts.apiKeys.create("simacct");
     expect(createApiKeyResult.data?.key).toBeTruthy();
     const createdApiKey = createApiKeyResult.data;
     if (!createdApiKey) throw new Error("Expected the simulator to create a sub-account API key.");
 
-    const listApiKeysResult = await mailchannels.subAccounts.listApiKeys("simacct");
+    const listApiKeysResult = await mailchannels.subAccounts.apiKeys.list("simacct");
     expect(listApiKeysResult.data?.length).toBe(1);
     const apiKey = listApiKeysResult.data?.at(0);
     expect(apiKey).toBeDefined();
     if (!apiKey) throw new Error("Expected an API key for the simulator sub-account.");
 
-    const createSmtpPasswordResult = await mailchannels.subAccounts.createSmtpPassword("simacct");
+    const createSmtpPasswordResult = await mailchannels.subAccounts.smtpPasswords.create("simacct");
     expect(createSmtpPasswordResult.data?.smtpPassword).toBeTruthy();
 
-    const listSmtpPasswordsResult = await mailchannels.subAccounts.listSmtpPasswords("simacct");
+    const listSmtpPasswordsResult = await mailchannels.subAccounts.smtpPasswords.list("simacct");
     expect(listSmtpPasswordsResult.data?.length).toBe(1);
     const smtpPassword = listSmtpPasswordsResult.data?.at(0);
     expect(smtpPassword).toBeDefined();
     if (!smtpPassword) throw new Error("Expected an SMTP password for the simulator sub-account.");
 
-    const getLimitBeforeResult = await mailchannels.subAccounts.getLimit("simacct");
+    const getLimitBeforeResult = await mailchannels.subAccounts.limits.get("simacct");
     expect(getLimitBeforeResult.data?.sends).toBe(-1);
 
-    const setLimitResult = await mailchannels.subAccounts.setLimit("simacct", { sends: 42 });
+    const setLimitResult = await mailchannels.subAccounts.limits.set("simacct", { sends: 42 });
     expect(setLimitResult.success).toBe(true);
 
-    const getLimitAfterResult = await mailchannels.subAccounts.getLimit("simacct");
+    const getLimitAfterResult = await mailchannels.subAccounts.limits.get("simacct");
     expect(getLimitAfterResult.data?.sends).toBe(42);
 
     const subAccountClient = new MailChannels(createdApiKey.key, { baseUrl });
@@ -254,9 +254,9 @@ describe("Email API simulator", () => {
 
     expect((await mailchannels.subAccounts.suspend("simacct")).success).toBe(true);
     expect((await mailchannels.subAccounts.activate("simacct")).success).toBe(true);
-    expect((await mailchannels.subAccounts.deleteLimit("simacct")).success).toBe(true);
-    expect((await mailchannels.subAccounts.deleteApiKey("simacct", apiKey.id)).success).toBe(true);
-    expect((await mailchannels.subAccounts.deleteSmtpPassword("simacct", smtpPassword.id)).success).toBe(true);
+    expect((await mailchannels.subAccounts.limits.delete("simacct")).success).toBe(true);
+    expect((await mailchannels.subAccounts.apiKeys.delete("simacct", apiKey.id)).success).toBe(true);
+    expect((await mailchannels.subAccounts.smtpPasswords.delete("simacct", smtpPassword.id)).success).toBe(true);
     expect((await mailchannels.subAccounts.delete("simacct")).success).toBe(true);
   });
 });

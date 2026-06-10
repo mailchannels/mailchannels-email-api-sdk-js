@@ -7,14 +7,14 @@ const fake = {
   validHandle: "validhandle123"
 };
 
-describe("setLimit", () => {
+describe("limits.set", () => {
   it("should successfully set the limit of a sub-account with a valid handle", async () => {
     const mockClient = {
       put: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.setLimit(fake.validHandle, { sends: 1 });
+    const { success, error } = await subAccounts.limits.set(fake.validHandle, { sends: 1 });
 
     expect(success).toBe(true);
     expect(error).toBeNull();
@@ -27,7 +27,7 @@ describe("setLimit", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.setLimit("", { sends: 1 });
+    const { success, error } = await subAccounts.limits.set("", { sends: 1 });
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
@@ -40,7 +40,7 @@ describe("setLimit", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.setLimit(fake.validHandle, { sends: -1 });
+    const { success, error } = await subAccounts.limits.set(fake.validHandle, { sends: -1 });
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
@@ -55,7 +55,7 @@ describe("setLimit", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.setLimit(fake.validHandle, { sends: 1 });
+    const { success, error } = await subAccounts.limits.set(fake.validHandle, { sends: 1 });
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
@@ -68,7 +68,7 @@ describe("setLimit", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.setLimit(fake.validHandle, { sends: 1 });
+    const { success, error } = await subAccounts.limits.set(fake.validHandle, { sends: 1 });
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
@@ -81,10 +81,23 @@ describe("setLimit", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.setLimit(fake.validHandle, { sends: 1 });
+    const { success, error } = await subAccounts.limits.set(fake.validHandle, { sends: 1 });
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
+  });
+
+  it("should do the same thing as setLimit", async () => {
+    const mockClient = {
+      put: vi.fn().mockResolvedValue(void 0)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const result = await subAccounts.limits.set(fake.validHandle, { sends: 1 });
+    const deprecatedResult = await subAccounts.setLimit(fake.validHandle, { sends: 1 });
+
+    expect(result).toStrictEqual(deprecatedResult);
+    expect(mockClient.put).toHaveBeenCalledTimes(2);
   });
 });
