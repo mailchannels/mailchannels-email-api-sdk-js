@@ -1,11 +1,11 @@
 ---
-title: Delete API Key
+title: Delete Limit
 titleTemplate: 🪪 Sub-Accounts
 ---
 
-# Delete API Key<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
+# Delete Limit<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
-Deletes the API key identified by its ID for the specified sub-account.
+Deletes the limit for the specified sub-account. After a successful deletion, the specified sub-account will be limited to the parent account's limit.
 
 ## Usage
 
@@ -16,7 +16,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { success, error } = await subAccounts.deleteApiKey('validhandle123', 1)
+const { success, error } = await subAccounts.limits.delete('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -24,14 +24,13 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success, error } = await mailchannels.subAccounts.deleteApiKey('validhandle123', 1)
+const { success, error } = await mailchannels.subAccounts.limits.delete('validhandle123')
 ```
 :::
 
 ## Params
 
-- `handle` `string` <Badge type="danger">required</Badge>: The handle of the sub-account for which the API key should be deleted.
-- `id` `number` <Badge type="danger">required</Badge>: The ID of the API key to delete.
+- `handle` `string` <Badge type="danger">required</Badge>: The handle of the sub-account to delete the limit for.
 
 ## Response
 
@@ -42,7 +41,7 @@ const { success, error } = await mailchannels.subAccounts.deleteApiKey('validhan
 
 **Signature**
 
-<<< @/snippets/sub-accounts-method-delete-api-key.ts
+<<< @/snippets/sub-accounts-limits-method-delete.ts
 
 **Response type declarations**
 

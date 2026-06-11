@@ -6,7 +6,7 @@ const guides = sidebar.find(item => item.text === 'Guides')?.items?.filter(item 
 
 # Examples
 
-Explore our collection of sample projects on GitHub.
+Explore our collection of sample projects on Bitbucket.
 
 <template v-for="group in guides" :key="group.text">
 

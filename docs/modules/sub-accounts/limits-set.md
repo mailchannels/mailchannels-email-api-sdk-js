@@ -16,7 +16,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { success, error } = await subAccounts.setLimit('validhandle123', { sends: 1000 })
+const { success, error } = await subAccounts.limits.set('validhandle123', { sends: 1000 })
 ```
 
 ```ts [full.ts]
@@ -24,7 +24,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success, error } = await mailchannels.subAccounts.setLimit('validhandle123', { sends: 1000 })
+const { success, error } = await mailchannels.subAccounts.limits.set('validhandle123', { sends: 1000 })
 ```
 :::
 
@@ -45,7 +45,7 @@ const { success, error } = await mailchannels.subAccounts.setLimit('validhandle1
 
 **Signature**
 
-<<< @/snippets/sub-accounts-method-set-limit.ts
+<<< @/snippets/sub-accounts-limits-method-set.ts
 
 **Response type declarations**
 

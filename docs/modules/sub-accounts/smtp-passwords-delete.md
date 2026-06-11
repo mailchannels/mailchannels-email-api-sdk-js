@@ -16,7 +16,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { success, error } = await subAccounts.deleteSmtpPassword('validhandle123', 1)
+const { success, error } = await subAccounts.smtpPasswords.delete('validhandle123', 1)
 ```
 
 ```ts [full.ts]
@@ -24,7 +24,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success, error } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle123', 1)
+const { success, error } = await mailchannels.subAccounts.smtpPasswords.delete('validhandle123', 1)
 ```
 :::
 
@@ -42,7 +42,7 @@ const { success, error } = await mailchannels.subAccounts.deleteSmtpPassword('va
 
 **Signature**
 
-<<< @/snippets/sub-accounts-method-delete-smtp-password.ts
+<<< @/snippets/sub-accounts-smtp-passwords-method-delete.ts
 
 **Response type declarations**
 

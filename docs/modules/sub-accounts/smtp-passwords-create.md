@@ -1,11 +1,11 @@
 ---
-title: List SMTP Passwords
+title: Create SMTP Password
 titleTemplate: 🪪 Sub-Accounts
 ---
 
-# List SMTP Passwords<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
+# Create SMTP Password<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
-Retrieves details of all SMTP passwords associated with the specified sub-account. For security, the full SMTP password is not returned; only the password ID and a partially redacted version are provided.
+Creates a new SMTP password for the specified sub-account.
 
 ## Usage
 
@@ -16,7 +16,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { data, error } = await subAccounts.listSmtpPasswords('validhandle123')
+const { data, error } = await subAccounts.smtpPasswords.create('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -24,17 +24,17 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { data, error } = await mailchannels.subAccounts.listSmtpPasswords('validhandle123')
+const { data, error } = await mailchannels.subAccounts.smtpPasswords.create('validhandle123')
 ```
 :::
 
 ## Params
 
-- `handle` `string` <Badge type="danger">required</Badge>: The handle of the sub-account to retrieve the SMTP passwords for.
+- `handle` `string` <Badge type="danger">required</Badge>: The handle of the sub-account to create SMTP password for.
 
 ## Response
 
-- `data` `SubAccountsSmtpPassword[] | null` <Badge type="warning">nullable</Badge>
+- `data` `SubAccountsSmtpPassword | null` <Badge type="warning">nullable</Badge>
   - `enabled` `boolean` <Badge>guaranteed</Badge>: Whether the SMTP password is enabled.
   - `id` `number` <Badge>guaranteed</Badge>: The SMTP password ID for the sub-account.
   - `smtpPassword` `string` <Badge>guaranteed</Badge>: SMTP password for the sub-account.
@@ -44,7 +44,7 @@ const { data, error } = await mailchannels.subAccounts.listSmtpPasswords('validh
 
 **Signature**
 
-<<< @/snippets/sub-accounts-method-list-smtp-passwords.ts
+<<< @/snippets/sub-accounts-smtp-passwords-method-create.ts
 
 **Response type declarations**
 
@@ -54,4 +54,4 @@ const { data, error } = await mailchannels.subAccounts.listSmtpPasswords('validh
 **SMTP Password type declarations**
 
 <<< @/snippets/sub-accounts-smtp-password.ts
-<<< @/snippets/sub-accounts-list-smtp-password-response.ts
+<<< @/snippets/sub-accounts-create-smtp-password-response.ts

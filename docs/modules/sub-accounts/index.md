@@ -14,6 +14,9 @@ Manage your sub-accounts associated with your MailChannels account.
 ## Type declarations
 
 <<< @/snippets/sub-accounts.ts
+<<< @/snippets/sub-accounts-api-keys.ts
+<<< @/snippets/sub-accounts-smtp-passwords.ts
+<<< @/snippets/sub-accounts-limits.ts
 
 <details>
   <summary>All type declarations</summary>

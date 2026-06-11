@@ -43,15 +43,15 @@ This page provides a mapping between the MailChannels SDK module methods and the
   | [`SubAccounts.delete()`](/modules/sub-accounts/delete) | [Delete Sub-account](https://docs.mailchannels.net/email-api/api-reference/delete-sub-account) |
   | [`SubAccounts.suspend()`](/modules/sub-accounts/suspend) | [Suspend Sub-account](https://docs.mailchannels.net/email-api/api-reference/suspend-sub-account) |
   | [`SubAccounts.activate()`](/modules/sub-accounts/activate) | [Activate Sub-account](https://docs.mailchannels.net/email-api/api-reference/activate-sub-account) |
-  | [`SubAccounts.createApiKey()`](/modules/sub-accounts/create-api-key) | [Create Sub-account API Key](https://docs.mailchannels.net/email-api/api-reference/create-sub-account-api-key) |
-  | [`SubAccounts.deleteApiKey()`](/modules/sub-accounts/delete-api-key) | [Delete Sub-account API Key](https://docs.mailchannels.net/email-api/api-reference/delete-sub-account-api-key) |
-  | [`SubAccounts.listApiKeys()`](/modules/sub-accounts/list-api-keys) | [Retrieve Sub-account API Keys](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-api-keys) |
-  | [`SubAccounts.createSmtpPassword()`](/modules/sub-accounts/create-smtp-password) | [Create Sub-account SMTP Password](https://docs.mailchannels.net/email-api/api-reference/create-sub-account-smtp-password) |
-  | [`SubAccounts.deleteSmtpPassword()`](/modules/sub-accounts/delete-smtp-password) | [Delete Sub-account SMTP Password](https://docs.mailchannels.net/email-api/api-reference/delete-sub-account-smtp-password) |
-  | [`SubAccounts.listSmtpPasswords()`](/modules/sub-accounts/list-smtp-passwords) | [Retrieve Sub-account SMTP Passwords](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-smtp-passwords) |
-  | [`SubAccounts.getLimit()`](/modules/sub-accounts/get-limit) | [Retrieve Sub-account Limit](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-limit) |
-  | [`SubAccounts.setLimit()`](/modules/sub-accounts/set-limit) | [Set Sub-account Limit](https://docs.mailchannels.net/email-api/api-reference/set-sub-account-limit) |
-  | [`SubAccounts.deleteLimit()`](/modules/sub-accounts/delete-limit) | [Delete Sub-account Limit](https://docs.mailchannels.net/email-api/api-reference/delete-sub-account-limit) |
+  | [`SubAccounts.apiKeys.create()`](/modules/sub-accounts/api-keys-create) | [Create Sub-account API Key](https://docs.mailchannels.net/email-api/api-reference/create-sub-account-api-key) |
+  | [`SubAccounts.apiKeys.delete()`](/modules/sub-accounts/api-keys-delete) | [Delete Sub-account API Key](https://docs.mailchannels.net/email-api/api-reference/delete-sub-account-api-key) |
+  | [`SubAccounts.apiKeys.list()`](/modules/sub-accounts/api-keys-list) | [Retrieve Sub-account API Keys](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-api-keys) |
+  | [`SubAccounts.smtpPasswords.create()`](/modules/sub-accounts/smtp-passwords-create) | [Create Sub-account SMTP Password](https://docs.mailchannels.net/email-api/api-reference/create-sub-account-smtp-password) |
+  | [`SubAccounts.smtpPasswords.delete()`](/modules/sub-accounts/smtp-passwords-delete) | [Delete Sub-account SMTP Password](https://docs.mailchannels.net/email-api/api-reference/delete-sub-account-smtp-password) |
+  | [`SubAccounts.smtpPasswords.list()`](/modules/sub-accounts/smtp-passwords-list) | [Retrieve Sub-account SMTP Passwords](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-smtp-passwords) |
+  | [`SubAccounts.limits.get()`](/modules/sub-accounts/limits-get) | [Retrieve Sub-account Limit](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-limit) |
+  | [`SubAccounts.limits.set()`](/modules/sub-accounts/limits-set) | [Set Sub-account Limit](https://docs.mailchannels.net/email-api/api-reference/set-sub-account-limit) |
+  | [`SubAccounts.limits.delete()`](/modules/sub-accounts/limits-delete) | [Delete Sub-account Limit](https://docs.mailchannels.net/email-api/api-reference/delete-sub-account-limit) |
   | [`SubAccounts.getUsage()`](/modules/sub-accounts/get-usage) | [Retrieve Sub-account Usage Stats](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-usage-stats) |
 
 ### 📊 Metrics

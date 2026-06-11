@@ -11,7 +11,7 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { success, error } = await mailchannels.subAccounts.setLimit("validhandle1234", {
+const { success, error } = await mailchannels.subAccounts.limits.set("validhandle1234", {
   sends: 1
 });
 

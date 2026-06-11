@@ -76,11 +76,11 @@ export default defineConfig({
     nav: navbarConfig,
     sidebar: sidebarConfig,
     socialLinks: [
-      { icon: "github", link: SITE.repo },
+      { icon: "bitbucket", link: SITE.repo },
       { icon: "npm", link: "https://www.npmjs.com/package/mailchannels-sdk" }
     ],
     editLink: {
-      pattern: `${SITE.repo}/edit/main/docs/:path`,
+      pattern: `${SITE.repo}/src/main/docs/:path?at=main&mode=edit`,
       text: "Suggest changes to this page"
     },
     search: {
@@ -88,7 +88,7 @@ export default defineConfig({
     },
     footer: {
       message: "Released under the MIT License.",
-      copyright: "Library created by Yizack"
+      copyright: "Copyright © 2025-present Yizack Rangel and MailChannels Corporation"
     }
   },
   rewrites: {

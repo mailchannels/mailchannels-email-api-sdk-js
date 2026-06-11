@@ -16,7 +16,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { data, error } = await subAccounts.createApiKey('validhandle123')
+const { data, error } = await subAccounts.apiKeys.create('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -24,7 +24,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { data, error } = await mailchannels.subAccounts.createApiKey('validhandle123')
+const { data, error } = await mailchannels.subAccounts.apiKeys.create('validhandle123')
 ```
 :::
 
@@ -43,7 +43,7 @@ const { data, error } = await mailchannels.subAccounts.createApiKey('validhandle
 
 **Signature**
 
-<<< @/snippets/sub-accounts-method-create-api-key.ts
+<<< @/snippets/sub-accounts-api-keys-method-create.ts
 
 **Response type declarations**
 

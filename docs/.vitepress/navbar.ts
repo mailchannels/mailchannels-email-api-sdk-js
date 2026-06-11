@@ -8,7 +8,7 @@ export default [
   {
     text: version,
     items: [
-      { text: "Changelog", link: `${SITE.repo}/blob/main/CHANGELOG.md` }
+      { text: "Changelog", link: `${SITE.repo}/src/main/CHANGELOG.md` }
     ]
   }
 ];
