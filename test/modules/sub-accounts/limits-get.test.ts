@@ -2,15 +2,16 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { SubAccounts } from "~/modules/sub-accounts";
 import { ErrorCode } from "~/utils/errors";
-import type { SubAccountsLimit, SubAccountsLimitResponse } from "~/types/sub-accounts/limit";
+import type { SubAccountsLimitsGetResponse } from "~/types/sub-accounts/limits";
+import type { SubAccountsLimitsGetApiResponse } from "~/types/sub-accounts/internal";
 
 const fake = {
   validHandle: "validhandle123",
-  apiResponse: { sends: 1 } satisfies SubAccountsLimit,
+  apiResponse: { sends: 1 } satisfies SubAccountsLimitsGetApiResponse,
   expectedResponse: {
     data: { sends: 1 },
     error: null
-  } satisfies SubAccountsLimitResponse
+  } satisfies SubAccountsLimitsGetResponse
 };
 
 describe("limits.get", () => {

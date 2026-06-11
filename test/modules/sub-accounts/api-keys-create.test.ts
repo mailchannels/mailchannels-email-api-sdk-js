@@ -1,16 +1,17 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { SubAccounts } from "~/modules/sub-accounts";
-import type { SubAccountsCreateApiKeyResponse } from "~/types/sub-accounts/api-key";
+import type { SubAccountsApiKeysCreateResponse } from "~/types/sub-accounts/api-keys";
+import type { SubAccountsApiKeysCreateApiResponse } from "~/types/sub-accounts/internal";
 import { ErrorCode } from "~/utils/errors";
 
 const fake = {
   validHandle: "validhandle123",
-  apiResponse: { id: 1, key: "api-key-value" } satisfies { id: number, key: string },
+  apiResponse: { id: 1, key: "api-key-value" } satisfies SubAccountsApiKeysCreateApiResponse,
   expectedResponse: {
     data: { id: 1, key: "api-key-value" },
     error: null
-  } satisfies SubAccountsCreateApiKeyResponse
+  } satisfies SubAccountsApiKeysCreateResponse
 };
 
 describe("apiKeys.create", () => {

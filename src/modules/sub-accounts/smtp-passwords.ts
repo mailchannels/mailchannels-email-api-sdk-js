@@ -2,8 +2,8 @@ import type { MailChannelsClient } from "../../client";
 import { ErrorCode, createValidationError, getResultError, getStatusError } from "../../utils/errors";
 import { clean } from "../../utils/clean";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { SubAccountsCreateSmtpPasswordApiResponse } from "../../types/sub-accounts/internal";
-import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../../types/sub-accounts/smtp-password";
+import type { SubAccountsSmtpPasswordsCreateResponse, SubAccountsSmtpPasswordsListResponse } from "../../types/sub-accounts/smtp-passwords";
+import type { SubAccountsSmtpPasswordsCreateApiResponse, SubAccountsSmtpPasswordsListApiResponse } from "../../types/sub-accounts/internal";
 
 export class SubAccountsSmtpPasswords {
   constructor (private mailchannels: MailChannelsClient) {}
@@ -17,7 +17,7 @@ export class SubAccountsSmtpPasswords {
    * const { data, error } = await mailchannels.subAccounts.smtpPasswords.create('validhandle123')
    * ```
    */
-  async create (handle: string): Promise<SubAccountsCreateSmtpPasswordResponse> {
+  async create (handle: string): Promise<SubAccountsSmtpPasswordsCreateResponse> {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
@@ -25,7 +25,7 @@ export class SubAccountsSmtpPasswords {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`, {
+    const response = await this.mailchannels.post<SubAccountsSmtpPasswordsCreateApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.Forbidden]: "You can't create SMTP passwords for this sub-account.",
@@ -58,7 +58,7 @@ export class SubAccountsSmtpPasswords {
    * const { data, error } = await mailchannels.subAccounts.smtpPasswords.list('validhandle123')
    * ```
    */
-  async list (handle: string): Promise<SubAccountsListSmtpPasswordResponse> {
+  async list (handle: string): Promise<SubAccountsSmtpPasswordsListResponse> {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
@@ -66,7 +66,7 @@ export class SubAccountsSmtpPasswords {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.get<SubAccountsCreateSmtpPasswordApiResponse[]>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`, {
+    const response = await this.mailchannels.get<SubAccountsSmtpPasswordsListApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`

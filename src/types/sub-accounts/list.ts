@@ -1,5 +1,5 @@
 import type { DataResponse } from "../responses";
-import type { SubAccountsAccount } from "./create";
+import type { SubAccount } from "./create";
 
 export interface SubAccountsListOptions {
   /**
@@ -14,4 +14,4 @@ export interface SubAccountsListOptions {
   offset?: number;
 }
 
-export type SubAccountsListResponse = DataResponse<SubAccountsAccount[]>;
+export type SubAccountsListResponse = DataResponse<SubAccount[]>;

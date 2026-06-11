@@ -52,7 +52,7 @@ const { data, error } = await mailchannels.subAccounts.limits.get('validhandle12
 <<< @/snippets/error-response.ts
 <<< @/snippets/data-response.ts
 
-**Limit type declaration**
+**Limits type declaration**
 
 <<< @/snippets/sub-accounts-limit.ts
-<<< @/snippets/sub-accounts-limit-response.ts
+<<< @/snippets/sub-accounts-limits-get-response.ts

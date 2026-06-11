@@ -1,9 +1,9 @@
-
 import type { MailChannelsClient } from "../../client";
 import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../utils/errors";
 import { clean } from "../../utils/clean";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyOptions, SubAccountsListApiKeyResponse } from "../../types/sub-accounts/api-key";
+import type { SubAccountsApiKeysCreateResponse, SubAccountsApiKeysListOptions, SubAccountsApiKeysListResponse } from "../../types/sub-accounts/api-keys";
+import type { SubAccountsApiKeysCreateApiResponse, SubAccountsApiKeysListApiResponse } from "../../types/sub-accounts/internal";
 
 export class SubAccountsApiKeys {
   constructor (private mailchannels: MailChannelsClient) {}
@@ -17,7 +17,7 @@ export class SubAccountsApiKeys {
    * const { data, error } = await mailchannels.subAccounts.apiKeys.create('validhandle123')
    * ```
    */
-  async create (handle: string): Promise<SubAccountsCreateApiKeyResponse> {
+  async create (handle: string): Promise<SubAccountsApiKeysCreateResponse> {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
@@ -25,7 +25,7 @@ export class SubAccountsApiKeys {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.post<{ id: number, key: string }>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`, {
+    const response = await this.mailchannels.post<SubAccountsApiKeysCreateApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.Forbidden]: "You can't create API keys for this sub-account.",
@@ -55,7 +55,7 @@ export class SubAccountsApiKeys {
    * const { data, error } = await mailchannels.subAccounts.apiKeys.list('validhandle123')
    * ```
    */
-  async list (handle: string, options?: SubAccountsListApiKeyOptions): Promise<SubAccountsListApiKeyResponse> {
+  async list (handle: string, options?: SubAccountsApiKeysListOptions): Promise<SubAccountsApiKeysListResponse> {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
@@ -66,7 +66,7 @@ export class SubAccountsApiKeys {
     error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
 
-    const response = await this.mailchannels.get<{ id: number, key: string }[]>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`, {
+    const response = await this.mailchannels.get<SubAccountsApiKeysListApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`

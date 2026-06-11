@@ -50,7 +50,7 @@ const { data, error } = await mailchannels.subAccounts.apiKeys.create('validhand
 <<< @/snippets/error-response.ts
 <<< @/snippets/data-response.ts
 
-**API Key type declarations**
+**API Keys type declarations**
 
 <<< @/snippets/sub-accounts-api-key.ts
-<<< @/snippets/sub-accounts-create-api-key-response.ts
+<<< @/snippets/sub-accounts-api-keys-create-response.ts

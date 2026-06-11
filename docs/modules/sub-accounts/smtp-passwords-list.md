@@ -51,7 +51,7 @@ const { data, error } = await mailchannels.subAccounts.smtpPasswords.list('valid
 <<< @/snippets/error-response.ts
 <<< @/snippets/data-response.ts
 
-**SMTP Password type declarations**
+**SMTP Passwords type declarations**
 
 <<< @/snippets/sub-accounts-smtp-password.ts
 <<< @/snippets/sub-accounts-list-smtp-password-response.ts

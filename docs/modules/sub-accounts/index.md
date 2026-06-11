@@ -27,32 +27,32 @@ Manage your sub-accounts associated with your MailChannels account.
   <<< @/snippets/data-response.ts
   <<< @/snippets/success-response.ts
 
-  **Account type declarations**
+  **Sub-Accounts type declarations**
 
-  <<< @/snippets/sub-accounts-account.ts
+  <<< @/snippets/sub-account.ts
   <<< @/snippets/sub-accounts-create-response.ts
   <<< @/snippets/sub-accounts-list-options.ts
   <<< @/snippets/sub-accounts-list-response.ts
-
-  **API Key type declarations**
-
-  <<< @/snippets/sub-accounts-api-key.ts
-  <<< @/snippets/sub-accounts-create-api-key-response.ts
-  <<< @/snippets/sub-accounts-list-api-key-response.ts
-
-  **SMTP Password type declarations**
-
-  <<< @/snippets/sub-accounts-smtp-password.ts
-  <<< @/snippets/sub-accounts-create-smtp-password-response.ts
-  <<< @/snippets/sub-accounts-list-smtp-password-response.ts
-
-  **Limit type declaration**
-
-  <<< @/snippets/sub-accounts-limit.ts
-  <<< @/snippets/sub-accounts-limit-response.ts
 
   **Usage type declarations**
 
   <<< @/snippets/sub-accounts-usage.ts
   <<< @/snippets/sub-accounts-usage-response.ts
+
+  **API Keys type declarations**
+
+  <<< @/snippets/sub-accounts-api-key.ts
+  <<< @/snippets/sub-accounts-api-keys-create-response.ts
+  <<< @/snippets/sub-accounts-api-keys-list-response.ts
+
+  **SMTP Passwords type declarations**
+
+  <<< @/snippets/sub-accounts-smtp-password.ts
+  <<< @/snippets/sub-accounts-smtp-passwords-create-response.ts
+  <<< @/snippets/sub-accounts-smtp-passwords-list-response.ts
+
+  **Limits type declaration**
+
+  <<< @/snippets/sub-accounts-limit.ts
+  <<< @/snippets/sub-accounts-limits-get-response.ts
 </details>

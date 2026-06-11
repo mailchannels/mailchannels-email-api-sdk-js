@@ -52,6 +52,7 @@ const { success, error } = await mailchannels.subAccounts.limits.set('validhandl
 <<< @/snippets/error-response.ts
 <<< @/snippets/success-response.ts
 
-**Limit type declaration**
+**Limits type declaration**
 
 <<< @/snippets/sub-accounts-limit.ts
+<<< @/snippets/sub-accounts-limits-set-options.ts

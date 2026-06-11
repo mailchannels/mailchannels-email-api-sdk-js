@@ -2,7 +2,8 @@ import type { MailChannelsClient } from "../../client";
 import { ErrorCode, createValidationError, getResultError, getStatusError } from "../../utils/errors";
 import { clean } from "../../utils/clean";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { SubAccountsLimit, SubAccountsLimitResponse } from "../../types/sub-accounts/limit";
+import type { SubAccountsLimitsGetResponse, SubAccountsLimitsSetOptions } from "../../types/sub-accounts/limits";
+import type { SubAccountsLimitsGetApiResponse, SubAccountsLimitsSetApiResponse } from "../../types/sub-accounts/internal";
 
 export class SubAccountsLimits {
   constructor (private mailchannels: MailChannelsClient) {}
@@ -15,7 +16,7 @@ export class SubAccountsLimits {
    * const { data, error } = await mailchannels.subAccounts.limits.get('validhandle123')
    * ```
    */
-  async get (handle: string): Promise<SubAccountsLimitResponse> {
+  async get (handle: string): Promise<SubAccountsLimitsGetResponse> {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
@@ -23,7 +24,7 @@ export class SubAccountsLimits {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.get<SubAccountsLimit>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
+    const response = await this.mailchannels.get<SubAccountsLimitsGetApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
@@ -44,14 +45,14 @@ export class SubAccountsLimits {
   /**
    * Sets the limit for the specified sub-account.
    * @param handle - Handle of the sub-account to set limit for.
-   * @param limit - The limits to set for the sub-account. The minimum allowed sends is `0`
+   * @param options - The limits to set for the sub-account. The minimum allowed sends is `0`
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
    * const { success, error } = await mailchannels.subAccounts.limits.set('validhandle123', { sends: 1000 })
    * ```
    */
-  async set (handle: string, limit: SubAccountsLimit): Promise<SuccessResponse> {
+  async set (handle: string, options: SubAccountsLimitsSetOptions): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
@@ -59,13 +60,13 @@ export class SubAccountsLimits {
       return { success: false, error };
     }
 
-    if (limit.sends < 0) {
+    if (options.sends < 0) {
       error = createValidationError("The sends value must be at least 0.");
       return { success: false, error };
     }
 
-    await this.mailchannels.put<{ limit: SubAccountsLimit }>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
-      body: limit,
+    await this.mailchannels.put<SubAccountsLimitsSetApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
+      body: options,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",

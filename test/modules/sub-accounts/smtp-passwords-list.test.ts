@@ -2,22 +2,22 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { SubAccounts } from "~/modules/sub-accounts";
 import { ErrorCode } from "~/utils/errors";
-import type { SubAccountsListSmtpPasswordResponse } from "~/types/sub-accounts/smtp-password";
-import type { SubAccountsCreateSmtpPasswordApiResponse } from "~/types/sub-accounts/internal";
+import type { SubAccountsSmtpPasswordsListResponse } from "~/types/sub-accounts/smtp-passwords";
+import type { SubAccountsSmtpPasswordsListApiResponse } from "~/types/sub-accounts/internal";
 
 const fake = {
   validHandle: "validhandle123",
   apiResponse: [
     { enabled: true, id: 1, smtp_password: "password-1" },
     { enabled: false, id: 2, smtp_password: "password-2" }
-  ] satisfies SubAccountsCreateSmtpPasswordApiResponse[],
+  ] satisfies SubAccountsSmtpPasswordsListApiResponse,
   expectedResponse: {
     data: [
       { enabled: true, id: 1, smtpPassword: "password-1" },
       { enabled: false, id: 2, smtpPassword: "password-2" }
     ],
     error: null
-  } satisfies SubAccountsListSmtpPasswordResponse
+  } satisfies SubAccountsSmtpPasswordsListResponse
 };
 
 describe("smtpPasswords.list", () => {

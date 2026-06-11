@@ -1,23 +1,24 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { SubAccounts } from "~/modules/sub-accounts";
-import type { SubAccountsListApiKeyOptions, SubAccountsListApiKeyResponse } from "~/types/sub-accounts/api-key";
+import type { SubAccountsApiKeysListOptions, SubAccountsApiKeysListResponse } from "~/types/sub-accounts/api-keys";
+import type { SubAccountsApiKeysListApiResponse } from "~/types/sub-accounts/internal";
 import { ErrorCode } from "~/utils/errors";
 
 const fake = {
   validHandle: "validhandle123",
-  options: { limit: 10, offset: 0 } satisfies SubAccountsListApiKeyOptions,
+  options: { limit: 10, offset: 0 } satisfies SubAccountsApiKeysListOptions,
   apiResponse: [
     { id: 1, key: "api-key-1" },
     { id: 2, key: "api-key-2" }
-  ] satisfies { id: number, key: string }[],
+  ] satisfies SubAccountsApiKeysListApiResponse,
   expectedResponse: {
     data: [
       { id: 1, key: "api-key-1" },
       { id: 2, key: "api-key-2" }
     ],
     error: null
-  } satisfies SubAccountsListApiKeyResponse
+  } satisfies SubAccountsApiKeysListResponse
 };
 
 describe("apiKeys.list", () => {
