@@ -122,7 +122,7 @@ export class SubAccounts {
       return { success: false, error };
     }
 
-    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}`, {
+    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response);
       }
@@ -150,7 +150,7 @@ export class SubAccounts {
       return { success: false, error };
     }
 
-    await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/suspend`, {
+    await this.mailchannels.post<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/suspend`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.NotFound]: `The specified sub-account '${handle}' does not exist.`
@@ -180,7 +180,7 @@ export class SubAccounts {
       return { success: false, error };
     }
 
-    await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/activate`, {
+    await this.mailchannels.post<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/activate`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The parent account does not have permission to activate the sub-account.",
@@ -211,7 +211,7 @@ export class SubAccounts {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.post<{ id: number, key: string }>(`/tx/v1/sub-account/${handle}/api-key`, {
+    const response = await this.mailchannels.post<{ id: number, key: string }>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.Forbidden]: "You can't create API keys for this sub-account.",
@@ -252,7 +252,7 @@ export class SubAccounts {
     error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
 
-    const response = await this.mailchannels.get<{ id: number, key: string }[]>(`/tx/v1/sub-account/${handle}/api-key`, {
+    const response = await this.mailchannels.get<{ id: number, key: string }[]>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
@@ -291,7 +291,7 @@ export class SubAccounts {
       return { success: false, error };
     }
 
-    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/api-key/${id}`, {
+    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key/${encodeURIComponent(id)}`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Missing or invalid API key ID."
@@ -321,7 +321,7 @@ export class SubAccounts {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${handle}/smtp-password`, {
+    const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.Forbidden]: "You can't create SMTP passwords for this sub-account.",
@@ -362,7 +362,7 @@ export class SubAccounts {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.get<SubAccountsCreateSmtpPasswordApiResponse[]>(`/tx/v1/sub-account/${handle}/smtp-password`, {
+    const response = await this.mailchannels.get<SubAccountsCreateSmtpPasswordApiResponse[]>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
@@ -402,7 +402,7 @@ export class SubAccounts {
       return { success: false, error };
     }
 
-    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/smtp-password/${id}`, {
+    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password/${encodeURIComponent(id)}`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Missing or invalid SMTP password ID."
@@ -432,7 +432,7 @@ export class SubAccounts {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.get<SubAccountsLimit>(`/tx/v1/sub-account/${handle}/limit`, {
+    const response = await this.mailchannels.get<SubAccountsLimit>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
@@ -473,7 +473,7 @@ export class SubAccounts {
       return { success: false, error };
     }
 
-    await this.mailchannels.put<{ limit: SubAccountsLimit }>(`/tx/v1/sub-account/${handle}/limit`, {
+    await this.mailchannels.put<{ limit: SubAccountsLimit }>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
       body: limit,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
@@ -505,7 +505,7 @@ export class SubAccounts {
       return { success: false, error };
     }
 
-    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/limit`, {
+    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
@@ -535,7 +535,7 @@ export class SubAccounts {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.get<SubAccountsUsageApiResponse>(`/tx/v1/sub-account/${handle}/usage`, {
+    const response = await this.mailchannels.get<SubAccountsUsageApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/usage`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`

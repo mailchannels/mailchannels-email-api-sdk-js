@@ -43,7 +43,7 @@ export class DomainsDkim {
       selector: options.selector
     };
 
-    const response = await this.mailchannels.post<DomainsDkimCreateApiResponse>(`/tx/v1/domains/${domain}/dkim-keys`, {
+    const response = await this.mailchannels.post<DomainsDkimCreateApiResponse>(`/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys`, {
       body: payload,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
@@ -99,7 +99,7 @@ export class DomainsDkim {
       include_dns_record: options?.includeDnsRecord
     };
 
-    const response = await this.mailchannels.get<{ keys: DomainsDkimCreateApiResponse[] }>(`/tx/v1/domains/${domain}/dkim-keys`, {
+    const response = await this.mailchannels.get<{ keys: DomainsDkimCreateApiResponse[] }>(`/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys`, {
       query: payload,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
@@ -147,7 +147,7 @@ export class DomainsDkim {
       status: options.status
     };
 
-    await this.mailchannels.patch(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}`, {
+    await this.mailchannels.patch(`/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys/${encodeURIComponent(options.selector)}`, {
       body: payload,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
@@ -202,7 +202,7 @@ export class DomainsDkim {
       }
     };
 
-    const response = await this.mailchannels.post<DomainsDkimRotateApiResponse>(`/tx/v1/domains/${domain}/dkim-keys/${selector}/rotate`, {
+    const response = await this.mailchannels.post<DomainsDkimRotateApiResponse>(`/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys/${encodeURIComponent(selector)}/rotate`, {
       body: payload,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {

@@ -68,7 +68,7 @@ export class Suppressions {
   async delete (recipient: string, source?: SuppressionsSource): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
-    await this.mailchannels.delete(`/tx/v1/suppression-list/recipients/${recipient}`, {
+    await this.mailchannels.delete(`/tx/v1/suppression-list/recipients/${encodeURIComponent(recipient)}`, {
       query: {
         source
       },
