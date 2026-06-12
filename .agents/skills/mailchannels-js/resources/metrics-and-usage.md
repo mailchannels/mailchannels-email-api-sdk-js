@@ -19,6 +19,13 @@ const { data, error } = await mc.metrics.volume({
   interval:  'day',        // 'hour' | 'day' | 'week' | 'month' (default 'day')
   campaignId: 'welcome'   // optional filter
 })
+
+// Date objects are also accepted
+const { data: last7d, error: error7days } = await mc.metrics.volume({
+  startTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),  // 7 days ago
+  endTime:   new Date(),
+  interval:  'day'
+})
 if (error) { /*...*/ }
 
 // Same parameter shape — pass the same options to any of these:
@@ -27,7 +34,7 @@ const { data: perf,       error: perfErr }  = await mc.metrics.performance({ int
 const { data: behaviour,  error: behErr }   = await mc.metrics.recipientBehaviour({ interval: 'day' })
 ```
 
-Time formats accepted: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults: `startTime` is
+Time formats accepted: `YYYY-MM-DD`, `YYYY-MM-DDTHH:MM:SSZ`, or a `Date` object. Defaults: `startTime` is
 one month ago, `endTime` is now.
 
 #### Buckets
