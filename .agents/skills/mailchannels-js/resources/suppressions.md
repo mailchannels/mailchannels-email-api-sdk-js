@@ -49,6 +49,12 @@ const { data, error } = await mc.suppressions.list({
   limit:         100,                        // 1..1000, default 1000
   offset:        0
 })
+
+// Date objects are also accepted
+const { data: recent } = await mc.suppressions.list({
+  createdAfter:  new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),  // 7 days ago
+  createdBefore: new Date()
+})
 ```
 
 `source` values:
@@ -59,7 +65,7 @@ const { data, error } = await mc.suppressions.list({
 - `'hard_bounce'` — bounced as undeliverable.
 - `'spam_complaint'` — recipient reported spam at their provider.
 
-Date formats accepted: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
+Date formats accepted: `YYYY-MM-DD`, `YYYY-MM-DDTHH:MM:SSZ`, or a `Date` object.
 
 ### Delete An Entry
 
