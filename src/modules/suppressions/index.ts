@@ -1,10 +1,10 @@
-import type { MailChannelsClient } from "../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../utils/errors";
-import { clean } from "../utils/clean";
-import { parseDateInputs } from "../utils/parse-date-inputs";
-import type { ErrorResponse, SuccessResponse } from "../types/responses";
-import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
-import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../types/suppressions/internal";
+import type { MailChannelsClient } from "../../client";
+import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../utils/errors";
+import { clean } from "../../utils/clean";
+import { parseDateInputs } from "../../utils/parse-date-inputs";
+import type { ErrorResponse, SuccessResponse } from "../../types/responses";
+import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../../types/suppressions";
+import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../../types/suppressions/internal";
 
 export class Suppressions {
   constructor (protected mailchannels: MailChannelsClient) {}
