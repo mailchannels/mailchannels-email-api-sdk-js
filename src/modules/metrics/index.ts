@@ -286,7 +286,7 @@ export class Metrics {
     error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
 
-    const response = await this.mailchannels.get<MetricsSendersApiResponse>(`/tx/v1/metrics/senders/${type}`, {
+    const response = await this.mailchannels.get<MetricsSendersApiResponse>(`/tx/v1/metrics/senders/${encodeURIComponent(type)}`, {
       query: {
         start_time: dates.startTime,
         end_time: dates.endTime,

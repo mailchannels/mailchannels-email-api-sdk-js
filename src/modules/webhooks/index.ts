@@ -337,7 +337,7 @@ export class Webhooks {
   async resendBatch (batchId: number): Promise<WebhooksResendBatchResponse> {
     let error: ErrorResponse | null = null;
 
-    const response = await this.mailchannels.post<WebhooksResendBatchApiResponse>(`/tx/v1/webhook-batch/${batchId}/resend`, {
+    const response = await this.mailchannels.post<WebhooksResendBatchApiResponse>(`/tx/v1/webhook-batch/${encodeURIComponent(batchId)}/resend`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request. The batch ID is invalid.",
