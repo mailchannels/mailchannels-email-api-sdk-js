@@ -99,55 +99,55 @@
     },
     {
       "module": "subAccounts",
-      "method": "listApiKeys",
+      "method": "apiKeys.list",
       "httpMethod": "GET",
       "path": "/sub-account/{handle}/api-key"
     },
     {
       "module": "subAccounts",
-      "method": "createApiKey",
+      "method": "apiKeys.create",
       "httpMethod": "POST",
       "path": "/sub-account/{handle}/api-key"
     },
     {
       "module": "subAccounts",
-      "method": "deleteApiKey",
+      "method": "apiKeys.delete",
       "httpMethod": "DELETE",
       "path": "/sub-account/{handle}/api-key/{id}"
     },
     {
       "module": "subAccounts",
-      "method": "deleteLimit",
+      "method": "limits.delete",
       "httpMethod": "DELETE",
       "path": "/sub-account/{handle}/limit"
     },
     {
       "module": "subAccounts",
-      "method": "getLimit",
+      "method": "limits.get",
       "httpMethod": "GET",
       "path": "/sub-account/{handle}/limit"
     },
     {
       "module": "subAccounts",
-      "method": "setLimit",
+      "method": "limits.set",
       "httpMethod": "PUT",
       "path": "/sub-account/{handle}/limit"
     },
     {
       "module": "subAccounts",
-      "method": "listSmtpPasswords",
+      "method": "smtpPasswords.list",
       "httpMethod": "GET",
       "path": "/sub-account/{handle}/smtp-password"
     },
     {
       "module": "subAccounts",
-      "method": "createSmtpPassword",
+      "method": "smtpPasswords.create",
       "httpMethod": "POST",
       "path": "/sub-account/{handle}/smtp-password"
     },
     {
       "module": "subAccounts",
-      "method": "deleteSmtpPassword",
+      "method": "smtpPasswords.delete",
       "httpMethod": "DELETE",
       "path": "/sub-account/{handle}/smtp-password/{id}"
     },

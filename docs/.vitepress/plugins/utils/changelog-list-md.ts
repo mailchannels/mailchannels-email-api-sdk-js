@@ -140,13 +140,15 @@ export const getChangelog = (filePath: string, minVersion?: string): string => {
       // Get the date of the first commit in this version
       const versionDate = commits[0]?.date || "";
       const dateFormatted = versionDate ? `<small style="color: var(--vp-c-text-2)">on ${versionDate}</small>` : "";
-      const versionHeader = `- <a href="${SITE.repo}/releases/tag/${version}" target="_blank"><Badge>${version}</Badge></a> ${dateFormatted}\n`;
+      const versionLabel = `<Badge>${version}</Badge>`;
+      const versionLink = version === "Unreleased" ? versionLabel : `<a href="${SITE.repo}/commits/tag/${version}" target="_blank">${versionLabel}</a>`;
+      const versionHeader = `- ${versionLink} ${dateFormatted}\n`;
       const commitsList = commits
         .map(({ hash, message }) => {
           const formattedMessage = message.replace(/#(\d+)/g, (match, prNumber) => {
-            return `[#${prNumber}](${SITE.repo}/pull/${prNumber})`;
+            return `[#${prNumber}](${SITE.repo}/pull-requests/${prNumber})`;
           });
-          return `   - [\`${hash}\`](${SITE.repo}/commit/${hash}) <span style="color: var(--vp-c-text-2)">—</span> ${formattedMessage}`;
+          return `   - [\`${hash}\`](${SITE.repo}/commits/${hash}) <span style="color: var(--vp-c-text-2)">—</span> ${formattedMessage}`;
         })
         .join("\n");
       return versionHeader + commitsList;

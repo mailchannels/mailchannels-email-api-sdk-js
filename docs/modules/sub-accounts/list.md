@@ -38,7 +38,7 @@ const { data, error } = await mailchannels.subAccounts.list()
 
 ## Response
 
-- `data` `SubAccountsAccount[] | null` <Badge type="warning">nullable</Badge>
+- `data` `SubAccount[] | null` <Badge type="warning">nullable</Badge>
   - `companyName` `string` <Badge>guaranteed</Badge>: The name of the company associated with the sub-account.
   - `enabled` `boolean` <Badge>guaranteed</Badge>: If the sub-account is enabled.
   - `handle` `string` <Badge>guaranteed</Badge>: The handle for the sub-account.
@@ -55,8 +55,8 @@ const { data, error } = await mailchannels.subAccounts.list()
 <<< @/snippets/error-response.ts
 <<< @/snippets/data-response.ts
 
-**Account type declarations**
+**Sub-Accounts type declarations**
 
-<<< @/snippets/sub-accounts-account.ts
+<<< @/snippets/sub-account.ts
 <<< @/snippets/sub-accounts-list-options.ts
 <<< @/snippets/sub-accounts-list-response.ts

@@ -14,8 +14,8 @@ hero:
       text: Get Started
       link: /getting-started
     - theme: alt
-      text: View on GitHub
-      link: https://github.com/Yizack/mailchannels
+      text: View on Bitbucket
+      link: https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js
 
 features:
   - icon: 📧

@@ -1,6 +1,6 @@
 import type { DataResponse } from "../responses";
 
-export interface SubAccountsAccount {
+export interface SubAccount {
   /**
    * The name of the company associated with the sub-account.
    */
@@ -15,4 +15,7 @@ export interface SubAccountsAccount {
   handle: string;
 }
 
-export type SubAccountsCreateResponse = DataResponse<SubAccountsAccount>;
+export type SubAccountsCreateResponse = DataResponse<SubAccount>;
+
+/** @deprecated Use `SubAccount` instead. */
+export type SubAccountsAccount = SubAccount;

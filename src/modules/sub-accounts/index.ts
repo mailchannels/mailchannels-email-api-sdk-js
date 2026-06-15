@@ -1,19 +1,28 @@
+import { SubAccountsApiKeys } from "./api-keys";
+import { SubAccountsSmtpPasswords } from "./smtp-passwords";
+import { SubAccountsLimits } from "./limits";
 import type { MailChannelsClient } from "../../client";
 import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../utils/errors";
 import { clean } from "../../utils/clean";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../../types/sub-accounts/internal";
+import type { SubAccountsCreateApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../../types/sub-accounts/internal";
 import type { SubAccountsCreateResponse } from "../../types/sub-accounts/create";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../../types/sub-accounts/list";
-import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyOptions, SubAccountsListApiKeyResponse } from "../../types/sub-accounts/api-key";
-import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../../types/sub-accounts/smtp-password";
-import type { SubAccountsLimit, SubAccountsLimitResponse } from "../../types/sub-accounts/limit";
 import type { SubAccountsUsageResponse } from "../../types/sub-accounts/usage";
 
 export class SubAccounts {
   private static readonly COMPANY_PATTERN = /^.{3,128}$/;
   private static readonly HANDLE_PATTERN = /^[a-z0-9]{3,128}$/;
-  constructor (protected mailchannels: MailChannelsClient) {}
+
+  readonly apiKeys: SubAccountsApiKeys;
+  readonly smtpPasswords: SubAccountsSmtpPasswords;
+  readonly limits: SubAccountsLimits;
+
+  constructor (protected mailchannels: MailChannelsClient) {
+    this.apiKeys = new SubAccountsApiKeys(mailchannels);
+    this.smtpPasswords = new SubAccountsSmtpPasswords(mailchannels);
+    this.limits = new SubAccountsLimits(mailchannels);
+  }
 
   /**
    * Creates a new sub-account under the parent account. Each sub-account must have a unique handle composed solely of lowercase alphanumeric characters. If no handle is provided, a random handle will be generated. Note that Sub-accounts are only available to parent accounts on 100K and higher plans.
@@ -195,330 +204,6 @@ export class SubAccounts {
   }
 
   /**
-   * Creates a new API key for the specified sub-account.
-   * @param handle - Handle of the sub-account to create API key for.
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { data, error } = await mailchannels.subAccounts.createApiKey('validhandle123')
-   * ```
-   */
-  async createApiKey (handle: string): Promise<SubAccountsCreateApiKeyResponse> {
-    let error: ErrorResponse | null = null;
-
-    if (!handle) {
-      error = createValidationError("No handle provided.");
-      return { data: null, error };
-    }
-
-    const response = await this.mailchannels.post<{ id: number, key: string }>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.Forbidden]: "You can't create API keys for this sub-account.",
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`,
-          [ErrorCode.UnprocessableEntity]: "You have reached the limit of API keys you can create for this sub-account."
-        });
-      }
-    }).catch((e) => {
-      error ||= getResultError(e, "Failed to create sub-account API key.");
-      return null;
-    });
-
-    if (!response) return { data: null, error: error! };
-
-    const data = clean(response);
-
-    return { data, error: null };
-  }
-
-  /**
-   * Retrieves details of all API keys associated with the specified sub-account. For security reasons, the full API key is not returned; only the key ID and a partially redacted version are provided.
-   * @param handle - Handle of the sub-account to retrieve the API key for.
-   * @param options - The options to filter the list of API keys.
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { data, error } = await mailchannels.subAccounts.listApiKeys('validhandle123')
-   * ```
-   */
-  async listApiKeys (handle: string, options?: SubAccountsListApiKeyOptions): Promise<SubAccountsListApiKeyResponse> {
-    let error: ErrorResponse | null = null;
-
-    if (!handle) {
-      error = createValidationError("No handle provided.");
-      return { data: null, error };
-    }
-
-    error = validatePagination({ ...options, max: 1000 });
-    if (error) return { data: null, error };
-
-    const response = await this.mailchannels.get<{ id: number, key: string }[]>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
-        });
-      }
-    }).catch((e) => {
-      error ||= getResultError(e, "Failed to fetch sub-account API keys.");
-      return null;
-    });
-
-    if (!response) return { data: null, error: error! };
-
-    const data = clean(response.map(key => ({
-      id: key.id,
-      key: key.key
-    })));
-
-    return { data, error: null };
-  }
-
-  /**
-   * Deletes the API key identified by its ID for the specified sub-account.
-   * @param handle - Handle of the sub-account for which the API key should be deleted.
-   * @param id - The ID of the API key to delete.
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { success, error } = await mailchannels.subAccounts.deleteApiKey('validhandle123', 1)
-   * ```
-   */
-  async deleteApiKey (handle: string, id: number): Promise<SuccessResponse> {
-    let error: ErrorResponse | null = null;
-
-    if (!handle) {
-      error = createValidationError("No handle provided.");
-      return { success: false, error };
-    }
-
-    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key/${encodeURIComponent(id)}`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Missing or invalid API key ID."
-        });
-      }
-    }).catch((e) => {
-      error ||= getResultError(e, "Failed to delete sub-account API key.");
-    });
-
-    return { success: !error, error };
-  }
-
-  /**
-   * Creates a new SMTP password for the specified sub-account.
-   * @param handle - Handle of the sub-account to create SMTP password for.
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { data, error } = await mailchannels.subAccounts.createSmtpPassword('validhandle123')
-   * ```
-   */
-  async createSmtpPassword (handle: string): Promise<SubAccountsCreateSmtpPasswordResponse> {
-    let error: ErrorResponse | null = null;
-
-    if (!handle) {
-      error = createValidationError("No handle provided.");
-      return { data: null, error };
-    }
-
-    const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.Forbidden]: "You can't create SMTP passwords for this sub-account.",
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`,
-          [ErrorCode.UnprocessableEntity]: "You have reached the limit of SMTP passwords you can create for this sub-account."
-        });
-      }
-    }).catch((e) => {
-      error ||= getResultError(e, "Failed to create sub-account SMTP password.");
-      return null;
-    });
-
-    if (!response) return { data: null, error: error! };
-
-    const data = clean({
-      enabled: response.enabled,
-      id: response.id,
-      smtpPassword: response.smtp_password
-    });
-
-    return { data, error: null };
-  }
-
-  /**
-   * Retrieves details of all SMTP passwords associated with the specified sub-account. For security, the full SMTP password is not returned; only the password ID and a partially redacted version are provided.
-   * @param handle - Handle of the sub-account to retrieve the SMTP password for.
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { data, error } = await mailchannels.subAccounts.listSmtpPasswords('validhandle123')
-   * ```
-   */
-  async listSmtpPasswords (handle: string): Promise<SubAccountsListSmtpPasswordResponse> {
-    let error: ErrorResponse | null = null;
-
-    if (!handle) {
-      error = createValidationError("No handle provided.");
-      return { data: null, error };
-    }
-
-    const response = await this.mailchannels.get<SubAccountsCreateSmtpPasswordApiResponse[]>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
-        });
-      }
-    }).catch((e) => {
-      error ||= getResultError(e, "Failed to fetch sub-account SMTP passwords.");
-      return null;
-    });
-
-    if (!response) return { data: null, error: error! };
-
-    const data = clean(response.map(password => ({
-      enabled: password.enabled,
-      id: password.id,
-      smtpPassword: password.smtp_password
-    })));
-
-    return { data, error: null };
-  }
-
-  /**
-   * Deletes the SMTP password identified by its ID for the specified sub-account.
-   * @param handle - Handle of the sub-account for which the SMTP password should be deleted.
-   * @param id - The ID of the SMTP password to delete.
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { success, error } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle123', 1)
-   * ```
-   */
-  async deleteSmtpPassword (handle: string, id: number): Promise<SuccessResponse> {
-    let error: ErrorResponse | null = null;
-
-    if (!handle) {
-      error = createValidationError("No handle provided.");
-      return { success: false, error };
-    }
-
-    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password/${encodeURIComponent(id)}`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Missing or invalid SMTP password ID."
-        });
-      }
-    }).catch((e) => {
-      error ||= getResultError(e, "Failed to delete sub-account SMTP password.");
-    });
-
-    return { success: !error, error };
-  }
-
-  /**
-   * Retrieves the limit of a specified sub-account. A value of `-1` indicates that the sub-account inherits the parent account's limit, allowing the sub-account to utilize any remaining capacity within the parent account's allocation.
-   * @param handle - Handle of the sub-account to retrieve the limit for.
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { data, error } = await mailchannels.subAccounts.getLimit('validhandle123')
-   * ```
-   */
-  async getLimit (handle: string): Promise<SubAccountsLimitResponse> {
-    let error: ErrorResponse | null = null;
-
-    if (!handle) {
-      error = createValidationError("No handle provided.");
-      return { data: null, error };
-    }
-
-    const response = await this.mailchannels.get<SubAccountsLimit>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
-        });
-      }
-    }).catch((e) => {
-      error ||= getResultError(e, "Failed to fetch sub-account limit.");
-      return null;
-    });
-
-    if (!response) return { data: null, error: error! };
-
-    const data = clean(response);
-
-    return { data, error: null };
-  }
-
-  /**
-   * Sets the limit for the specified sub-account.
-   * @param handle - Handle of the sub-account to set limit for.
-   * @param limit - The limits to set for the sub-account. The minimum allowed sends is `0`
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { success, error } = await mailchannels.subAccounts.setLimit('validhandle123', { sends: 1000 })
-   * ```
-   */
-  async setLimit (handle: string, limit: SubAccountsLimit): Promise<SuccessResponse> {
-    let error: ErrorResponse | null = null;
-
-    if (!handle) {
-      error = createValidationError("No handle provided.");
-      return { success: false, error };
-    }
-
-    if (limit.sends < 0) {
-      error = createValidationError("The sends value must be at least 0.");
-      return { success: false, error };
-    }
-
-    await this.mailchannels.put<{ limit: SubAccountsLimit }>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
-      body: limit,
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
-        });
-      }
-    }).catch((e) => {
-      error ||= getResultError(e, "Failed to set sub-account limit.");
-    });
-
-    return { success: !error, error };
-  }
-
-  /**
-   * Deletes the limit for the specified sub-account. After a successful deletion, the specified sub-account will be limited to the parent account's limit.
-   * @param handle - Handle of the sub-account to delete limit for.
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { success, error } = await mailchannels.subAccounts.deleteLimit('validhandle123')
-   * ```
-   */
-  async deleteLimit (handle: string): Promise<SuccessResponse> {
-    let error: ErrorResponse | null = null;
-
-    if (!handle) {
-      error = createValidationError("No handle provided.");
-      return { success: false, error };
-    }
-
-    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
-        });
-      }
-    }).catch((e) => {
-      error ||= getResultError(e, "Failed to delete sub-account limit.");
-    });
-
-    return { success: !error, error };
-  }
-
-  /**
    * Retrieves usage statistics for the specified sub-account during the current billing period.
    * @param handle - Handle of the sub-account to query usage stats for.
    * @example
@@ -555,5 +240,50 @@ export class SubAccounts {
     });
 
     return { data, error: null };
+  }
+
+  /** @deprecated Use `apiKeys.create` instead. */
+  createApiKey (...args: Parameters<SubAccountsApiKeys["create"]>) {
+    return this.apiKeys.create(...args);
+  }
+
+  /** @deprecated Use `apiKeys.list` instead. */
+  listApiKeys (...args: Parameters<SubAccountsApiKeys["list"]>) {
+    return this.apiKeys.list(...args);
+  }
+
+  /** @deprecated Use `apiKeys.delete` instead. */
+  deleteApiKey (...args: Parameters<SubAccountsApiKeys["delete"]>) {
+    return this.apiKeys.delete(...args);
+  }
+
+  /** @deprecated Use `smtpPasswords.create` instead. */
+  createSmtpPassword (...args: Parameters<SubAccountsSmtpPasswords["create"]>) {
+    return this.smtpPasswords.create(...args);
+  }
+
+  /** @deprecated Use `smtpPasswords.list` instead. */
+  listSmtpPasswords (...args: Parameters<SubAccountsSmtpPasswords["list"]>) {
+    return this.smtpPasswords.list(...args);
+  }
+
+  /** @deprecated Use `smtpPasswords.delete` instead. */
+  deleteSmtpPassword (...args: Parameters<SubAccountsSmtpPasswords["delete"]>) {
+    return this.smtpPasswords.delete(...args);
+  }
+
+  /** @deprecated Use `limits.set` instead. */
+  setLimit (...args: Parameters<SubAccountsLimits["set"]>) {
+    return this.limits.set(...args);
+  }
+
+  /** @deprecated Use `limits.get` instead. */
+  getLimit (...args: Parameters<SubAccountsLimits["get"]>) {
+    return this.limits.get(...args);
+  }
+
+  /** @deprecated Use `limits.delete` instead. */
+  deleteLimit (...args: Parameters<SubAccountsLimits["delete"]>) {
+    return this.limits.delete(...args);
   }
 }

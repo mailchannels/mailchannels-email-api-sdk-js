@@ -14,10 +14,6 @@ export default [
     link: "/simulator"
   },
   {
-    text: "Contributors",
-    link: "/contributors"
-  },
-  {
     text: "Modules",
     collapsed: false,
     link: "/modules",
@@ -72,15 +68,15 @@ export default [
               { text: "Delete Sub-account", link: "/modules/sub-accounts/delete" },
               { text: "Suspend Sub-account", link: "/modules/sub-accounts/suspend" },
               { text: "Activate Sub-account", link: "/modules/sub-accounts/activate" },
-              { text: "Create API Key", link: "/modules/sub-accounts/create-api-key" },
-              { text: "Delete API Key", link: "/modules/sub-accounts/delete-api-key" },
-              { text: "List API Keys", link: "/modules/sub-accounts/list-api-keys" },
-              { text: "Create SMTP Password", link: "/modules/sub-accounts/create-smtp-password" },
-              { text: "List SMTP Passwords", link: "/modules/sub-accounts/list-smtp-passwords" },
-              { text: "Delete SMTP Password", link: "/modules/sub-accounts/delete-smtp-password" },
-              { text: "Get Limit", link: "/modules/sub-accounts/get-limit" },
-              { text: "Set Limit", link: "/modules/sub-accounts/set-limit" },
-              { text: "Delete Limit", link: "/modules/sub-accounts/delete-limit" },
+              { text: "Create API Key", link: "/modules/sub-accounts/api-keys-create" },
+              { text: "Delete API Key", link: "/modules/sub-accounts/api-keys-delete" },
+              { text: "List API Keys", link: "/modules/sub-accounts/api-keys-list" },
+              { text: "Create SMTP Password", link: "/modules/sub-accounts/smtp-passwords-create" },
+              { text: "List SMTP Passwords", link: "/modules/sub-accounts/smtp-passwords-list" },
+              { text: "Delete SMTP Password", link: "/modules/sub-accounts/smtp-passwords-delete" },
+              { text: "Get Limit", link: "/modules/sub-accounts/limits-get" },
+              { text: "Set Limit", link: "/modules/sub-accounts/limits-set" },
+              { text: "Delete Limit", link: "/modules/sub-accounts/limits-delete" },
               { text: "Get Usage", link: "/modules/sub-accounts/get-usage" }
             ]
           },

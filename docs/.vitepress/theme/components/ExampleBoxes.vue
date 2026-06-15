@@ -16,14 +16,14 @@ defineProps<{
     <VPLink
       v-for="(example, i) in examples"
       :key="i"
-      :href="`${SITE.repo}/blob/main` + example.path"
+      :href="`${SITE.repo}/src/main` + example.path"
       class="example-box link"
       no-icon
     >
       <article class="box">
         <span class="vp-external-link-icon" />
         <div class="icon">
-          <span class="vpi-social-github" style="--icon: url('https://api.iconify.design/simple-icons/github.svg');" />
+          <span class="vpi-social-bitbucket" style="--icon: url('https://api.iconify.design/simple-icons/bitbucket.svg');" />
         </div>
         <h4 class="title">{{ example.title }}</h4>
         <p class="details" v-if="example.description">{{ example.description }}</p>

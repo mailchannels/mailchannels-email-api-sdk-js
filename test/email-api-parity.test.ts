@@ -44,6 +44,19 @@ const getPublicApiMethods = (value: object, excludedMethods: string[] = [], pref
   return [...methods, ...nested].sort();
 };
 
+const deprecatedMethods = new Set([
+  "emails.sendAsync",
+  "subAccounts.createApiKey",
+  "subAccounts.createSmtpPassword",
+  "subAccounts.deleteApiKey",
+  "subAccounts.deleteLimit",
+  "subAccounts.deleteSmtpPassword",
+  "subAccounts.getLimit",
+  "subAccounts.listApiKeys",
+  "subAccounts.listSmtpPasswords",
+  "subAccounts.setLimit"
+]);
+
 const assertParityFixture = (
   fixtureName: string,
   fixture: ParityFixture,
@@ -66,9 +79,10 @@ const assertParityFixture = (
       }, {});
 
       for (const [module, methods] of Object.entries(actualByModule)) {
-        // Exclude sendAsync which is not in the fixture
-        const comparableMethods = module === "emails" ? methods.filter(method => method !== "sendAsync"): methods;
-        expect(fixtureByModule[module]?.sort(), `Fixture mismatch for module ${module}`).toEqual(comparableMethods);
+        const modulePrefix = `${module}.`;
+        const comparableMethods = methods.filter(m => !deprecatedMethods.has(modulePrefix + m)).sort();
+        const fixtureMethods = fixtureByModule[module] ? [...fixtureByModule[module]].sort() : [];
+        expect(fixtureMethods, `Fixture mismatch for module ${module}`).toEqual(comparableMethods);
       }
     });
 

@@ -11,6 +11,7 @@ This module allows you to check a domain's email authentication and manage DKIM 
 ## Type declarations
 
 <<< @/snippets/domains.ts
+<<< @/snippets/domains-dkim.ts
 
 <details>
   <summary>All type declarations</summary>

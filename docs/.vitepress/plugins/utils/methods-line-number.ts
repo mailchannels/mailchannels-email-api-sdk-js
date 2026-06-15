@@ -1,10 +1,40 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { pascalCase } from "scule";
 import { type Node, ScriptTarget, SyntaxKind, createSourceFile, forEachChild, isClassDeclaration, isMethodDeclaration } from "typescript";
 
 const methodLineCache = new Map<string, Map<string, number>>();
 const moduleSubclassCache = new Map<string, string[]>();
+
+const normalize = (value: string) => value.replace(/[^a-z0-9]/gi, "").toLowerCase();
+
+const resolveSubclassSlug = (moduleName: string, className?: string): string | null => {
+  if (!className) return null;
+
+  const moduleKey = normalize(moduleName);
+  const classKey = normalize(className);
+
+  if (classKey === moduleKey || classKey === normalize(pascalCase(moduleName))) {
+    return null;
+  }
+
+  const subclasses = getModuleSubclassSlugs(moduleName);
+  for (const subclass of subclasses) {
+    const subclassKey = normalize(subclass);
+    const candidates = [
+      subclassKey,
+      normalize(`${moduleName}${subclass}`),
+      normalize(`${moduleName}-${subclass}`),
+      normalize(`${pascalCase(moduleName)}${pascalCase(subclass)}`)
+    ];
+
+    if (candidates.includes(classKey)) {
+      return subclass;
+    }
+  }
+
+  return null;
+};
 
 export const getModuleSubclassSlugs = (moduleName: string): string[] => {
   if (moduleSubclassCache.has(moduleName)) {
@@ -13,23 +43,12 @@ export const getModuleSubclassSlugs = (moduleName: string): string[] => {
 
   try {
     const projectDir = process.cwd();
-    const sourceFilePath = path.join(projectDir, `src/modules/${moduleName}.ts`);
-    const code = readFileSync(sourceFilePath, "utf8");
-    const sourceFile = createSourceFile(sourceFilePath, code, ScriptTarget.Latest, true);
-
-    const classNames: string[] = [];
-    const visit = (node: Node) => {
-      if (isClassDeclaration(node) && node.name) {
-        classNames.push(node.name.text);
-      }
-      forEachChild(node, visit);
-    };
-    visit(sourceFile);
-
-    const mainClass = classNames.find(name => name === pascalCase(moduleName)) ?? "";
-    const slugs = classNames
-      .filter(name => name !== mainClass && name.toLowerCase().startsWith(mainClass.toLowerCase()))
-      .map(name => name.slice(mainClass.length).toLowerCase());
+    const moduleDirPath = path.join(projectDir, `src/modules/${moduleName}`);
+    const slugs = readdirSync(moduleDirPath, { withFileTypes: true })
+      .filter(entry => entry.isFile())
+      .map(entry => entry.name)
+      .filter(name => name.endsWith(".ts") && name !== "index.ts")
+      .map(name => name.slice(0, -3));
 
     moduleSubclassCache.set(moduleName, slugs);
     return slugs;
@@ -41,7 +60,8 @@ export const getModuleSubclassSlugs = (moduleName: string): string[] => {
 };
 
 export const getMethodLineNumber = (moduleName: string, methodName: string, className?: string) => {
-  const targetClass = className ?? moduleName;
+  const subclassSlug = resolveSubclassSlug(moduleName, className);
+  const targetClass = subclassSlug ? pascalCase(`${moduleName}-${subclassSlug}`) : pascalCase(moduleName);
   const cacheKey = `${moduleName}:${targetClass}`;
 
   if (methodLineCache.has(cacheKey)) {
@@ -50,7 +70,7 @@ export const getMethodLineNumber = (moduleName: string, methodName: string, clas
 
   try {
     const projectDir = process.cwd();
-    const sourceFilePath = path.join(projectDir, `src/modules/${moduleName}.ts`);
+    const sourceFilePath = subclassSlug? path.join(projectDir, `src/modules/${moduleName}/${subclassSlug}.ts`): path.join(projectDir, `src/modules/${moduleName}/index.ts`);
     const code = readFileSync(sourceFilePath, "utf8");
     const sourceFile = createSourceFile(sourceFilePath, code, ScriptTarget.Latest, true);
 
@@ -58,7 +78,7 @@ export const getMethodLineNumber = (moduleName: string, methodName: string, clas
 
     const visit = (node: Node) => {
       if (isClassDeclaration(node) && node.name) {
-        if (node.name.text.toLowerCase() !== targetClass.toLowerCase()) {
+        if (normalize(node.name.text) !== normalize(targetClass)) {
           forEachChild(node, visit);
           return;
         }
