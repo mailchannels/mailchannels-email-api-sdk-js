@@ -67,6 +67,7 @@ export class SubAccountsApiKeys {
     if (error) return { data: null, error };
 
     const response = await this.mailchannels.get<SubAccountsApiKeysListApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`, {
+      query: options,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
