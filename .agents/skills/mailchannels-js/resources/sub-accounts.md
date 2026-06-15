@@ -49,25 +49,25 @@ Each sub-account has its own API keys and SMTP passwords.
 
 ```ts
 // API keys
-const { data: createdKey, error: createErr } = await mc.subAccounts.createApiKey('clienta')
+const { data: createdKey, error: createErr } = await mc.subAccounts.apiKeys.create('clienta')
 if (createErr) { /*...*/ }
 // Store createdKey.key immediately — only returned once
 
-const { data: keys, error: listErr } = await mc.subAccounts.listApiKeys('clienta')
+const { data: keys, error: listErr } = await mc.subAccounts.apiKeys.list('clienta')
 if (listErr) { /*...*/ }
 
-const { error: deleteErr } = await mc.subAccounts.deleteApiKey('clienta', storedKeyId)
+const { error: deleteErr } = await mc.subAccounts.apiKeys.delete('clienta', storedKeyId)
 if (deleteErr) { /*...*/ }
 
 // SMTP passwords
-const { data: createdPwd, error: createPwdErr } = await mc.subAccounts.createSmtpPassword('clienta')
+const { data: createdPwd, error: createPwdErr } = await mc.subAccounts.smtpPasswords.create('clienta')
 if  (createPwdErr) { /*...*/ }
 // Store createdPwd.smtpPassword immediately — only returned once
 
-const { data: passwords, error: listPwdErr } = await mc.subAccounts.listSmtpPasswords('clienta')
+const { data: passwords, error: listPwdErr } = await mc.subAccounts.smtpPasswords.list('clienta')
 if (listPwdErr) { /*...*/ }
 
-const { error: deletePwdErr } = await mc.subAccounts.deleteSmtpPassword('clienta', storedPasswordId)
+const { error: deletePwdErr } = await mc.subAccounts.smtpPasswordss.delete('clienta', storedPasswordId)
 if (deletePwdErr) { /*...*/ }
 ```
 
@@ -82,13 +82,13 @@ Per-sub-account monthly send caps. A sub-account without a limit inherits the pa
 capacity.
 
 ```ts
-const { error: setLimitErr } = await mc.subAccounts.setLimit('clienta', { sends: 100_000 })
+const { error: setLimitErr } = await mc.subAccounts.limits.set('clienta', { sends: 100_000 })
 if (setLimitErr) { /*...*/ }
 
-const { data: limit, error: getLimitErr } = await mc.subAccounts.getLimit('clienta')
+const { data: limit, error: getLimitErr } = await mc.subAccounts.limits.get('clienta')
 if (getLimitErr) { /*...*/ }
 
-const { error: deleteLimitErr } = await mc.subAccounts.deleteLimit('clienta')   // back to inheriting parent
+const { error: deleteLimitErr } = await mc.subAccounts.limits.delete('clienta')   // back to inheriting parent
 if (deleteLimitErr) { /*...*/ }
 ```
 
