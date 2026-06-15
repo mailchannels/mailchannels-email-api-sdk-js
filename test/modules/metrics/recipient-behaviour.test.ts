@@ -5,6 +5,7 @@ import { ErrorCode } from "~/utils/errors";
 import type { MetricsRecipientBehaviourResponse } from "~/types/metrics/recipient-behaviour";
 import type { MetricsRecipientBehaviourApiResponse } from "~/types/metrics/internal";
 import type { MetricsOptions } from "~/types/metrics";
+import { formatDateInput } from "~/utils/parse-date-inputs";
 
 const fake = {
   options: {
@@ -49,7 +50,16 @@ describe("recipientBehaviour", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalled();
+    expect(mockClient.get).toHaveBeenCalledWith("/tx/v1/metrics/recipient-behaviour",
+      expect.objectContaining({
+        query: {
+          start_time: formatDateInput(fake.options.startTime),
+          end_time: formatDateInput(fake.options.endTime),
+          campaign_id: fake.options.campaignId,
+          interval: fake.options.interval
+        }
+      })
+    );
   });
 
   it("should contain error for invalid startTime date", async () => {

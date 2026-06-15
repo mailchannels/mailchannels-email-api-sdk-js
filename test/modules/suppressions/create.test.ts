@@ -6,6 +6,7 @@ import type { SuppressionsCreateOptions } from "~/types/suppressions/create";
 
 const fake = {
   options: {
+    addToSubAccounts: false,
     entries: [
       {
         recipient: "test@example.com",
@@ -27,7 +28,18 @@ describe("create", () => {
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/suppression-list",
+      expect.objectContaining({
+        body: {
+          add_to_sub_accounts: fake.options.addToSubAccounts,
+          suppression_entries: fake.options.entries.map(entry => ({
+            recipient: entry.recipient,
+            suppression_types: entry.types,
+            notes: entry.notes
+          }))
+        }
+      })
+    );
   });
 
   it("should default suppression type to non-transactional when types is not provided", async () => {

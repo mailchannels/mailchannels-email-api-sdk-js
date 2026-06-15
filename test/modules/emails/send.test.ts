@@ -4,6 +4,7 @@ import { Emails } from "~/modules/emails";
 import type { EmailsSendOptions, EmailsSendResponse } from "~/types/emails/send";
 import { ErrorCode } from "~/utils/errors";
 import type { EmailsSendApiResponse } from "~/types/emails/internal";
+import { buildSendPayload } from "~/utils/build-send-payload";
 
 const fake = {
   options: {
@@ -53,7 +54,12 @@ describe("send", () => {
 
     expect(error).toBeNull();
     expect(data).toStrictEqual(fake.expectedResponse.data);
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/send",
+      expect.objectContaining({
+        query: fake.query,
+        body: await buildSendPayload(fake.options)
+      })
+    );
   });
 
   it("should contain error when payload is invalid", async () => {

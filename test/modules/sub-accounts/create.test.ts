@@ -28,7 +28,14 @@ describe("create", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/sub-account",
+      expect.objectContaining({
+        body: {
+          company_name: fake.validCompanyName,
+          handle: fake.validHandle
+        }
+      })
+    );
   });
 
   it("should contain error for an invalid company name", async () => {

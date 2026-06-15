@@ -11,9 +11,9 @@ describe("deleteAll", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.deleteAll();
 
-    expect(mockClient.delete).toHaveBeenCalled();
     expect(error).toBeNull();
     expect(success).toBe(true);
+    expect(mockClient.delete).toHaveBeenCalledWith("/tx/v1/webhook", expect.any(Object));
   });
 
   it("should contain error on api response error", async () => {

@@ -3,24 +3,26 @@ import type { MailChannelsClient } from "~/client";
 import { Domains } from "~/modules/domains";
 import { ErrorCode } from "~/utils/errors";
 import type { DomainsDkimCreateApiResponse } from "~/types/domains/internal";
-import type { DomainsDkimCreateResponse } from "~/types/domains/dkim-create";
+import type { DomainsDkimCreateOptions, DomainsDkimCreateResponse } from "~/types/domains/dkim-create";
 
 const fake = {
   options: {
-    selector: "mailchannels_test"
-  },
+    selector: "mailchannels-test",
+    algorithm: "rsa",
+    length: 2048
+  } satisfies DomainsDkimCreateOptions,
   apiResponse: {
     algorithm: "rsa",
     created_at: "2024-07-29T15:51:28.071Z",
     dkim_dns_records: [{
-      name: "mailchannels_test._domainkey.example.com",
+      name: "mailchannels-test._domainkey.example.com",
       type: "TXT",
       value: "string"
     }],
     domain: "example.com",
     key_length: 2048,
     public_key: "string",
-    selector: "mailchannels_test",
+    selector: "mailchannels-test",
     status: "active",
     status_modified_at: "2024-07-29T15:51:28.071Z"
   } satisfies DomainsDkimCreateApiResponse,
@@ -29,14 +31,14 @@ const fake = {
       algorithm: "rsa",
       createdAt: "2024-07-29T15:51:28.071Z",
       dnsRecords: [{
-        name: "mailchannels_test._domainkey.example.com",
+        name: "mailchannels-test._domainkey.example.com",
         type: "TXT",
         value: "string"
       }],
       domain: "example.com",
       length: 2048,
       publicKey: "string",
-      selector: "mailchannels_test",
+      selector: "mailchannels-test",
       status: "active",
       statusModifiedAt: "2024-07-29T15:51:28.071Z"
     },
@@ -55,7 +57,15 @@ describe("dkim.create", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/domains/example.com/dkim-keys",
+      expect.objectContaining({
+        body: {
+          algorithm: fake.options.algorithm,
+          key_length: fake.options.length,
+          selector: fake.options.selector
+        }
+      })
+    );
   });
 
   it("should return error if domain is not provided", async () => {

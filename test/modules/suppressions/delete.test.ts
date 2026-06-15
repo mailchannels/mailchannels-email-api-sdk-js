@@ -20,7 +20,13 @@ describe("delete", () => {
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.delete).toHaveBeenCalled();
+    expect(mockClient.delete).toHaveBeenCalledWith(`/tx/v1/suppression-list/recipients/${encodeURIComponent(fake.recipient)}`,
+      expect.objectContaining({
+        query: {
+          source: fake.source
+        }
+      })
+    );
   });
 
   it("should handle API error response on delete", async () => {

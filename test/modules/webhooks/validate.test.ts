@@ -38,11 +38,17 @@ describe("validate", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { data, error } = await webhooks.validate();
+    const { data, error } = await webhooks.validate("req_id_123");
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/webhook/validate",
+      expect.objectContaining({
+        body: {
+          request_id: "req_id_123"
+        }
+      })
+    );
   });
 
   it("should contain error on api response error", async () => {

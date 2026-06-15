@@ -55,7 +55,11 @@ describe("check", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/check-domain",
+      expect.objectContaining({
+        body: fake.payload
+      })
+    );
   });
 
   it("should successfully check a domain with dkim as array", async () => {
