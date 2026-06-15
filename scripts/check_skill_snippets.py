@@ -267,8 +267,21 @@ def rewrite_line_numbers(
 
 
 def _find_tsc() -> list[str]:
-    """Return the tsc command: project-local preferred, system tsc fallback."""
+    """Return the tsc command: project-local preferred, system tsc fallback.
+
+    On Windows, node_modules/.bin provides ``tsc.cmd`` which must be launched
+    via ``cmd /c`` to avoid ``WinError 193``.
+    """
     local = ROOT / "node_modules" / ".bin" / "tsc"
+    local_cmd = ROOT / "node_modules" / ".bin" / "tsc.cmd"
+
+    if sys.platform == "win32":
+        if local_cmd.is_file():
+            return ["cmd", "/d", "/s", "/c", str(local_cmd)]
+        if local.is_file():
+            return [str(local)]
+        return ["cmd", "/d", "/s", "/c", "tsc"]
+
     if local.is_file():
         return [str(local)]
     return ["tsc"]
