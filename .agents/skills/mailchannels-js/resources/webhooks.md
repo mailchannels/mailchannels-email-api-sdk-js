@@ -157,7 +157,7 @@ fields:
 | `campaignId` | `string?` | Present when `campaignId` was set on the send.                                                                                                          |
 | `recipients` | `string[]?` | All recipients in the personalization.                                                                                                                  |
 | `status` | `string?` | The SMTP status code received for the message. Use for system logic. Present on `hard-bounced`, `soft-bounced` events.                                  |
-| `reason` | `number?` | A human readable explanation of the status code. Do not use for system logic. Present on `hard-bounced`, `soft-bounced` events.                         |
+| `reason` | `string?` | A human readable explanation of the status code. Do not use for system logic. Present on `hard-bounced`, `soft-bounced` events.                         |
 | `url` / `userAgent` / `ip` | `string?` | Present on `click` / `open` events.                                                                                                                     |
 
 ### Responding

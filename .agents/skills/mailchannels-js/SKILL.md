@@ -14,15 +14,6 @@ other languages and their APIs differ.
 > the SDK (adding features, fixing bugs, releasing the package) is a different job.
 >  If the user is working in a Python, Go, Ruby, PHP, Rust, or shell context, this skill does not apply.
 
-### Quick Sanity Check Before Using This Skill
-
-If any of these are true, you're in the right place:
-
-- The file you're editing ends in `.ts`, `.tsx`, `.js`, `.mjs`, or `.cjs`.
-- The user said "Node", "npm", "pnpm", "yarn", "bun", "TypeScript", "Next.js",
-  "Express", "Hono", "Fastify", `package.json`, `tsconfig.json`, or similar.
-- The codebase already imports `mailchannels-sdk` or has `mailchannels-sdk` in its dependencies.
-
 ## How To Use This Skill
 
 The body of each topic lives in [`resources/`](resources/). Read this file for context and
