@@ -1,5 +1,5 @@
 diff --git a/dist/shared/changelogen.D-9f3HTX.mjs b/dist/shared/changelogen.D-9f3HTX.mjs
-index dd70b3f4651f1691c1f4e4cb22862079f8c02c05..95777cb792b0a6d84c68e99d20ca404b0471b1d0 100644
+index dd70b3f4651f1691c1f4e4cb22862079f8c02c05..bc132dde07f1b1f74e3dc13a94bbc9d90b7158a1 100644
 --- a/dist/shared/changelogen.D-9f3HTX.mjs
 +++ b/dist/shared/changelogen.D-9f3HTX.mjs
 @@ -203,6 +203,6 @@ const providerToRefSpec = {
@@ -10,3 +10,12 @@ index dd70b3f4651f1691c1f4e4cb22862079f8c02c05..95777cb792b0a6d84c68e99d20ca404b
      issue: "issues"
    }
  };
+@@ -347,7 +347,7 @@ async function generateMarkDown(commits, config) {
+         const _email = [...i.email].find(
+           (e) => !e.includes("noreply.github.com")
+         );
+-        const email = config.hideAuthorEmail !== true && _email ? ` <${_email}>` : "";
++        const email = config.hideAuthorEmail !== true && _email ? (config.repo.provider === "bitbucket" ? ` [${_email}](mailto:${_email})` : ` <${_email}>`) : "";
+         const github = i.github ? ` ([@${i.github}](https://github.com/${i.github}))` : "";
+         return `- ${i.name}${github || email || ""}`;
+       })
