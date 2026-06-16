@@ -29,17 +29,11 @@ definitions:
           - pnpm install
           - pnpm publish --access public --no-git-checks
 
-
-
 pipelines:
   default:
     - step: *checks
 
   branches:
-    main:
-      - step: *checks
-
-  pull-requests:
     main:
       - step: *checks
 
