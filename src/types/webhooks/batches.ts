@@ -5,13 +5,13 @@ export type WebhooksBatchResponseStatus = "1xx_response" | "2xx_response" | "3xx
 
 export interface WebhooksBatchesOptions {
   /**
-   * Inclusive lower bound (UTC) for filtering webhook batches by creation time. Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
+   * Inclusive lower bound (UTC) for filtering webhook batches by creation time. Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object.
    */
-  createdAfter?: string;
+  createdAfter?: string | Date;
   /**
-   * Exclusive upper bound (UTC) for filtering webhook batches by creation time. Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
+   * Exclusive upper bound (UTC) for filtering webhook batches by creation time. Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object.
    */
-  createdBefore?: string;
+  createdBefore?: string | Date;
   /**
    * Filters webhook batches by webhook response status category. If not provided, batches with all categories are returned.
    */

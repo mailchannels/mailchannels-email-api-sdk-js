@@ -2,6 +2,7 @@ import type { MailChannelsClient } from "../../client";
 import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../utils/errors";
 import { clean } from "../../utils/clean";
 import { isValidWebhook } from "../../utils/webhook-validator";
+import { parseDateInputs } from "../../utils/parse-date-inputs";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
 import type { WebhooksListResponse } from "../../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../../types/webhooks/signing-key";
@@ -268,17 +269,16 @@ export class Webhooks {
       return { data: null, error: createValidationError("Status filters must be unique.") };
     }
 
-    if (options?.createdAfter && Number.isNaN(Date.parse(options.createdAfter))) {
-      return { data: null, error: createValidationError("createdAfter must be a valid date string.") };
-    }
+    const { dates, error: dateError } = parseDateInputs({
+      createdAfter: options?.createdAfter,
+      createdBefore: options?.createdBefore
+    });
 
-    if (options?.createdBefore && Number.isNaN(Date.parse(options.createdBefore))) {
-      return { data: null, error: createValidationError("createdBefore must be a valid date string.") };
-    }
+    if (!dates) return { data: null, error: dateError };
 
-    if (options?.createdAfter && options?.createdBefore) {
-      const createdAfter = Date.parse(options.createdAfter);
-      const createdBefore = Date.parse(options.createdBefore);
+    if (dates.createdAfter && dates.createdBefore) {
+      const createdAfter = Date.parse(dates.createdAfter);
+      const createdBefore = Date.parse(dates.createdBefore);
       const maxRangeMs = 31 * 24 * 60 * 60 * 1000;
 
       if (createdBefore <= createdAfter) {
@@ -292,8 +292,8 @@ export class Webhooks {
 
     const response = await this.mailchannels.get<WebhooksBatchesApiResponse>("/tx/v1/webhook-batch", {
       query: {
-        created_after: options?.createdAfter,
-        created_before: options?.createdBefore,
+        created_after: dates.createdAfter,
+        created_before: dates.createdBefore,
         statuses: options?.statuses,
         webhook: options?.webhook,
         limit: options?.limit,
