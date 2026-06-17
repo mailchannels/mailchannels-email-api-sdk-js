@@ -18,7 +18,13 @@ describe("limits.set", () => {
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.put).toHaveBeenCalled();
+    expect(mockClient.put).toHaveBeenCalledWith(`/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/limit`,
+      expect.objectContaining({
+        body: {
+          sends: 1
+        }
+      })
+    );
   });
 
   it("should contain error when handle is not provided", async () => {

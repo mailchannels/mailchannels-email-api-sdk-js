@@ -32,7 +32,11 @@ describe("apiKeys.list", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalled();
+    expect(mockClient.get).toHaveBeenCalledWith(`/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/api-key`,
+      expect.objectContaining({
+        query: fake.options
+      })
+    );
   });
 
   it("should contain error when handle is not provided", async () => {

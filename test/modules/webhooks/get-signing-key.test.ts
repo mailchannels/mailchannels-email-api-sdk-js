@@ -24,7 +24,13 @@ describe("getSigningKey", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalled();
+    expect(mockClient.get).toHaveBeenCalledWith("/tx/v1/webhook/public-key",
+      expect.objectContaining({
+        query: {
+          id: fake.id
+        }
+      })
+    );
   });
 
   it("should contain error on api response error", async () => {

@@ -5,6 +5,7 @@ import type { EmailsSendOptions } from "~/types/emails/send";
 import type { EmailsQueueResponse } from "~/types/emails/queue";
 import { ErrorCode } from "~/utils/errors";
 import type { EmailsQueueApiResponse } from "~/types/emails/internal";
+import { buildSendPayload } from "~/utils/build-send-payload";
 
 const fake = {
   options: {
@@ -46,7 +47,11 @@ describe("queue", () => {
 
     expect(error).toBeNull();
     expect(data).toStrictEqual(fake.expectedResponse.data);
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/send-async",
+      expect.objectContaining({
+        body: await buildSendPayload(fake.options)
+      })
+    );
   });
 
   it("should contain error when payload is invalid in async mode", async () => {

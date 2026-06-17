@@ -2,10 +2,18 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Metrics } from "~/modules/metrics";
 import { ErrorCode } from "~/utils/errors";
-import type { MetricsSendersResponse } from "~/types/metrics/senders";
+import type { MetricsSendersOptions, MetricsSendersResponse } from "~/types/metrics/senders";
 import type { MetricsSendersApiResponse } from "~/types/metrics/internal";
+import { formatDateInput } from "~/utils/parse-date-inputs";
 
 const fake = {
+  options: {
+    startTime: "2024-07-01T00:00:00Z",
+    endTime: "2024-07-31T23:59:59Z",
+    limit: 10,
+    offset: 0,
+    sortOrder: "desc"
+  } satisfies MetricsSendersOptions,
   apiResponse: {
     start_time: "2025-11-02T03:37:58.989566774Z",
     end_time: "2025-12-02T03:37:58.989566774Z",
@@ -50,11 +58,21 @@ describe("senders", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { data, error } = await metrics.senders("campaigns");
+    const { data, error } = await metrics.senders("campaigns", fake.options);
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalled();
+    expect(mockClient.get).toHaveBeenCalledWith("/tx/v1/metrics/senders/campaigns",
+      expect.objectContaining({
+        query: {
+          start_time: formatDateInput(fake.options.startTime),
+          end_time: formatDateInput(fake.options.endTime),
+          limit: fake.options.limit,
+          offset: fake.options.offset,
+          sort_order: fake.options.sortOrder
+        }
+      })
+    );
   });
 
   it("should contain error for invalid startTime date", async () => {

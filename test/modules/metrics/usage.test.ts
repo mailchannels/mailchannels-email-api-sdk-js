@@ -32,7 +32,7 @@ describe("usage", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalled();
+    expect(mockClient.get).toHaveBeenCalledWith("/tx/v1/usage", expect.any(Object));
   });
 
   it("should handle missing billing period dates", async () => {

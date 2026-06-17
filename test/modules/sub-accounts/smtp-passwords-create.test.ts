@@ -33,7 +33,7 @@ describe("smtpPasswords.create", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith(`/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/smtp-password`, expect.any(Object));
   });
 
   it("should contain error when handle is not provided", async () => {

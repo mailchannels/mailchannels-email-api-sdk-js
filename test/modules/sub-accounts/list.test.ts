@@ -44,7 +44,11 @@ describe("list", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalled();
+    expect(mockClient.get).toHaveBeenCalledWith("/tx/v1/sub-account",
+      expect.objectContaining({
+        query: fake.options
+      })
+    );
   });
 
   it("should contain error for invalid limit", async () => {

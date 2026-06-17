@@ -42,7 +42,7 @@ describe("resend-batch", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith(`/tx/v1/webhook-batch/${encodeURIComponent(fake.batchId)}/resend`, expect.any(Object));
   });
 
   it("should contain error on api response error", async () => {

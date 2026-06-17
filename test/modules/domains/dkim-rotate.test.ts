@@ -9,7 +9,7 @@ const fake = {
 
   options: {
     newKey: {
-      selector: "mc_test"
+      selector: "mc-test"
     }
   },
   apiResponse: {
@@ -17,7 +17,7 @@ const fake = {
       algorithm: "rsa",
       dkim_dns_records: [
         {
-          name: "mc_test._domainkey.example.com",
+          name: "mc-test._domainkey.example.com",
           type: "TXT",
           value: "string"
         }
@@ -25,7 +25,7 @@ const fake = {
       domain: "example.com",
       key_length: 2048,
       public_key: "string",
-      selector: "mc_test",
+      selector: "mc-test",
       status: "active"
     },
     rotated_key: {
@@ -33,7 +33,7 @@ const fake = {
       created_at: "2025-09-17T16:31:20Z",
       dkim_dns_records: [
         {
-          name: "mailchannels_test._domainkey.example.com",
+          name: "mailchannels-test._domainkey.example.com",
           type: "TXT",
           value: "string"
         }
@@ -43,7 +43,7 @@ const fake = {
       key_length: 2048,
       public_key: "string",
       retiresAt: "2025-12-16T01:47:11.311Z",
-      selector: "mailchannels_test",
+      selector: "mailchannels-test",
       status: "rotated",
       status_modified_at: "2025-12-02T01:47:11.311Z"
     }
@@ -54,7 +54,7 @@ const fake = {
         algorithm: "rsa",
         dnsRecords: [
           {
-            name: "mc_test._domainkey.example.com",
+            name: "mc-test._domainkey.example.com",
             type: "TXT",
             value: "string"
           }
@@ -62,7 +62,7 @@ const fake = {
         domain: "example.com",
         length: 2048,
         publicKey: "string",
-        selector: "mc_test",
+        selector: "mc-test",
         status: "active"
       },
       rotated: {
@@ -70,7 +70,7 @@ const fake = {
         createdAt: "2025-09-17T16:31:20Z",
         dnsRecords: [
           {
-            name: "mailchannels_test._domainkey.example.com",
+            name: "mailchannels-test._domainkey.example.com",
             type: "TXT",
             value: "string"
           }
@@ -80,7 +80,7 @@ const fake = {
         length: 2048,
         publicKey: "string",
         retiresAt: "2025-12-16T01:47:11.311Z",
-        selector: "mailchannels_test",
+        selector: "mailchannels-test",
         status: "rotated",
         statusModifiedAt: "2025-12-02T01:47:11.311Z"
       }
@@ -96,11 +96,19 @@ describe("dkim.rotate", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels_test", fake.options);
+    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels-test", fake.options);
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/domains/example.com/dkim-keys/mailchannels-test/rotate",
+      expect.objectContaining({
+        body: {
+          new_key: {
+            selector: fake.options.newKey.selector
+          }
+        }
+      })
+    );
   });
 
   it("should return error if domain is not provided", async () => {
@@ -109,7 +117,7 @@ describe("dkim.rotate", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.dkim.rotate("", "mailchannels_test", fake.options);
+    const { data, error } = await domains.dkim.rotate("", "mailchannels-test", fake.options);
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -131,7 +139,7 @@ describe("dkim.rotate", () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels_test", {
+    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels-test", {
       newKey: {
         selector: "a".repeat(64)
       }
@@ -151,7 +159,7 @@ describe("dkim.rotate", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels_test", fake.options);
+    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels-test", fake.options);
 
     expect(error).toStrictEqual({
       message: "Bad Request.",
@@ -168,7 +176,7 @@ describe("dkim.rotate", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels_test", fake.options);
+    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels-test", fake.options);
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -181,7 +189,7 @@ describe("dkim.rotate", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels_test", fake.options);
+    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels-test", fake.options);
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();

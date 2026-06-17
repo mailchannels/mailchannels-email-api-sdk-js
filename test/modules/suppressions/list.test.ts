@@ -4,15 +4,21 @@ import { ErrorCode } from "~/utils/errors";
 import { Suppressions } from "~/modules/suppressions";
 import type { SuppressionsListApiResponse } from "~/types/suppressions/internal";
 import type { SuppressionsListOptions, SuppressionsListResponse } from "~/types/suppressions/list";
+import { formatDateInput } from "~/utils/parse-date-inputs";
 
 const fake = {
   options: {
-    recipient: "test@example.com"
+    recipient: "test@example.com",
+    source: "hard_bounce",
+    createdAfter: "2026-06-01T00:00:00Z",
+    createdBefore: "2026-07-01T00:00:00Z",
+    limit: 10,
+    offset: 0
   } satisfies SuppressionsListOptions,
   apiResponse: {
     suppression_list: [
       {
-        created_at: "2024-07-29T15:51:28.071Z",
+        created_at: "2026-06-15T15:51:28.071Z",
         notes: "string",
         recipient: "string",
         sender: "string",
@@ -26,7 +32,7 @@ const fake = {
   expectedResponse: {
     data: [
       {
-        createdAt: "2024-07-29T15:51:28.071Z",
+        createdAt: "2026-06-15T15:51:28.071Z",
         notes: "string",
         recipient: "string",
         sender: "string",
@@ -51,7 +57,18 @@ describe("list", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalled();
+    expect(mockClient.get).toHaveBeenCalledWith("/tx/v1/suppression-list",
+      expect.objectContaining({
+        query: {
+          recipient: fake.options.recipient,
+          source: fake.options.source,
+          created_after: formatDateInput(fake.options.createdAfter),
+          created_before: formatDateInput(fake.options.createdBefore),
+          limit: fake.options.limit,
+          offset: fake.options.offset
+        }
+      })
+    );
   });
 
   it("should contain error for invalid limit (0)", async () => {

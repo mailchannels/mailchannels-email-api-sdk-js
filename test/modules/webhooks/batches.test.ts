@@ -7,13 +7,18 @@ import type { WebhooksBatchesOptions, WebhooksBatchesResponse } from "~/types/we
 
 const fake = {
   options: {
-    webhook: "https://example.com/webhook"
+    webhook: "https://example.com/webhook",
+    createdAfter: "2026-06-01T00:00:00Z",
+    createdBefore: "2026-07-01T00:00:00Z",
+    statuses: ["1xx", "2xx", "3xx", "4xx", "5xx", "no_response"],
+    limit: 500,
+    offset: 0
   } satisfies WebhooksBatchesOptions,
   apiResponse: {
     webhook_batches: [
       {
         batch_id: 1,
-        created_at: "2024-07-29T15:51:28.071Z",
+        created_at: "2026-06-15T15:51:28.071Z",
         customer_handle: "test-customer",
         duration: { unit: "milliseconds", value: 120 },
         event_count: 5,
@@ -27,7 +32,7 @@ const fake = {
     data: [
       {
         batchId: 1,
-        createdAt: "2024-07-29T15:51:28.071Z",
+        createdAt: "2026-06-15T15:51:28.071Z",
         customerHandle: "test-customer",
         duration: { unit: "milliseconds", value: 120 },
         eventCount: 5,
@@ -51,7 +56,18 @@ describe("batches", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalled();
+    expect(mockClient.get).toHaveBeenCalledWith("/tx/v1/webhook-batch",
+      expect.objectContaining({
+        query: {
+          webhook: fake.options.webhook,
+          created_after: fake.options.createdAfter,
+          created_before: fake.options.createdBefore,
+          statuses: fake.options.statuses,
+          limit: fake.options.limit,
+          offset: fake.options.offset
+        }
+      })
+    );
   });
 
   it("should successfully retrieve webhook batches with valid date range", async () => {

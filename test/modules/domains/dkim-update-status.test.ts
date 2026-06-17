@@ -11,13 +11,19 @@ describe("dkim.updateStatus", () => {
 
     const domains = new Domains(mockClient);
     const { success, error } = await domains.dkim.updateStatus("example.com", {
-      selector: "mailchannels_test",
+      selector: "mailchannels-test",
       status: "retired"
     });
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.patch).toHaveBeenCalled();
+    expect(mockClient.patch).toHaveBeenCalledWith("/tx/v1/domains/example.com/dkim-keys/mailchannels-test",
+      expect.objectContaining({
+        body: {
+          status: "retired"
+        }
+      })
+    );
   });
 
   it("should return error if domain is not provided", async () => {
@@ -25,7 +31,7 @@ describe("dkim.updateStatus", () => {
 
     const domains = new Domains(mockClient);
     const { success, error } = await domains.dkim.updateStatus("", {
-      selector: "mailchannels_test",
+      selector: "mailchannels-test",
       status: "retired"
     });
 
@@ -43,7 +49,7 @@ describe("dkim.updateStatus", () => {
 
     const domains = new Domains(mockClient);
     const { success, error } = await domains.dkim.updateStatus("example.com", {
-      selector: "mailchannels_test",
+      selector: "mailchannels-test",
       status: "retired"
     });
 

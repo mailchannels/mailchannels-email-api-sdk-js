@@ -18,7 +18,13 @@ describe("create", () => {
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/webhook",
+      expect.objectContaining({
+        query: {
+          endpoint: fake.endpoint
+        }
+      })
+    );
   });
 
   it("should contain error if the endpoint is not provided", async () => {

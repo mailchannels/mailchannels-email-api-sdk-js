@@ -17,7 +17,7 @@ describe("delete", () => {
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.delete).toHaveBeenCalled();
+    expect(mockClient.delete).toHaveBeenCalledWith(`/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}`, expect.any(Object));
   });
 
   it("should contain error when handle is not provided", async () => {

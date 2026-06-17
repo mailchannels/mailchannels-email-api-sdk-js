@@ -24,7 +24,7 @@ describe("apiKeys.create", () => {
     const result = await subAccounts.apiKeys.create(fake.validHandle);
 
     expect(result).toStrictEqual(fake.expectedResponse);
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith(`/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/api-key`, expect.any(Object));
   });
 
   it("should contain error when handle is not provided", async () => {
