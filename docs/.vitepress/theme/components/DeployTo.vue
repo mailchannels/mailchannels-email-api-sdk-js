@@ -9,12 +9,12 @@ const props = defineProps<{
 
 const deployData = {
   vercel: {
-    href: `https://vercel.com/new/clone?repository-url=${SITE.repo + "/tree/main" + props.path}&env=MAILCHANNELS_API_KEY&envDefaults=%7B%22MAILCHANNELS_API_KEY%22%3A%22your-api-key%22%7D&project-name=mailchannels-vercel-functions-example&repository-name=mailchannels-vercel-functions-example`,
+    href: `https://vercel.com/new/clone?repository-url=${SITE.repo + "/src/main" + props.path}&env=MAILCHANNELS_API_KEY&envDefaults=%7B%22MAILCHANNELS_API_KEY%22%3A%22your-api-key%22%7D&project-name=mailchannels-vercel-functions-example&repository-name=mailchannels-vercel-functions-example`,
     image: "https://vercel.com/button",
     alt: "Deploy on Vercel"
   },
   cloudflare: {
-    href: `https://deploy.workers.cloudflare.com/?url=${SITE.repo + "/tree/main" + props.path}`,
+    href: `https://deploy.workers.cloudflare.com/?url=${SITE.repo + "/src/main" + props.path}`,
     image: "https://deploy.workers.cloudflare.com/button",
     alt: "Deploy to Cloudflare"
   },

@@ -54,7 +54,7 @@
       > [!WARNING]
       > Cannot contain a `text/html` entry when `html` is set, or a `text/plain` entry when `text` is set.
     > [!NOTE]
-    > For more information about sending emails with multiple content parts, see the [MailChannels documentation](https://docs.mailchannels.net/email-api/sending-email/content-types).
+    > For more information about sending emails with multiple content parts, see the [MailChannels documentation](https://docs.mailchannels.com/email-api/content-types).
     <!---->
     > [!IMPORTANT]
     > Either `html`, `text`, or `content` must be provided.
