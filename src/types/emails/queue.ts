@@ -11,4 +11,5 @@ export type EmailsQueueResponse = DataResponse<{
   requestId: string;
 }>;
 
+/** @deprecated Use `EmailsQueueResponse` instead. */
 export type EmailsSendAsyncResponse = EmailsQueueResponse;
