@@ -106,7 +106,7 @@ export class Suppressions {
       createdAfter: options?.createdAfter
     });
 
-    if (!dates) return { data: null, error: dateError };
+    if (!dates || dateError) return { data: null, error: dateError };
 
     error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };

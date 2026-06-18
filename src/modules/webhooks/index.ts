@@ -274,7 +274,7 @@ export class Webhooks {
       createdBefore: options?.createdBefore
     });
 
-    if (!dates) return { data: null, error: dateError };
+    if (!dates || dateError) return { data: null, error: dateError };
 
     if (dates.createdAfter && dates.createdBefore) {
       const createdAfter = Date.parse(dates.createdAfter);
