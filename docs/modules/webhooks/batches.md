@@ -30,8 +30,8 @@ const { data, error } = await mailchannels.webhooks.batches()
 
 ## Params
 
-- `createdAfter` `string` <Badge type="info">optional</Badge>: Inclusive lower bound (UTC) for filtering webhook batches by creation time. Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
-- `createdBefore` `string` <Badge type="info">optional</Badge>: Exclusive upper bound (UTC) for filtering webhook batches by creation time. Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
+- `createdAfter` `string | Date` <Badge type="info">optional</Badge>: Inclusive lower bound (UTC) for filtering webhook batches by creation time. Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object.
+- `createdBefore` `string | Date` <Badge type="info">optional</Badge>: Exclusive upper bound (UTC) for filtering webhook batches by creation time. Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object.
 - `statuses` `WebhooksBatchStatus[]` <Badge type="info">optional</Badge>: Filters webhook batches by webhook response status category. If not provided, batches with all categories are returned. Possible values: `1xx`, `2xx`, `3xx`, `4xx`, `5xx`, `no_response`.
 - `webhook` `string` <Badge type="info">optional</Badge>: Filters webhook batches by the webhook endpoint to which events in the batch were posted.
 - `limit` `number` <Badge type="info">optional</Badge>: The maximum number of webhook batches to return. Must be between `1` and `500`. Default is `500`.

@@ -4,6 +4,7 @@ import { Webhooks } from "~/modules/webhooks";
 import { ErrorCode } from "~/utils/errors";
 import type { WebhooksBatchesApiResponse } from "~/types/webhooks/internal";
 import type { WebhooksBatchesOptions, WebhooksBatchesResponse } from "~/types/webhooks/batches";
+import { formatDateInput } from "~/utils/parse-date-inputs";
 
 const fake = {
   options: {
@@ -60,8 +61,8 @@ describe("batches", () => {
       expect.objectContaining({
         query: {
           webhook: fake.options.webhook,
-          created_after: fake.options.createdAfter,
-          created_before: fake.options.createdBefore,
+          created_after: formatDateInput(fake.options.createdAfter),
+          created_before: formatDateInput(fake.options.createdBefore),
           statuses: fake.options.statuses,
           limit: fake.options.limit,
           offset: fake.options.offset

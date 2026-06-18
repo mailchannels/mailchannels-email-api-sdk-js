@@ -61,9 +61,16 @@ const { data, error } = await mc.webhooks.batches({
   limit:         500,                             // 1..500, default 500
   offset:        0
 })
+
+// Date objects are also accepted
+const { data: recent } = await mc.webhooks.batches({
+  createdAfter:  new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),  // 7 days ago
+  createdBefore: new Date()
+})
 ```
 
-If neither `createdAfter` nor `createdBefore` is set, the default range is the last 3 days.
+Time formats accepted: `YYYY-MM-DD`, `YYYY-MM-DDTHH:MM:SSZ`, or a `Date` object. If neither `createdAfter`
+nor `createdBefore` is set, the default range is the last 3 days.
 
 ### Resend A Batch
 
