@@ -33,7 +33,7 @@ export class Metrics {
       endTime: options?.endTime
     });
 
-    if (!dates) return { data: null, error: dateError };
+    if (!dates || dateError) return { data: null, error: dateError };
 
     const response = await this.mailchannels.get<MetricsEngagementApiResponse>("/tx/v1/metrics/engagement", {
       query: {
@@ -89,7 +89,7 @@ export class Metrics {
       endTime: options?.endTime
     });
 
-    if (!dates) return { data: null, error: dateError };
+    if (!dates || dateError) return { data: null, error: dateError };
 
     const response = await this.mailchannels.get<MetricsPerformanceApiResponse>("/tx/v1/metrics/performance", {
       query: {
@@ -143,7 +143,7 @@ export class Metrics {
       endTime: options?.endTime
     });
 
-    if (!dates) return { data: null, error: dateError };
+    if (!dates || dateError) return { data: null, error: dateError };
 
     const response = await this.mailchannels.get<MetricsRecipientBehaviourApiResponse>("/tx/v1/metrics/recipient-behaviour", {
       query: {
@@ -195,7 +195,7 @@ export class Metrics {
       endTime: options?.endTime
     });
 
-    if (!dates) return { data: null, error: dateError };
+    if (!dates || dateError) return { data: null, error: dateError };
 
     const response = await this.mailchannels.get<MetricsVolumeApiResponse>("/tx/v1/metrics/volume", {
       query: {
@@ -281,7 +281,7 @@ export class Metrics {
       endTime: options?.endTime
     });
 
-    if (!dates) return { data: null, error: dateError };
+    if (!dates || dateError) return { data: null, error: dateError };
 
     error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
