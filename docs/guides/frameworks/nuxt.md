@@ -55,11 +55,11 @@ export default defineNuxtConfig({
 
 ## 3. Send email using HTML
 
-Register a [Server handler](https://nuxt.com/docs/guide/directory-structure/server) under `server/api/send.post.ts`.
+Register a [Server handler](https://nuxt.com/docs/guide/directory-structure/server) under `server/api/emails/send.post.ts`.
 
 Use the `html` property to send an email with HTML content.
 
-```ts [server/api/send.post.ts]
+```ts [server/api/emails/send.post.ts]
 import { MailChannels } from 'mailchannels-sdk'
 
 export default defineEventHandler(async (event) => {
@@ -76,7 +76,7 @@ export default defineEventHandler(async (event) => {
 
   if (error) {
     throw createError({
-      status: error.statusCode || 400,
+      status: error.statusCode || 500,
       message: error.message
     })
   }
@@ -85,12 +85,83 @@ export default defineEventHandler(async (event) => {
 })
 ```
 
+## 4. Call the API route
+
+Create a form in your Nuxt app to call the `send` API route.
+
+```vue [app/pages/emails/send.vue]
+<script setup lang="ts">
+import type { EmailsSendResponse } from 'mailchannels-sdk'
+
+const loading = ref(false)
+const result = ref<EmailsSendResponse['data']>()
+
+const sendEmail = async () => {
+  loading.value = true
+  $fetch('/api/emails/send', {
+    method: "POST"
+  }).then((response) => {
+    result.value = response
+  }).finally(() => {
+    loading.value = false
+  })
+}
+</script>
+
+<template>
+  <h1>Send a predefined email</h1>
+
+  <form class="form" @submit.prevent="sendEmail">
+    <button type="submit" :disabled="loading">
+      {{ loading ? 'Sending...' : 'Send Email' }}
+    </button>
+  </form>
+
+  <pre v-if="result">{{ JSON.stringify(result, null, 2) }}</pre>
+</template>
+```
+
 ## Examples
 
 <ExampleBoxes :examples="[
   {
     title: 'Send',
-    description: 'Send a predefined email using the API route',
-    path: '/examples/frameworks/nuxt/server/api/send.post.ts'
+    description: 'Send a predefined email',
+    path: '/examples/frameworks/nuxt/server/api/emails/send.post.ts'
+  },
+  {
+    title: 'Queue email',
+    description: 'Queue a predefined email',
+    path: '/examples/frameworks/nuxt/server/api/emails/queue.post.ts'
+  },
+  {
+    title: 'Send with form',
+    description: 'Send an email using a form',
+    path: '/examples/frameworks/nuxt/server/api/emails/send-form.post.ts'
+  },
+  {
+    title: 'Send with attachment',
+    description: 'Send an email with an attachment using a form',
+    path: '/examples/frameworks/nuxt/server/api/emails/send-attachment.post.ts'
+  },
+  {
+    title: 'Send with template',
+    description: 'Send an email using a template engine with a form',
+    path: '/examples/frameworks/nuxt/server/api/emails/send-template.post.ts'
+  },
+  {
+    title: 'Check domain',
+    description: 'Perform a DKIM, SPF & Domain Lockdown Check',
+    path: '/examples/frameworks/nuxt/server/api/domains/check.post.ts'
+  },
+  {
+    title: 'Create webhook',
+    description: 'Create a webhook',
+    path: '/examples/frameworks/nuxt/server/api/webhooks/index.post.ts'
+  },
+  {
+    title: 'Webhooks events',
+    description: 'Handle webhook events',
+    path: '/examples/frameworks/nuxt/server/api/webhooks/mailchannels.post.ts'
   }
 ]" />
