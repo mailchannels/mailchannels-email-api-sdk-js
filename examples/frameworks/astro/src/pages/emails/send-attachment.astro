@@ -19,8 +19,8 @@ import Layout from "../../layouts/Layout.astro";
       <textarea id="message" name="message" placeholder="Write a message" required></textarea>
     </div>
     <div class="input">
-      <label for="url">Attachment URL:</label>
-      <input id="url" name="url" type="url" placeholder="https://example.com/image.jpg" required>
+      <label for="file">Attachment File:</label>
+      <input id="file" name="file" type="file" required>
     </div>
     <div class="input">
       <label for="filename">Attachment Filename:</label>
@@ -46,7 +46,21 @@ form.addEventListener("submit", async (e) => {
   result.hidden = true;
   result.textContent = "";
 
-  const { data, error } = await actions.emails.sendAttachment(Object.fromEntries(new FormData(form)));
+  const values = Object.fromEntries(new FormData(form));
+
+  const formData = new FormData();
+  formData.set("payload", JSON.stringify({
+    to: values.to,
+    subject: values.subject,
+    message: values.message,
+    filename: values.filename
+  }));
+
+  if (values.file instanceof File) {
+    formData.set("file", values.file);
+  }
+
+  const { data, error } = await actions.emails.sendAttachment(formData);
 
   submitBtn.disabled = false;
   submitBtn.textContent = "Send Email";

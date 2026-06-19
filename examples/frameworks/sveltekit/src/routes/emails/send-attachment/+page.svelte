@@ -5,7 +5,7 @@ const form = $state({
   to: "",
   subject: "",
   message: "",
-  url: "",
+  file: null as File | null,
   filename: ""
 });
 
@@ -14,17 +14,32 @@ let result = $state<EmailsSendResponse["data"]>();
 
 async function sendEmail (e: SubmitEvent) {
   e.preventDefault();
+  const formData = new FormData();
+
+  const { file, ...data } = form;
+
+  formData.append("payload", JSON.stringify(data));
+  if (file instanceof File) {
+    formData.append("file", file);
+  }
+
   loading = true;
 
   const response = await fetch("/api/emails/send-attachment", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(form)
+    body: formData
   });
 
   result = await response.json();
   loading = false;
 }
+
+const addFile = async (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files.length > 0) {
+    form.file = target.files[0] ?? null;
+  }
+};
 </script>
 
 <h1>Send an email with an attachment</h1>
@@ -64,13 +79,12 @@ async function sendEmail (e: SubmitEvent) {
     </textarea>
   </div>
   <div class="input">
-    <label for="url">Attachment URL:</label>
+    <label for="file">Attachment File:</label>
     <input
-      id="url"
-      name="url"
-      type="url"
-      placeholder="https://example.com/image.jpg"
-      bind:value={form.url}
+      id="file"
+      name="file"
+      type="file"
+      onchange={addFile}
       required
     >
   </div>

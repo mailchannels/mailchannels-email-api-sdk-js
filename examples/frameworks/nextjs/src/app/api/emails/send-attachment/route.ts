@@ -3,9 +3,12 @@ import { Attachment, MailChannels } from "mailchannels-sdk";
 const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY as string);
 
 export async function POST (request: Request) {
-  const body = await request.json();
+  const formData = await request.formData();
+  const file = formData.get("file") as File;
+  const payload = formData.get("payload") as string;
+  const body = JSON.parse(payload);
 
-  const fileData = await fetch(body.url).then(res => res.arrayBuffer());
+  const fileData = await file.arrayBuffer();
 
   const { data, error } = await mailchannels.emails.send({
     from: "Name <from@example.com>",

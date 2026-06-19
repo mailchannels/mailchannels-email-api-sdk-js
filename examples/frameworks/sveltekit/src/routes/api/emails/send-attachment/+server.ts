@@ -6,9 +6,12 @@ import type { RequestHandler } from "./$types";
 const mailchannels = new MailChannels(MAILCHANNELS_API_KEY);
 
 export const POST: RequestHandler = async ({ request }) => {
-  const body = await request.json();
+  const formData = await request.formData();
+  const file = formData.get("file") as File;
+  const payload = formData.get("payload") as string;
+  const body = JSON.parse(payload);
 
-  const fileData = await fetch(body.url).then(res => res.arrayBuffer());
+  const fileData = await file.arrayBuffer();
 
   const { data, error } = await mailchannels.emails.send({
     from: "Name <from@example.com>",
