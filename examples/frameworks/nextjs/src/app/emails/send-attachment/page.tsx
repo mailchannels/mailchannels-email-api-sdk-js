@@ -15,11 +15,14 @@ export default function () {
 
   async function sendEmail (e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!(file instanceof File)) {
+      alert("Attachment file is required.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("payload", JSON.stringify({ to, subject, message, filename }));
-    if (file instanceof File) {
-      formData.append("file", file);
-    }
+    formData.append("file", file);
 
     setLoading(true);
 

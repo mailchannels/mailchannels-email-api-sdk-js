@@ -14,14 +14,16 @@ let result = $state<EmailsSendResponse["data"]>();
 
 async function sendEmail (e: SubmitEvent) {
   e.preventDefault();
-  const formData = new FormData();
-
   const { file, ...data } = form;
 
-  formData.append("payload", JSON.stringify(data));
-  if (file instanceof File) {
-    formData.append("file", file);
+  if (!(file instanceof File)) {
+    alert("Attachment file is required.");
+    return;
   }
+
+  const formData = new FormData();
+  formData.append("payload", JSON.stringify(data));
+  formData.append("file", file);
 
   loading = true;
 
