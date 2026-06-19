@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { type ChangeEvent, useState } from "react";
 import type { EmailsSendResponse } from "mailchannels-sdk";
 
 export default function () {
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const [url, setUrl] = useState("");
+  const [file, setFile] = useState<File | null>(null);
   const [filename, setFilename] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -15,12 +15,20 @@ export default function () {
 
   async function sendEmail (e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!(file instanceof File)) {
+      alert("Attachment file is required.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("payload", JSON.stringify({ to, subject, message, filename }));
+    formData.append("file", file);
+
     setLoading(true);
 
     const response = await fetch("/api/emails/send-attachment", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ to, subject, message, url })
+      body: formData
     });
 
     const data = await response.json();
@@ -28,6 +36,13 @@ export default function () {
     setResult(data);
     setLoading(false);
   }
+
+  const addFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      setFile(target.files[0] ?? null);
+    }
+  };
 
   return (
     <>
@@ -70,14 +85,12 @@ export default function () {
           />
         </div>
         <div className="input">
-          <label htmlFor="url">Attachment URL:</label>
+          <label htmlFor="file">Attachment File:</label>
           <input
-            id="url"
-            name="url"
-            type="url"
-            placeholder="https://example.com/image.jpg"
-            value={url}
-            onChange={e => setUrl(e.target.value)}
+            id="file"
+            name="file"
+            type="file"
+            onChange={e => addFile(e)}
             required
           />
         </div>
