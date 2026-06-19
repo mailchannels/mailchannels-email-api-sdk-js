@@ -1,6 +1,62 @@
 # Changelog
 
 
+## v1.1.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.1.0%0Dv1.0.0)
+
+### 🚀 Enhancements
+
+- **suppressions:** Accept Date object for list date filters ([f5477f8](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f5477f8))
+- **metrics:** Support Date inputs for metrics time fields ([6e7047f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/6e7047f))
+- **webhooks:** Support Date values in `batches` time fields ([731229c](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/731229c))
+
+### 🩹 Fixes
+
+- Encode path params in all api requests ([5a34b8a](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/5a34b8a))
+- **sub-accounts:** Include missing query in API keys list request ([f2c3ef0](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f2c3ef0))
+
+### 💅 Refactors
+
+- Replace formatDateInput with parseDateInputs ([b86dc89](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/b86dc89))
+- Restructure modules into module directories ([b2cf377](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/b2cf377))
+- SubAccounts into sub-classes and deprecate methods ([2638b9e](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/2638b9e))
+- **types:** Rename sub-accounts types and deprecate aliases ([8aa0ebb](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/8aa0ebb))
+
+### 📖 Documentation
+
+- **agents:** Add a 'mailchannels-js' AI skill ([7e05ba1](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7e05ba1))
+- Update and sync docs and playground ([996d8fe](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/996d8fe))
+- **agents:** Update sub-account methods ([e1c66fc](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/e1c66fc))
+- **types:** Add missing deprecated tag to `EmailsSendAsyncResponse` type alias ([b2ff506](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/b2ff506))
+- **examples:** Expand nuxt app examples ([f3f1e7e](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f3f1e7e))
+- Update api-reference broken links ([7d39a41](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7d39a41))
+- Refresh spec file ([b206f36](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/b206f36))
+
+### 🏡 Chore
+
+- Add `AGENTS.md` for local development ([cc137e7](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/cc137e7))
+- **agents:** Fix typo ([1db026b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/1db026b))
+- **utils:** Relax date input regex to allow offsets/space ([b6404b1](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/b6404b1))
+- **scripts:** Support windows in check skill script ([0ab4221](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/0ab4221))
+- Check for `dateError` in date validations ([4d39388](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/4d39388))
+- **examples:** Replace URL-based attachments with direct file uploads ([021be6b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/021be6b))
+- **examples:** Validate attachment presence before submitting form ([d0cfc01](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d0cfc01))
+- Patch changelogen to format author email as mailto link for Bitbucket ([384ecb5](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/384ecb5))
+
+### ✅ Tests
+
+- Assert client query options and body payloads ([4dd0d95](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/4dd0d95))
+
+### 🤖 CI
+
+- Remove unused and invalid pipeline config ([c1b10ba](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/c1b10ba))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+- Robin Cryer [robin.cryer@mailchannels.com](mailto:robin.cryer@mailchannels.com)
+
 ## v1.0.0
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.0.0%0Dv0.8.0)
