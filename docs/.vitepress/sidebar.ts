@@ -133,7 +133,8 @@ export default [
         items: [
           { text: "Vercel Functions", link: "/guides/serverless/vercel-functions" },
           { text: "Cloudflare Workers", link: "/guides/serverless/cloudflare-workers" },
-          { text: "Deno Deploy", link: "/guides/serverless/deno-deploy" }
+          { text: "Deno Deploy", link: "/guides/serverless/deno-deploy" },
+          { text: "Netlify Edge", link: "/guides/serverless/netlify-edge" }
         ]
       },
       {
