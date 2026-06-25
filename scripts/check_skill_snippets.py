@@ -211,18 +211,12 @@ def _process_line(line: str) -> str | None:
 def assemble(blocks: list[Block]) -> AssembledSource:
     """Concatenate blocks into one TypeScript source plus a ts→markdown line map.
 
-    The result has two layers: the fixed `PREAMBLE` (module scope), and the
-    body assembled from `blocks`. `AssembledSource.ts_to_md[i]` is the
-    1-based Markdown line for TypeScript line `i` (1-based), or `None` for
-    synthetic lines (preamble, block separators).
+    `AssembledSource.ts_to_md[i]` is the 1-based Markdown line for TypeScript
+    line `i` (1-based), or `None` for synthetic lines (block separators).
     """
     lines: list[SourceLine] = []
 
-    # Layer 1 — preamble (always module-scope).
-    for preamble_line in PREAMBLE.splitlines():
-        lines.append(SourceLine(text=preamble_line, md_line=None))
-
-    # Layer 2 — body collected from the snippet blocks.
+    # body collected from the snippet blocks.
     # Each block is wrapped in an async IIFE so that:
     #   • const/let re-declarations across blocks don't conflict
     #   • `return` statements (common in error-handling examples) are valid
@@ -264,6 +258,31 @@ def rewrite_line_numbers(
             md_line = ts_to_md[ts_line]
             if md_line is not None:
                 return f"{match.group(1)}:{md_line}:"
+        return f"{match.group(1)}:?(ts {ts_line}):"
+
+    return pattern.sub(replacement, output)
+
+
+def rewrite_line_numbers_to_files(
+    output: str,
+    label: str,
+    mapping: list[tuple[str | None, int | None]],
+) -> str:
+    """Substitute tsc's TypeScript line numbers with source file + markdown line.
+
+    *mapping* is a 1-based list where index==TypeScript line number and
+    each entry is a `(filename|None, md_line|None)` tuple. If a line maps
+    to a source file, replace ``label(line,col):`` with ``<file>:<mdline>:``
+    so downstream filtering can pick errors per resource file.
+    """
+    pattern = re.compile(rf"^({re.escape(label)})\((\d+),\d+\):", re.MULTILINE)
+
+    def replacement(match: re.Match[str]) -> str:
+        ts_line = int(match.group(2))
+        if 0 < ts_line < len(mapping):
+            filename, md_line = mapping[ts_line]
+            if filename is not None and md_line is not None:
+                return f"{filename}:{md_line}:"
         return f"{match.group(1)}:?(ts {ts_line}):"
 
     return pattern.sub(replacement, output)
@@ -372,11 +391,18 @@ def _filter_snippet_errors(output: str, label: str) -> str:
         else:
             keep_context = False
 
-    # Strip trailing blank lines.
-    while result and not result[-1].strip():
-        result.pop()
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for ln in result:
+        if ln not in seen:
+            deduped.append(ln)
+            seen.add(ln)
 
-    return "\n".join(result)
+    # Strip trailing blank lines.
+    while deduped and not deduped[-1].strip():
+        deduped.pop()
+
+    return "\n".join(deduped)
 
 
 def discover_markdown() -> list[Path]:
@@ -432,6 +458,19 @@ def main(argv: list[str] | None = None) -> int:
     total_blocks = 0
     failed: list[str] = []
 
+    # Assemble a single combined source so tsc runs once.
+    preamble_lines = PREAMBLE.splitlines()
+    combined_text_lines: list[str] = []
+    # 1-based mapping: index 0 unused. Each entry is (filename, md_line).
+    mapping: list[tuple[str | None, int | None]] = [(None, None)]
+
+    # Add the preamble once at the top of the combined file.
+    for pl in preamble_lines:
+        combined_text_lines.append(pl)
+        mapping.append((None, None))
+
+    file_ranges = {}
+
     for md in md_files:
         rel = md.relative_to(ROOT)
         all_blocks = extract_blocks(md.read_text(encoding="utf-8"))
@@ -442,33 +481,51 @@ def main(argv: list[str] | None = None) -> int:
 
         total_blocks += len(all_blocks)
         assembled = assemble(all_blocks)
+        assembled_lines = assembled.source.splitlines()
+
+        start_idx = len(mapping)
+        for i, text in enumerate(assembled_lines):
+            combined_text_lines.append(text)
+            mapping.append((str(rel), assembled.ts_to_md[i + 1]))
+
+        end_idx = len(mapping) - 1
+        file_ranges[str(rel)] = (start_idx, end_idx, len(all_blocks))
 
         if args.show_source:
             logger.info(
                 "--- assembled source for %s ---\n%s---", rel, assembled.source
             )
 
-        tsc_result = run_tsc(assembled.source, str(rel))
-        output = rewrite_line_numbers(tsc_result.output, str(rel), assembled.ts_to_md)
-        snippet_errors = _filter_snippet_errors(output, str(rel))
+    if len(mapping) <= 1:
+        logger.info("No snippets found to check.")
+        return 0
 
+    combined_source = "\n".join(combined_text_lines) + "\n"
+
+    tsc_result = run_tsc(combined_source, "combined_snippets.md")
+    output = tsc_result.output
+
+    remapped = rewrite_line_numbers_to_files(output, "combined_snippets.md", mapping)
+    for rel, (start, end, blocks_count) in file_ranges.items():
+        snippet_errors = _filter_snippet_errors(remapped, rel)
+        suffix = "" if blocks_count == 1 else "s"
         if not snippet_errors:
             logger.info(
                 "[ ok ] %s (%d block%s)",
-                rel, len(all_blocks), "" if len(all_blocks) == 1 else "s",
+                rel, blocks_count, suffix
             )
         else:
-            failed.append(str(rel))
+            failed.append(rel)
             logger.error(
                 "[FAIL] %s (%d block%s)\n%s",
-                rel, len(all_blocks), "" if len(all_blocks) == 1 else "s",
+                rel, blocks_count, suffix,
                 snippet_errors,
             )
 
     logger.info(
         "\nChecked %d file%s / %d block%s. %d failed.",
-        len(md_files),
-        "" if len(md_files) == 1 else "s",
+        len(file_ranges),
+        "" if len(file_ranges) == 1 else "s",
         total_blocks,
         "" if total_blocks == 1 else "s",
         len(failed),
