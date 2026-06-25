@@ -24,7 +24,7 @@ features:
     link: /modules/emails
   - icon: 🌐
     title: Domains module
-    details: Check a domain's email authentication and manage DKIM keys
+    details: Domain auth, DKIM & custom tracking
     link: /modules/domains
   - icon: 📢
     title: Webhooks module

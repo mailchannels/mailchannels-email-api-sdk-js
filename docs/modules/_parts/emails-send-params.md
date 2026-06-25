@@ -30,8 +30,10 @@
   - `to` `EmailsSendRecipient[] | EmailsSendRecipient | string[] | string` <Badge type="danger">required</Badge>: The recipients of the email.
   - `tracking` `EmailsSendTracking` <Badge type="info">optional</Badge>: Adjust open and click tracking for the message.
     - `click` `object` <Badge type="info">optional</Badge>: Click tracking settings.
+      - `customDomainName` `string` <Badge type="info">optional</Badge>: The name of a configured active click tracking domain. When specified, click tracking links will use this domain instead of the default MailChannels domain. The domain must be registered in your account and have an active status.
       - `enable` `boolean` <Badge type="info">optional</Badge>: Enable click tracking.
     - `open` `object` <Badge type="info">optional</Badge>: Open tracking settings.
+      - `customDomainName` `string` <Badge type="info">optional</Badge>: The name of a configured active open tracking domain. When specified, the open tracking pixel will use this domain instead of the default MailChannels domain. The domain must be registered in your account and have an active status.
       - `enable` `boolean` <Badge type="info">optional</Badge>: Enable open tracking.
     > [!INFO]
     > Tracking for your messages requires a [subscription](https://www.mailchannels.com/pricing/#for_devs) that supports open and click tracking.
@@ -70,7 +72,9 @@
     > - map, whose keys must be strings, and whose values are all of permitted types
   - `personalizations` `EmailsSendPersonalization[]` <Badge type="info">optional</Badge>: Explicit personalization objects for advanced payloads with multiple recipient groups or per-personalization overrides.
   - `transactional` `boolean` <Badge type="info">optional</Badge>: Mark these messages as transactional or non-transactional. In order for a message to be marked as non-transactional, it must have exactly one recipient per personalization, and it must be DKIM signed. 400 Bad Request will be returned if there are more than one recipient in any personalization for non-transactional messages. If a message is marked as non-transactional, it changes the sending process as follows:
-    List-Unsubscribe headers will be added.
+    List-Unsubscribe and List-Unsubscribe-Post headers will be added, unless you supply your own List-Unsubscribe header, in which case yours is used and neither is added.
+  - `unsubscribe` `object` <Badge type="info">optional</Badge>: Settings to customize the unsubscribe experience for the message.
+    - `customDomainName` `string` <Badge type="info">optional</Badge>: The name of a configured active unsubscribe tracking domain. When specified, unsubscribe links will use this domain instead of the default MailChannels domain. The domain must be registered in your account and have an active status.
     <!-- #endregion options -->
 - `dryRun` `boolean` <Badge type="info">optional</Badge>: When set to `true`, the email will not be sent. Instead, the fully rendered message will be returned in the `data.rendered` property of the response.
   > [!TIP]

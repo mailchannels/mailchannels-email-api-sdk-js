@@ -20,6 +20,10 @@ This page provides a mapping between the MailChannels SDK module methods and the
   | [`Domains.dkim.list()`](/modules/domains/dkim-list) | [Retrieve DKIM Keys](https://docs.mailchannels.com/api-reference/dkim/retrieve-dkim-keys) |
   | [`Domains.dkim.updateStatus()`](/modules/domains/dkim-update-status) | [Update DKIM Key Status](https://docs.mailchannels.com/api-reference/dkim/update-dkim-key-status) |
   | [`Domains.dkim.rotate()`](/modules/domains/dkim-rotate) | [Rotate DKIM Key Pair](https://docs.mailchannels.com/api-reference/dkim/rotate-dkim-key-pair) |
+  | [`Domains.customTracking.create()`](/modules/domains/custom-tracking-create) | [Register Custom Tracking Domain](https://docs.mailchannels.com/api-reference/custom-tracking/register-custom-tracking-domain) |
+  | [`Domains.customTracking.list()`](/modules/domains/custom-tracking-list) | [Retrieve Custom Tracking Domains](https://docs.mailchannels.com/api-reference/custom-tracking/retrieve-custom-tracking-domains) |
+  | [`Domains.customTracking.update()`](/modules/domains/custom-tracking-update) | [Update Custom Tracking Domain](https://docs.mailchannels.com/api-reference/custom-tracking/update-custom-tracking-domain) |
+  | [`Domains.customTracking.delete()`](/modules/domains/custom-tracking-delete) | [Delete Custom Tracking Domain](https://docs.mailchannels.com/api-reference/custom-tracking/delete-custom-tracking-domain) |
 
 ### 📢 Webhooks
 
