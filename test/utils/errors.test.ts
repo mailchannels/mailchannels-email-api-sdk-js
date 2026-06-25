@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { FetchResponse } from "ofetch";
-import { ErrorCode, getStatusError, validatePagination } from "~/utils/errors";
+import { ErrorCode, getStatusError, validateCustomTrackingName, validatePagination } from "~/utils/errors";
 
 describe("getStatusError", () => {
   type ErrorResponse = FetchResponse<{ message?: string, errors?: string[] } | string | Record<string, unknown>>;
@@ -126,5 +126,18 @@ describe("validatePagination", () => {
       type: "validation_error",
       response: null
     });
+  });
+});
+
+describe("validateCustomTrackingName", () => {
+  it("should return error for invalid custom tracking domain name", () => {
+    const error = validateCustomTrackingName("invalid name");
+    expect(error).toBeTruthy();
+  });
+
+  it("should return error for long custom tracking domain name", () => {
+    const longName = "a".repeat(65);
+    const error = validateCustomTrackingName(longName);
+    expect(error).toBeTruthy();
   });
 });

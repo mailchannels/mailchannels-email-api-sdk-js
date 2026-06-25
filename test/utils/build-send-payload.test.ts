@@ -12,11 +12,16 @@ const fake = {
     text: "Test content",
     tracking: {
       click: {
+        customDomainName: "clickdemo",
         enable: true
       },
       open: {
+        customDomainName: "opendemo",
         enable: true
       }
+    },
+    unsubscribe: {
+      customDomainName: "unsubscribedemo"
     }
   } satisfies EmailsSendOptions,
   personalizations: [{
@@ -49,8 +54,17 @@ describe("buildSendPayload", async () => {
       { type: "text/html", value: fake.options.html, template_type: undefined }
     ]);
     expect(payload.tracking_settings).toStrictEqual({
-      click_tracking: { enable: true },
-      open_tracking: { enable: true }
+      click_tracking: {
+        custom_domain_name: "clickdemo",
+        enable: true
+      },
+      open_tracking: {
+        custom_domain_name: "opendemo",
+        enable: true
+      }
+    });
+    expect(payload.unsubscribe_settings).toStrictEqual({
+      custom_domain_name: "unsubscribedemo"
     });
   });
 
@@ -148,8 +162,14 @@ describe("buildSendPayload", async () => {
     });
 
     expect(payload.tracking_settings).toStrictEqual({
-      click_tracking: { enable: false },
-      open_tracking: { enable: false }
+      click_tracking: {
+        custom_domain_name: undefined,
+        enable: false
+      },
+      open_tracking: {
+        custom_domain_name: undefined,
+        enable: false
+      }
     });
   });
 
@@ -641,5 +661,43 @@ describe("buildSendPayload", async () => {
 
     expect(typeof payload).toBe("string");
     expect(payload).toBe("No subject provided. Use the 'subject' option to specify a subject.");
+  });
+
+  it("should contain error when invalid custom tracking domain names are provided", async () => {
+    const payloadClick = await buildSendPayload({
+      ...fake.options,
+      tracking: {
+        click: {
+          customDomainName: "invalid name",
+          enable: true
+        }
+      }
+    });
+
+    expect(typeof payloadClick).toBe("string");
+    expect(payloadClick).toBe("Invalid click tracking: The custom tracking domain name must match ^[a-z0-9-]+$");
+
+    const payloadOpen = await buildSendPayload({
+      ...fake.options,
+      tracking: {
+        open: {
+          customDomainName: "invalid name",
+          enable: true
+        }
+      }
+    });
+
+    expect(typeof payloadOpen).toBe("string");
+    expect(payloadOpen).toBe("Invalid open tracking: The custom tracking domain name must match ^[a-z0-9-]+$");
+
+    const payloadUnsubscribe = await buildSendPayload({
+      ...fake.options,
+      unsubscribe: {
+        customDomainName: "invalid name"
+      }
+    });
+
+    expect(typeof payloadUnsubscribe).toBe("string");
+    expect(payloadUnsubscribe).toBe("Invalid unsubscribe settings: The custom tracking domain name must match ^[a-z0-9-]+$");
   });
 });
