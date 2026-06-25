@@ -9,7 +9,7 @@
 [![TypeScript][typescript-src]][typescript-href]
 [![Node.js][node-src]][node-href]
 
-> Built and tested against Email API `1.0.0`
+> Built and tested against Email API `1.2.1`
 
 Node.js SDK to integrate [MailChannels Email API](https://docs.mailchannels.net/email-api) into your JavaScript or TypeScript server-side applications.
 

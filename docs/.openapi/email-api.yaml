@@ -136,6 +136,52 @@ components:
         - type
         - value
       type: object
+    CustomTrackingDomain:
+      properties:
+        created_at:
+          description: ISO 8601 timestamp when the domain was registered
+          format: date-time
+          type: string
+        hostname:
+          description: The registered domain hostname
+          type: string
+        name:
+          description: The label for this custom tracking domain
+          type: string
+        scope:
+          description: The event type this domain handles
+          enum:
+            - click
+            - open
+            - unsubscribe
+          type: string
+        status:
+          description: Current status of the custom tracking domain
+          enum:
+            - active
+            - disabled
+          type: string
+      required:
+        - name
+        - hostname
+        - scope
+        - status
+        - created_at
+      type: object
+    CustomTrackingDomainListResponse:
+      properties:
+        custom_tracking_domains:
+          description: List of custom tracking domains matching the filter criteria
+          items:
+            $ref: '#/components/schemas/CustomTrackingDomain'
+          type: array
+        total:
+          description: Total number of custom tracking domains
+          type: integer
+      required:
+        - custom_tracking_domains
+        - total
+      type: object
     DKIMDnsRecord:
       description: |
         Suggested DNS record for the DKIM key
@@ -329,6 +375,32 @@ components:
         dkim_selector:
           type: string
       type: object
+    DnsSetupRequired:
+      properties:
+        instructions:
+          description: >-
+            Human-readable guidance for the DNS records that must be in place
+            before retrying.
+          type: string
+        token:
+          description: >-
+            UUID v4 nonce; also the TXT record value to set. Present only when
+            TXT ownership verification is pending.
+          example: 550e8400-e29b-41d4-a716-446655440000
+          type: string
+        txt_record_name:
+          description: >-
+            Fully-qualified DNS TXT record name to add. Present only when TXT
+            ownership verification is pending.
+          example: _mailchannels-verify.click.example.com
+          type: string
+        txt_record_value:
+          description: >-
+            Value for the DNS TXT record (same as token). Present only when TXT
+            ownership verification is pending.
+          example: 550e8400-e29b-41d4-a716-446655440000
+          type: string
+      type: object
     EmailAddress:
       properties:
         email:
@@ -490,6 +562,19 @@ components:
           properties:
             click_tracking:
               properties:
+                custom_domain_name:
+                  description: >
+                    The name of a configured active click tracking domain. When
+                    specified, click
+
+                    tracking links will use this domain instead of the default
+                    MailChannels domain.
+
+                    The domain must be registered in your account and have an
+                    active status.
+                  maxLength: 64
+                  pattern: ^[a-z0-9-]+$
+                  type: string
                 enable:
                   default: false
                   description: >
@@ -501,6 +586,19 @@ components:
               type: object
             open_tracking:
               properties:
+                custom_domain_name:
+                  description: >
+                    The name of a configured active open tracking domain. When
+                    specified, the open
+
+                    tracking pixel will use this domain instead of the default
+                    MailChannels domain.
+
+                    The domain must be registered in your account and have an
+                    active status.
+                  maxLength: 64
+                  pattern: ^[a-z0-9-]+$
+                  type: string
                 enable:
                   default: false
                   description: >
@@ -531,9 +629,27 @@ components:
 
             If a message is marked as non-transactional, it changes the sending
             process as follows:
-              * List-Unsubscribe headers will be added.
+              * List-Unsubscribe and List-Unsubscribe-Post headers will be added, unless you supply your own List-Unsubscribe header, in which case yours is used and neither is added.
           nullable: true
           type: boolean
+        unsubscribe_settings:
+          description: |
+            Settings to customize the unsubscribe experience for the message.
+          properties:
+            custom_domain_name:
+              description: >
+                The name of a configured active unsubscribe tracking domain.
+                When specified,
+
+                unsubscribe links will use this domain instead of the default
+                MailChannels domain.
+
+                The domain must be registered in your account and have an active
+                status.
+              maxLength: 64
+              pattern: ^[a-z0-9-]+$
+              type: string
+          type: object
       required:
         - personalizations
         - from
@@ -877,6 +993,20 @@ components:
       required:
         - selector
       type: object
+    PatchCustomTrackingDomainRequest:
+      properties:
+        name:
+          description: New label for this custom tracking domain
+          maxLength: 64
+          pattern: ^[a-z0-9-]+$
+          type: string
+        status:
+          description: New status; active ↔ disabled
+          enum:
+            - active
+            - disabled
+          type: string
+      type: object
     Personalization:
       properties:
         bcc:
@@ -977,6 +1107,33 @@ components:
           type: array
       required:
         - to
+    PostCustomTrackingDomainRequest:
+      properties:
+        hostname:
+          description: >
+            The hostname to register as a custom tracking domain (e.g.,
+            click.example.com).
+
+            The hostname must have a CNAME record pointing to
+            `links.mailchannels.net`.
+          type: string
+        name:
+          description: A unique label used to select this domain at message send time
+          maxLength: 64
+          pattern: ^[a-z0-9-]+$
+          type: string
+        scope:
+          description: The event type this domain handles
+          enum:
+            - click
+            - open
+            - unsubscribe
+          type: string
+      required:
+        - name
+        - hostname
+        - scope
+      type: object
     SMTPPassword:
       properties:
         enabled:
@@ -1465,7 +1622,7 @@ info:
     information on every endpoint, including parameters, response formats, and
     error codes.
   title: Email API
-  version: 1.0.0
+  version: 1.2.1
 openapi: 3.0.0
 paths:
   /check-domain:
@@ -1592,6 +1749,275 @@ paths:
 
 
             print_r($response->toArray());
+  /custom-tracking-domains:
+    get:
+      description: |
+        Retrieve all custom tracking domains registered under your account.
+        Optional filters include domain name, status, scope, limit and offset.
+      parameters:
+        - description: Filter by custom tracking domain label
+          in: query
+          name: name
+          required: false
+          schema:
+            type: string
+        - description: Filter by status
+          in: query
+          name: status
+          required: false
+          schema:
+            enum:
+              - active
+              - disabled
+            type: string
+        - description: Filter by scope
+          in: query
+          name: scope
+          required: false
+          schema:
+            enum:
+              - click
+              - open
+              - unsubscribe
+            type: string
+        - description: The maximum number of domains to return. The default is 100.
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            maximum: 1000
+            minimum: 1
+            type: integer
+        - description: >-
+            The number of domains to skip before returning results. The default
+            is 0.
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - in: header
+          name: X-Api-Key
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomTrackingDomainListResponse'
+          description: Response with the list of custom tracking domains
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid query parameter value
+        '500':
+          description: Internal server error
+      summary: Retrieve Custom Tracking Domains
+      tags:
+        - Custom Tracking
+    post:
+      description: >
+        Register a custom branded domain for click tracking, open tracking, or
+        unsubscribe handling.
+
+        By default, MailChannels uses shared domains for these links. Using a
+        custom domain improves
+
+        brand consistency by replacing shared domains with your own (e.g.,
+        click.example.com).
+
+        Once registered, select the domain at send time using its `name`.
+
+
+        Before registration completes, two DNS records must be in place:
+
+        1. A TXT record at `_mailchannels-verify.<hostname>` containing the
+        verification token
+           (returned in the 202 response).
+        2. A CNAME record at `<hostname>` pointing to `links.mailchannels.net`.
+      parameters:
+        - in: header
+          name: X-Api-Key
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCustomTrackingDomainRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomTrackingDomain'
+          description: Domain verified and registered
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsSetupRequired'
+          description: >-
+            Verification required — add the DNS TXT record and CNAME record
+            described in the response body, then retry
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request body
+        '403':
+          description: No permission to register this domain
+        '409':
+          description: >-
+            A domain with the same name already exists, or the hostname and
+            scope combination is already registered
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsSetupRequired'
+          description: >
+            DNS verification incomplete. Either the TXT ownership record has not
+            propagated yet
+
+            or the hostname CNAME does not point to the required target.
+
+            Check the `instructions` field and retry once both records are in
+            place.
+        '500':
+          description: Internal Server Error
+      summary: Register Custom Tracking Domain
+      tags:
+        - Custom Tracking
+  /custom-tracking-domains/{hostname}/{scope}:
+    delete:
+      description: >
+        Permanently delete an existing custom tracking domain for the given
+        hostname and scope. The domain can be re-registered if needed.
+
+        WARNING: Any tracking links or unsubscribe URLs in previously sent
+        emails using this domain will stop working immediately.
+      parameters:
+        - in: path
+          name: hostname
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: scope
+          required: true
+          schema:
+            enum:
+              - click
+              - open
+              - unsubscribe
+            type: string
+        - in: header
+          name: X-Api-Key
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Custom tracking domain successfully deleted
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid hostname or scope value
+        '500':
+          description: Internal server error
+      summary: Delete Custom Tracking Domain
+      tags:
+        - Custom Tracking
+    patch:
+      description: >
+        Update an existing custom tracking domain by its hostname and scope.
+
+        Supports updating the custom tracking domain's name or toggling its
+        active status.
+      parameters:
+        - in: path
+          name: hostname
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: scope
+          required: true
+          schema:
+            enum:
+              - click
+              - open
+              - unsubscribe
+            type: string
+        - in: header
+          name: X-Api-Key
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchCustomTrackingDomainRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomTrackingDomain'
+          description: Custom tracking domain updated
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsSetupRequired'
+          description: >-
+            Re-activation requires DNS verification — add the TXT record and
+            CNAME record described in the response body, then retry
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request body
+        '403':
+          description: No permission to activate this domain
+        '404':
+          description: Domain not found
+        '409':
+          description: Name already used by another domain
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsSetupRequired'
+          description: >
+            DNS verification incomplete. Either the TXT ownership record has not
+            propagated yet
+
+            or the hostname CNAME does not point to the required target.
+
+            Check the `instructions` field and retry once both records are in
+            place.
+        '500':
+          description: Internal server error
+      summary: Update Custom Tracking Domain
+      tags:
+        - Custom Tracking
   /domains/{domain}/dkim-keys:
     get:
       description: |
@@ -6214,17 +6640,17 @@ paths:
 
         response.
       parameters:
-        - in: header
-          name: X-Customer-Handle
-          required: true
-          schema:
-            type: string
         - description: the ID of the batch
           in: path
           name: batch_id
           required: true
           schema:
             type: integer
+        - in: header
+          name: X-Api-Key
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -6562,3 +6988,4 @@ tags:
   - name: Suppression
   - name: Webhooks
   - name: Usage
+  - name: Custom Tracking
