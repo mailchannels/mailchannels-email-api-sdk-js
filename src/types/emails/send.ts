@@ -40,6 +40,12 @@ export interface EmailsSendTracking {
    */
   click?: {
     /**
+     * The name of a configured active click tracking domain.
+     * When specified, click tracking links will use this domain instead of the default MailChannels domain.
+     * The domain must be registered in your account and have an active status.
+     */
+    customDomainName?: string;
+    /**
      * @default false
      */
     enable?: boolean;
@@ -48,6 +54,12 @@ export interface EmailsSendTracking {
    * Track when a recipient opens your email. Please note that some email clients may not support open tracking.
    */
   open?: {
+    /**
+     * The name of a configured active open tracking domain.
+     * When specified, the open tracking pixel will use this domain instead of the default MailChannels domain.
+     * The domain must be registered in your account and have an active status.
+     */
+    customDomainName?: string;
     /**
      * @default false
      */
@@ -276,10 +288,21 @@ interface EmailsSendOptionsBase {
   /**
    * Mark these messages as transactional or non-transactional. In order for a message to be marked as non-transactional, it must have exactly one recipient per personalization, and it must be DKIM signed. 400 Bad Request will be returned if there are more than one recipient in any personalization for non-transactional messages. If a message is marked as non-transactional, it changes the sending process as follows:
    *
-   * List-Unsubscribe headers will be added.
+   * List-Unsubscribe and List-Unsubscribe-Post headers will be added, unless you supply your own List-Unsubscribe header, in which case yours is used and neither is added.
    * @default true
    */
   transactional?: boolean;
+  /**
+   * Settings to customize the unsubscribe experience for the message.
+   */
+  unsubscribe?: {
+    /**
+     * The name of a configured active unsubscribe tracking domain.
+     * When specified, unsubscribe links will use this domain instead of the default MailChannels domain.
+     * The domain must be registered in your account and have an active status.
+     */
+    customDomainName?: string;
+  };
 }
 
 type EmailsSendTargetOptions =

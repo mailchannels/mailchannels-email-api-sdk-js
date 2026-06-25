@@ -42,13 +42,18 @@ export interface EmailsSendPayload {
   subject: string;
   tracking_settings?: {
     click_tracking?: {
+      custom_domain_name?: string;
       enable?: boolean;
     };
     open_tracking?: {
+      custom_domain_name?: string;
       enable?: boolean;
     };
   };
   transactional?: boolean;
+  unsubscribe_settings?: {
+    custom_domain_name?: string;
+  };
 }
 
 export interface EmailsSendApiResponse {

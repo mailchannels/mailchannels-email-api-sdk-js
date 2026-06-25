@@ -81,3 +81,25 @@ export interface DomainsDkimRotateApiResponse {
   new_key: DomainsDkimCreateApiResponse;
   rotated_key: DomainsDkimCreateApiResponse;
 }
+
+export interface DomainsCustomTrackingCreateApiResponse {
+  name: string;
+  hostname: string;
+  scope: "click" | "open" | "unsubscribe";
+  status: "active" | "disabled";
+  created_at: string;
+}
+
+export interface DomainsCustomTrackingListApiResponse {
+  custom_tracking_domains: DomainsCustomTrackingCreateApiResponse[];
+  total: number;
+}
+
+export interface DomainsCustomTrackingPendingApiResponse {
+  token?: string;
+  txt_record_name?: string;
+  txt_record_value?: string;
+  instructions?: string;
+}
+
+export type DomainsCustomTrackingApiResponse = DomainsCustomTrackingPendingApiResponse | DomainsCustomTrackingCreateApiResponse;
