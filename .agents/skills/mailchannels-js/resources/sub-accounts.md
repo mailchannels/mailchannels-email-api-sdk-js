@@ -67,7 +67,7 @@ if  (createPwdErr) { /*...*/ }
 const { data: passwords, error: listPwdErr } = await mc.subAccounts.smtpPasswords.list('clienta')
 if (listPwdErr) { /*...*/ }
 
-const { error: deletePwdErr } = await mc.subAccounts.smtpPasswordss.delete('clienta', storedPasswordId)
+const { error: deletePwdErr } = await mc.subAccounts.smtpPasswords.delete('clienta', storedPasswordId)
 if (deletePwdErr) { /*...*/ }
 ```
 
