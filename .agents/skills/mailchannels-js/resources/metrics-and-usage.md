@@ -57,7 +57,8 @@ for (const bucket of data?.buckets.processed ?? []) {
 
 #### Engagement Buckets
 
-`data.buckets` has `open`, `click`, `openTrackingDelivered`, `clickTrackingDelivered`.
+`data.buckets` has `open`, `click`, `uniqueOpen`, `uniqueClick`, `openTrackingDelivered`,
+`clickTrackingDelivered`, `uniqueOpenTrackingDelivered`, `uniqueClickTrackingDelivered`.
 
 #### Performance Buckets
 

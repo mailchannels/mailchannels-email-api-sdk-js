@@ -10,6 +10,10 @@ export interface MetricsEngagement {
     clickTrackingDelivered: MetricsBucket[];
     open: MetricsBucket[];
     openTrackingDelivered: MetricsBucket[];
+    uniqueClick?: MetricsBucket[];
+    uniqueClickTrackingDelivered?: MetricsBucket[];
+    uniqueOpen?: MetricsBucket[];
+    uniqueOpenTrackingDelivered?: MetricsBucket[];
   };
   click: number;
   clickTrackingDelivered: number;
@@ -17,6 +21,10 @@ export interface MetricsEngagement {
   open: number;
   openTrackingDelivered: number;
   startTime: string;
+  uniqueClick?: number;
+  uniqueClickTrackingDelivered?: number;
+  uniqueOpen?: number;
+  uniqueOpenTrackingDelivered?: number;
 }
 
 export type MetricsEngagementResponse = DataResponse<MetricsEngagement>;

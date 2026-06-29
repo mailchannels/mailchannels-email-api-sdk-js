@@ -59,14 +59,22 @@ export class Metrics {
         click: response.buckets.click.map(mapBucket),
         clickTrackingDelivered: response.buckets.click_tracking_delivered.map(mapBucket),
         open: response.buckets.open.map(mapBucket),
-        openTrackingDelivered: response.buckets.open_tracking_delivered.map(mapBucket)
+        openTrackingDelivered: response.buckets.open_tracking_delivered.map(mapBucket),
+        uniqueClick: response.buckets.unique_click?.map(mapBucket),
+        uniqueClickTrackingDelivered: response.buckets.unique_click_tracking_delivered?.map(mapBucket),
+        uniqueOpen: response.buckets.unique_open?.map(mapBucket),
+        uniqueOpenTrackingDelivered: response.buckets.unique_open_tracking_delivered?.map(mapBucket)
       },
       click: response.click,
       clickTrackingDelivered: response.click_tracking_delivered,
       endTime: response.end_time,
       open: response.open,
       openTrackingDelivered: response.open_tracking_delivered,
-      startTime: response.start_time
+      startTime: response.start_time,
+      uniqueClick: response.unique_click,
+      uniqueClickTrackingDelivered: response.unique_click_tracking_delivered,
+      uniqueOpen: response.unique_open,
+      uniqueOpenTrackingDelivered: response.unique_open_tracking_delivered
     });
 
     return { data, error: null };

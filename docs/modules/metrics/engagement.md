@@ -52,12 +52,28 @@ const { data, error } = await mailchannels.metrics.engagement()
     - `openTrackingDelivered` `MetricsBucket[]` <Badge>guaranteed</Badge>
       - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
       - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
+    - `uniqueClick` `MetricsBucket[]` <Badge type="info">optional</Badge>
+      - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
+      - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
+    - `uniqueClickTrackingDelivered` `MetricsBucket[]` <Badge type="info">optional</Badge>
+      - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
+      - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
+    - `uniqueOpen` `MetricsBucket[]` <Badge type="info">optional</Badge>
+      - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
+      - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
+    - `uniqueOpenTrackingDelivered` `MetricsBucket[]` <Badge type="info">optional</Badge>
+      - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
+      - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
   - `click` `number` <Badge>guaranteed</Badge>
   - `clickTrackingDelivered` `number` <Badge>guaranteed</Badge>
   - `endTime` `string` <Badge>guaranteed</Badge>
   - `open` `number` <Badge>guaranteed</Badge>
   - `openTrackingDelivered` `number` <Badge>guaranteed</Badge>
   - `startTime` `string` <Badge>guaranteed</Badge>
+  - `uniqueClick` `number` <Badge type="info">optional</Badge>
+  - `uniqueClickTrackingDelivered` `number` <Badge type="info">optional</Badge>
+  - `uniqueOpen` `number` <Badge type="info">optional</Badge>
+  - `uniqueOpenTrackingDelivered` `number` <Badge type="info">optional</Badge>
 <!-- @include: ../_parts/error-response.md -->
 
 ## Type declarations
