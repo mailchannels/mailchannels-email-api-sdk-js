@@ -61,7 +61,7 @@ for (const bucket of data?.buckets.processed ?? []) {
 
 #### Performance Buckets
 
-`data.buckets` has `processed`, `delivered`, `bounced`.
+`data.buckets` has `processed`, `delivered`, `bounced`, `complained`.
 
 #### Recipient Behaviour Buckets
 

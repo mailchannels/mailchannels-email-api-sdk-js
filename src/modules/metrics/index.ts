@@ -73,7 +73,7 @@ export class Metrics {
   }
 
   /**
-   * Retrieve performance metrics for messages sent from your account, including counts of processed, delivered, hard-bounced events. Supports optional filters for time range, and campaign ID.
+   * Retrieve performance metrics for messages sent from your account, including counts of processed, delivered, hard-bounced, and complained events. Supports optional filters for time range, and campaign ID.
    * @param options - Options to filter and customize the performance metrics retrieval.
    * @example
    * ```ts
@@ -112,8 +112,10 @@ export class Metrics {
 
     const data = clean({
       bounced: response.bounced,
+      complained: response.complained,
       buckets: {
         bounced: response.buckets.bounced.map(mapBucket),
+        complained: response.buckets.complained.map(mapBucket),
         delivered: response.buckets.delivered.map(mapBucket),
         processed: response.buckets.processed.map(mapBucket)
       },

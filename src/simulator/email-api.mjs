@@ -156,6 +156,7 @@ const collectMessages = (account, filters = {}) => {
 
 const summarizeMessages = messages => ({
   bounced: messages.reduce((total, message) => total + message.bounced, 0),
+  complained: messages.reduce((total, message) => total + message.complained, 0),
   click: messages.reduce((total, message) => total + message.click, 0),
   clickTrackingDelivered: messages.reduce((total, message) => total + message.clickTrackingDelivered, 0),
   delivered: messages.reduce((total, message) => total + message.delivered, 0),
@@ -249,6 +250,7 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
           account.messages.push({
             bounced: 0,
             campaignId: body?.campaign_id || "uncategorized",
+            complained: 0,
             click: body?.tracking_settings?.click_tracking?.enable ? 1 : 0,
             clickTrackingDelivered: body?.tracking_settings?.click_tracking?.enable ? 1 : 0,
             delivered: 1,
@@ -675,8 +677,10 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         const summary = summarizeMessages(messages);
         sendJson(response, 200, {
           bounced: summary.bounced,
+          complained: summary.complained,
           buckets: {
             bounced: createMetricsBuckets(summary.bounced),
+            complained: createMetricsBuckets(summary.complained),
             delivered: createMetricsBuckets(summary.delivered),
             processed: createMetricsBuckets(summary.processed)
           },

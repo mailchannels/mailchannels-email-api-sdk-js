@@ -20,8 +20,10 @@ export interface MetricsEngagementApiResponse {
 
 export interface MetricsPerformanceApiResponse {
   bounced: number;
+  complained: number;
   buckets: {
     bounced: MetricsApiBucket[];
+    complained: MetricsApiBucket[];
     delivered: MetricsApiBucket[];
     processed: MetricsApiBucket[];
   };

@@ -5,7 +5,7 @@ titleTemplate: 📊 Metrics
 
 # Performance<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/metrics">📊 Metrics</a></Badge></llm-exclude>
 
-Retrieve performance metrics for messages sent from your account, including counts of processed, delivered, hard-bounced events. Supports optional filters for time range, and campaign ID.
+Retrieve performance metrics for messages sent from your account, including counts of processed, delivered, hard-bounced, and complained events. Supports optional filters for time range, and campaign ID.
 
 ## Usage
 
@@ -39,7 +39,8 @@ const { data, error } = await mailchannels.metrics.performance()
 ## Response
 
 - `data` `MetricsPerformance | null` <Badge type="warning">nullable</Badge>
-  - `bounced` `number` <Badge>guaranteed</Badge>: Count of messages bounced during the specified time range.
+  - `bounced` `number` <Badge>guaranteed</Badge>: Count of messages hard-bounced during the specified time range.
+  - `complained` `number` <Badge>guaranteed</Badge>: Count of messages complained during the specified time range.
   - `buckets` `object` <Badge>guaranteed</Badge>: A series of metrics aggregations bucketed by time interval (e.g. hour, day).
     - `bounced` `MetricsBucket[]` <Badge>guaranteed</Badge>
       - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
