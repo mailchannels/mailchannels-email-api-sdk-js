@@ -9,6 +9,10 @@ export interface MetricsEngagementApiResponse {
     click_tracking_delivered: MetricsApiBucket[];
     open: MetricsApiBucket[];
     open_tracking_delivered: MetricsApiBucket[];
+    unique_click?: MetricsApiBucket[];
+    unique_click_tracking_delivered?: MetricsApiBucket[];
+    unique_open?: MetricsApiBucket[];
+    unique_open_tracking_delivered?: MetricsApiBucket[];
   };
   click: number;
   click_tracking_delivered: number;
@@ -16,6 +20,10 @@ export interface MetricsEngagementApiResponse {
   open: number;
   open_tracking_delivered: number;
   start_time: string;
+  unique_click?: number;
+  unique_click_tracking_delivered?: number;
+  unique_open?: number;
+  unique_open_tracking_delivered?: number;
 }
 
 export interface MetricsPerformanceApiResponse {

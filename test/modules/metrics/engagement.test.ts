@@ -19,14 +19,22 @@ const fake = {
       click: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }],
       click_tracking_delivered: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }],
       open: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }],
-      open_tracking_delivered: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }]
+      open_tracking_delivered: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }],
+      unique_click: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }],
+      unique_click_tracking_delivered: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }],
+      unique_open: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }],
+      unique_open_tracking_delivered: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }]
     },
     click: 0,
     click_tracking_delivered: 0,
     end_time: "2024-07-29T15:51:28.071Z",
     open: 0,
     open_tracking_delivered: 0,
-    start_time: "2024-07-29T15:51:28.071Z"
+    start_time: "2024-07-29T15:51:28.071Z",
+    unique_click: 0,
+    unique_click_tracking_delivered: 0,
+    unique_open: 0,
+    unique_open_tracking_delivered: 0
   } satisfies MetricsEngagementApiResponse,
   expectedResponse: {
     data: {
@@ -34,14 +42,22 @@ const fake = {
         click: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
         clickTrackingDelivered: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
         open: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
-        openTrackingDelivered: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }]
+        openTrackingDelivered: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
+        uniqueClick: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
+        uniqueClickTrackingDelivered: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
+        uniqueOpen: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
+        uniqueOpenTrackingDelivered: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }]
       },
       click: 0,
       clickTrackingDelivered: 0,
       endTime: "2024-07-29T15:51:28.071Z",
       open: 0,
       openTrackingDelivered: 0,
-      startTime: "2024-07-29T15:51:28.071Z"
+      startTime: "2024-07-29T15:51:28.071Z",
+      uniqueClick: 0,
+      uniqueClickTrackingDelivered: 0,
+      uniqueOpen: 0,
+      uniqueOpenTrackingDelivered: 0
     },
     error: null
   } satisfies MetricsEngagementResponse
