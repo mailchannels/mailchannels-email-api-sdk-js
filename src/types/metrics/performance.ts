@@ -3,14 +3,19 @@ import type { MetricsBucket } from ".";
 
 export interface MetricsPerformance {
   /**
-   * Count of messages bounced during the specified time range.
+   * Count of messages hard-bounced during the specified time range.
    */
   bounced: number;
+  /**
+   * Count of messages complained during the specified time range.
+   */
+  complained: number;
   /**
    * A series of metrics aggregations bucketed by time interval (e.g. hour, day).
    */
   buckets: {
     bounced: MetricsBucket[];
+    complained: MetricsBucket[];
     delivered: MetricsBucket[];
     processed: MetricsBucket[];
   };

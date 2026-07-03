@@ -16,8 +16,10 @@ const fake = {
   } satisfies MetricsOptions,
   apiResponse: {
     bounced: 0,
+    complained: 0,
     buckets: {
       bounced: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }],
+      complained: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }],
       delivered: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }],
       processed: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }]
     },
@@ -29,8 +31,10 @@ const fake = {
   expectedResponse: {
     data: {
       bounced: 0,
+      complained: 0,
       buckets: {
         bounced: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
+        complained: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
         delivered: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
         processed: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }]
       },
