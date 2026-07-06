@@ -29,6 +29,11 @@ export interface ErrorResponse {
    * This field is intended for diagnostic use only and should not be relied upon.
    */
   type: ErrorType;
+  /**
+   * An object containing the response, if available.
+   * This field may be `null` if no response is available or if the error is not related to an HTTP request or if the response is not a JSON object.
+   */
+  response: Record<string, unknown> | null;
 }
 
 export interface SuccessResponse {

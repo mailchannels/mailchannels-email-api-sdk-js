@@ -29,16 +29,18 @@ const STATUS_ERROR_TYPE_MAP: Record<number, ErrorType> = {
 const createError = (
   message: string,
   statusCode: number | null = null,
-  type: ErrorType
+  type: ErrorType,
+  response: Record<string, unknown> | null = null
 ): ErrorResponse => {
   return {
     message,
     statusCode,
-    type
+    type,
+    response
   };
 };
 
-type MailChannelsErrorResponse = { message?: string, errors?: string[] } | string;
+type MailChannelsErrorResponse = { message?: string, errors?: string[] } | string | Record<string, unknown>;
 
 /** Create an error response based on the HTTP response status code and payload. */
 export const getStatusError = (
@@ -50,21 +52,26 @@ export const getStatusError = (
   const payload = response._data ?? (response as { data?: MailChannelsErrorResponse }).data;
 
   let details: string | undefined;
+  let errorResponse: Record<string, unknown> | null = null;
 
   if (typeof payload === "string") {
     details = payload;
   }
-  else if (payload?.message) {
-    details = payload.message;
-  }
-  else if (Array.isArray(payload?.errors) && payload.errors?.length) {
-    details = payload.errors.join(", ");
+  else if (typeof payload === "object" && payload !== null) {
+    if (typeof payload.message === "string") {
+      details = payload.message;
+    }
+    else if (Array.isArray(payload.errors) && payload.errors.length) {
+      details = payload.errors.join(", ");
+    }
+    errorResponse = payload;
   }
 
   return createError(
     details ? `${statusText} ${details}` : statusText,
     response.status ?? null,
-    STATUS_ERROR_TYPE_MAP[response.status] || "api_error"
+    STATUS_ERROR_TYPE_MAP[response.status] || "api_error",
+    errorResponse
   );
 };
 
