@@ -1,5 +1,6 @@
 import { parseArrayRecipients, parseRecipient } from "./parse-recipients";
 import { stripPemHeaders } from "./strip-pem-headers";
+import { validateCustomTrackingName } from "./errors";
 import type { EmailsSendAttachment, EmailsSendDkim, EmailsSendOptions, EmailsSendPersonalization, EmailsSendTemplate } from "../types/emails/send";
 import type { EmailsSendPayload, EmailsSendPayloadAttachment, EmailsSendPayloadPersonalization } from "../types/emails/internal";
 
@@ -270,6 +271,27 @@ export const buildSendPayload = async (options: EmailsSendOptions): Promise<Emai
     }
   }
 
+  if (options.tracking?.click?.customDomainName !== undefined) {
+    const clickCustomTrackingNameError = validateCustomTrackingName(options.tracking.click.customDomainName);
+    if (clickCustomTrackingNameError) {
+      return `Invalid click tracking: ${clickCustomTrackingNameError.message}`;
+    }
+  }
+
+  if (options.tracking?.open?.customDomainName !== undefined) {
+    const openCustomTrackingNameError = validateCustomTrackingName(options.tracking.open.customDomainName);
+    if (openCustomTrackingNameError) {
+      return `Invalid open tracking: ${openCustomTrackingNameError.message}`;
+    }
+  }
+
+  if (options.unsubscribe?.customDomainName !== undefined) {
+    const unsubscribeCustomTrackingNameError = validateCustomTrackingName(options.unsubscribe.customDomainName);
+    if (unsubscribeCustomTrackingNameError) {
+      return `Invalid unsubscribe settings: ${unsubscribeCustomTrackingNameError.message}`;
+    }
+  }
+
   const content: EmailsSendPayload["content"] = [];
   const template_type = options.template?.type;
 
@@ -297,14 +319,19 @@ export const buildSendPayload = async (options: EmailsSendOptions): Promise<Emai
     from: parsedFrom,
     subject: options.subject,
     content,
-    tracking_settings: options.tracking ? {
-      click_tracking: options.tracking.click ? {
+    tracking_settings: options.tracking && {
+      click_tracking: options.tracking.click && {
+        custom_domain_name: options.tracking.click.customDomainName,
         enable: options.tracking.click.enable
-      } : undefined,
-      open_tracking: options.tracking.open ? {
+      },
+      open_tracking: options.tracking.open && {
+        custom_domain_name: options.tracking.open.customDomainName,
         enable: options.tracking.open.enable
-      } : undefined
-    } : undefined,
-    transactional: options.transactional
+      }
+    },
+    transactional: options.transactional,
+    unsubscribe_settings: options.unsubscribe && {
+      custom_domain_name: options.unsubscribe.customDomainName
+    }
   };
 };

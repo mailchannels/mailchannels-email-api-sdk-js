@@ -1,4 +1,5 @@
 import { DomainsDkim } from "./dkim";
+import { DomainsCustomTracking } from "./custom-tracking";
 import type { MailChannelsClient } from "../../client";
 import { ErrorCode, createValidationError, getResultError, getStatusError } from "../../utils/errors";
 import { clean } from "../../utils/clean";
@@ -9,9 +10,11 @@ import type { DomainsCheckOptions, DomainsCheckResponse } from "../../types/doma
 
 export class Domains {
   readonly dkim: DomainsDkim;
+  readonly customTracking: DomainsCustomTracking;
 
   constructor (protected mailchannels: MailChannelsClient) {
     this.dkim = new DomainsDkim(mailchannels);
+    this.customTracking = new DomainsCustomTracking(mailchannels);
   }
 
   /**

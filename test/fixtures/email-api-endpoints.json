@@ -1,11 +1,35 @@
 {
-  "version": "1.0.0",
+  "version": "1.2.1",
   "endpoints": [
     {
       "module": "domains",
       "method": "check",
       "httpMethod": "POST",
       "path": "/check-domain"
+    },
+    {
+      "module": "domains",
+      "method": "customTracking.list",
+      "httpMethod": "GET",
+      "path": "/custom-tracking-domains"
+    },
+    {
+      "module": "domains",
+      "method": "customTracking.create",
+      "httpMethod": "POST",
+      "path": "/custom-tracking-domains"
+    },
+    {
+      "module": "domains",
+      "method": "customTracking.delete",
+      "httpMethod": "DELETE",
+      "path": "/custom-tracking-domains/{hostname}/{scope}"
+    },
+    {
+      "module": "domains",
+      "method": "customTracking.update",
+      "httpMethod": "PATCH",
+      "path": "/custom-tracking-domains/{hostname}/{scope}"
     },
     {
       "module": "domains",

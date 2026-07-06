@@ -104,3 +104,16 @@ export const validatePagination = (pagination: Partial<{
   }
   return null;
 };
+
+const CUSTOM_TRACKING_NAME_PATTERN = /^[a-z0-9-]+$/;
+
+/** Validate a custom tracking name and return an error response if invalid. */
+export const validateCustomTrackingName = (name: string): ErrorResponse | null => {
+  if (!name || name.length < 1 || name.length > 64) {
+    return createValidationError("The custom tracking domain name must be between 1 and 64 characters.");
+  }
+  if (!CUSTOM_TRACKING_NAME_PATTERN.test(name)) {
+    return createValidationError("The custom tracking domain name must match ^[a-z0-9-]+$");
+  }
+  return null;
+};

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { FetchResponse } from "ofetch";
-import { ErrorCode, getStatusError, validatePagination } from "~/utils/errors";
+import { ErrorCode, getStatusError, validateCustomTrackingName, validatePagination } from "~/utils/errors";
 
 describe("getStatusError", () => {
   type ErrorResponse = FetchResponse<{ message?: string, errors?: string[] } | string | Record<string, unknown>>;
@@ -122,6 +122,29 @@ describe("validatePagination", () => {
     const error = validatePagination({ limit: 0 });
     expect(error).toStrictEqual({
       message: "The limit value is invalid. Only positive values are allowed.",
+      statusCode: null,
+      type: "validation_error",
+      response: null
+    });
+  });
+});
+
+describe("validateCustomTrackingName", () => {
+  it("should return error for invalid custom tracking domain name", () => {
+    const error = validateCustomTrackingName("invalid name");
+    expect(error).toStrictEqual({
+      message: "The custom tracking domain name must match ^[a-z0-9-]+$",
+      statusCode: null,
+      type: "validation_error",
+      response: null
+    });
+  });
+
+  it("should return error for long custom tracking domain name", () => {
+    const longName = "a".repeat(65);
+    const error = validateCustomTrackingName(longName);
+    expect(error).toStrictEqual({
+      message: "The custom tracking domain name must be between 1 and 64 characters.",
       statusCode: null,
       type: "validation_error",
       response: null
