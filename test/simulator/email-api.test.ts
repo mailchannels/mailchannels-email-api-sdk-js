@@ -116,6 +116,55 @@ describe("Email API simulator", () => {
       error: null
     });
 
+    const createCustomTrackingResult = await mailchannels.domains.customTracking.create(
+      "clickdemo",
+      "click.example.com",
+      "click"
+    );
+    expect(createCustomTrackingResult.error).toBeNull();
+    expect(createCustomTrackingResult.data).toMatchObject({
+      dnsSetupRequired: false,
+      name: "clickdemo",
+      hostname: "click.example.com",
+      scope: "click",
+      status: "active"
+    });
+
+    const listCustomTrackingResult = await mailchannels.domains.customTracking.list({
+      scope: "click",
+      status: "active"
+    });
+    expect(listCustomTrackingResult.error).toBeNull();
+    expect(listCustomTrackingResult.data?.total).toBe(1);
+    expect(listCustomTrackingResult.data?.customTrackingDomains[0]).toMatchObject({
+      name: "clickdemo",
+      hostname: "click.example.com"
+    });
+
+    const updateCustomTrackingResult = await mailchannels.domains.customTracking.update("click.example.com", "click", {
+      name: "clickdemo-renamed",
+      status: "disabled"
+    });
+    expect(updateCustomTrackingResult.error).toBeNull();
+    expect(updateCustomTrackingResult.data).toMatchObject({
+      dnsSetupRequired: false,
+      name: "clickdemo-renamed",
+      hostname: "click.example.com",
+      scope: "click",
+      status: "disabled"
+    });
+
+    const deleteCustomTrackingResult = await mailchannels.domains.customTracking.delete("click.example.com", "click");
+    expect(deleteCustomTrackingResult).toEqual({
+      success: true,
+      error: null
+    });
+
+    const emptyCustomTrackingResult = await mailchannels.domains.customTracking.list({
+      name: "clickdemo-renamed"
+    });
+    expect(emptyCustomTrackingResult.data?.total).toBe(0);
+
     const createWebhookResult = await mailchannels.webhooks.create(webhookEndpoint);
     expect(createWebhookResult).toEqual({
       success: true,
