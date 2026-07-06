@@ -26,10 +26,10 @@ if (error) {
 }
 
 if (data.dnsSetupRequired) {
-  // DNS setup required types available here
+  // DNS setup required fields available here
 }
 else {
-  // Domain types available here
+  // Domain fields available here
 }
 ```
 
@@ -48,10 +48,10 @@ if (error) {
 }
 
 if (data.dnsSetupRequired) {
-  // DNS setup required types available here
+  // DNS setup required fields available here
 }
 else {
-  // Domain types available here
+  // Domain fields available here
 }
 ```
 :::

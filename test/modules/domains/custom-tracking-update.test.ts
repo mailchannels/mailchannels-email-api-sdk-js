@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Domains } from "~/modules/domains";
 import { ErrorCode } from "~/utils/errors";
-import type { DomainsCustomTrackingCreateApiResponse, DomainsCustomTrackingPendingApiResponse } from "~/types/domains/internal";
+import type { DomainsCustomTrackingDnsSetupRequiredApiResponse, DomainsCustomTrackingDomainApiResponse } from "~/types/domains/internal";
 import type { DomainsCustomTrackingScope, DomainsCustomTrackingWithDnsSetupRequired } from "~/types/domains/custom-tracking-create";
 import type { DomainsCustomTrackingUpdateOptions } from "~/types/domains/custom-tracking-update";
 
@@ -20,27 +20,27 @@ const fake = {
     scope: "open",
     status: "active",
     createdAt: "2026-06-24T00:00:00Z"
-  } satisfies DomainsCustomTrackingWithDnsSetupRequired,
+  } satisfies DomainsCustomTrackingWithDnsSetupRequired<200>,
   expectedResponseDnsSetupRequired: {
     dnsSetupRequired: true,
     token: "550e8400-e29b-41d4-a716-446655440000",
     txtRecordName: "_mailchannels-verify.open.example.com",
     txtRecordValue: "550e8400-e29b-41d4-a716-446655440000",
     instructions: "Add this TXT record"
-  } satisfies DomainsCustomTrackingWithDnsSetupRequired,
+  } satisfies DomainsCustomTrackingWithDnsSetupRequired<202>,
   apiResponseUpdated: {
     name: "new-label",
     hostname: "open.example.com",
     scope: "open",
     status: "active",
     created_at: "2026-06-24T00:00:00Z"
-  } satisfies DomainsCustomTrackingCreateApiResponse,
+  } satisfies DomainsCustomTrackingDomainApiResponse,
   apiResponsePending: {
     token: "550e8400-e29b-41d4-a716-446655440000",
     txt_record_name: "_mailchannels-verify.open.example.com",
     txt_record_value: "550e8400-e29b-41d4-a716-446655440000",
     instructions: "Add this TXT record"
-  } satisfies DomainsCustomTrackingPendingApiResponse
+  } satisfies DomainsCustomTrackingDnsSetupRequiredApiResponse
 };
 
 describe("customTracking.update", () => {
@@ -65,7 +65,10 @@ describe("customTracking.update", () => {
 
   it("should successfully return verification pending", async () => {
     const mockClient = {
-      patch: vi.fn().mockResolvedValueOnce(fake.apiResponsePending)
+      patch: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { status: 202 } });
+        return fake.apiResponsePending;
+      })
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);

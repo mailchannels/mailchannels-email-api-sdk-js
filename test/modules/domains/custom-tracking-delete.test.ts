@@ -43,7 +43,7 @@ describe("customTracking.delete", () => {
   it("should contain error on api response error", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: ErrorCode.NotFound } });
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
         reject();
       }))
     } as unknown as MailChannelsClient;

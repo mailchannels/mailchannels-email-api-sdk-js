@@ -97,8 +97,13 @@ export class DomainsCustomTracking {
       scope: options.scope
     };
 
+    let statusCode: number | null = null;
+
     const response = await this.mailchannels.post<DomainsCustomTrackingApiResponse>("/tx/v1/custom-tracking-domains", {
       body: payload,
+      onResponse: async ({ response }) => {
+        statusCode = response.status;
+      },
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Invalid request body.",
@@ -114,19 +119,27 @@ export class DomainsCustomTracking {
 
     if (!response) return { data: null, error: error! };
 
-    const data = clean<DomainsCustomTrackingWithDnsSetupRequired>("hostname" in response ? {
+    if (statusCode === 202) {
+      const dnsSetupRequiredResponse = response as DomainsCustomTrackingApiResponse<202>;
+      const data = clean<DomainsCustomTrackingWithDnsSetupRequired<202>>({
+        dnsSetupRequired: true,
+        token: dnsSetupRequiredResponse.token,
+        txtRecordName: dnsSetupRequiredResponse.txt_record_name,
+        txtRecordValue: dnsSetupRequiredResponse.txt_record_value,
+        instructions: dnsSetupRequiredResponse.instructions
+      });
+
+      return { data, error: null };
+    }
+
+    const createResponse = response as DomainsCustomTrackingApiResponse<201>;
+    const data = clean<DomainsCustomTrackingWithDnsSetupRequired<201>>({
       dnsSetupRequired: false,
-      name: response.name,
-      hostname: response.hostname,
-      scope: response.scope,
-      status: response.status,
-      createdAt: response.created_at
-    } : {
-      dnsSetupRequired: true,
-      token: response.token,
-      txtRecordName: response.txt_record_name,
-      txtRecordValue: response.txt_record_value,
-      instructions: response.instructions
+      name: createResponse.name,
+      hostname: createResponse.hostname,
+      scope: createResponse.scope,
+      status: createResponse.status,
+      createdAt: createResponse.created_at
     });
 
     return { data, error: null };
@@ -174,8 +187,13 @@ export class DomainsCustomTracking {
       status: options.status
     };
 
+    let statusCode: number | null = null;
+
     const response = await this.mailchannels.patch<DomainsCustomTrackingApiResponse>(`/tx/v1/custom-tracking-domains/${encodeURIComponent(hostname)}/${encodeURIComponent(scope)}`, {
       body: payload,
+      onResponse: async ({ response }) => {
+        statusCode = response.status;
+      },
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
@@ -192,19 +210,27 @@ export class DomainsCustomTracking {
 
     if (!response) return { data: null, error: error! };
 
-    const data = clean<DomainsCustomTrackingWithDnsSetupRequired>("hostname" in response ? {
+    if (statusCode === 202) {
+      const dnsSetupRequiredResponse = response as DomainsCustomTrackingApiResponse<202>;
+      const data = clean<DomainsCustomTrackingWithDnsSetupRequired<202>>({
+        dnsSetupRequired: true,
+        token: dnsSetupRequiredResponse.token,
+        txtRecordName: dnsSetupRequiredResponse.txt_record_name,
+        txtRecordValue: dnsSetupRequiredResponse.txt_record_value,
+        instructions: dnsSetupRequiredResponse.instructions
+      });
+
+      return { data, error: null };
+    }
+
+    const updateResponse = response as DomainsCustomTrackingApiResponse<200>;
+    const data = clean<DomainsCustomTrackingWithDnsSetupRequired<200>>({
       dnsSetupRequired: false,
-      name: response.name,
-      hostname: response.hostname,
-      scope: response.scope,
-      status: response.status,
-      createdAt: response.created_at
-    } : {
-      dnsSetupRequired: true,
-      token: response.token,
-      txtRecordName: response.txt_record_name,
-      txtRecordValue: response.txt_record_value,
-      instructions: response.instructions
+      name: updateResponse.name,
+      hostname: updateResponse.hostname,
+      scope: updateResponse.scope,
+      status: updateResponse.status,
+      createdAt: updateResponse.created_at
     });
 
     return { data, error: null };
@@ -238,7 +264,7 @@ export class DomainsCustomTracking {
     await this.mailchannels.delete(`/tx/v1/custom-tracking-domains/${encodeURIComponent(hostname)}/${encodeURIComponent(scope)}`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.NotFound]: `Custom tracking domain for hostname '${hostname}' and scope '${scope}' not found.`
+          [ErrorCode.BadRequest]: "Invalid hostname or scope value"
         });
       }
     }).catch((e) => {
