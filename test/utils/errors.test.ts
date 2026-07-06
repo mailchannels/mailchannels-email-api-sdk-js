@@ -132,12 +132,22 @@ describe("validatePagination", () => {
 describe("validateCustomTrackingName", () => {
   it("should return error for invalid custom tracking domain name", () => {
     const error = validateCustomTrackingName("invalid name");
-    expect(error).toBeTruthy();
+    expect(error).toStrictEqual({
+      message: "The custom tracking domain name must match ^[a-z0-9-]+$",
+      statusCode: null,
+      type: "validation_error",
+      response: null
+    });
   });
 
   it("should return error for long custom tracking domain name", () => {
     const longName = "a".repeat(65);
     const error = validateCustomTrackingName(longName);
-    expect(error).toBeTruthy();
+    expect(error).toStrictEqual({
+      message: "The custom tracking domain name must be between 1 and 64 characters.",
+      statusCode: null,
+      type: "validation_error",
+      response: null
+    });
   });
 });

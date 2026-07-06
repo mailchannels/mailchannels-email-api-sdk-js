@@ -193,3 +193,29 @@ const { data, error } = await mc.emails.queue({
 ```
 
 Open and click tracking require a subscription that supports them.
+
+### Custom Tracking Domains
+
+Pass `customDomainName` on the `tracking` field (or on `unsubscribe`) to route those
+links through a domain you registered instead of the shared MailChannels domain.
+The name must match an **active** custom tracking domain registered for that
+scope — see [custom-tracking-domains](custom-tracking-domains.md) for
+registration and DNS verification.
+
+```ts
+const { data, error } = await mc.emails.queue({
+  from: 'sender@example.com',
+  to: 'recipient@example.net',
+  subject: 'Tracked with a custom domain',
+  html: "<p>Hello <a href='https://example.com'>click here</a></p>",
+  tracking: {
+    click: {
+      enable: true,
+      customDomainName: 'newsletter-clicks'
+    }
+  },
+  unsubscribe: {
+    customDomainName: 'newsletter-unsubscribe'
+  }
+})
+```
