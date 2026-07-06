@@ -21,11 +21,11 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { data, error } = await domains.customTracking.create({
-  name: 'clickdemo',
-  hostname: 'click.example.com',
-  scope: 'click'
-})
+const { data, error } = await domains.customTracking.create(
+  'clickdemo',
+  'click.example.com',
+  'click'
+)
 
 if (error) {
   throw new Error(error.message)
@@ -44,11 +44,11 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { data, error } = await mailchannels.domains.customTracking.create({
-  name: 'clickdemo',
-  hostname: 'click.example.com',
-  scope: 'click'
-})
+const { data, error } = await mailchannels.domains.customTracking.create(
+  'clickdemo',
+  'click.example.com',
+  'click'
+)
 
 if (error) {
   throw new Error(error.message)
@@ -65,12 +65,11 @@ else {
 
 ## Params
 
-- `options` `DomainsCustomTrackingCreateOptions` <Badge type="danger">required</Badge>: Create options.
-  - `name` `string` <Badge type="danger">required</Badge>: A unique label used to select this domain at message send time.
-    > [!IMPORTANT]
-    > Maximum length is `64` characters. Must match the pattern `^[a-z0-9-]+$`.
-  - `hostname` `string` <Badge type="danger">required</Badge>: The hostname to register as a custom tracking domain. The hostname must have a CNAME record pointing to `links.mailchannels.net`.
-  - `scope` `DomainsCustomTrackingScope` <Badge type="danger">required</Badge>: The event type this domain handles (`click`, `open`, `unsubscribe`).
+- `name` `string` <Badge type="danger">required</Badge>: A unique label used to select this domain at message send time.
+  > [!IMPORTANT]
+  > Maximum length is `64` characters. Must match the pattern `^[a-z0-9-]+$`.
+- `hostname` `string` <Badge type="danger">required</Badge>: The hostname to register as a custom tracking domain. The hostname must have a CNAME record pointing to `links.mailchannels.net`.
+- `scope` `DomainsCustomTrackingScope` <Badge type="danger">required</Badge>: The event type this domain handles (`click`, `open`, `unsubscribe`).
 
 ## Response
 
@@ -108,7 +107,6 @@ else {
 
 **Create Custom Tracking Domain type declarations**
 
-<<< @/snippets/domains-custom-tracking-create-options.ts
 <<< @/snippets/domains-custom-tracking-dns-setup-required.ts
 <<< @/snippets/domains-custom-tracking-with-dns-setup-required.ts
 <<< @/snippets/domains-custom-tracking-create-response.ts

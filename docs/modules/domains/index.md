@@ -60,7 +60,6 @@ This module allows you to check a domain's email authentication, manage DKIM key
 
   **Create Custom Tracking Domain type declarations**
 
-  <<< @/snippets/domains-custom-tracking-create-options.ts
   <<< @/snippets/domains-custom-tracking-dns-setup-required.ts
   <<< @/snippets/domains-custom-tracking-create-response.ts
 

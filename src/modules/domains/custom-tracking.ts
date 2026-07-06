@@ -3,7 +3,7 @@ import { ErrorCode, createValidationError, getResultError, getStatusError, valid
 import { clean } from "../../utils/clean";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
 import type { DomainsCustomTrackingApiResponse, DomainsCustomTrackingListApiResponse } from "../../types/domains/internal";
-import type { DomainsCustomTrackingCreateOptions, DomainsCustomTrackingCreateResponse, DomainsCustomTrackingScope, DomainsCustomTrackingWithDnsSetupRequired } from "../../types/domains/custom-tracking-create";
+import type { DomainsCustomTrackingCreateResponse, DomainsCustomTrackingScope, DomainsCustomTrackingWithDnsSetupRequired } from "../../types/domains/custom-tracking-create";
 import type { DomainsCustomTrackingListOptions, DomainsCustomTrackingListResponse } from "../../types/domains/custom-tracking-list";
 import type { DomainsCustomTrackingUpdateOptions, DomainsCustomTrackingUpdateResponse } from "../../types/domains/custom-tracking-update";
 
@@ -64,37 +64,39 @@ export class DomainsCustomTracking {
    * Before registration completes, two DNS records must be in place:
    * 1. A TXT record at `_mailchannels-verify.<hostname>` containing the verification token (returned when DNS setup is required).
    * 2. A CNAME record at `<hostname>` pointing to `links.mailchannels.net`.
-   * @param options - The options for creating a custom tracking domain.
+   * @param name - A unique label used to select this domain at message send time. Maximum length is `64` characters. Must match the pattern `^[a-z0-9-]+$`.
+   * @param hostname - The hostname to register as a custom tracking domain (e.g., `click.example.com`).
+   * @param scope - The event type this domain handles.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { data, error } = await mailchannels.domains.customTracking.create({
-   *   name: 'clickdemo',
-   *   hostname: 'click.example.com',
-   *   scope: 'click'
-   * })
+   * const { data, error } = await mailchannels.domains.customTracking.create(
+   *   'clickdemo',
+   *   'click.example.com',
+   *   'click'
+   * )
    * ```
    */
-  async create (options: DomainsCustomTrackingCreateOptions): Promise<DomainsCustomTrackingCreateResponse> {
+  async create (name: string, hostname: string, scope: DomainsCustomTrackingScope): Promise<DomainsCustomTrackingCreateResponse> {
     let error: ErrorResponse | null = null;
 
-    error = validateCustomTrackingName(options.name);
+    error = validateCustomTrackingName(name);
     if (error) return { data: null, error };
 
-    if (!options.hostname) {
+    if (!hostname) {
       error = createValidationError("Hostname is required.");
       return { data: null, error };
     }
 
-    if (!options.scope || !DomainsCustomTracking.SCOPE_VALUES.has(options.scope)) {
+    if (!scope || !DomainsCustomTracking.SCOPE_VALUES.has(scope)) {
       error = createValidationError("Scope must be one of 'click', 'open', or 'unsubscribe'.");
       return { data: null, error };
     }
 
     const payload = {
-      name: options.name,
-      hostname: options.hostname,
-      scope: options.scope
+      name: name,
+      hostname: hostname,
+      scope: scope
     };
 
     let statusCode: number | null = null;

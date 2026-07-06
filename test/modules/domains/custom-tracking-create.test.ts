@@ -3,14 +3,12 @@ import type { MailChannelsClient } from "~/client";
 import { Domains } from "~/modules/domains";
 import { ErrorCode } from "~/utils/errors";
 import type { DomainsCustomTrackingDnsSetupRequiredApiResponse, DomainsCustomTrackingDomainApiResponse } from "~/types/domains/internal";
-import type { DomainsCustomTrackingCreateOptions, DomainsCustomTrackingWithDnsSetupRequired } from "~/types/domains/custom-tracking-create";
+import type { DomainsCustomTrackingWithDnsSetupRequired } from "~/types/domains/custom-tracking-create";
 
 const fake = {
-  options: {
-    name: "clickdemo",
-    hostname: "click.example.com",
-    scope: "click"
-  } satisfies DomainsCustomTrackingCreateOptions,
+  name: "clickdemo",
+  hostname: "click.example.com",
+  scope: "click" as const,
   expectedResponseCreated: {
     dnsSetupRequired: false,
     name: "clickdemo",
@@ -48,16 +46,16 @@ describe("customTracking.create", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.customTracking.create(fake.options);
+    const { data, error } = await domains.customTracking.create(fake.name, fake.hostname, fake.scope);
 
     expect(data).toStrictEqual(fake.expectedResponseCreated);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/custom-tracking-domains",
       expect.objectContaining({
         body: {
-          name: fake.options.name,
-          hostname: fake.options.hostname,
-          scope: fake.options.scope
+          name: fake.name,
+          hostname: fake.hostname,
+          scope: fake.scope
         }
       }));
   });
@@ -71,7 +69,7 @@ describe("customTracking.create", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.customTracking.create(fake.options);
+    const { data, error } = await domains.customTracking.create(fake.name, fake.hostname, fake.scope);
 
     expect(data).toStrictEqual(fake.expectedResponseDnsSetupRequired);
     expect(error).toBeNull();
@@ -82,10 +80,7 @@ describe("customTracking.create", () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.customTracking.create({
-      ...fake.options,
-      name: "invalid name with spaces"
-    });
+    const { data, error } = await domains.customTracking.create("invalid name with spaces", fake.hostname, fake.scope);
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -96,10 +91,7 @@ describe("customTracking.create", () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.customTracking.create({
-      ...fake.options,
-      hostname: ""
-    });
+    const { data, error } = await domains.customTracking.create(fake.name, "", fake.scope);
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -110,11 +102,8 @@ describe("customTracking.create", () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.customTracking.create({
-      ...fake.options,
-      // @ts-expect-error Testing invalid scope
-      scope: "invalid-scope"
-    });
+    // @ts-expect-error Testing invalid scope
+    const { data, error } = await domains.customTracking.create(fake.name, fake.hostname, "invalid-scope");
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -130,7 +119,7 @@ describe("customTracking.create", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.customTracking.create(fake.options);
+    const { data, error } = await domains.customTracking.create(fake.name, fake.hostname, fake.scope);
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();

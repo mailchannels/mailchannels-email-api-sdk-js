@@ -11,10 +11,10 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { data, error } = await mailchannels.domains.customTracking.create({
-  name: "clickdemo",
-  hostname: "click.example.com",
-  scope: "click"
-});
+const { data, error } = await mailchannels.domains.customTracking.create(
+  "clickdemo",
+  "click.example.com",
+  "click"
+);
 
 console.info(JSON.stringify({ data, error }, null, 2));

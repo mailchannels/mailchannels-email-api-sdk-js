@@ -2,23 +2,6 @@ import type { DataResponse } from "../responses";
 
 export type DomainsCustomTrackingScope = "click" | "open" | "unsubscribe";
 
-export interface DomainsCustomTrackingCreateOptions {
-  /**
-   * A unique label used to select this domain at message send time. Maximum length is `64` characters. Must match the pattern `^[a-z0-9-]+$`.
-   */
-  name: string;
-  /**
-   * The hostname to register as a custom tracking domain.
-   * The hostname must have a CNAME record pointing to `links.mailchannels.net`.
-   * @example "click.example.com"
-   */
-  hostname: string;
-  /**
-   * The event type this domain handles.
-   */
-  scope: DomainsCustomTrackingScope;
-}
-
 export interface DomainsCustomTrackingDomain {
   /**
    * The label for this custom tracking domain.
