@@ -45,6 +45,9 @@ const { data, error } = await mailchannels.metrics.performance()
     - `bounced` `MetricsBucket[]` <Badge>guaranteed</Badge>
       - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
       - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
+    - `complained` `MetricsBucket[]` <Badge>guaranteed</Badge>
+      - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
+      - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
     - `delivered` `MetricsBucket[]` <Badge>guaranteed</Badge>
       - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
       - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
