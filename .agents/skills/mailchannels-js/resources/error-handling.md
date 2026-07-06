@@ -23,6 +23,7 @@ if (error) {
   // error.message    — human-readable description
   // error.type       — stable string identifier (see table below)
   // error.statusCode — HTTP status code, or null for non-HTTP errors
+  // error.response   — Response body (Object) for 4xx/5xx errors
   console.error(error.message, error.type, error.statusCode)
   return
 }
