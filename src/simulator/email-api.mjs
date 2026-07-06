@@ -77,6 +77,7 @@ const createMetricsBuckets = count => [{
 const createAccountState = apiKey => ({
   apiKey,
   customerHandle: createId("customer"),
+  customTrackingDomains: [],
   dkimKeysByDomain: new Map(),
   messages: [],
   subAccounts: new Map(),
@@ -129,6 +130,18 @@ const createDkimKey = (domain, selector, overrides = {}) => {
 };
 
 const listDkimKeys = (account, domain) => account.dkimKeysByDomain.get(domain) || [];
+
+const createCustomTrackingDomain = ({ hostname, name, scope, status = "active" }) => ({
+  created_at: currentTimestamp(),
+  hostname,
+  name,
+  scope,
+  status
+});
+
+const findCustomTrackingDomain = (account, hostname, scope) => {
+  return account.customTrackingDomains.find(domain => domain.hostname === hostname && domain.scope === scope);
+};
 
 const recordWebhookBatch = (account, webhook, eventCount, status = "2xx_response", statusCode = 200) => {
   account.webhookBatches.unshift({
@@ -410,6 +423,89 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         targetKey.status_modified_at = currentTimestamp();
         sendNoContent(response);
         return;
+      }
+
+      if (url.pathname === "/tx/v1/custom-tracking-domains") {
+        if (method === "POST") {
+          const { hostname, name, scope } = body || {};
+          if (!hostname || !name || !scope) {
+            sendJson(response, 400, { error: "Invalid request body." });
+            return;
+          }
+
+          const hasDuplicateName = account.customTrackingDomains.some(domain => domain.name === name);
+          const hasDuplicateHostnameAndScope = Boolean(findCustomTrackingDomain(account, hostname, scope));
+          if (hasDuplicateName || hasDuplicateHostnameAndScope) {
+            sendJson(response, 409, { error: "Custom tracking domain already exists." });
+            return;
+          }
+
+          const domain = createCustomTrackingDomain({ hostname, name, scope });
+          account.customTrackingDomains.push(domain);
+          sendJson(response, 201, clone(domain));
+          return;
+        }
+
+        if (method === "GET") {
+          const name = url.searchParams.get("name");
+          const status = url.searchParams.get("status");
+          const scope = url.searchParams.get("scope");
+          const offset = Number(url.searchParams.get("offset") || "0");
+          const limit = Number(url.searchParams.get("limit") || "100");
+
+          let domains = account.customTrackingDomains;
+          if (name) {
+            domains = domains.filter(domain => domain.name === name);
+          }
+          if (status) {
+            domains = domains.filter(domain => domain.status === status);
+          }
+          if (scope) {
+            domains = domains.filter(domain => domain.scope === scope);
+          }
+
+          sendJson(response, 200, {
+            custom_tracking_domains: clone(domains.slice(offset, offset + limit)),
+            total: domains.length
+          });
+          return;
+        }
+      }
+
+      const customTrackingDomainMatch = url.pathname.match(/^\/tx\/v1\/custom-tracking-domains\/([^/]+)\/([^/]+)$/);
+      if (customTrackingDomainMatch) {
+        const [, hostname, scope] = customTrackingDomainMatch;
+        const targetDomain = findCustomTrackingDomain(account, hostname, scope);
+
+        if (!targetDomain) {
+          sendJson(response, 404, { error: `Custom tracking domain for hostname '${hostname}' and scope '${scope}' not found.` });
+          return;
+        }
+
+        if (method === "PATCH") {
+          if (body?.name) {
+            const hasDuplicateName = account.customTrackingDomains.some(domain => domain !== targetDomain && domain.name === body.name);
+            if (hasDuplicateName) {
+              sendJson(response, 409, { error: "Name already used by another domain." });
+              return;
+            }
+
+            targetDomain.name = body.name;
+          }
+
+          if (body?.status) {
+            targetDomain.status = body.status;
+          }
+
+          sendJson(response, 200, clone(targetDomain));
+          return;
+        }
+
+        if (method === "DELETE") {
+          account.customTrackingDomains = account.customTrackingDomains.filter(domain => domain !== targetDomain);
+          sendNoContent(response);
+          return;
+        }
       }
 
       if (url.pathname === "/tx/v1/webhook" && method === "POST") {

@@ -169,6 +169,7 @@ const { data, error } = await mailchannels.emails.send({
 - Email sends and async sends
 - Domain checks
 - DKIM key create, list, rotate, and update
+- Custom tracking domain create, list, update, and delete
 - Webhook enrollment, listing, validation, signing key lookup, and batch inspection
 - Sub-account lifecycle, API keys, SMTP passwords, limits, and usage
 - Engagement, performance, recipient behaviour, sender, volume, and usage metrics
@@ -179,6 +180,7 @@ const { data, error } = await mailchannels.emails.send({
 - State is in-memory only and is reset when the process stops
 - Any non-empty `X-API-Key` is accepted, with separate in-memory state per API key
 - Webhook responses are simulated locally, but the simulator does not yet emit real webhook callbacks to your application
+- Custom tracking domain verification is simulated, but the simulator does not yet check DNS records
 
 The next planned expansion is outbound webhook delivery so client applications can test webhook ingestion flows against the simulator as well.
 <!-- #endregion simulator -->
