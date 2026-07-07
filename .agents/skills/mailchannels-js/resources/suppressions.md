@@ -10,8 +10,8 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 
-const { success, error } = await mc.suppressions.create({
-  entries: [
+const { success, error } = await mc.suppressions.create(
+  [
     {
       recipient: 'out@example.net',
       types: ['non-transactional'],          // optional; defaults to non-transactional
@@ -22,8 +22,8 @@ const { success, error } = await mc.suppressions.create({
       types: ['transactional', 'non-transactional']
     }
   ],
-  addToSubAccounts: true   // parent only; copies entries to every sub-account
-})
+  { addToSubAccounts: true }   // parent only; copies entries to every sub-account
+)
 ```
 
 Constraints:
@@ -83,9 +83,9 @@ that recipient regardless of origin.
 
 ### Patterns
 
-- **Preference center opt-out**: set `type` according to the email category, e.g. `non-transactional` for marketing 
-  emails, `transactional` for order updates, and so on. 
+- **Preference center opt-out**: set `types` according to the email category, e.g. `non-transactional` for marketing
+  emails, `transactional` for order updates, and so on.
   Configure `addToSubAccounts` depending on whether the preference applies to all sub-accounts or just the parent account.
   Add a note to indicate the source, e.g. "Opted out via preference center".
-- **Migrating from another ESP**: bulk-create with `addToSubAccounts: true` so every tenant
+- **Migrating from another ESP**: bulk-create with option `addToSubAccounts: true` so every tenant
   inherits the list.

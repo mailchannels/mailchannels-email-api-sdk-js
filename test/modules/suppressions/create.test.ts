@@ -2,19 +2,19 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { ErrorCode } from "~/utils/errors";
 import { Suppressions } from "~/modules/suppressions";
-import type { SuppressionsCreateOptions } from "~/types/suppressions/create";
+import type { SuppressionsCreateEntry, SuppressionsCreateOptions } from "~/types/suppressions/create";
 
 const fake = {
+  entries: [
+    {
+      recipient: "test@example.com",
+      types: ["transactional"],
+      notes: "Test suppression"
+    }
+  ] satisfies SuppressionsCreateEntry[],
   options: {
-    addToSubAccounts: false,
-    entries: [
-      {
-        recipient: "test@example.com",
-        types: ["transactional"],
-        notes: "Test suppression"
-      }
-    ]
-  } satisfies SuppressionsCreateOptions
+    addToSubAccounts: false
+  } satisfies Omit<SuppressionsCreateOptions, "entries">
 };
 
 describe("create", () => {
@@ -24,7 +24,7 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { success, error } = await suppressions.create(fake.options);
+    const { success, error } = await suppressions.create(fake.entries, fake.options);
 
     expect(success).toBe(true);
     expect(error).toBeNull();
@@ -32,7 +32,7 @@ describe("create", () => {
       expect.objectContaining({
         body: {
           add_to_sub_accounts: fake.options.addToSubAccounts,
-          suppression_entries: fake.options.entries.map(entry => ({
+          suppression_entries: fake.entries.map(entry => ({
             recipient: entry.recipient,
             suppression_types: entry.types,
             notes: entry.notes
@@ -47,12 +47,12 @@ describe("create", () => {
       post: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
-    const options = { ...fake.options };
+    const newEntries = structuredClone(fake.entries);
     // @ts-expect-error testing without types
-    delete options.entries[0].types;
+    delete newEntries[0].types;
 
     const suppressions = new Suppressions(mockClient);
-    const { success, error } = await suppressions.create(options);
+    const { success, error } = await suppressions.create(newEntries, fake.options);
 
     expect(success).toBe(true);
     expect(error).toBeNull();
@@ -65,9 +65,7 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { success, error } = await suppressions.create({
-      entries: Array.from({ length: 1001 }, (_, i) => ({ recipient: `test${i}@example.com` }))
-    });
+    const { success, error } = await suppressions.create(Array.from({ length: 1001 }, (_, i) => ({ recipient: `test${i}@example.com` })));
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
@@ -82,7 +80,7 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { success, error } = await suppressions.create(fake.options);
+    const { success, error } = await suppressions.create(fake.entries, fake.options);
 
     expect(success).toBe(false);
     expect(error).toBeTruthy();
@@ -95,7 +93,7 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { success, error } = await suppressions.create(fake.options);
+    const { success, error } = await suppressions.create(fake.entries, fake.options);
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
@@ -108,10 +106,26 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { success, error } = await suppressions.create(fake.options);
+    const { success, error } = await suppressions.create(fake.entries, fake.options);
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle deprecated create method with options object", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(void 0)
+    } as unknown as MailChannelsClient;
+
+    const suppressions = new Suppressions(mockClient);
+    const { success, error } = await suppressions.create({
+      entries: fake.entries,
+      addToSubAccounts: fake.options.addToSubAccounts
+    });
+
+    expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
