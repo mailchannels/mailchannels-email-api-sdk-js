@@ -16,6 +16,6 @@
     "wrangler": "^4.110.0"
   },
   "dependencies": {
-    "mailchannels-sdk": "^1.1.0"
+    "mailchannels-sdk": "^1.2.0"
   }
 }

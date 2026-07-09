@@ -1,6 +1,46 @@
 # Changelog
 
 
+## v1.2.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.2.0%0Dv1.1.0)
+
+### 🚀 Enhancements
+
+- **metrics:** Add unique open/click engagement metrics ([567e6bb](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/567e6bb))
+- **metrics:** Add complained field to performance ([693612f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/693612f))
+- **errors:** Include api response in `ErrorResponse` object ([2abc900](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/2abc900))
+- Add custom tracking domains and update send options ([7c35915](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7c35915))
+- **simulator:** Add custom tracking domain to simulator ([b46171a](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/b46171a))
+
+### 💅 Refactors
+
+- **domains:** Replace options object with positional params ([5f9d0b7](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/5f9d0b7))
+
+### 📖 Documentation
+
+- **agents:** Fix typo in sub-accounts ([113a4e0](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/113a4e0))
+- **types:** Add JSDoc comments to engagement fields ([638beb9](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/638beb9))
+- **domains:** Add custom tracking docs and update send params ([e1831a2](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/e1831a2))
+- Refresh spec file and email-api versions to 1.2.1 ([7b76399](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7b76399))
+- **agents:** Add custom tracking domains skill resource ([6237c0f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/6237c0f))
+- **metrics:** Add missing complained bucket ([721be3b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/721be3b))
+- Refresh spec file and email-api versions to 1.4.0 ([e4f2526](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/e4f2526))
+
+### 🏡 Chore
+
+- **playground:** Add playground scripts for custom tracking domains ([7bedbb1](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7bedbb1))
+- **domains:** Check status code for custom tracking create/update response ([b6485e7](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/b6485e7))
+- Update all dependencies ([e1ae094](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/e1ae094))
+
+### ✅ Tests
+
+- **domains:** Add custom tracking domains unit tests ([5e5f1fb](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/5e5f1fb))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+
 ## v1.1.0
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.1.0%0Dv1.0.0)
