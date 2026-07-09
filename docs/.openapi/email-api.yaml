@@ -715,6 +715,22 @@ components:
               items:
                 $ref: '#/components/schemas/MetricsBucket'
               type: array
+            unique_click:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            unique_click_tracking_delivered:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            unique_open:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            unique_open_tracking_delivered:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
           required:
             - open
             - open_tracking_delivered
@@ -759,6 +775,46 @@ components:
             metrics (inclusive).
           format: date-time
           type: string
+        unique_click:
+          description: >
+            Count of distinct messages that had at least one click event. Unlike
+            `click`, each message
+
+            is counted at most once regardless of how many links were clicked or
+            how many times.
+
+            Use this to compute click rates without exceeding 100%.
+          minimum: 0
+          type: integer
+        unique_click_tracking_delivered:
+          description: >
+            Count of distinct messages delivered with click tracking enabled
+            (message-level, not
+
+            recipient-level). Use as the denominator when computing unique click
+            rates.
+          minimum: 0
+          type: integer
+        unique_open:
+          description: >
+            Count of distinct messages that had at least one open event. Unlike
+            `open`, each message
+
+            is counted at most once regardless of how many times its tracking
+            pixel was fired.
+
+            Use this to compute open rates without exceeding 100%.
+          minimum: 0
+          type: integer
+        unique_open_tracking_delivered:
+          description: >
+            Count of distinct messages delivered with open tracking enabled
+            (message-level, not
+
+            recipient-level). Use as the denominator when computing unique open
+            rates.
+          minimum: 0
+          type: integer
       required:
         - open
         - open_tracking_delivered
@@ -770,7 +826,7 @@ components:
       properties:
         bounced:
           description: |
-            Count of messages bounced during the specified time range.
+            Count of messages hard-bounced during the specified time range.
           minimum: 0
           type: integer
         buckets:
@@ -779,6 +835,10 @@ components:
             hour, day)
           properties:
             bounced:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            complained:
               items:
                 $ref: '#/components/schemas/MetricsBucket'
               type: array
@@ -793,8 +853,14 @@ components:
           required:
             - delivered
             - bounced
+            - complained
             - processed
           type: object
+        complained:
+          description: |
+            Count of messages complained during the specified time range.
+          minimum: 0
+          type: integer
         delivered:
           description: |
             Count of messages delivered during the specified time range.
@@ -820,6 +886,7 @@ components:
       required:
         - delivered
         - bounced
+        - complained
         - processed
         - buckets
       type: object
@@ -1622,7 +1689,7 @@ info:
     information on every endpoint, including parameters, response formats, and
     error codes.
   title: Email API
-  version: 1.2.1
+  version: 1.4.0
 openapi: 3.0.0
 paths:
   /check-domain:
@@ -2816,9 +2883,12 @@ paths:
             print_r($response->toArray());
   /metrics/performance:
     get:
-      description: |
+      description: >
         Retrieve performance metrics for messages sent from your account,
-        including counts of processed, delivered, hard-bounced events.
+
+        including counts of processed, delivered, hard-bounced, and complained
+        events.
+
         Supports optional filters for time range, and campaign ID.
       parameters:
         - description: >

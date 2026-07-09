@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const SPEC_URL = "https://docs.mailchannels.net/email-api.yaml";
+const SPEC_URL = "https://docs.mailchannels.com/email-api.yaml";
 const SPEC_PATH = join(rootDir, "docs", ".openapi", "email-api.yaml");
 const FIXTURE_PATH = join(rootDir, "test", "fixtures", "email-api-endpoints.json");
 const README_PATH = join(rootDir, "README.md");

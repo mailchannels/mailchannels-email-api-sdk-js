@@ -9,12 +9,12 @@
 [![TypeScript][typescript-src]][typescript-href]
 [![Node.js][node-src]][node-href]
 
-> Built and tested against Email API `1.2.1`
+> Built and tested against Email API `1.4.0`
 
-Node.js SDK to integrate [MailChannels Email API](https://docs.mailchannels.net/email-api) into your JavaScript or TypeScript server-side applications.
+Node.js SDK to integrate [MailChannels Email API](https://docs.mailchannels.com/email-api) into your JavaScript or TypeScript server-side applications.
 
 <!-- #region overview -->
-This library provides a simple way to interact with the [MailChannels Email API](https://docs.mailchannels.net/email-api). It is written in TypeScript and can be used in both JavaScript and TypeScript projects and in different runtimes.
+This library provides a simple way to interact with the [MailChannels Email API](https://docs.mailchannels.com/email-api). It is written in TypeScript and can be used in both JavaScript and TypeScript projects and in different runtimes.
 <!-- #endregion overview -->
 
 - [✨ Release Notes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/src/HEAD/CHANGELOG.md)
@@ -35,7 +35,7 @@ This library provides a simple way to interact with the [MailChannels Email API]
 ## <a name="features">🚀 Features</a>
 
 <!-- #region features -->
-This SDK fully supports all features and operations available in the [MailChannels Email API](https://docs.mailchannels.net/email-api). It is actively maintained to ensure compatibility and to quickly add support for new API features as they are released.
+This SDK fully supports all features and operations available in the [MailChannels Email API](https://docs.mailchannels.com/email-api). It is actively maintained to ensure compatibility and to quickly add support for new API features as they are released.
 
 Some of the things you can do with the SDK:
 
