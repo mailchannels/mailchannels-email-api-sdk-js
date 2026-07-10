@@ -25,6 +25,7 @@ Manage your MailChannels account suppressions list.
 
   <<< @/snippets/suppressions-types.ts
   <<< @/snippets/suppressions-create-options.ts
+  <<< @/snippets/suppressions-create-entry.ts
 
   **List type declarations**
 

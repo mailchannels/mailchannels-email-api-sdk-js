@@ -282,12 +282,10 @@ describe("Email API simulator", () => {
     const senderSubAccountsResult = await mailchannels.metrics.senders("sub-accounts");
     expect(senderSubAccountsResult.data?.senders.some(sender => sender.name === "simacct")).toBe(true);
 
-    const createSuppressionResult = await mailchannels.suppressions.create({
-      entries: [{
-        notes: "local simulator",
-        recipient: "suppressed@example.com"
-      }]
-    });
+    const createSuppressionResult = await mailchannels.suppressions.create([{
+      notes: "local simulator",
+      recipient: "suppressed@example.com"
+    }]);
     expect(createSuppressionResult.success).toBe(true);
 
     const listSuppressionsResult = await mailchannels.suppressions.list({

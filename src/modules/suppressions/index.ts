@@ -3,7 +3,7 @@ import { ErrorCode, createValidationError, getResultError, getStatusError, valid
 import { clean } from "../../utils/clean";
 import { parseDateInputs } from "../../utils/parse-date-inputs";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../../types/suppressions";
+import type { SuppressionsCreateEntry, SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../../types/suppressions";
 import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../../types/suppressions/internal";
 
 export class Suppressions {
@@ -11,18 +11,28 @@ export class Suppressions {
 
   /**
    * Creates suppression entries for the specified account. Parent accounts can create suppression entries for all associated sub-accounts. If `types` is not provided, it defaults to `non-transactional`. The operation is atomic, meaning all entries are successfully added or none are added if an error occurs.
-   * @param options - The details of the suppression entries to create.
+   * @param entries - The total number of suppression entries to create, for the parent and/or its sub-accounts, must not exceed `1000`.
+   * @param options - The options of the suppression entries to create.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success, error } = await mailchannels.suppressions.create({
-   * // ...
-   * });
+   * const { success, error } = await mailchannels.suppressions.create([
+   *   {
+   *     notes: "test",
+   *     recipient: "name@example.com",
+   *     types: ["transactional"]
+   *   }
+   * ], { addToSubAccounts: false });
    */
-  async create (options: SuppressionsCreateOptions): Promise<SuccessResponse> {
+  async create (entries: SuppressionsCreateEntry[], options?: Omit<SuppressionsCreateOptions, "entries">): Promise<SuccessResponse>;
+  /** @deprecated Use positional params `create(entries, options?)` instead. */
+  async create (options: SuppressionsCreateOptions): Promise<SuccessResponse>;
+  /** @deprecated Use positional params `create(entries, options?)` instead. */
+  async create (entriesOrOptions: SuppressionsCreateEntry[] | SuppressionsCreateOptions, options?: Omit<SuppressionsCreateOptions, "entries">): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
-    const { addToSubAccounts, entries } = options;
+    const entries = Array.isArray(entriesOrOptions) ? entriesOrOptions : entriesOrOptions.entries;
+    const createOptions = Array.isArray(entriesOrOptions) ? options : entriesOrOptions;
 
     if (entries.length > 1000) {
       error = createValidationError("The number of suppression entries must not exceed 1000.");
@@ -30,7 +40,7 @@ export class Suppressions {
     }
 
     const payload: SuppressionsCreatePayload = {
-      add_to_sub_accounts: addToSubAccounts,
+      add_to_sub_accounts: createOptions?.addToSubAccounts,
       suppression_entries: entries.map(entry => ({
         notes: entry.notes,
         recipient: entry.recipient,

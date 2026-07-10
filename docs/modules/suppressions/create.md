@@ -16,16 +16,13 @@ import { MailChannelsClient, Suppressions } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
 
-const { success, error } = await suppressions.create({
-  addToSubAccounts: false,
-  entries: [
-    {
-      notes: "test",
-      recipient: "name@example.com",
-      types: ["transactional"]
-    }
-  ]
-})
+const { success, error } = await suppressions.create([
+  {
+    notes: "test",
+    recipient: "name@example.com",
+    types: ["transactional"]
+  }
+], { addToSubAccounts: false })
 ```
 
 ```ts [full.ts]
@@ -33,29 +30,26 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success, error } = await mailchannels.suppressions.create({
-  addToSubAccounts: false,
-  entries: [
-    {
-      notes: "test",
-      recipient: "name@example.com",
-      types: ["transactional"]
-    }
-  ]
-})
+const { success, error } = await mailchannels.suppressions.create([
+  {
+    notes: "test",
+    recipient: "name@example.com",
+    types: ["transactional"]
+  }
+], { addToSubAccounts: false })
 ```
 :::
 
 ## Params
 
-- `options` `SuppressionsCreateOptions` <Badge type="danger">required</Badge>: The details of the suppression entries to create.
+- `entries` `SuppressionsCreateEntry[]` <Badge type="danger">required</Badge>: The total number of suppression entries to create, for the parent and/or its sub-accounts, must not exceed `1000`.
+  - `notes` `string` <Badge type="info">optional</Badge>: Must be less than `1024` characters.
+  - `recipient` `string` <Badge type="danger">required</Badge>: The email address to suppress. Must be a valid email address format and less than `255` characters.
+  - `types` `("transactional" | "non-transactional")[]` <Badge type="info">optional</Badge>: An array of types of suppression to apply to the recipient. If not provided, it defaults to `["non-transactional"]`.
+    > [!NOTE]
+    > Possible type values are: `transactional`, `non-transactional`.
+- `options` `Omit<SuppressionsCreateOptions, "entries">` <Badge type="info">optional</Badge>: The options of the suppression entries to create.
   - `addToSubAccounts` `boolean` <Badge type="info">optional</Badge>: If `true`, the parent account creates suppression entries for all associated sub-accounts. This field is only applicable to parent accounts. Sub-accounts cannot create entries for other sub-accounts.
-  - `entries` `object[]` <Badge type="danger">required</Badge>: The total number of suppression entries to create, for the parent and/or its sub-accounts, must not exceed `1000`.
-    - `notes` `string` <Badge type="info">optional</Badge>: Must be less than `1024` characters.
-    - `recipient` `string` <Badge type="danger">required</Badge>: The email address to suppress. Must be a valid email address format and less than `255` characters.
-    - `types` `("transactional" | "non-transactional")[]` <Badge type="info">optional</Badge>: An array of types of suppression to apply to the recipient. If not provided, it defaults to `["non-transactional"]`.
-      > [!NOTE]
-      > Possible type values are: `transactional`, `non-transactional`.
 
 ## Response
 
@@ -77,3 +71,4 @@ const { success, error } = await mailchannels.suppressions.create({
 
 <<< @/snippets/suppressions-types.ts
 <<< @/snippets/suppressions-create-options.ts
+<<< @/snippets/suppressions-create-entry.ts

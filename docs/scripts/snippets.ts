@@ -58,7 +58,7 @@ const extractClassWithSignatures = (code: string) => {
           const fixedMethodText = methodText
             .replace(/(\w+)\s*=\s*(true|false)(?=[,)])/g, "$1?: boolean") // boolean default values
             .replace(/(\w+)\s*:\s*([\w[\]]+)\s*=\s*\[\]/g, "$1?: $2"); // array default values
-          const method = fixedMethodText.trim();
+          const method = fixedMethodText.trim().replace(/;$/, "");
           const methodName = member.name ? member.name.getText(sourceFile) : "constructor";
           classSignature += `  ${method};\n`;
           if (methodName !== "constructor") {
