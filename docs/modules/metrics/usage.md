@@ -34,6 +34,7 @@ const { data, error } = await mailchannels.metrics.usage()
   - `endDate` `string` <Badge type="info">optional</Badge>: The end date of the current billing period (ISO 8601 format).
   - `startDate` `string` <Badge type="info">optional</Badge>: The start date of the current billing period (ISO 8601 format).
   - `total` `number` <Badge>guaranteed</Badge>: The total usage for the current billing period.
+  - `monthlyLimit` `number` <Badge>guaranteed</Badge>: The effective monthly limit for the current billing period. A limit of zero means the account cannot send any messages. For sub-accounts with no explicit limit set (i.e., -1), the monthly limit for the parent account is returned.
 <!-- @include: ../_parts/error-response.md -->
 
 ## Type declarations

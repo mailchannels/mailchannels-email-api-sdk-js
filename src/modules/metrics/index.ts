@@ -267,7 +267,8 @@ export class Metrics {
     const data = clean({
       endDate: response.period_end_date,
       startDate: response.period_start_date,
-      total: response.total_usage
+      total: response.total_usage,
+      monthlyLimit: response.monthly_limit
     });
 
     return { data, error: null };

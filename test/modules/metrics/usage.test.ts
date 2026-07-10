@@ -9,13 +9,15 @@ const fake = {
   apiResponse: {
     period_end_date: "2025-04-11",
     period_start_date: "2025-03-12",
-    total_usage: 5000
+    total_usage: 5000,
+    monthly_limit: 10000
   } satisfies MetricsUsageApiResponse,
   expectedResponse: {
     data: {
       endDate: "2025-04-11",
       startDate: "2025-03-12",
-      total: 5000
+      total: 5000,
+      monthlyLimit: 10000
     },
     error: null
   } satisfies MetricsUsageResponse
@@ -38,14 +40,18 @@ describe("usage", () => {
   it("should handle missing billing period dates", async () => {
     const mockClient = {
       get: vi.fn().mockResolvedValueOnce({
-        total_usage: 5000
+        total_usage: fake.apiResponse.total_usage,
+        monthly_limit: fake.apiResponse.monthly_limit
       } satisfies MetricsUsageApiResponse)
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.usage();
 
-    expect(data).toStrictEqual({ total: 5000 });
+    expect(data).toStrictEqual({
+      total: fake.expectedResponse.data.total,
+      monthlyLimit: fake.expectedResponse.data.monthlyLimit
+    });
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
