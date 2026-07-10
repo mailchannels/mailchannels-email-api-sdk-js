@@ -13,8 +13,15 @@ export interface SubAccountsUsage {
   startDate?: string;
   /**
    * The total usage for the current billing period.
+   * @example 5000
    */
   total: number;
+  /**
+   * The effective monthly limit for the current billing period. A limit of zero means the account cannot send any messages.
+   * For sub-accounts with no explicit limit set (i.e., -1), the monthly limit for the parent account is returned.
+   * @example 10000
+   */
+  monthlyLimit: number;
 }
 
 export type SubAccountsUsageResponse = DataResponse<SubAccountsUsage>;
