@@ -77,6 +77,7 @@ const createMetricsBuckets = count => [{
 const createAccountState = apiKey => ({
   apiKey,
   customerHandle: createId("customer"),
+  limit: { sends: 100000 },
   customTrackingDomains: [],
   dkimKeysByDomain: new Map(),
   messages: [],
@@ -735,10 +736,14 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         }
 
         if (suffix === "usage" && method === "GET") {
+          const subLimitSends = subAccount.limit?.sends ?? -1;
+          const monthlyLimit = subLimitSends === -1 ? account.limit.sends : subLimitSends;
+
           sendJson(response, 200, {
             period_end_date: currentTimestamp(),
             period_start_date: new Date(new Date().setDate(1)).toISOString(),
-            total_usage: subAccount.usage
+            total_usage: subAccount.usage,
+            monthly_limit: monthlyLimit
           });
           return;
         }
@@ -867,10 +872,23 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
       }
 
       if (url.pathname === "/tx/v1/usage" && method === "GET") {
+        let totalUsage = account.messages.length;
+        let monthlyLimit = account.limit.sends;
+
+        if (scopeHandle) {
+          const subAccount = account.subAccounts.get(scopeHandle);
+          if (subAccount) {
+            totalUsage = subAccount.usage;
+            const subLimitSends = subAccount.limit?.sends ?? -1;
+            monthlyLimit = subLimitSends === -1 ? account.limit.sends : subLimitSends;
+          }
+        }
+
         sendJson(response, 200, {
           period_end_date: currentTimestamp(),
           period_start_date: new Date(new Date().setDate(1)).toISOString(),
-          total_usage: account.messages.length
+          total_usage: totalUsage,
+          monthly_limit: monthlyLimit
         });
         return;
       }

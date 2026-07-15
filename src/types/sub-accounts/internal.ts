@@ -10,6 +10,7 @@ export interface SubAccountsUsageApiResponse {
   period_end_date?: string;
   period_start_date?: string;
   total_usage: number;
+  monthly_limit: number;
 }
 
 export interface SubAccountsApiKeysCreateApiResponse {
