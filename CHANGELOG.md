@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v1.3.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.3.0%0Dv1.2.0)
+
+### 🚀 Enhancements
+
+- **metrics:** Add monthly limit field to usage response ([12acad5](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/12acad5))
+- **sub-accounts:** Add monthly limit field to usage response ([527667b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/527667b))
+- **simulator:** Add monthly limit to usage responses ([9eaf234](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/9eaf234))
+
+### 💅 Refactors
+
+- **suppressions:** Deprecate `create` entries option and use as positional param ([c85e5b1](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/c85e5b1))
+
+### 🏡 Chore
+
+- Update all dependencies ([6cc56dd](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/6cc56dd))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+
 ## v1.2.0
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.2.0%0Dv1.1.0)
