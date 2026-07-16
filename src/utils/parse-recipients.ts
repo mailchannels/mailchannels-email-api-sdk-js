@@ -1,4 +1,4 @@
-import type { EmailsSendRecipient } from "../types/emails/send";
+import type { EmailsSendRecipient, EmailsSendRecipientInput } from "../types/emails/send";
 
 /**
  * Validates if a string is a valid email address
@@ -42,7 +42,7 @@ export const parseRecipient = (recipient?: EmailsSendRecipient | string) => {
 /**
  * Parses any array of recipients format to MailChannels format
  */
-export const parseArrayRecipients = (recipients?: EmailsSendRecipient | EmailsSendRecipient[] | string[] | string) => {
+export const parseArrayRecipients = (recipients?: EmailsSendRecipientInput) => {
   if (!recipients) return undefined;
 
   const arr = typeof recipients === "string" ? (

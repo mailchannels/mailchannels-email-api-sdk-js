@@ -64,6 +64,11 @@ describe("parseArrayRecipients", () => {
     expect(recipient).toStrictEqual([fake.object, fake.object]);
   });
 
+  it("should parse array of recipients with mixed formats", () => {
+    const recipient = parseArrayRecipients([fake.pair, fake.object, fake.object.email]);
+    expect(recipient).toStrictEqual([fake.object, fake.object, { email: fake.object.email }]);
+  });
+
   it("should return undefined if array is empty", () => {
     const recipient = parseArrayRecipients([]);
     expect(recipient).toBeUndefined();

@@ -101,7 +101,7 @@ export interface EmailsSendContent {
   value: string;
 }
 
-export type EmailsSendRecipientInput = EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
+export type EmailsSendRecipientInput = EmailsSendRecipient | string | (EmailsSendRecipient | string)[];
 
 export interface EmailsSendDkim {
   /**
