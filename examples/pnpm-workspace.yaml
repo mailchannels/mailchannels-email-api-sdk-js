@@ -3,6 +3,7 @@ minimumReleaseAge: 0
 packages:
   - frameworks/*
   - serverless/*
+  - templating/*
 
 allowBuilds:
   '@parcel/watcher': false
