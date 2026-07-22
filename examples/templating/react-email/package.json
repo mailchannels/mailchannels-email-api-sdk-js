@@ -1,0 +1,28 @@
+{
+  "name": "mailchannels-react-email-example",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "send": "node dist/index.js"
+  },
+  "dependencies": {
+    "mailchannels-sdk": "^1.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-email": "6.9.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "tsdown": "0.22.13",
+    "typescript": "7.0.2"
+  }
+}
