@@ -27,9 +27,9 @@ If your templates use Vue single-file components (`.vue`) in a bundler other tha
 
 ## 2. Configure your API key
 
-Add your MailChannels API key to your `.env` or `.env.local` file.
+Add your MailChannels API key to your `.env` file.
 
-```sh [.env.local]
+```sh [.env]
 MAILCHANNELS_API_KEY=your-api-key
 ```
 

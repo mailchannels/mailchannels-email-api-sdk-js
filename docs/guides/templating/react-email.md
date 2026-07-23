@@ -27,9 +27,9 @@ If your bundler is not `tsdown`, ensure it supports importing `.jsx`/`.tsx` and 
 
 ## 2. Configure your API key
 
-Add your MailChannels API key to your `.env` or `.env.local` file.
+Add your MailChannels API key to your `.env` file.
 
-```sh [.env.local]
+```sh [.env]
 MAILCHANNELS_API_KEY=your-api-key
 ```
 
