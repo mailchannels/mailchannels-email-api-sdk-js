@@ -25,7 +25,7 @@ export class SubAccounts {
   }
 
   /**
-   * Creates a new sub-account under the parent account. Each sub-account must have a unique handle composed solely of lowercase alphanumeric characters. If no handle is provided, a random handle will be generated. Note that Sub-accounts are only available to parent accounts on 100K and higher plans.
+   * Creates a new sub-account under the parent account. Each sub-account must have a unique handle composed solely of lowercase alphanumeric characters. If no handle is provided, a random handle will be generated.
    * @param companyName - The name of the company associated with the sub-account. This name is used for display purposes only and does not affect the functionality of the sub-account. The length must be between 3 and 128 characters.
    * @param handle - A unique name for the sub-account to be created. The length must be between 3 and 128 characters, and it may contain only lowercase letters and numbers. If not provided, a random handle will be generated.
    * @example

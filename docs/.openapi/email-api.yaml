@@ -4061,8 +4061,6 @@ paths:
 
         If no handle is provided, a random handle will be generated.
 
-        Note that Sub-accounts are only available to parent accounts on 100K and
-        higher plans.
       parameters:
         - in: header
           name: X-Api-Key

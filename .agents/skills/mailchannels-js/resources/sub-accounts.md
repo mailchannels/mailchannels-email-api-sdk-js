@@ -4,8 +4,6 @@ Sub-accounts are first-class on MailChannels. Use them for tenants, customers, o
 senders so that one customer's reputation, limits, and bad traffic don't contaminate the
 parent account or other tenants.
 
-> Sub-accounts are only available on parent accounts on the 100K and higher plans.
-
 ### Handles
 
 A handle uniquely identifies a sub-account. Rules:

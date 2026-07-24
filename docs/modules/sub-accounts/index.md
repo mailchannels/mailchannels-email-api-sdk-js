@@ -8,9 +8,6 @@ title: 🪪 Sub-Accounts
 Manage your sub-accounts associated with your MailChannels account.
 <!-- #endregion description -->
 
-> [!IMPORTANT]
-> Sub-accounts are only available to parent accounts on 100K and higher plans.
-
 ## Type declarations
 
 <<< @/snippets/sub-accounts.ts
