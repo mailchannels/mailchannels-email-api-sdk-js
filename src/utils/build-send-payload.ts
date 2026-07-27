@@ -87,8 +87,7 @@ const mapAttachment = (attachment: EmailsSendAttachment): EmailsSendPayloadAttac
   content: attachment.content,
   filename: attachment.filename,
   type: attachment.type,
-  content_id: attachment.contentId,
-  disposition: attachment.disposition
+  content_id: attachment.contentId
 });
 
 const mapPersonalization = (personalization: EmailsSendPersonalization, index: number, rootTemplateData?: EmailsSendTemplate["data"]) => {

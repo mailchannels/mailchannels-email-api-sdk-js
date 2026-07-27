@@ -15,14 +15,13 @@ type AttachmentOptions = Omit<EmailsSendAttachment, "content">;
 
 export class Attachment {
   static fromBytes (data: ArrayBuffer | Uint8Array, options: AttachmentOptions): EmailsSendAttachment {
-    const { filename, type, contentId, disposition = "attachment" } = options;
+    const { filename, type, contentId } = options;
 
     return {
       content: base64Content(data),
       filename: decodeURIComponent(filename) || "attachment",
       type: type || guessContentType(filename),
-      contentId,
-      disposition
+      contentId
     };
   }
 

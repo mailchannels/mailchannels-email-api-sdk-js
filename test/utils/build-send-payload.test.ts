@@ -211,8 +211,7 @@ describe("buildSendPayload", async () => {
         content: "data",
         filename: "inline.png",
         type: "image/png",
-        contentId: "logo-cid",
-        disposition: "inline"
+        contentId: "logo-cid"
       }]
     });
 
@@ -220,8 +219,7 @@ describe("buildSendPayload", async () => {
       content: "data",
       filename: "inline.png",
       type: "image/png",
-      content_id: "logo-cid",
-      disposition: "inline"
+      content_id: "logo-cid"
     }]);
   });
 
