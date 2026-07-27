@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDateInput, parseDateInputs } from "~/utils/parse-date-inputs";
+import { formatDateInput, parseDateInputs } from "~/internal/parse-date-inputs";
 
 const fake = {
   date: new Date("2026-01-01T12:00:00.000Z"),

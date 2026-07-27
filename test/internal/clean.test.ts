@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clean } from "~/utils/clean";
+import { clean } from "~/internal/clean";
 
 describe("clean", () => {
   it("should remove undefined values from object", () => {

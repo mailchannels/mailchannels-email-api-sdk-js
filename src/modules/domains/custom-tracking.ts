@@ -1,6 +1,6 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validateCustomTrackingName, validatePagination } from "../../utils/errors";
-import { clean } from "../../utils/clean";
+import { ErrorCode, createValidationError, getResultError, getStatusError, validateCustomTrackingName, validatePagination } from "../../internal/errors";
+import { clean } from "../../internal/clean";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
 import type { DomainsCustomTrackingApiResponse, DomainsCustomTrackingListApiResponse } from "../../types/domains/internal";
 import type { DomainsCustomTrackingCreateResponse, DomainsCustomTrackingScope, DomainsCustomTrackingWithDnsSetupRequired } from "../../types/domains/custom-tracking-create";

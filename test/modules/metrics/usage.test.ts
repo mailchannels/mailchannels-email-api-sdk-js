@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Metrics } from "~/modules/metrics";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 import type { MetricsUsageResponse } from "~/types/metrics/usage";
 import type { MetricsUsageApiResponse } from "~/types/metrics/internal";
 

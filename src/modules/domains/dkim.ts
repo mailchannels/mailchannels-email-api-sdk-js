@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../utils/errors";
-import { clean } from "../../utils/clean";
-import { mapDkimKey } from "../../utils/map-dkim-key";
+import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import { clean } from "../../internal/clean";
+import { mapDkimKey } from "../../internal/map-dkim-key";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
 import type { DomainsDkimCreateApiResponse, DomainsDkimCreatePayload, DomainsDkimListPayload, DomainsDkimRotateApiResponse } from "../../types/domains/internal";
 import type { DomainsDkimCreateOptions, DomainsDkimCreateResponse } from "../../types/domains/dkim-create";

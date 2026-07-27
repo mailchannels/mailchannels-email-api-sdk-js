@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { EmailsSendPayload } from "~/types/emails/internal";
 import type { EmailsSendOptions, EmailsSendPersonalization } from "~/types/emails/send";
-import { buildSendPayload } from "~/utils/build-send-payload";
+import { buildSendPayload } from "~/internal/build-send-payload";
 
 const fake = {
   options: {

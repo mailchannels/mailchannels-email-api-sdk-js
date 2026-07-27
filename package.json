@@ -29,8 +29,8 @@
   },
   "types": "./dist/mailchannels.d.mts",
   "bin": {
-    "mailchannels-sdk": "./dist/cli.mjs",
-    "mailchannels": "./dist/cli.mjs"
+    "mailchannels-sdk": "./dist/cli/index.mjs",
+    "mailchannels": "./dist/cli/index.mjs"
   },
   "files": [
     "dist",
@@ -41,7 +41,7 @@
     "parity:fixtures": "node scripts/generate-parity-fixtures.ts",
     "prepack": "pnpm build",
     "release": "pnpm lint && pnpm test && pnpm build && changelogen --bump",
-    "simulate": "node src/cli.ts simulate",
+    "simulate": "node src/cli/index.ts simulate",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "test": "vitest run --reporter=verbose --coverage",

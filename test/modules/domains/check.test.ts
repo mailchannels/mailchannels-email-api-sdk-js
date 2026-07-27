@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Domains } from "~/modules/domains";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 import type { DomainsCheckResponse } from "~/types/domains/check";
 
 const fake = {

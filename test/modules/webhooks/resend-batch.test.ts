@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Webhooks } from "~/modules/webhooks";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 import type { WebhooksResendBatchApiResponse } from "~/types/webhooks/internal";
 import type { WebhooksResendBatchResponse } from "~/types/webhooks/resend-batch";
 

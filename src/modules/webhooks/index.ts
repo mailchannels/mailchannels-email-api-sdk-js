@@ -1,8 +1,8 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../utils/errors";
-import { clean } from "../../utils/clean";
-import { isValidWebhook } from "../../utils/webhook-validator";
-import { parseDateInputs } from "../../utils/parse-date-inputs";
+import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import { clean } from "../../internal/clean";
+import { isValidWebhook } from "../../internal/webhook-validator";
+import { parseDateInputs } from "../../internal/parse-date-inputs";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
 import type { WebhooksListResponse } from "../../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../../types/webhooks/signing-key";

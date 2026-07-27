@@ -1,8 +1,8 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, getResultError, getStatusError, validatePagination } from "../../utils/errors";
-import { clean } from "../../utils/clean";
-import { mapBucket } from "../../utils/map-bucket";
-import { parseDateInputs } from "../../utils/parse-date-inputs";
+import { ErrorCode, getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import { clean } from "../../internal/clean";
+import { mapBucket } from "../../internal/map-bucket";
+import { parseDateInputs } from "../../internal/parse-date-inputs";
 import type { ErrorResponse } from "../../types/responses";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../../types/metrics/internal";
 import type { MetricsOptions } from "../../types/metrics";
