@@ -5,7 +5,6 @@ import { fileURLToPath } from "node:url";
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const SPEC_URL = "https://docs.mailchannels.com/email-api.yaml";
-const SPEC_PATH = join(rootDir, "docs", ".openapi", "email-api.yaml");
 const FIXTURE_PATH = join(rootDir, "test", "fixtures", "email-api-endpoints.json");
 const README_PATH = join(rootDir, "README.md");
 
@@ -156,10 +155,7 @@ if (!response.ok) {
   throw new Error(`Failed to fetch ${SPEC_URL}: ${response.status} ${response.statusText}`);
 }
 
-const spec = await response.text();
-await writeFile(SPEC_PATH, spec);
-
-const specText = await readFile(SPEC_PATH, "utf8");
+const specText = await response.text();
 const specOps = parseYamlOperations(specText);
 const fixture = mapOperationsToFixture(specOps.operations, methodMap, "Email API");
 

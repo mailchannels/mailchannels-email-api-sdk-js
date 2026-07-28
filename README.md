@@ -273,7 +273,7 @@ pnpm test:watch
 # Run typecheck
 pnpm test:types
 
-# Refresh API parity fixtures, specs, and README version note
+# Refresh API parity fixtures and README version note
 pnpm parity:fixtures
 
 # Run the local simulator
