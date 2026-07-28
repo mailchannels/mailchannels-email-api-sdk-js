@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Domains } from "~/modules/domains";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 import type { DomainsCustomTrackingDnsSetupRequiredApiResponse, DomainsCustomTrackingDomainApiResponse } from "~/types/domains/internal";
 import type { DomainsCustomTrackingScope, DomainsCustomTrackingWithDnsSetupRequired } from "~/types/domains/custom-tracking-create";
 import type { DomainsCustomTrackingUpdateOptions } from "~/types/domains/custom-tracking-update";

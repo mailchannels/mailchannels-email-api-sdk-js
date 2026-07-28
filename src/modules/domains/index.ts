@@ -1,9 +1,9 @@
 import { DomainsDkim } from "./dkim";
 import { DomainsCustomTracking } from "./custom-tracking";
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError } from "../../utils/errors";
-import { clean } from "../../utils/clean";
-import { stripPemHeaders } from "../../utils/strip-pem-headers";
+import { ErrorCode, createValidationError, getResultError, getStatusError } from "../../internal/errors";
+import { clean } from "../../internal/clean";
+import { stripPemHeaders } from "../../internal/strip-pem-headers";
 import type { ErrorResponse } from "../../types/responses";
 import type { DomainsCheckApiResponse, DomainsCheckPayload } from "../../types/domains/internal";
 import type { DomainsCheckOptions, DomainsCheckResponse } from "../../types/domains/check";

@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Emails } from "~/modules/emails";
 import type { EmailsSendOptions, EmailsSendResponse } from "~/types/emails/send";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 import type { EmailsSendApiResponse } from "~/types/emails/internal";
-import { buildSendPayload } from "~/utils/build-send-payload";
+import { buildSendPayload } from "~/internal/build-send-payload";
 
 const fake = {
   options: {

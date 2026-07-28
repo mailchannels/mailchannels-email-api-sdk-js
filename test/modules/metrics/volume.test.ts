@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Metrics } from "~/modules/metrics";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 import type { MetricsVolumeResponse } from "~/types/metrics/volume";
 import type { MetricsVolumeApiResponse } from "~/types/metrics/internal";
 import type { MetricsOptions } from "~/types/metrics";
-import { formatDateInput } from "~/utils/parse-date-inputs";
+import { formatDateInput } from "~/internal/parse-date-inputs";
 
 const fake = {
   options: {

@@ -11,6 +11,12 @@ export const createSimulator = (options: {
   silent?: boolean;
 } = {}) => {
   const { host = DEFAULT_HOST, port = DEFAULT_PORT } = options;
+
+  if (port !== undefined && (isNaN(port) || port < 0 || port > 65535)) {
+    console.error("[Simulator]", `Invalid port '${port}': must be an integer between 0 and 65535.`);
+    process.exit(1);
+  }
+
   const logRequests = !options.silent;
 
   const emailApi = createEmailApiHandler({ logRequests });

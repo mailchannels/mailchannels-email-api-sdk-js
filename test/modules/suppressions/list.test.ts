@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 import { Suppressions } from "~/modules/suppressions";
 import type { SuppressionsListApiResponse } from "~/types/suppressions/internal";
 import type { SuppressionsListOptions, SuppressionsListResponse } from "~/types/suppressions/list";
-import { formatDateInput } from "~/utils/parse-date-inputs";
+import { formatDateInput } from "~/internal/parse-date-inputs";
 
 const fake = {
   options: {

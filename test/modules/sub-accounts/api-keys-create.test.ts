@@ -3,7 +3,7 @@ import type { MailChannelsClient } from "~/client";
 import { SubAccounts } from "~/modules/sub-accounts";
 import type { SubAccountsApiKeysCreateResponse } from "~/types/sub-accounts/api-keys";
 import type { SubAccountsApiKeysCreateApiResponse } from "~/types/sub-accounts/internal";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 
 const fake = {
   validHandle: "validhandle123",

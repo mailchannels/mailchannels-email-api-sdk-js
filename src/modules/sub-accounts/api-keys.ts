@@ -1,6 +1,6 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../utils/errors";
-import { clean } from "../../utils/clean";
+import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import { clean } from "../../internal/clean";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
 import type { SubAccountsApiKeysCreateResponse, SubAccountsApiKeysListOptions, SubAccountsApiKeysListResponse } from "../../types/sub-accounts/api-keys";
 import type { SubAccountsApiKeysCreateApiResponse, SubAccountsApiKeysListApiResponse } from "../../types/sub-accounts/internal";

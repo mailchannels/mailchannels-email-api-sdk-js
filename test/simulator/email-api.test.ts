@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { MailChannels } from "~/mailchannels";
 import { createSimulator } from "~/simulator";
 
@@ -23,6 +23,24 @@ describe("Email API simulator", () => {
 
   afterAll(async () => {
     await simulator.close();
+  });
+
+  it("should exit with error for invalid port", async () => {
+    const exitSpy = vi.spyOn(process, "exit").mockImplementation(((code?: number) => {
+      throw new Error(`process.exit:${code}`);
+    }) as never);
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    expect(() => createSimulator({ port: -1 })).toThrow("process.exit:1");
+
+    expect(errorSpy).toHaveBeenCalledWith(
+      "[Simulator]",
+      "Invalid port '-1': must be an integer between 0 and 65535."
+    );
+    expect(exitSpy).toHaveBeenCalledWith(1);
+
+    exitSpy.mockRestore();
+    errorSpy.mockRestore();
   });
 
   it("should support the primary email and webhook flows against a local server", async () => {

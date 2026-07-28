@@ -4,7 +4,10 @@ export default defineBuildConfig({
   entries: [
     {
       type: "bundle",
-      input: ["./src/mailchannels.ts", "./src/cli.ts"]
+      input: [
+        "./src/mailchannels.ts",
+        "./src/cli/index.ts"
+      ]
     }
   ]
 });

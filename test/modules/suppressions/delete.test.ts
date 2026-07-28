@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 import { Suppressions } from "~/modules/suppressions";
 import type { SuppressionsSource } from "~/types/suppressions/list";
 

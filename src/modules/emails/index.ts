@@ -1,11 +1,11 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError } from "../../utils/errors";
-import { clean } from "../../utils/clean";
+import { ErrorCode, createValidationError, getResultError, getStatusError } from "../../internal/errors";
+import { clean } from "../../internal/clean";
 import type { ErrorResponse } from "../../types/responses";
 import type { EmailsQueueApiResponse, EmailsSendApiResponse } from "../../types/emails/internal";
 import type { EmailsSendOptions, EmailsSendResponse } from "../../types/emails/send";
 import type { EmailsQueueResponse } from "../../types/emails/queue";
-import { buildSendPayload } from "../../utils/build-send-payload";
+import { buildSendPayload } from "../../internal/build-send-payload";
 
 export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}

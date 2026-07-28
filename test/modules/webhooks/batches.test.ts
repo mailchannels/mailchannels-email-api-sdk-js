@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Webhooks } from "~/modules/webhooks";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 import type { WebhooksBatchesApiResponse } from "~/types/webhooks/internal";
 import type { WebhooksBatchesOptions, WebhooksBatchesResponse } from "~/types/webhooks/batches";
-import { formatDateInput } from "~/utils/parse-date-inputs";
+import { formatDateInput } from "~/internal/parse-date-inputs";
 
 const fake = {
   options: {

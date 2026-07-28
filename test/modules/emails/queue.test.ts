@@ -3,9 +3,9 @@ import type { MailChannelsClient } from "~/client";
 import { Emails } from "~/modules/emails";
 import type { EmailsSendOptions } from "~/types/emails/send";
 import type { EmailsQueueResponse } from "~/types/emails/queue";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 import type { EmailsQueueApiResponse } from "~/types/emails/internal";
-import { buildSendPayload } from "~/utils/build-send-payload";
+import { buildSendPayload } from "~/internal/build-send-payload";
 
 const fake = {
   options: {

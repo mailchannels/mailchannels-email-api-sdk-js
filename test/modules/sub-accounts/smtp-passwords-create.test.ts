@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { SubAccounts } from "~/modules/sub-accounts";
-import { ErrorCode } from "~/utils/errors";
+import { ErrorCode } from "~/internal/errors";
 import type { SubAccountsSmtpPasswordsCreateResponse } from "~/types/sub-accounts/smtp-passwords";
 import type { SubAccountsSmtpPasswordsCreateApiResponse } from "~/types/sub-accounts/internal";
 

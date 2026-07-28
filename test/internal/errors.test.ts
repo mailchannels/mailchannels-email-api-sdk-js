@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { FetchResponse } from "ofetch";
-import { ErrorCode, getStatusError, validateCustomTrackingName, validatePagination } from "~/utils/errors";
+import { ErrorCode, getStatusError, validateCustomTrackingName, validatePagination } from "~/internal/errors";
 
 describe("getStatusError", () => {
   type ErrorResponse = FetchResponse<{ message?: string, errors?: string[] } | string | Record<string, unknown>>;
