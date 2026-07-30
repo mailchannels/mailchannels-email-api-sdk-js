@@ -9,7 +9,7 @@ describe("Attachment", () => {
     expect(result.content).toBe(Buffer.from(bytes).toString("base64"));
     expect(result.filename).toBe("abc.txt");
     expect(result.type).toBe("text/plain");
-    expect(result.disposition).toBe("attachment");
+    expect(result.contentId).toBeUndefined();
   });
 
   it("should create fromBytes with ArrayBuffer", () => {
@@ -19,7 +19,7 @@ describe("Attachment", () => {
     expect(result.content).toBe(Buffer.from(buffer).toString("base64"));
     expect(result.filename).toBe("def.txt");
     expect(result.type).toBe("text/plain");
-    expect(result.disposition).toBe("attachment");
+    expect(result.contentId).toBeUndefined();
   });
 
   it("should use default filename in fromBytes when it's an empty string", () => {
@@ -29,7 +29,7 @@ describe("Attachment", () => {
     expect(result.content).toBe(Buffer.from(bytes).toString("base64"));
     expect(result.filename).toBe("attachment");
     expect(result.type).toBeUndefined();
-    expect(result.disposition).toBe("attachment");
+    expect(result.contentId).toBeUndefined();
   });
 
   it("should use decoded filename in fromBytes when it contains URL-encoded characters", async () => {
@@ -39,7 +39,7 @@ describe("Attachment", () => {
     expect(result.content).toBe(Buffer.from(buffer).toString("base64"));
     expect(result.filename).toBe("file with spaces.txt");
     expect(result.type).toBe("text/plain");
-    expect(result.disposition).toBe("attachment");
+    expect(result.contentId).toBeUndefined();
   });
 
   it("should set type undefined in fromBytes if content type cannot be guessed", () => {
@@ -49,7 +49,7 @@ describe("Attachment", () => {
     expect(result.content).toBe(Buffer.from(bytes).toString("base64"));
     expect(result.filename).toBe("abc");
     expect(result.type).toBeUndefined();
-    expect(result.disposition).toBe("attachment");
+    expect(result.contentId).toBeUndefined();
   });
 
   it("should create fromBlob with Blob", async () => {
@@ -60,7 +60,7 @@ describe("Attachment", () => {
     expect(result.content).toBe(Buffer.from(bytes).toString("base64"));
     expect(result.filename).toBe("file.pdf");
     expect(result.type).toBe("application/pdf");
-    expect(result.disposition).toBe("attachment");
+    expect(result.contentId).toBeUndefined();
   });
 
   it("should prioritize options.type over blob.type in fromBlob", async () => {
@@ -71,18 +71,18 @@ describe("Attachment", () => {
     expect(result.content).toBe(Buffer.from(bytes).toString("base64"));
     expect(result.filename).toBe("example");
     expect(result.type).toBe("text/plain");
-    expect(result.disposition).toBe("attachment");
+    expect(result.contentId).toBeUndefined();
   });
 
   it("should use guessed content type when blob.type is empty in fromBlob", async () => {
     const bytes = new Uint8Array([80, 81, 82]);
     const blob = new Blob([bytes]);
-    const result = await Attachment.fromBlob(blob, { filename: "file.txt" });
+    const result = await Attachment.fromBlob(blob, { filename: "file.txt", contentId: "example-id" });
 
     expect(result.content).toBe(Buffer.from(bytes).toString("base64"));
     expect(result.filename).toBe("file.txt");
     expect(result.type).toBe("text/plain");
-    expect(result.disposition).toBe("attachment");
+    expect(result.contentId).toBe("example-id");
   });
 
   it("should throw an error in fromBlob if input is not a Blob", async () => {

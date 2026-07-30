@@ -4,8 +4,7 @@
     - `content` `string` <Badge type="danger">required</Badge>: The attachment data, encoded in Base64.
     - `filename` `string` <Badge type="danger">required</Badge>: The name of the attachment file.
     - `type` `string` <Badge type="info">optional</Badge>: The MIME type of the attachment.
-    - `contentId` `string` <Badge type="info">optional</Badge>: The `Content-ID` header value for inline attachments, referenced from HTML with `cid:`.
-    - `disposition` `"attachment" | "inline"` <Badge type="info">optional</Badge>: The `Content-Disposition` header value for the attachment. Defaults to `attachment`.
+    - `contentId` `string` <Badge type="info">optional</Badge>: A unique identifier for this attachment. When set, the attachment is embedded inline in the message body (`Content-Disposition: inline`) instead of offered as a downloadable attachment, and can be referenced from HTML content via a `cid:` URI, e.g. `<img src="cid:logo123">` refers to an attachment with content_id: `logo123`. (RFC 2392). Must be unique across all attachments in the request. Max length is 255 characters.
     > [!IMPORTANT]
     > Usage notes:
     > - Multiple attachments can be included in a single email.

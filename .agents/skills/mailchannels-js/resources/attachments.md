@@ -45,12 +45,11 @@ const attachment = await Attachment.fromBlob(blob, { filename: 'hello.txt' })
 
 ### Inline Images (CID References)
 
-Pass `disposition: 'inline'` and a `contentId` to embed an image inside the HTML body:
+Pass a `contentId` to embed an image inside the HTML body:
 
 ```ts
 const logo = Attachment.fromBytes(bytes, {
   filename: 'logo.png',
-  disposition: 'inline',
   contentId: 'company-logo'
 })
 
@@ -72,7 +71,6 @@ Both `fromBytes` and `fromBlob` accept an `AttachmentOptions` object:
 | `filename` | `string` | Required. MIME type is inferred from it when `type` is omitted. |
 | `type` | `string` | MIME type. Inferred from `filename` if omitted. For `fromBlob`, defaults to the Blob's own `type`. |
 | `contentId` | `string` | For `cid:` inline image references. |
-| `disposition` | `'attachment' \| 'inline'` | Defaults to `'attachment'`. |
 
 ### Awaiting Attachments Lazily
 

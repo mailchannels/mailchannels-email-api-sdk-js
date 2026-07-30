@@ -22,7 +22,7 @@ const { data, error } = await mailchannels.emails.send({
   text: "Hello world",
   attachments: [
     Attachment.fromBytes(fileData1, { filename: "test-image-1.jpg" }),
-    Attachment.fromBlob(fileData2, { filename: "test-image-2.jpg", disposition: "inline", contentId: "example-image" })
+    Attachment.fromBlob(fileData2, { filename: "test-image-2.jpg", contentId: "example-image" })
   ]
 }, true);
 

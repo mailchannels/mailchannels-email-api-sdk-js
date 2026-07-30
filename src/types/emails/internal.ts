@@ -5,7 +5,6 @@ export interface EmailsSendPayloadAttachment {
   filename: string;
   type?: string;
   content_id?: string;
-  disposition?: "attachment" | "inline";
 }
 
 export interface EmailsSendPayloadPersonalization {
