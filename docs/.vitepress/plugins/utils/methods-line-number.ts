@@ -70,7 +70,7 @@ export const getMethodLineNumber = (moduleName: string, methodName: string, clas
 
   try {
     const projectDir = process.cwd();
-    const sourceFilePath = subclassSlug? path.join(projectDir, `src/modules/${moduleName}/${subclassSlug}.ts`): path.join(projectDir, `src/modules/${moduleName}/index.ts`);
+    const sourceFilePath = subclassSlug ? path.join(projectDir, `src/modules/${moduleName}/${subclassSlug}.ts`) : path.join(projectDir, `src/modules/${moduleName}/index.ts`);
     const code = readFileSync(sourceFilePath, "utf8");
     const sourceFile = createSourceFile(sourceFilePath, code, ScriptTarget.Latest, true);
 

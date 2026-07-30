@@ -320,7 +320,7 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
 
       if (method === "POST" && url.pathname === "/tx/v1/check-domain") {
         const domain = body?.domain || "example.com";
-        const dkimSettings = body?.dkim_settings?.length? body.dkim_settings: listDkimKeys(account, domain).map(key => ({
+        const dkimSettings = body?.dkim_settings?.length ? body.dkim_settings : listDkimKeys(account, domain).map(key => ({
           dkim_domain: key.domain,
           dkim_selector: key.selector
         }));
@@ -838,7 +838,7 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         const offset = Number(url.searchParams.get("offset") || "0");
         const sortOrder = url.searchParams.get("sort_order") || "desc";
 
-        const senders = senderType === "campaigns"? Array.from(collectMessages(account).reduce((map, message) => {
+        const senders = senderType === "campaigns" ? Array.from(collectMessages(account).reduce((map, message) => {
           const name = message.campaignId || "uncategorized";
           const current = map.get(name) || { bounced: 0, delivered: 0, dropped: 0, name, processed: 0 };
           current.bounced += message.bounced;
@@ -847,7 +847,7 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
           current.processed += message.processed;
           map.set(name, current);
           return map;
-        }, new Map()).values()): Array.from(account.subAccounts.values()).map(subAccount => ({
+        }, new Map()).values()) : Array.from(account.subAccounts.values()).map(subAccount => ({
           bounced: 0,
           delivered: subAccount.usage,
           dropped: 0,

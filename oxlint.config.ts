@@ -42,6 +42,7 @@ export default defineConfig({
     "@stylistic/quote-props": ["error", "consistent-as-needed"],
     "@stylistic/arrow-parens": ["error", "as-needed", { requireForBlockBody: true }],
     "@stylistic/function-call-spacing": ["error", "never"],
+    "@stylistic/space-infix-ops": "error",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/no-import-type-side-effects": "error"

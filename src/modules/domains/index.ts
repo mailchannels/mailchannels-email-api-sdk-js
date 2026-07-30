@@ -42,7 +42,7 @@ export class Domains {
       return { data: null, error };
     }
 
-    const dkimOptions = options?.dkim ? Array.isArray(options.dkim) ? options.dkim: [options.dkim]: undefined;
+    const dkimOptions = options?.dkim ? Array.isArray(options.dkim) ? options.dkim : [options.dkim] : undefined;
 
     if (dkimOptions && dkimOptions.length > 10) {
       error = createValidationError("A maximum of 10 DKIM settings can be provided.");
