@@ -59,20 +59,20 @@
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^26.1.1",
+    "@types/node": "^26.1.2",
     "@vitest/coverage-v8": "^4.1.10",
     "changelogen": "^0.6.2",
     "obuild": "^0.4.38",
-    "oxlint": "^1.74.0",
+    "oxlint": "^1.76.0",
     "scule": "^1.3.0",
     "typescript": "^6.0.3",
     "vitepress": "^2.0.0-alpha.18",
-    "vitepress-plugin-group-icons": "^1.7.5",
-    "vitepress-plugin-llms": "^1.13.3",
+    "vitepress-plugin-group-icons": "^1.7.6",
+    "vitepress-plugin-llms": "^1.13.4",
     "vitest": "^4.1.10"
   },
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@11.13.0"
+  "packageManager": "pnpm@11.18.0"
 }
