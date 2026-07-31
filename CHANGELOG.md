@@ -1,6 +1,38 @@
 # Changelog
 
 
+## v1.3.1
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.3.1%0Dv1.3.0)
+
+### 🩹 Fixes
+
+- **types:** Allow mixed recipient/string arrays in `EmailsSendRecipientInput` ([f889fdf](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f889fdf))
+
+### 💅 Refactors
+
+- Improve src directory structure ([afcf4fb](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/afcf4fb))
+
+### 📖 Documentation
+
+- **examples:** Add react and vue templating examples ([5a8b434](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/5a8b434))
+- **sub-accounts:** Remove 100K plan requirement ([32b7c65](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/32b7c65))
+- **examples:** Add Netlify Edge basic serverless example app ([9099070](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/9099070))
+- **examples:** Prefer .env in templating guides and remove trailing comma ([7006ad5](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7006ad5))
+- Bump email-api version to `1.6.0` ([34b42dd](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/34b42dd))
+
+### 🏡 Chore
+
+- **attachments:** Remove unused `disposition` field ([7cf598b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7cf598b))
+- Remove unused local email-api spec from SDK ([5d7f14d](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/5d7f14d))
+- **lint:** Include `@stylistic/space-infix-ops` lint rule ([1e1637f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/1e1637f))
+- Update all dependencies ([d0542fb](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d0542fb))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+- Axel Li [axel.li@mailchannels.com](mailto:axel.li@mailchannels.com)
+
 ## v1.3.0
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.3.0%0Dv1.2.0)
