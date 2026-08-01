@@ -1,0 +1,244 @@
+import { describe, expect, it } from "vitest";
+import { Buffer } from "node:buffer";
+import { Readable } from "node:stream";
+import { parseAddress, parseAddresses, parseAttachments, parseDkim, parseHeaders, parseIcalEvent } from "~/plugins/nodemailer/utils";
+import type { EmailsSendRecipient, EmailsSendRecipientInput } from "~/types/emails/send";
+
+const fake = {
+  nodemailerAddress: { address: "recipient@example.com", name: "Recipient Name" }
+};
+
+describe("parseAddress", () => {
+  it("should return empty string for falsy input", () => {
+    expect(parseAddress(undefined)).toBe("");
+  });
+
+  it("should return string address unchanged", () => {
+    expect(parseAddress(fake.nodemailerAddress.address)).toBe(fake.nodemailerAddress.address);
+  });
+
+  it("should parse object address into EmailsSendRecipient", () => {
+    expect(parseAddress(fake.nodemailerAddress)).toEqual({
+      email: fake.nodemailerAddress.address,
+      name: fake.nodemailerAddress.name
+    } satisfies EmailsSendRecipient);
+  });
+
+  it("should return first element when given an array", () => {
+    expect(parseAddress([fake.nodemailerAddress])).toEqual({
+      email: fake.nodemailerAddress.address,
+      name: fake.nodemailerAddress.name
+    } satisfies EmailsSendRecipient);
+  });
+
+  it("should handle address object without name", () => {
+    expect(parseAddress({ address: "no-name@example.com" })).toEqual({
+      email: "no-name@example.com",
+      name: undefined
+    } satisfies EmailsSendRecipient);
+  });
+});
+
+describe("parseAddresses", () => {
+  it("should return empty array for falsy input", () => {
+    expect(parseAddresses(undefined)).toEqual([]);
+  });
+
+  it("should wrap string address in an array", () => {
+    expect(parseAddresses(fake.nodemailerAddress.address)).toEqual([fake.nodemailerAddress.address]);
+  });
+
+  it("should parse array of mixed addresses", () => {
+    expect(parseAddresses([
+      "test@example.com",
+      fake.nodemailerAddress
+    ])).toEqual([
+      "test@example.com",
+      { email: fake.nodemailerAddress.address, name: fake.nodemailerAddress.name }
+    ] satisfies EmailsSendRecipientInput);
+  });
+
+  it("should parse single address object", () => {
+    expect(parseAddresses(fake.nodemailerAddress)).toEqual([
+      { email: fake.nodemailerAddress.address, name: fake.nodemailerAddress.name }
+    ]);
+  });
+
+  it("should return empty array if address property is empty string", () => {
+    expect(parseAddresses({ name: "No Address", address: "" })).toEqual([]);
+  });
+
+  it("should parse object address with missing name into undefined name", () => {
+    expect(parseAddresses({ address: "solo@example.com" })).toEqual([
+      { email: "solo@example.com", name: undefined }
+    ]);
+  });
+
+  it("should return a list of addresses when given a comma-separated string", () => {
+    const input = "recipient1@example.com,recipient2@example.com";
+    expect(parseAddresses(input)).toEqual([
+      "recipient1@example.com",
+      "recipient2@example.com"
+    ]);
+  });
+});
+
+describe("parseHeaders", () => {
+  it("should return undefined for falsy input", () => {
+    expect(parseHeaders(undefined)).toBeUndefined();
+  });
+
+  it("should convert string and array header values to strings", () => {
+    const headers = {
+      "x-single": "one",
+      "x-multi": ["a", "b"]
+    };
+    expect(parseHeaders(headers)).toEqual({
+      "x-single": "one",
+      "x-multi": "a,b"
+    });
+  });
+
+  it("should convert array of headers to object", () => {
+    const headersArray = [
+      { key: "x-header1", value: "value1" },
+      { key: "x-header2", value: "value2" }
+    ];
+    expect(parseHeaders(headersArray)).toStrictEqual({
+      "x-header1": "value1",
+      "x-header2": "value2"
+    });
+  });
+
+  it("should convert header value objects to their `value` property", () => {
+    const headers = { "x-obj": { value: "objval" } };
+    // @ts-expect-error - testing object value conversion
+    expect(parseHeaders(headers)).toEqual({ "x-obj": "objval" });
+  });
+});
+
+describe("parseAttachments", () => {
+  it("should return undefined when no attachments provided", () => {
+    expect(parseAttachments(undefined)).toBeUndefined();
+  });
+
+  it("should throw when attachment missing filename or content", () => {
+    expect(() => parseAttachments([{ filename: "a.txt" }])).toThrow(
+      "Attachment is missing filename or content"
+    );
+    expect(() => parseAttachments([{ content: "hi" }])).toThrow(
+      "Attachment is missing filename or content"
+    );
+  });
+
+  it("should parse string content attachments", () => {
+    const out = parseAttachments([
+      {
+        filename: "note.txt",
+        content: "hello",
+        contentType: "text/plain",
+        cid: "cid1",
+        contentDisposition: "inline"
+      }
+    ]);
+    expect(out).toEqual([
+      {
+        filename: "note.txt",
+        content: "hello",
+        type: "text/plain",
+        contentId: "cid1"
+      }
+    ]);
+  });
+
+  it("should parse Buffer attachments via Attachment.fromBytes", () => {
+    const buf = Buffer.from("bytes!");
+    const out = parseAttachments([
+      { filename: "bin.bin", content: buf, contentType: "application/octet-stream", cid: "cid2" }
+    ])!;
+    expect(out).toStrictEqual([
+      {
+        filename: "bin.bin",
+        content: Buffer.from(buf).toString("base64"),
+        type: "application/octet-stream",
+        contentId: "cid2"
+      }
+    ]);
+  });
+
+  it("should throw when content is not string or Buffer", () => {
+    expect(() => parseAttachments([{ filename: "x", content: new Readable() }])).toThrow(
+      "Attachment content must be a string or Buffer"
+    );
+  });
+});
+
+describe("parseIcalEvent", () => {
+  it("should accept string icalEvent", () => {
+    expect(parseIcalEvent("BEGIN:VCAL")).toEqual({ filename: "invite.ics", content: "BEGIN:VCAL" });
+  });
+
+  it("should accept Buffer icalEvent", () => {
+    const buf = Buffer.from("icalbytes");
+    const out = parseIcalEvent(buf);
+    expect(out.filename).toBe("invite.ics");
+    expect(out.type).toBe("text/calendar");
+    expect(out.content).toBe(Buffer.from("icalbytes").toString("base64"));
+  });
+
+  it("should accept object with filename and content", () => {
+    const out = parseIcalEvent({ filename: "meet.ics", content: "icaltext" });
+    expect(out.filename).toBe("meet.ics");
+    expect(out.content).toBe("icaltext");
+  });
+
+  it("should default empty filename to invite.ics when provided in object", () => {
+    const out = parseIcalEvent({ filename: "", content: "icaltext" });
+    expect(out.filename).toBe("invite.ics");
+    expect(out.content).toBe("icaltext");
+  });
+
+  it("should throw on invalid format", () => {
+    expect(() => parseIcalEvent(new Readable())).toThrow("Invalid icalEvent format");
+  });
+});
+
+describe("parseDkim", () => {
+  it("returns undefined for falsy input", () => {
+    expect(parseDkim(undefined)).toBeUndefined();
+  });
+
+  it("throws for multiple signatures", () => {
+    expect(() => parseDkim({ keys: [] })).toThrow("Multiple DKIM signatures are not supported");
+  });
+
+  it("throws when keySelector is not a string", () => {
+    // @ts-expect-error - testing invalid input
+    expect(() => parseDkim({ keySelector: 123 })).toThrow("DKIM keySelector must be a string");
+  });
+
+  it("parses string privateKey and domain", () => {
+    expect(
+      parseDkim({
+        keySelector: "sel",
+        privateKey: "priv",
+        domainName: "example.com"
+      }))
+      .toStrictEqual({
+        selector: "sel",
+        privateKey: "priv",
+        domain: "example.com"
+      });
+  });
+
+  it("parses missing privateKey as undefined", () => {
+    expect(
+      // @ts-expect-error - testing missing privateKey
+      parseDkim({ keySelector: "sel", domainName: "example.com" }))
+      .toStrictEqual({
+        selector: "sel",
+        privateKey: undefined,
+        domain: "example.com"
+      });
+  });
+});

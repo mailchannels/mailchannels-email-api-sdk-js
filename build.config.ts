@@ -7,7 +7,8 @@ export default defineBuildConfig({
       input: [
         "./src/mailchannels.ts",
         "./src/cli/index.ts",
-        "./src/simulator/index.ts"
+        "./src/simulator/index.ts",
+        "./src/plugins/nodemailer/index.ts"
       ]
     }
   ]
