@@ -120,9 +120,20 @@ This package includes a local MailChannels simulator you can run via the CLI. It
 
 ### Start the simulator
 
+CLI:
+
 ```sh
 # default: http://127.0.0.1:8787
 npx mailchannels-sdk simulate
+```
+
+Programmatically:
+
+```ts
+import { createSimulator } from 'mailchannels-sdk/simulator'
+
+const simulator = createSimulator()
+const simulatorUrl = await simulator.listen()
 ```
 
 ### Options
