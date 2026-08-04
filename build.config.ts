@@ -1,4 +1,5 @@
 import { defineBuildConfig } from "obuild/config";
+import { rm } from "node:fs/promises";
 
 export default defineBuildConfig({
   entries: [
@@ -10,5 +11,10 @@ export default defineBuildConfig({
         "./src/simulator/index.ts"
       ]
     }
-  ]
+  ],
+  hooks: {
+    async end () {
+      await rm("dist/cli/index.d.mts");
+    }
+  }
 });
