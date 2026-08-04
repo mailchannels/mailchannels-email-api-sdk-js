@@ -79,6 +79,7 @@ PLACEHOLDER = re.compile(r"\{\s*\.\.\.\s*\}")
 # Lines stripped entirely from blocks before assembly.
 _STRIP_PATTERNS: list[re.Pattern[str]] = [
     re.compile(r"^import\s.*from\s+['\"]mailchannels-sdk['\"]"),
+    re.compile(r"^import\s.*from\s+['\"]mailchannels-sdk/simulator['\"]"),
     re.compile(r"^import\s+process\s+from\s+['\"]node:process['\"]"),
     re.compile(r"^import\s.*from\s+['\"]vitest['\"]"),
     re.compile(r"^let\s+mc\s*:\s*MailChannels\b"),
@@ -91,6 +92,7 @@ PREAMBLE = """\
 // Auto-injected preamble for documentation snippet type-checking.
 import { MailChannels, Attachment, MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 import type { EmailsSendAttachment, ErrorResponse } from 'mailchannels-sdk'
+import { createSimulator } from 'mailchannels-sdk/simulator'
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
@@ -144,6 +146,7 @@ _TSCONFIG: dict = {
         "verbatimModuleSyntax": True,
         "paths": {
             "mailchannels-sdk": ["./src/mailchannels.ts"],
+            "mailchannels-sdk/simulator": ["./src/simulator/index.ts"],
         },
     },
 }
