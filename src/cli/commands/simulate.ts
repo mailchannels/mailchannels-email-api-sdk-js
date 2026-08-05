@@ -1,5 +1,5 @@
 import { defineCommand } from "citty";
-import { createSimulator } from "../../simulator/index.ts";
+import { createSimulator } from "../../simulator";
 
 export default defineCommand({
   meta: {

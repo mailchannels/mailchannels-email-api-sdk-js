@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import { defineCommand, runMain } from "citty";
-import pkg from "../../package.json" with { type: "json" };
+import pkg from "../../package.json";
+import simulate from "./commands/simulate";
+import emails from "./commands/emails";
 
 const main = defineCommand({
   meta: {
@@ -9,7 +11,8 @@ const main = defineCommand({
     version: pkg.version
   },
   subCommands: {
-    simulate: () => import("./commands/simulate.ts").then(m => m.default)
+    simulate,
+    emails
   },
   setup () {
     const LOGGER_NAME = "[MailChannels-CLI]";
