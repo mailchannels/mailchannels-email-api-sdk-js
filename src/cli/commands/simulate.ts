@@ -1,34 +1,35 @@
-import { parseArgs } from "node:util";
+import { defineCommand } from "citty";
 import { createSimulator } from "../../simulator/index.ts";
 
-export default async (args: string[]) => {
-  const {
-    MAILCHANNELS_SIMULATOR_PORT,
-    MAILCHANNELS_SIMULATOR_HOST
-  } = process.env;
+export default defineCommand({
+  meta: {
+    name: "simulate",
+    description: "Start a local MailChannels simulator server"
+  },
+  args: {
+    port: { type: "string", alias: "p" },
+    host: { type: "string", alias: "h" },
+    silent: { type: "boolean", alias: "s", default: false }
+  },
+  async run ({ args }) {
+    const { MAILCHANNELS_SIMULATOR_HOST, MAILCHANNELS_SIMULATOR_PORT } = process.env;
 
-  const { values } = parseArgs({
-    args,
-    options: {
-      port: { type: "string", short: "p", default: MAILCHANNELS_SIMULATOR_PORT },
-      host: { type: "string", short: "h", default: MAILCHANNELS_SIMULATOR_HOST },
-      silent: { type: "boolean", short: "s", default: false }
-    }
-  });
+    const host = args.host || MAILCHANNELS_SIMULATOR_HOST;
+    const port = args.port || MAILCHANNELS_SIMULATOR_PORT;
 
-  const simulator = createSimulator({
-    host: values.host,
-    port: values.port !== undefined ? Number.parseInt(values.port, 10) : undefined,
-    silent: values.silent
-  });
+    const simulator = createSimulator({
+      host: host,
+      port: port !== undefined ? Number.parseInt(port, 10) : undefined,
+      silent: args.silent
+    });
 
-  await simulator.listen();
+    await simulator.listen();
 
-  const shutdown = async () => {
-    await simulator.close();
-    process.exit(0);
-  };
+    const shutdown = async () => {
+      await simulator.close();
+    };
 
-  process.on("SIGINT", shutdown);
-  process.on("SIGTERM", shutdown);
-};
+    process.on("SIGINT", shutdown);
+    process.on("SIGTERM", shutdown);
+  }
+});

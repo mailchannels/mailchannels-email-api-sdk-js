@@ -57,6 +57,7 @@
     "docs:snippets": "node docs/scripts/snippets.ts"
   },
   "dependencies": {
+    "citty": "^0.2.2",
     "mime": "^4.1.0",
     "ofetch": "^2.0.0-alpha.3"
   },

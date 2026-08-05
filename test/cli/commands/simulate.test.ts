@@ -1,4 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { runCommand } from "citty";
 
 const mockSimulator = {
   listen: vi.fn().mockResolvedValue("http://127.0.0.1:8787"),
@@ -11,25 +12,17 @@ vi.mock("~/simulator", () => ({
   createSimulator: mockCreateSimulator
 }));
 
-describe("simulate", () => {
-  const originalArgv = process.argv;
+const { default: simulate } = await import("~/cli/commands/simulate");
 
-  beforeEach(() => {
-    vi.resetModules();
+describe("simulate", () => {
+  afterEach(() => {
     mockCreateSimulator.mockClear();
-    mockSimulator.listen.mockClear().mockResolvedValue("http://127.0.0.1:8787");
+    mockSimulator.listen.mockClear();
     mockSimulator.close.mockClear();
   });
 
-  afterEach(() => {
-    process.argv = originalArgv;
-    vi.unstubAllEnvs();
-    vi.restoreAllMocks();
-  });
-
   it("should start simulator with default options", async () => {
-    process.argv = ["node", "src/cli/index.ts", "simulate"];
-    await import("~/cli");
+    await runCommand(simulate, { rawArgs: [] });
 
     expect(mockCreateSimulator).toHaveBeenCalledWith({
       host: undefined,
@@ -40,8 +33,7 @@ describe("simulate", () => {
   });
 
   it("should use --port flag", async () => {
-    process.argv = ["node", "src/cli/index.ts", "simulate", "--port", "9000"];
-    await import("~/cli");
+    await runCommand(simulate, { rawArgs: ["--port", "9000"] });
 
     expect(mockCreateSimulator).toHaveBeenCalledWith({
       host: undefined,
@@ -51,8 +43,7 @@ describe("simulate", () => {
   });
 
   it("should use --host flag", async () => {
-    process.argv = ["node", "src/cli/index.ts", "simulate", "--host", "0.0.0.0"];
-    await import("~/cli");
+    await runCommand(simulate, { rawArgs: ["--host", "0.0.0.0"] });
 
     expect(mockCreateSimulator).toHaveBeenCalledWith({
       host: "0.0.0.0",
@@ -62,8 +53,7 @@ describe("simulate", () => {
   });
 
   it("should disable logging with --silent flag", async () => {
-    process.argv = ["node", "src/cli/index.ts", "simulate", "--silent"];
-    await import("~/cli");
+    await runCommand(simulate, { rawArgs: ["--silent"] });
 
     expect(mockCreateSimulator).toHaveBeenCalledWith({
       host: undefined,
@@ -74,34 +64,32 @@ describe("simulate", () => {
 
   it("should use MAILCHANNELS_SIMULATOR_PORT env var as default port", async () => {
     vi.stubEnv("MAILCHANNELS_SIMULATOR_PORT", "7000");
-    process.argv = ["node", "src/cli/index.ts", "simulate"];
-    await import("~/cli");
+    await runCommand(simulate, { rawArgs: [] });
 
     expect(mockCreateSimulator).toHaveBeenCalledWith({
       host: undefined,
       port: 7000,
       silent: false
     });
+    vi.unstubAllEnvs();
   });
 
   it("should use MAILCHANNELS_SIMULATOR_HOST env var as default host", async () => {
     vi.stubEnv("MAILCHANNELS_SIMULATOR_HOST", "0.0.0.0");
-    process.argv = ["node", "src/cli/index.ts", "simulate"];
-    await import("~/cli");
+    await runCommand(simulate, { rawArgs: [] });
 
     expect(mockCreateSimulator).toHaveBeenCalledWith({
       host: "0.0.0.0",
       port: undefined,
       silent: false
     });
+    vi.unstubAllEnvs();
   });
 
   it("should register SIGTERM handler that closes simulator and exits", async () => {
-    const exitSpy = vi.spyOn(process, "exit").mockImplementation(() => undefined as never);
     const onSpy = vi.spyOn(process, "on");
 
-    process.argv = ["node", "src/cli/index.ts", "simulate"];
-    await import("~/cli");
+    await runCommand(simulate, { rawArgs: [] });
 
     const sigtermCall = onSpy.mock.calls.find(([event]) => event === "SIGTERM");
     expect(sigtermCall).toBeDefined();
@@ -109,6 +97,5 @@ describe("simulate", () => {
     await sigtermHandler();
 
     expect(mockSimulator.close).toHaveBeenCalled();
-    expect(exitSpy).toHaveBeenCalledWith(0);
   });
 });

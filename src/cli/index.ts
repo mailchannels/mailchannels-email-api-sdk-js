@@ -1,16 +1,21 @@
 #!/usr/bin/env node
-const LOGGER_NAME = "[MailChannels-CLI]";
-console.info = console.info.bind(console.info, LOGGER_NAME);
-console.error = console.error.bind(console.error, LOGGER_NAME);
+import { defineCommand, runMain } from "citty";
+import pkg from "../../package.json" with { type: "json" };
 
-const [command, ...args] = process.argv.slice(2);
+const main = defineCommand({
+  meta: {
+    name: pkg.name,
+    description: "MailChannels CLI",
+    version: pkg.version
+  },
+  subCommands: {
+    simulate: () => import("./commands/simulate.ts").then(m => m.default)
+  },
+  setup () {
+    const LOGGER_NAME = "[MailChannels-CLI]";
+    console.info = console.info.bind(console, LOGGER_NAME);
+    console.error = console.error.bind(console, LOGGER_NAME);
+  }
+});
 
-switch (command) {
-  case "simulate":
-    const { default: simulate } = await import("./commands/simulate.ts");
-    await simulate(args);
-    break;
-  default:
-    console.error(`Unknown command: ${command}`);
-    process.exit(1);
-}
+runMain(main);
