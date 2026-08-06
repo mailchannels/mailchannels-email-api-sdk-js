@@ -6,7 +6,8 @@ export default defineBuildConfig({
       type: "bundle",
       input: [
         "./src/mailchannels.ts",
-        "./src/cli/index.ts"
+        "./src/cli/index.ts",
+        "./src/simulator/index.ts"
       ]
     }
   ]

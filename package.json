@@ -25,6 +25,10 @@
     ".": {
       "types": "./dist/mailchannels.d.mts",
       "default": "./dist/mailchannels.mjs"
+    },
+    "./simulator": {
+      "types": "./dist/simulator/index.d.mts",
+      "default": "./dist/simulator/index.mjs"
     }
   },
   "types": "./dist/mailchannels.d.mts",

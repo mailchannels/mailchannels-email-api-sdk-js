@@ -2,17 +2,12 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { MailChannels } from "~/mailchannels";
 import { createSimulator } from "~/simulator";
 
-type Simulator = {
-  close: () => Promise<void>;
-  listen: (listenOptions?: { host?: string, port?: number }) => Promise<string | null>;
-};
-
 describe("Email API simulator", () => {
   const parentApiKey = "local-parent-key";
   const webhookEndpoint = "http://127.0.0.1:9999/webhooks/mailchannels";
 
   let baseUrl = "";
-  let simulator: Simulator;
+  let simulator: ReturnType<typeof createSimulator>;
 
   beforeAll(async () => {
     simulator = createSimulator({ port: 0, silent: true });
