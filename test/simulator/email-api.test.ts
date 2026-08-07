@@ -17,6 +17,7 @@ describe("Email API simulator", () => {
   });
 
   afterAll(async () => {
+    vi.spyOn(console, "info").mockImplementationOnce(() => {});
     await simulator.close();
   });
 

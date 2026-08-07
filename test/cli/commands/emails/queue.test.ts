@@ -1,4 +1,4 @@
-import { afterAll, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import emails from "~/cli/commands/emails";
 
@@ -30,6 +30,11 @@ const fake = {
 };
 
 describe("queue", () => {
+  beforeAll(() => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "info").mockImplementation(() => {});
+  });
+
   afterAll(() => {
     vi.restoreAllMocks();
   });
