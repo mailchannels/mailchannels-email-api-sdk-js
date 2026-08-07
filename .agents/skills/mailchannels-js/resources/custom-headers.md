@@ -3,7 +3,7 @@
 Use `headers` for application-specific metadata, tracking IDs, campaign tags, or any
 custom `X-…` header.
 
-### Root vs Per-Personalization
+## Root vs Per-Personalization
 
 - **Root `headers`**: applied to every personalization.
 - **Per-personalization `headers`**: applied only to that personalization.
@@ -31,7 +31,7 @@ const { data, error } = await mc.emails.queue({
 })
 ```
 
-### Reserved Headers — Never Set These
+## Reserved Headers — Never Set These
 
 MailChannels controls a fixed set of message headers. The SDK pre-validates and returns a
 `validation_error` client-side before any request that tries to set one. Header names are
@@ -53,12 +53,12 @@ checked case-insensitively, so `From`, `from`, and `FROM` are all rejected.
 This list mirrors the SDK's `RESERVED_HEADER_NAMES` set — keep them in sync if MailChannels
 changes the list upstream.
 
-### Case Sensitivity
+## Case Sensitivity
 
 Header names are treated case-insensitively by MailChannels. If two keys differ only by
 case, only one is used and the choice is unspecified. Pick one canonical casing per header.
 
-### Values
+## Values
 
 Both keys and values must be strings. A non-string value returns a `validation_error`
 before the request leaves the client.

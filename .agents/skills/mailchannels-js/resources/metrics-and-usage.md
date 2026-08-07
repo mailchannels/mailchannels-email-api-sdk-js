@@ -3,7 +3,7 @@
 The metrics module exposes the operational view of your traffic. Usage exposes
 billing-period totals.
 
-### Time-Series Metrics
+## Time-Series Metrics
 
 The four time-series methods share the same `MetricsOptions` parameter shape: optional
 `startTime`, `endTime`, `campaignId`, and `interval`.
@@ -37,7 +37,7 @@ const { data: behaviour,  error: behErr }   = await mc.metrics.recipientBehaviou
 Time formats accepted: `YYYY-MM-DD`, `YYYY-MM-DDTHH:MM:SSZ`, or a `Date` object. Defaults: `startTime` is
 one month ago, `endTime` is now.
 
-#### Buckets
+### Buckets
 
 Each response includes both totals **and** a `buckets` object grouped by metric name, each
 containing a list of `{ count, periodStart }` rows aligned to `interval`.
@@ -51,24 +51,24 @@ for (const bucket of data?.buckets.processed ?? []) {
 }
 ```
 
-#### Volume Buckets
+### Volume Buckets
 
 `data.buckets` has `processed`, `delivered`, `dropped`.
 
-#### Engagement Buckets
+### Engagement Buckets
 
 `data.buckets` has `open`, `click`, `uniqueOpen`, `uniqueClick`, `openTrackingDelivered`,
 `clickTrackingDelivered`, `uniqueOpenTrackingDelivered`, `uniqueClickTrackingDelivered`.
 
-#### Performance Buckets
+### Performance Buckets
 
 `data.buckets` has `processed`, `delivered`, `bounced`, `complained`.
 
-#### Recipient Behaviour Buckets
+### Recipient Behaviour Buckets
 
 `data.buckets` has `unsubscribed`, `unsubscribeDelivered`.
 
-### Sender Metrics
+## Sender Metrics
 
 `mc.metrics.senders()` lists per-sender totals grouped either by campaign or sub-account.
 
@@ -92,7 +92,7 @@ for (const sender of data?.senders ?? []) {
 
 Senders with **zero traffic in the time range are omitted** from the response.
 
-### Usage
+## Usage
 
 ```ts
 const { data: usage, error } = await mc.metrics.usage()
@@ -104,7 +104,7 @@ console.log(usage?.total, usage?.startDate, usage?.endDate)
 For a specific sub-account, use `mc.subAccounts.getUsage(handle)` instead. See
 [sub-accounts](sub-accounts.md).
 
-### Common Patterns
+## Common Patterns
 
 - **Daily dashboard**: `mc.metrics.volume({ interval: 'day' })` plus
   `mc.metrics.engagement({ interval: 'day' })` over the same range.

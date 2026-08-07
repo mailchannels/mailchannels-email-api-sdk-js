@@ -17,7 +17,7 @@ const { data, error } = await mc.emails.queue({
 })
 ```
 
-### Module Inventory
+## Module Inventory
 
 | Property | What it does |
 | --- | --- |
@@ -28,7 +28,7 @@ const { data, error } = await mc.emails.queue({
 | `mc.metrics` | Volume, engagement, performance, recipient-behaviour, sender metrics. |
 | `mc.suppressions` | List, create, delete suppression entries. |
 
-### Key Concept: Personalizations
+## Key Concept: Personalizations
 
 A single `emails.send()` or `emails.queue()` call can produce **many individual messages**. 
 The `personalizations` array is the advanced form: each entry is one
@@ -39,7 +39,7 @@ act as defaults that each personalization can override.
 For simple sends the shorthand fields (`to`, `cc`, `bcc`, `html`, `text`) cover most cases
 without needing to write out personalizations explicitly.
 
-### `send` vs `queue`
+## `send` vs `queue`
 
 | Method | Server behaviour | When to use                                                                       |
 | --- | --- |-----------------------------------------------------------------------------------|
@@ -48,7 +48,7 @@ without needing to write out personalizations explicitly.
 
 `emails.sendAsync()` is a deprecated alias for `queue()` — use `queue()` in new code.
 
-### Response Shape
+## Response Shape
 
 Every SDK method returns one of two shapes:
 
@@ -76,7 +76,7 @@ if (error) {
 console.log(data.requestId)
 ```
 
-### Configuration
+## Configuration
 
 ```ts
 const mc = new MailChannels('YOUR-API-KEY', {

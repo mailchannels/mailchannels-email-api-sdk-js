@@ -4,7 +4,7 @@ MailChannels can host the **private** DKIM key for you. You publish the **public
 the domain's DNS as a TXT record. The public DNS record is **not** hosted by MailChannels —
 you must publish it yourself in whatever DNS provider holds the zone.
 
-### Create A Hosted Key
+## Create A Hosted Key
 
 ```ts
 import { MailChannels } from 'mailchannels-sdk'
@@ -27,7 +27,7 @@ for (const record of data?.dnsRecords ?? []) {
 
 The returned `data.dnsRecords` contains TXT records you must publish in DNS.
 
-### List, Filter, And Include DNS Records
+## List, Filter, And Include DNS Records
 
 ```ts
 const { data, error } = await mc.domains.dkim.list('example.com', {
@@ -39,7 +39,7 @@ const { data, error } = await mc.domains.dkim.list('example.com', {
 })
 ```
 
-### Key Lifecycle
+## Key Lifecycle
 
 | Status | Meaning |
 | --- | --- |
@@ -48,7 +48,7 @@ const { data, error } = await mc.domains.dkim.list('example.com', {
 | `retired` | No longer in use. |
 | `revoked` | Marked compromised. Stop using immediately. |
 
-#### Update status directly
+### Update status directly
 
 ```ts
 const { success, error } = await mc.domains.dkim.updateStatus('example.com', {
@@ -60,7 +60,7 @@ const { success, error } = await mc.domains.dkim.updateStatus('example.com', {
 Only `active` keys can move to `rotated`. Only `revoked`, `retired`, and `rotated` are
 valid update targets.
 
-#### Rotate (recommended for routine rollover)
+### Rotate (recommended for routine rollover)
 
 ```ts
 const { data, error } = await mc.domains.dkim.rotate('example.com', 'mcdkim', {
@@ -82,7 +82,7 @@ Rotation:
 **Publish the new DNS record before `gracePeriodExpiresAt`** or emails signed with the new
 key will fail DKIM at receiving providers.
 
-### Sending With A Hosted Key
+## Sending With A Hosted Key
 
 ```ts
 const { data, error } = await mc.emails.queue({
@@ -100,7 +100,7 @@ const { data, error } = await mc.emails.queue({
 If `dkim.selector` is set without `dkim.domain`, MailChannels takes the domain from the
 `from` address.
 
-### Sending With A Customer-Managed Key
+## Sending With A Customer-Managed Key
 
 If you keep the private key yourself, pass it Base64-encoded (PEM headers are stripped
 automatically):
@@ -121,7 +121,7 @@ const { data, error } = await mc.emails.queue({
 
 `dkim` can also be set per-personalization to override the root value.
 
-### DNS Publication
+## DNS Publication
 
 MailChannels does not host the public DKIM DNS record — you do. The SDK returns the exact
 record to publish in `data.dnsRecords`:
@@ -132,7 +132,7 @@ record to publish in `data.dnsRecords`:
 | `type` | Always `TXT`. |
 | `value` | Public key material. **Publish verbatim** — do not re-wrap, strip quotes, or split lines. |
 
-#### Required Steps
+### Required Steps
 
 1. **Create** with `mc.domains.dkim.create(domain, { selector })`. Capture `dnsRecords`.
 2. **Resolve the DNS zone** in your provider's API.
@@ -142,7 +142,7 @@ record to publish in `data.dnsRecords`:
    The `dkim[].verdict` must be `'passed'` before sending real traffic.
 5. **For rotations**, leave the old TXT record in place until `gracePeriodExpiresAt`.
 
-### Selector Format
+## Selector Format
 
 - 1–63 characters.
 - Lowercase letters, numbers, and `-` work everywhere. Avoid `_` in the selector itself.
