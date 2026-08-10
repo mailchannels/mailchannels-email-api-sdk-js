@@ -3,7 +3,7 @@
 MailChannels posts batched delivery events to a URL you register. Events cover both
 `emails.send()` and `emails.queue()` sends and use the same payload shape.
 
-### Enroll And Manage
+## Enroll And Manage
 
 ```ts
 import { MailChannels } from 'mailchannels-sdk'
@@ -25,7 +25,7 @@ Enroll the replacement first if you're swapping URLs.
 
 If the endpoint is already enrolled, `create()` returns `conflict_error`.
 
-### Validate
+## Validate
 
 `mc.webhooks.validate()` sends a synthetic test request to **every** enrolled webhook and
 reports each one's response. Useful as a deploy check.
@@ -47,7 +47,7 @@ for (const entry of data?.results ?? []) {
 
 The test payload carries `event: 'test'` and a hardcoded sender of `test@mailchannels.com`.
 
-### Inspect Batches
+## Inspect Batches
 
 `mc.webhooks.batches()` returns up to 500 batch summaries with status, status code,
 duration, and event count. Use it to investigate failed deliveries.
@@ -72,7 +72,7 @@ const { data: recent } = await mc.webhooks.batches({
 Time formats accepted: `YYYY-MM-DD`, `YYYY-MM-DDTHH:MM:SSZ`, or a `Date` object. If neither `createdAfter`
 nor `createdBefore` is set, the default range is the last 3 days.
 
-### Resend A Batch
+## Resend A Batch
 
 ```ts
 const { data, error } = await mc.webhooks.resendBatch(12345)
@@ -83,7 +83,7 @@ console.log(data?.statusCode, data?.duration)
 A successful call means the resend attempt completed — not that your webhook returned 2xx.
 Check `data.statusCode` to see what your endpoint actually returned.
 
-### Verify Incoming Webhooks (Crucial)
+## Verify Incoming Webhooks (Crucial)
 
 MailChannels signs every webhook request with an Ed25519 signature. `Webhooks.verify()`
 does the full verification — content digest, freshness, and signature — in one call.
@@ -126,7 +126,7 @@ instance (no API key needed). It is also available as an instance method on
 the signature will never match. Use `req.body.toString()` (Express with raw middleware),
 `await request.text()` (Fetch API / Hono / Cloudflare Workers), or the framework equivalent.
 
-#### Supplying The Public Key Manually
+### Supplying The Public Key Manually
 
 By default `verify()` fetches and caches the public key automatically from MailChannels.
 You can supply it yourself to avoid the outbound call:
@@ -148,7 +148,7 @@ Cache the key — it only changes on rotation, and MailChannels may publish mult
 keys at once during a rollover. Always fetch by the `keyId` from the incoming request
 rather than holding a single "current" key.
 
-### Event Payload Shape
+## Event Payload Shape
 
 After successful verification `data` is typed as an array of webhook events. Common shared
 fields:
@@ -167,7 +167,7 @@ fields:
 | `reason` | `string?` | A human readable explanation of the status code. Do not use for system logic. Present on `hard-bounced`, `soft-bounced` events.                         |
 | `url` / `userAgent` / `ip` | `string?` | Present on `click` / `open` events.                                                                                                                     |
 
-### Responding
+## Responding
 
 Return any 2xx status code quickly. MailChannels treats anything else as a failure and may
 retry. Keep your handler thin: enqueue the event and return, then do the actual processing

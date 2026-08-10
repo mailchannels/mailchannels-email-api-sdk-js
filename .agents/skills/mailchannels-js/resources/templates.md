@@ -8,7 +8,7 @@ no "create template" endpoint. To use a template:
 
 The only supported template type is `'mustache'`.
 
-### Single Recipient
+## Single Recipient
 
 ```ts
 import { MailChannels } from 'mailchannels-sdk'
@@ -28,7 +28,7 @@ const { data, error } = await mc.emails.queue({
 })
 ```
 
-### Multiple Recipients With Per-Recipient Variables
+## Multiple Recipients With Per-Recipient Variables
 
 Each personalization renders independently with its own variables. Root-level
 `template.data` is the base; per-personalization `template.data` is merged on top
@@ -56,7 +56,7 @@ const { data, error } = await mc.emails.queue({
 })
 ```
 
-### Allowed Template Variable Value Types
+## Allowed Template Variable Value Types
 
 Keys are strings. Values may be:
 
@@ -69,12 +69,12 @@ Keys are strings. Values may be:
 `null`, `undefined`, and class instances are rejected with a `validation_error` before
 the request leaves the client.
 
-### Subject Templates
+## Subject Templates
 
 The root `subject` field is **also** mustache-rendered when a `template` is set. There is
 no separate subject template configuration.
 
-### Preview Without Sending
+## Preview Without Sending
 
 Use `dryRun: true` on `emails.send()` to render and validate without delivering:
 

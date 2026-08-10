@@ -3,7 +3,7 @@
 A suppression list keeps known-bad or opted-out recipients out of future sends. MailChannels
 suppresses by recipient + suppression type + source.
 
-### Create Entries
+## Create Entries
 
 ```ts
 import { MailChannels } from 'mailchannels-sdk'
@@ -38,7 +38,7 @@ Constraints:
 All entries created via this endpoint have an inherent source of `'api'`.
 The endpoint does not have a field to set the source value.
 
-### List Entries
+## List Entries
 
 ```ts
 const { data, error } = await mc.suppressions.list({
@@ -67,7 +67,7 @@ const { data: recent } = await mc.suppressions.list({
 
 Date formats accepted: `YYYY-MM-DD`, `YYYY-MM-DDTHH:MM:SSZ`, or a `Date` object.
 
-### Delete An Entry
+## Delete An Entry
 
 Warning:
 Do not remove entries from the suppression list if the recipient has not explicitly opted back in.
@@ -81,7 +81,7 @@ const { error: delAllErr } = await mc.suppressions.delete('recipient@example.net
 If `source` is omitted it defaults to `'api'`. Use `'all'` to remove every suppression for
 that recipient regardless of origin.
 
-### Patterns
+## Patterns
 
 - **Preference center opt-out**: set `types` according to the email category, e.g. `non-transactional` for marketing
   emails, `transactional` for order updates, and so on.

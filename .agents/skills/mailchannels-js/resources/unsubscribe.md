@@ -10,7 +10,7 @@ inbox providers (Gmail, Yahoo, etc.) effectively require both for bulk senders.
 Both mechanisms require the message to have **exactly one recipient per personalization**
 and to be **DKIM-signed**.
 
-### In-Body Unsubscribe Link
+## In-Body Unsubscribe Link
 
 Use the literal placeholder string `{{mc-unsubscribe-url}}` inside a mustache HTML body.
 MailChannels substitutes a hosted one-click unsubscribe URL at render time.
@@ -30,7 +30,7 @@ const { data, error } = await mc.emails.queue({
 
 The `template` field must be present for `{{mc-unsubscribe-url}}` to be substituted.
 
-### `List-Unsubscribe` Headers (Non-Transactional)
+## `List-Unsubscribe` Headers (Non-Transactional)
 
 Setting `transactional: false` tells MailChannels to add `List-Unsubscribe` and
 `List-Unsubscribe-Post` headers automatically. These headers are what inbox providers read
@@ -60,7 +60,7 @@ const { data, error } = await mc.emails.queue({
 If `transactional: false` is set but a personalization has more than one recipient,
 the SDK returns a `validation_error` before making any HTTP call.
 
-### When To Use Which
+## When To Use Which
 
 | Message type | In-body link | `transactional: false` headers |
 | --- | --- | --- |

@@ -11,7 +11,7 @@ sending from it. The check covers four things:
 - **Domain Lockdown** — a MailChannels feature that ties a sending domain to your account
   so other MailChannels customers cannot spoof it.
 
-### Basic Check
+## Basic Check
 
 ```ts
 import { MailChannels } from 'mailchannels-sdk'
@@ -29,7 +29,7 @@ console.log(data?.dkim)                    // array of per-selector results
 console.log(data?.references)             // support links if anything failed
 ```
 
-### With Specific DKIM Settings
+## With Specific DKIM Settings
 
 If you don't pass `dkim`, MailChannels uses all stored keys for the domain. To target
 specific selectors:
@@ -63,7 +63,7 @@ const { data, error } = await mc.domains.check('example.com', {
 })
 ```
 
-#### DKIM Settings Resolution Rules
+### DKIM Settings Resolution Rules
 
 | Provided fields | Behavior |
 | --- | --- |
@@ -74,7 +74,7 @@ const { data, error } = await mc.domains.check('example.com', {
 | `privateKey` set | `selector` is required too. |
 | `dkim` empty / absent | Use all stored keys for the request domain. |
 
-### With A Sender ID (Domain Lockdown)
+## With A Sender ID (Domain Lockdown)
 
 If your lockdown record uses `senderid=` or `sidw=` fields, pass the sender identity:
 
@@ -86,14 +86,14 @@ const { data, error } = await mc.domains.check('example.com', {
 
 If your lockdown record uses `auth=` (account-wide authorization), omit `senderId`.
 
-### Verdicts Reference
+## Verdicts Reference
 
 - DKIM, Domain Lockdown, A, and MX verdicts: `'passed'` or `'failed'`.
 - SPF has a richer set: `'passed'`, `'failed'`, `'soft failed'`, `'temporary error'`,
   `'permanent error'`, `'neutral'`, `'none'`, `'unknown'`.
 - `senderDomain` passes if **either** the A or MX check passes.
 
-### When To Use
+## When To Use
 
 - During onboarding for every new sending domain.
 - In CI after rotating DKIM keys, to verify the new DNS record propagated.

@@ -3,7 +3,7 @@
 Use `mc.emails.queue()` as the default. Switch to `mc.emails.send()` only when you
 specifically need immediate results for a small number of messages, or the dry-run preview.
 
-### Quickest Send
+## Quickest Send
 
 ```ts
 import { MailChannels } from 'mailchannels-sdk'
@@ -25,7 +25,7 @@ console.log(data.requestId)
 Provide both `text` and `html` whenever possible — receiving clients prefer the last
 matching content type and a plain-text fallback improves deliverability.
 
-### Recipient Formats
+## Recipient Formats
 
 All recipient fields (`to`, `from`, `cc`, `bcc`, `replyTo`, `envelopeFrom`) accept multiple formats
 interchangeably. Note: `from`, `replyTo`, `envelopeFrom` must be single
@@ -38,7 +38,7 @@ const r3 = { email: 'recipient@example.net', name: 'Jane Smith' }          // ob
 const r4 = ['a@example.net', { email: 'b@example.net', name: 'Bob' }]      // array
 ```
 
-### Per-Recipient Personalization
+## Per-Recipient Personalization
 
 `personalizations` is the advanced form — each entry is one fully-rendered outgoing message
 with optional per-recipient overrides:
@@ -63,7 +63,7 @@ const { data, error } = await mc.emails.queue({
 Per-personalization overridable fields: `to`, `cc`, `bcc`, `from`, `subject`, `replyTo`,
 `envelopeFrom`, `headers`, `dkim`, `template.data`.
 
-### Body Content Fields
+## Body Content Fields
 
 At least one of `html`, `text`, or `content` is required. The shorthand fields are the
 simplest form; `content` is the explicit array form for more control.
@@ -112,7 +112,7 @@ const { data: data2, error: err2 } = await mc.emails.queue({
 })
 ```
 
-### Dry Run (send endpoint only)
+## Dry Run (send endpoint only)
 
 `emails.send()` supports `dryRun: true`. The API validates and renders the message without
 delivering it. Useful for asserting templates render before launch:
@@ -136,7 +136,7 @@ console.log(data?.rendered?.[0])
 
 `emails.queue()` does **not** support dry-run.
 
-### When To Pick Which
+## When To Pick Which
 
 | Situation                                                        | Method |
 |------------------------------------------------------------------| --- |
@@ -145,7 +145,7 @@ console.log(data?.rendered?.[0])
 | Need the rendered message for inspection                         | `mc.emails.send(options, true)` |
 | Need `status` results immediately for a small number of messages | `mc.emails.send()` |
 
-### send() Response Details
+## send() Response Details
 
 ```ts
 const { data, error } = await mc.emails.send({ ... })
@@ -158,7 +158,7 @@ data?.results?.forEach(r => {
 })
 ```
 
-### Common Pitfalls
+## Common Pitfalls
 
 - **Reserved headers**: don't set `From`, `To`, `Subject`, `Reply-To`, `Message-ID`,
   `Content-Type`, `DKIM-Signature`, etc. in `headers`. Use the payload fields instead.
@@ -177,7 +177,7 @@ data?.results?.forEach(r => {
   idempotency into the caller (e.g. a unique `campaignId` + recipient-set check) when
   at-most-once delivery matters.
 
-### Tracking
+## Tracking
 
 ```ts
 const { data, error } = await mc.emails.queue({
@@ -194,7 +194,7 @@ const { data, error } = await mc.emails.queue({
 
 Open and click tracking require a subscription that supports them.
 
-### Custom Tracking Domains
+## Custom Tracking Domains
 
 Pass `customDomainName` on the `tracking` field (or on `unsubscribe`) to route those
 links through a domain you registered instead of the shared MailChannels domain.

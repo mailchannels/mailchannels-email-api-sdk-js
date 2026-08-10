@@ -4,7 +4,7 @@ Sub-accounts are first-class on MailChannels. Use them for tenants, customers, o
 senders so that one customer's reputation, limits, and bad traffic don't contaminate the
 parent account or other tenants.
 
-### Handles
+## Handles
 
 A handle uniquely identifies a sub-account. Rules:
 
@@ -13,7 +13,7 @@ A handle uniquely identifies a sub-account. Rules:
 - Unique per parent account.
 - If omitted on create, a random handle is generated.
 
-### Lifecycle
+## Lifecycle
 
 ```ts
 import { MailChannels } from 'mailchannels-sdk'
@@ -41,7 +41,7 @@ const { error: deleteError } = await mc.subAccounts.delete('clienta')
 if (deleteError) { /*...*/ }
 ```
 
-### Credentials
+## Credentials
 
 Each sub-account has its own API keys and SMTP passwords.
 
@@ -74,7 +74,7 @@ create time. Store it immediately or rotate. Each sub-account has server-side ca
 many API keys and SMTP passwords it can hold — once at the cap, create returns
 `unprocessable_entity_error`; delete an unused credential first.
 
-### Limits
+## Limits
 
 Per-sub-account monthly send caps. A sub-account without a limit inherits the parent's
 capacity.
@@ -90,7 +90,7 @@ const { error: deleteLimitErr } = await mc.subAccounts.limits.delete('clienta') 
 if (deleteLimitErr) { /*...*/ }
 ```
 
-### Usage
+## Usage
 
 ```ts
 const { data: parentUsage } = await mc.metrics.usage()
@@ -102,7 +102,7 @@ console.log(parentUsage?.total, parentUsage?.startDate, parentUsage?.endDate)
 `mc.metrics.usage()` is for the parent account. Use `mc.subAccounts.getUsage(handle)` for
 one specific sub-account.
 
-### Sending As A Sub-Account
+## Sending As A Sub-Account
 
 Create a separate `MailChannels` instance with the sub-account's API key:
 
@@ -121,7 +121,7 @@ if (error) { /*...*/ }
 This keeps the account boundary explicit in code and avoids hard-to-debug issues where the
 wrong key is used at the wrong call site.
 
-### Suppressions And Sub-Accounts
+## Suppressions And Sub-Accounts
 
 When creating suppressions on the parent, set `addToSubAccounts: true` to also copy entries
 into every sub-account. See [suppressions](suppressions.md).

@@ -17,7 +17,7 @@ A missing or empty API key throws synchronously at construction:
 new MailChannels('')   // throws Error: "Missing MailChannels API key."
 ```
 
-### Constructor Options
+## Constructor Options
 
 ```ts
 // new MailChannels(apiKey: string, options?: MailChannelsClientOptions)
@@ -30,7 +30,7 @@ new MailChannels('')   // throws Error: "Missing MailChannels API key."
 | `retry` | `boolean \| number \| RetryOptions` | `false` | `ofetch` retry options. |
 | `signal` | `AbortSignal` | `undefined` | Propagated to every fetch call made by this instance. |
 
-### Multi-Tenant: One Client Per Credential
+## Multi-Tenant: One Client Per Credential
 
 Never share a parent key and a sub-account key on the same instance. Create a separate
 `MailChannels` for each credential:
@@ -50,7 +50,7 @@ const { data: queueB, error: queueErrB } = await tenantB.emails.queue({ ... })
 if (queueErrB) { /*...*/ }
 ```
 
-### Request Cancellation
+## Request Cancellation
 
 Pass an `AbortSignal` to cancel in-flight requests:
 
@@ -63,7 +63,7 @@ const mc = new MailChannels(apiKey, { signal: controller.signal })
 controller.abort()
 ```
 
-### Headers Sent On Every Request
+## Headers Sent On Every Request
 
 The SDK sets these on every request and they cannot be overridden via `MailChannelsClientOptions`:
 
@@ -72,7 +72,7 @@ The SDK sets these on every request and they cannot be overridden via `MailChann
 - `Content-Type: application/json`
 - `User-Agent: mailchannels-node/<version>`
 
-### Extending The Client
+## Extending The Client
 
 The `MailChannels` class extends the public `MailChannelsClient` base. If you need to
 intercept, proxy, or instrument requests you can subclass `MailChannelsClient` and override

@@ -31,7 +31,7 @@ if (error) {
 console.log(data.requestId)
 ```
 
-### Error Types
+## Error Types
 
 | `error.type` | HTTP status | Meaning |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ console.log(data.requestId)
 | `'application_error'` | `null` | Unexpected JS/network error (e.g. fetch failed). |
 | `'api_error'` | varies | Fallback for unmapped status codes. |
 
-### Handling Patterns
+## Handling Patterns
 
 The `message` field is a human-readable description of the error, useful for logging and debugging,
 but it should not be parsed or used for control flow as it may change without warning. Instead, use the `type` field for error handling logic.
@@ -87,7 +87,7 @@ if (error) {
 }
 ```
 
-### Client-Side Validation Errors (`validation_error`)
+## Client-Side Validation Errors (`validation_error`)
 
 These produce `error.type === 'validation_error'` and `error.statusCode === null` before
 any HTTP call:
@@ -102,7 +102,7 @@ any HTTP call:
 
 Failing early gives a precise error rather than a vague 400.
 
-### Retrying and Idempotency
+## Retrying and Idempotency
 
 | Error type | Safe to retry? |
 | --- | --- |
@@ -114,7 +114,7 @@ The API has no idempotency keys, so retrying `emails.send()` or `emails.queue()`
 transient failure can produce a duplicate send. Build idempotency into the caller (e.g. a
 unique `campaignId` + recipient-set check) when at-most-once delivery matters.
 
-### SDK Exceptions
+## SDK Exceptions
 
 `new MailChannels('')` (empty or missing key) throws synchronously:
 
