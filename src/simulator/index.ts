@@ -13,7 +13,7 @@ export const createSimulator = (options: {
   const { host = DEFAULT_HOST, port = DEFAULT_PORT } = options;
 
   if (port !== undefined && (isNaN(port) || port < 0 || port > 65535)) {
-    console.error("[Simulator]", `Invalid port '${port}': must be an integer between 0 and 65535.`);
+    console.error(`[Simulator] Invalid port '${port}': must be an integer between 0 and 65535.`);
     process.exit(1);
   }
 
@@ -52,6 +52,7 @@ export const createSimulator = (options: {
     },
     async close () {
       await new Promise<void>((resolve, reject) => {
+        console.info("[Simulator] Shutting down simulator...");
         for (const socket of sockets) {
           socket.destroy();
         }
@@ -73,6 +74,9 @@ export const createSimulator = (options: {
           server.off("error", onError);
           resolve();
         });
+      }).catch((error) => {
+        console.error(`[Simulator] ${error.message}`);
+        process.exit(1);
       });
 
       const address = server.address();
@@ -80,7 +84,7 @@ export const createSimulator = (options: {
       serverUrl = `http://${nextHost}:${actualPort}`;
 
       if (logRequests) {
-        console.info("[Simulator]", `listening on ${serverUrl}`);
+        console.info(`[Simulator] listening on ${serverUrl}`);
       }
 
       return serverUrl;

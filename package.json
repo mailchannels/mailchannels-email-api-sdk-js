@@ -45,7 +45,8 @@
     "parity:fixtures": "node scripts/generate-parity-fixtures.ts",
     "prepack": "pnpm build",
     "release": "pnpm lint && pnpm test && pnpm build && changelogen --bump",
-    "simulate": "node src/cli/index.ts simulate",
+    "cli": "pnpx jiti src/cli/index.ts",
+    "simulate": "pnpx jiti src/cli/index.ts simulate",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "test": "vitest run --reporter=verbose --coverage",
@@ -57,6 +58,7 @@
     "docs:snippets": "node docs/scripts/snippets.ts"
   },
   "dependencies": {
+    "citty": "^0.2.2",
     "mime": "^4.1.0",
     "ofetch": "^2.0.0-alpha.3"
   },

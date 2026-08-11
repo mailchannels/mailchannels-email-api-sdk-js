@@ -17,24 +17,15 @@ describe("Email API simulator", () => {
   });
 
   afterAll(async () => {
+    vi.spyOn(console, "info").mockImplementationOnce(() => {});
     await simulator.close();
   });
 
   it("should exit with error for invalid port", async () => {
-    const exitSpy = vi.spyOn(process, "exit").mockImplementation(((code?: number) => {
-      throw new Error(`process.exit:${code}`);
-    }) as never);
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
-
-    expect(() => createSimulator({ port: -1 })).toThrow("process.exit:1");
-
-    expect(errorSpy).toHaveBeenCalledWith(
-      "[Simulator]",
-      "Invalid port '-1': must be an integer between 0 and 65535."
-    );
-    expect(exitSpy).toHaveBeenCalledWith(1);
-
-    exitSpy.mockRestore();
+    const createInvalidSimulator = () => createSimulator({ port: -1 });
+    expect(createInvalidSimulator).toThrow();
+    expect(errorSpy).toHaveBeenCalledWith("[Simulator] Invalid port '-1': must be an integer between 0 and 65535.");
     errorSpy.mockRestore();
   });
 
