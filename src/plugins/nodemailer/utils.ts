@@ -1,3 +1,4 @@
+import { createPrivateKey } from "node:crypto";
 import type Mail from "nodemailer/lib/mailer";
 import type { EmailsSendAttachment, EmailsSendDkim, EmailsSendRecipient } from "../../mailchannels";
 import { Attachment } from "../../mailchannels";
@@ -66,13 +67,21 @@ export const parseDkim = (dkim: Mail.Options["dkim"]): EmailsSendDkim | undefine
     throw new Error("Multiple DKIM signatures are not supported");
   }
 
-  if (typeof dkim.keySelector !== "string") {
-    throw new Error("DKIM keySelector must be a string");
+  let privateKey: string | undefined;
+
+  if (typeof dkim.privateKey === "string") {
+    privateKey = dkim.privateKey;
+  }
+  else if (dkim.privateKey?.key && dkim.privateKey?.passphrase) {
+    privateKey = createPrivateKey({
+      key: dkim.privateKey.key,
+      passphrase: dkim.privateKey.passphrase
+    }).export({ format: "pem", type: "pkcs1" });
   }
 
   return {
     selector: dkim.keySelector,
-    privateKey: typeof dkim.privateKey === "string" ? dkim.privateKey : undefined,
+    privateKey,
     domain: dkim.domainName
   };
 };

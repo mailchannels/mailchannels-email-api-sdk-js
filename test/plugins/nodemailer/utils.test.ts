@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
 import { Buffer } from "node:buffer";
 import { Readable } from "node:stream";
+import { createPrivateKey, generateKeyPairSync } from "node:crypto";
+import { describe, expect, it } from "vitest";
 import { parseAddress, parseAddresses, parseAttachments, parseDkim, parseHeaders, parseIcalEvent } from "~/plugins/nodemailer/utils";
 import type { EmailsSendRecipient, EmailsSendRecipientInput } from "~/types/emails/send";
 
@@ -212,11 +213,6 @@ describe("parseDkim", () => {
     expect(() => parseDkim({ keys: [] })).toThrow("Multiple DKIM signatures are not supported");
   });
 
-  it("throws when keySelector is not a string", () => {
-    // @ts-expect-error - testing invalid input
-    expect(() => parseDkim({ keySelector: 123 })).toThrow("DKIM keySelector must be a string");
-  });
-
   it("parses string privateKey and domain", () => {
     expect(
       parseDkim({
@@ -240,5 +236,29 @@ describe("parseDkim", () => {
         privateKey: undefined,
         domain: "example.com"
       });
+  });
+
+  it("parses object privateKey with key and passphrase", () => {
+    const passphrase = "testpass";
+    const { privateKey } = generateKeyPairSync("rsa", {
+      modulusLength: 2048,
+      publicKeyEncoding: { type: "spki", format: "pem" },
+      privateKeyEncoding: { type: "pkcs1", format: "pem", cipher: "aes-256-cbc", passphrase }
+    });
+
+    const out = parseDkim({
+      keySelector: "mc-test",
+      privateKey: { key: privateKey, passphrase },
+      domainName: "example.com"
+    });
+
+    expect(out).toStrictEqual({
+      selector: "mc-test",
+      privateKey: createPrivateKey({
+        key: privateKey,
+        passphrase
+      }).export({ format: "pem", type: "pkcs1" }),
+      domain: "example.com"
+    });
   });
 });
