@@ -145,7 +145,7 @@ describe("parseAttachments", () => {
     expect(out).toEqual([
       {
         filename: "note.txt",
-        content: "hello",
+        content: Buffer.from("hello").toString("base64"),
         type: "text/plain",
         contentId: "cid1"
       }
@@ -176,7 +176,10 @@ describe("parseAttachments", () => {
 
 describe("parseIcalEvent", () => {
   it("should accept string icalEvent", () => {
-    expect(parseIcalEvent("BEGIN:VCAL")).toEqual({ filename: "invite.ics", content: "BEGIN:VCAL" });
+    const out = parseIcalEvent("BEGIN:VCAL");
+    expect(out.filename).toBe("invite.ics");
+    expect(out.type).toBe("text/calendar");
+    expect(out.content).toBe(Buffer.from("BEGIN:VCAL").toString("base64"));
   });
 
   it("should accept Buffer icalEvent", () => {
@@ -190,17 +193,17 @@ describe("parseIcalEvent", () => {
   it("should accept object with filename and content", () => {
     const out = parseIcalEvent({ filename: "meet.ics", content: "icaltext" });
     expect(out.filename).toBe("meet.ics");
-    expect(out.content).toBe("icaltext");
+    expect(out.content).toBe(Buffer.from("icaltext").toString("base64"));
   });
 
   it("should default empty filename to invite.ics when provided in object", () => {
     const out = parseIcalEvent({ filename: "", content: "icaltext" });
     expect(out.filename).toBe("invite.ics");
-    expect(out.content).toBe("icaltext");
+    expect(out.content).toBe(Buffer.from("icaltext").toString("base64"));
   });
 
   it("should throw on invalid format", () => {
-    expect(() => parseIcalEvent(new Readable())).toThrow("Invalid icalEvent format");
+    expect(() => parseIcalEvent(new Readable())).toThrow("Not supported icalEvent format");
   });
 });
 

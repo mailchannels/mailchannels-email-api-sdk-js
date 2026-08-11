@@ -1,4 +1,5 @@
 import { createPrivateKey } from "node:crypto";
+import { Buffer } from "node:buffer";
 import type Mail from "nodemailer/lib/mailer";
 import type { EmailsSendAttachment, EmailsSendDkim, EmailsSendRecipient } from "../../mailchannels";
 import { Attachment } from "../../mailchannels";
@@ -40,12 +41,14 @@ export const parseAttachments = (attachments: Mail.Options["attachments"]): Emai
     }
 
     if (typeof attachment.content === "string") {
-      return {
+      const encoding = attachment.encoding as BufferEncoding || "utf-8";
+      const contentBuffer = Buffer.from(attachment.content, encoding);
+
+      return Attachment.fromBytes(contentBuffer, {
         filename: attachment.filename,
-        content: attachment.content,
         type: attachment.contentType,
         contentId: attachment.cid
-      };
+      });
     }
 
     if (attachment.content instanceof Buffer) {
@@ -108,10 +111,12 @@ export const parseHeaders = (headers: Mail.Options["headers"]): Record<string, s
 
 export const parseIcalEvent = (icalEvent: Mail.Options["icalEvent"]): EmailsSendAttachment => {
   if (typeof icalEvent === "string") {
-    return {
+    const contentBuffer = Buffer.from(icalEvent);
+
+    return Attachment.fromBytes(contentBuffer, {
       filename: "invite.ics",
-      content: icalEvent
-    };
+      type: "text/calendar"
+    });
   }
 
   if (icalEvent instanceof Buffer) {
@@ -124,9 +129,10 @@ export const parseIcalEvent = (icalEvent: Mail.Options["icalEvent"]): EmailsSend
   if (typeof icalEvent === "object" && icalEvent && "filename" in icalEvent && "content" in icalEvent) {
     return parseAttachments([{
       filename: icalEvent.filename || "invite.ics",
-      content: icalEvent.content
+      content: icalEvent.content,
+      encoding: icalEvent.encoding
     }])![0]!;
   }
 
-  throw new Error("Invalid icalEvent format");
+  throw new Error("Not supported icalEvent format");
 };
