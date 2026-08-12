@@ -264,4 +264,29 @@ describe("parseDkim", () => {
       domain: "example.com"
     });
   });
+
+  it("should throw for non-RSA private keys", () => {
+    const { privateKey } = generateKeyPairSync("ed25519", {
+      privateKeyEncoding: {
+        type: "pkcs8",
+        format: "pem",
+        passphrase: "test",
+        cipher: "aes128"
+      }
+    });
+
+    expect(() => parseDkim({
+      keySelector: "mc-test",
+      privateKey: { key: privateKey, passphrase: "test" },
+      domainName: "example.com"
+    })).toThrow("Only RSA private keys are supported for DKIM signing");
+  });
+
+  it("should rethrow errors from createPrivateKey", () => {
+    expect(() => parseDkim({
+      keySelector: "mc-test",
+      privateKey: { key: "invalid", passphrase: "test" },
+      domainName: "example.com"
+    })).toThrow();
+  });
 });

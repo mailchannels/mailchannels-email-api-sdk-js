@@ -76,10 +76,18 @@ export const parseDkim = (dkim: Mail.Options["dkim"]): EmailsSendDkim | undefine
     privateKey = dkim.privateKey;
   }
   else if (dkim.privateKey?.key && dkim.privateKey?.passphrase) {
-    privateKey = createPrivateKey({
-      key: dkim.privateKey.key,
-      passphrase: dkim.privateKey.passphrase
-    }).export({ format: "pem", type: "pkcs1" });
+    try {
+      privateKey = createPrivateKey({
+        key: dkim.privateKey.key,
+        passphrase: dkim.privateKey.passphrase
+      }).export({ format: "pem", type: "pkcs1" });
+    }
+    catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ERR_CRYPTO_INCOMPATIBLE_KEY_OPTIONS") {
+        throw new Error("Only RSA private keys are supported for DKIM signing");
+      }
+      throw error;
+    }
   }
 
   return {
