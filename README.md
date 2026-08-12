@@ -28,6 +28,7 @@ This library provides a simple way to interact with the [MailChannels Email API]
 - 📚 [Usage](#usage)
 - 📐 [Naming Conventions](#naming-conventions)
 - 🧪 [Local simulator](#local-simulator)
+- 📬 [Using with Nodemailer](#using-with-nodemailer)
 - 🤖 [Using with an AI agent](#using-with-an-ai-agent)
 - ⚖️ [License](#license)
 - 💻 [Development](#development)
@@ -195,6 +196,65 @@ const { data, error } = await mailchannels.emails.send({
 
 The next planned expansion is outbound webhook delivery so client applications can test webhook ingestion flows against the simulator as well.
 <!-- #endregion simulator -->
+
+## <a name="using-with-nodemailer">📬 Using with Nodemailer</a>
+
+The SDK provides a transport for Nodemailer that allows you to send emails using the MailChannels Email API.
+
+### Install
+
+```sh
+# npm
+npm i mailchannels-sdk nodemailer && npm i -D @types/nodemailer
+
+# yarn
+yarn add mailchannels-sdk nodemailer && yarn add -D @types/nodemailer
+
+# pnpm
+pnpm add mailchannels-sdk nodemailer && pnpm add -D @types/nodemailer
+```
+
+### Sending
+
+```ts
+import nodemailer from 'nodemailer'
+import { mailchannelsTransport } from 'mailchannels-sdk/nodemailer'
+
+const transport = nodemailer.createTransport(
+  mailchannelsTransport({
+    apiKey: 'your-api-key',
+    sendMode: 'async', // 'async' or 'sync'. Default is 'async'
+    // SDK client options: `baseUrl`, `timeout`, `signal`, `retry`
+  })
+)
+
+transport.sendMail({
+  from: 'sender@example.com',
+  to: 'recipient@example.com',
+  subject: 'Hello from Nodemailer',
+  html: '<p>Hello World</p>',
+  mailchannels: {
+    // SDK send options: `campaignId`, `tracking`, `transactional`, `unsubscribe`
+  }
+}, (error, info) => {
+  if (error) {
+    console.error('Error sending email:', error)
+    return;
+  }
+  console.log('Sent message info:', info)
+})
+```
+
+### Limitations
+
+The MailChannels Nodemailer transport maps a subset of Nodemailer features to the MailChannels SDK. Some features are not supported or have limitations:
+
+- Only a single `replyTo` address is supported
+- Multiple DKIM signatures are not supported
+- For async sends (`sendMode: 'async'`), the response will have a `messageId` of `null`, and both the `accepted` and `rejected` arrays will be empty
+- Attachment `path`, `href` and other URL fields are not supported
+- MailChannels-specific send options must be passed via the augmented `mailchannels` field in the `sendMail` options
+- Some advanced Nodemailer behaviors may be ignored or transformed when mapped to the SDK
 
 ## <a name="using-with-an-ai-agent">🤖 Using with an AI agent</a>
 
