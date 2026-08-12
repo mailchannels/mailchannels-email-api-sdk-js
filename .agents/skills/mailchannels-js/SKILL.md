@@ -34,6 +34,10 @@ You're about to write JS/TS SDK code. What does it need to do?
 ├── Set up the client (API keys, base URL, options, lifecycle)
 │   → resources/clients-and-transport.md
 │
+├── Send through a framework's mail API instead of using the SDK directly
+│   └── …Nodemailer?
+│       → resources/plugins/nodemailer.md
+│
 ├── Send email
 │   → resources/sending.md
 │   ├── …with file / bytes / URL / inline-image attachments?
