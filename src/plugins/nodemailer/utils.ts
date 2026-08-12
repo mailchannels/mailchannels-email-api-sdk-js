@@ -2,7 +2,6 @@ import { createPrivateKey } from "node:crypto";
 import { Buffer } from "node:buffer";
 import type Mail from "nodemailer/lib/mailer";
 import type { EmailsSendAttachment, EmailsSendDkim, EmailsSendRecipient } from "../../mailchannels";
-import { Attachment } from "../../mailchannels";
 
 export const parseAddress = (address: Mail.Options["from"]): EmailsSendRecipient | string => {
   if (!address) return "";
@@ -42,21 +41,13 @@ export const parseAttachments = (attachments: Mail.Options["attachments"]): Emai
 
     if (typeof attachment.content === "string") {
       const encoding = attachment.encoding as BufferEncoding || "utf-8";
-      const contentBuffer = Buffer.from(attachment.content, encoding);
 
-      return Attachment.fromBytes(contentBuffer, {
-        filename: attachment.filename,
+      return {
+        content: encoding === "base64" ? attachment.content : Buffer.from(attachment.content, encoding).toString("base64"),
+        filename: decodeURIComponent(attachment.filename),
         type: attachment.contentType,
         contentId: attachment.cid
-      });
-    }
-
-    if (attachment.content instanceof Buffer) {
-      return Attachment.fromBytes(attachment.content, {
-        filename: attachment.filename,
-        type: attachment.contentType,
-        contentId: attachment.cid
-      });
+      };
     }
 
     throw new Error("Attachment content must be a string or Buffer");
@@ -119,19 +110,11 @@ export const parseHeaders = (headers: Mail.Options["headers"]): Record<string, s
 
 export const parseIcalEvent = (icalEvent: Mail.Options["icalEvent"]): EmailsSendAttachment => {
   if (typeof icalEvent === "string") {
-    const contentBuffer = Buffer.from(icalEvent);
-
-    return Attachment.fromBytes(contentBuffer, {
+    return {
+      content: Buffer.from(icalEvent).toString("base64"),
       filename: "invite.ics",
       type: "text/calendar"
-    });
-  }
-
-  if (icalEvent instanceof Buffer) {
-    return Attachment.fromBytes(icalEvent, {
-      filename: "invite.ics",
-      type: "text/calendar"
-    });
+    };
   }
 
   if (typeof icalEvent === "object" && icalEvent && "content" in icalEvent) {
