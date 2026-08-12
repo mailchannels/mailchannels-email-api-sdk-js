@@ -134,11 +134,12 @@ export const parseIcalEvent = (icalEvent: Mail.Options["icalEvent"]): EmailsSend
     });
   }
 
-  if (typeof icalEvent === "object" && icalEvent && "filename" in icalEvent && "content" in icalEvent) {
+  if (typeof icalEvent === "object" && icalEvent && "content" in icalEvent) {
     return parseAttachments([{
       filename: icalEvent.filename || "invite.ics",
       content: icalEvent.content,
-      encoding: icalEvent.encoding
+      encoding: icalEvent.encoding,
+      contentType: "text/calendar"
     }])![0]!;
   }
 
