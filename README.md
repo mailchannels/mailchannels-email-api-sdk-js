@@ -245,6 +245,17 @@ transport.sendMail({
 })
 ```
 
+### Limitations
+
+The MailChannels Nodemailer transport maps a subset of Nodemailer features to the MailChannels SDK. Some features are not supported or have limitations:
+
+- Only a single `replyTo` address is supported
+- Multiple DKIM signatures are not supported
+- For async sends (`sendMode: 'async'`), the response will have a `messageId` of `null`, and both the `accepted` and `rejected` arrays will be empty
+- Attachment `path`, `href` and other URL fields are not supported
+- MailChannels-specific send options must be passed via the augmented `mailchannels` field in the `sendMail` options
+- Some advanced Nodemailer behaviors may be ignored or transformed when mapped to the SDK
+
 ## <a name="using-with-an-ai-agent">🤖 Using with an AI agent</a>
 
 This repository ships a complete agent skill at
