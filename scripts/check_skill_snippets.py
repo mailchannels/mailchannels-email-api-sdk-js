@@ -79,10 +79,11 @@ PLACEHOLDER = re.compile(r"\{\s*\.\.\.\s*\}")
 # Lines stripped entirely from blocks before assembly.
 _STRIP_PATTERNS: list[re.Pattern[str]] = [
     re.compile(r"^import\s.*from\s+['\"]mailchannels-sdk['\"]"),
-    re.compile(r"^import\s.*from\s+['\"]mailchannels-sdk/simulator['\"]"),
+    re.compile(r"^import\s.*from\s+['\"]mailchannels-sdk/[^'\"]+['\"]"),
     re.compile(r"^import\s+process\s+from\s+['\"]node:process['\"]"),
     re.compile(r"^import\s.*from\s+['\"]vitest['\"]"),
     re.compile(r"^let\s+mc\s*:\s*MailChannels\b"),
+    re.compile(r"^import\s.*from\s+['\"]nodemailer(?:/.*)?['\"]"),
 ]
 
 # Auto-injected scaffolding prepended to every assembled snippet group.
@@ -91,8 +92,9 @@ _STRIP_PATTERNS: list[re.Pattern[str]] = [
 PREAMBLE = """\
 // Auto-injected preamble for documentation snippet type-checking.
 import { MailChannels, Attachment, MailChannelsClient, Webhooks } from 'mailchannels-sdk'
-import type { EmailsSendAttachment, ErrorResponse } from 'mailchannels-sdk'
+import type { EmailsSendAttachment, ErrorResponse, EmailsSendResponse, EmailsQueueResponse } from 'mailchannels-sdk'
 import { createSimulator } from 'mailchannels-sdk/simulator'
+import { mailchannelsTransport, type MailChannelsTransportSendMode } from 'mailchannels-sdk/nodemailer'
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
@@ -125,6 +127,16 @@ declare const blob2: Blob
 declare function recordLatency(path: string, ms: number): void
 declare function recordError(path: string): void
 
+// Stubs for nodemailer snippets and the mailchannelsTransport helper so
+// documentation examples that reference them don't require the real package
+// to be installed during snippet checking.
+declare const nodemailer: {
+    createTransport(options?: unknown): { sendMail(options: unknown, callback: (error: Error | null, info: unknown) => void): void }
+}
+declare namespace MimeNode {
+    export interface Envelope { from: string; to: string[] }
+}
+
 // Stubs for Express-style HTTP handler examples.
 // TODO: either import express or give a different example so these can be verified properly
 interface _Req { body: { toString(): string }; headers: Record<string, string> }
@@ -147,6 +159,7 @@ _TSCONFIG: dict = {
         "paths": {
             "mailchannels-sdk": ["./src/mailchannels.ts"],
             "mailchannels-sdk/simulator": ["./src/simulator/index.ts"],
+            "mailchannels-sdk/nodemailer": ["./src/plugins/nodemailer/index.ts"],
         },
     },
 }
@@ -387,7 +400,7 @@ def discover_markdown() -> list[Path]:
         files.append(skill_md)
     resources = SKILL_DIR / "resources"
     if resources.is_dir():
-        files.extend(sorted(resources.glob("*.md")))
+        files.extend(sorted(resources.rglob("*.md")))
     return files
 
 
