@@ -82,7 +82,7 @@ Refer back to the original SKILL.md for links to full explanations of each field
   `dkim.keySelector`, and `dkim.privateKey`.
 - When providing `dkim.privateKey` as a `{ key, passphrase }` object the
   transport attempts to convert it into a PEM via Node's `createPrivateKey`.
-  Only RSA private keys are supported when using the `key+passphrase` object form.
+- Only RSA private keys are supported
 
 ## Errors and Result Structure
 
@@ -103,7 +103,7 @@ interface MailChannelsTransportInfo<T extends MailChannelsTransportSendMode> {
 ## Limitations
 
 - Only a single `replyTo` address is supported.
-- Multiple DKIM signatures are not supported.
+- Multiple DKIM signatures are not supported; the API only supports RSA private keys.
 - Attachment `path`, `href`, and other URL-based attachment sources are not supported;
   attachments should be provided as buffers or strings.
 - For async sends (`sendMode: 'async'`) the transport returns a `messageId` of `null`
