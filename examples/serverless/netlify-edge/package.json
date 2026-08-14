@@ -12,8 +12,8 @@
   },
   "devDependencies": {
     "@netlify/edge-functions": "^3.0.8",
-    "@types/node": "^26.1.2",
-    "netlify-cli": "^27.0.1",
+    "@types/node": "^26.2.0",
+    "netlify-cli": "^27.1.1",
     "typescript": "^7.0.2"
   }
 }
