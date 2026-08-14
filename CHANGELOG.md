@@ -1,6 +1,46 @@
 # Changelog
 
 
+## v1.4.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.4.0%0Dv1.3.1)
+
+### 🚀 Enhancements
+
+- **simulator:** Expose programmatic `createSimulator` method ([15e3ae0](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/15e3ae0))
+- **cli:** Add new emails commands ([226b2fc](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/226b2fc))
+- **plugins:** Add transport for Nodemailer ([6c2408f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/6c2408f))
+
+### 💅 Refactors
+
+- **cli:** Migrate to 'citty' cmd framework ([d6f658c](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d6f658c))
+
+### 📖 Documentation
+
+- **agents:** Add programmatic simulator usage ([7b0d37d](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7b0d37d))
+- **agents:** Normalize many H3/H4 headings to H2/H3 heading levels ([679df81](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/679df81))
+- **examples:** Add Hono basic framework example app ([d4ba297](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d4ba297))
+- **readme:** Add nodemailer transport limitations ([2ff406e](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/2ff406e))
+- **agents:** Add nodemailer plugin skill resource ([a892a1b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/a892a1b))
+- **skill:** Clarify dkim rsa-only limitation ([6f7623b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/6f7623b))
+
+### 📦 Build
+
+- **cli:** Remove unwanted cli declarations file after build ([48721d2](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/48721d2))
+
+### 🏡 Chore
+
+- **scripts:** Add nodemailer support and recursive skills discovery ([e35931d](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/e35931d))
+- Update all dependencies ([77fbc99](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/77fbc99))
+
+### ✅ Tests
+
+- **cli:** Mock console loggers to prevent noisy test output ([ac5a162](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/ac5a162))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+
 ## v1.3.1
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.3.1%0Dv1.3.0)
