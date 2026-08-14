@@ -2,11 +2,28 @@ import { Buffer } from "node:buffer";
 import { Readable } from "node:stream";
 import { createPrivateKey, generateKeyPairSync } from "node:crypto";
 import { describe, expect, it } from "vitest";
+import Mail from "nodemailer/lib/mailer";
+import MailMessage from "nodemailer/lib/mailer/mail-message";
+import MailComposer from "nodemailer/lib/mail-composer";
 import { parseAddress, parseAddresses, parseAttachments, parseDkim, parseHeaders, parseIcalEvent } from "~/plugins/nodemailer/utils";
 import type { EmailsSendRecipient, EmailsSendRecipientInput } from "~/types/emails/send";
 
 const fake = {
+  transport: { name: "test", version: "0.0.0", send: () => {} },
   nodemailerAddress: { address: "recipient@example.com", name: "Recipient Name" }
+};
+
+const mailer = new Mail(fake.transport);
+
+const normalize = async (raw: Mail.Options): Promise<Mail.Options> => {
+  const mailMessage = new MailMessage(mailer, raw);
+  mailMessage.message = new MailComposer(mailMessage.data).compile();
+  return new Promise((resolve, reject) => {
+    mailMessage.normalize((error, data) => {
+      if (error) reject(error);
+      else resolve(data!);
+    });
+  });
 };
 
 describe("parseAddress", () => {
@@ -142,7 +159,7 @@ describe("parseAttachments", () => {
         contentDisposition: "inline"
       }
     ]);
-    expect(out).toEqual([
+    expect(out).toStrictEqual([
       {
         filename: "note.txt",
         content: Buffer.from("hello").toString("base64"),
@@ -152,17 +169,42 @@ describe("parseAttachments", () => {
     ]);
   });
 
-  it("should parse Buffer attachments via Attachment.fromBytes", () => {
+  it("should parse Buffer attachments", async () => {
     const buf = Buffer.from("bytes!");
-    const out = parseAttachments([
-      { filename: "bin.bin", content: buf, contentType: "application/octet-stream", cid: "cid2" }
-    ])!;
+    const normalized = await normalize({
+      attachments: [
+        { filename: "bin.bin", content: buf, contentType: "application/octet-stream", cid: "cid2" }
+      ]
+    });
+
+    const out = parseAttachments(normalized.attachments)!;
+
     expect(out).toStrictEqual([
       {
         filename: "bin.bin",
         content: Buffer.from(buf).toString("base64"),
         type: "application/octet-stream",
         contentId: "cid2"
+      }
+    ]);
+  });
+
+  it("should parse base64 string content attachments", () => {
+    const base64Content = Buffer.from("hello").toString("base64");
+    const out = parseAttachments([
+      {
+        filename: "note.txt",
+        content: base64Content,
+        encoding: "base64",
+        contentType: "text/plain"
+      }
+    ]);
+    expect(out).toStrictEqual([
+      {
+        filename: "note.txt",
+        content: base64Content,
+        type: "text/plain",
+        contentId: undefined
       }
     ]);
   });
@@ -182,9 +224,10 @@ describe("parseIcalEvent", () => {
     expect(out.content).toBe(Buffer.from("BEGIN:VCAL").toString("base64"));
   });
 
-  it("should accept Buffer icalEvent", () => {
+  it("should accept Buffer icalEvent", async () => {
     const buf = Buffer.from("icalbytes");
-    const out = parseIcalEvent(buf);
+    const normalized = await normalize({ icalEvent: buf });
+    const out = parseIcalEvent(normalized.icalEvent);
     expect(out.filename).toBe("invite.ics");
     expect(out.type).toBe("text/calendar");
     expect(out.content).toBe(Buffer.from("icalbytes").toString("base64"));
