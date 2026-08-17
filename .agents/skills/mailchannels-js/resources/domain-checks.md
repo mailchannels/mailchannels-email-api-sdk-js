@@ -86,6 +86,18 @@ const { data, error } = await mc.domains.check('example.com', {
 
 If your lockdown record uses `auth=` (account-wide authorization), omit `senderId`.
 
+## With A Different Envelope-From Domain
+
+If the envelope-from domain used during delivery differs from the domain you are
+checking, provide it with `envelopeFromDomain` so SPF is evaluated against the
+correct domain:
+
+```ts
+const { data, error } = await mc.domains.check('example.com', {
+  envelopeFromDomain: 'bounce.example.net'
+})
+```
+
 ## Verdicts Reference
 
 - DKIM, Domain Lockdown, A, and MX verdicts: `'passed'` or `'failed'`.

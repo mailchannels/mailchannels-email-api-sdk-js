@@ -60,6 +60,7 @@ const { data, error } = await mailchannels.domains.check('example.com', {
     > 4. If none are present, use all stored keys for the `domain` provided in the domain field of the request.
     > 5. If `privateKey` is present, `selector` must be present.
     > 6. If `selector` is present and `domain` is not, the domain will be taken from the domain field of the request.
+  - `envelopeFromDomain` `string` <Badge type="info">optional</Badge>: Optional envelope-from domain. During message delivery, SPF is evaluated against the envelope sender domain. If your envelope-from domain differs from the domain used for sending messages, provide it here to ensure SPF is checked against the correct domain. Otherwise, SPF failures may cause recipient servers to reject messages.
   - `senderId` `string` <Badge type="info">optional</Badge>: Used exclusively for [Domain Lockdown](https://docs.mailchannels.com/email-api/domain-lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field.
     > [!INFO]
     > Your `senderId` is the `X-MailChannels-Sender-Id` header value in emails sent via MailChannels.

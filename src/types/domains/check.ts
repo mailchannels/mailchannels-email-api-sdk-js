@@ -28,6 +28,12 @@ export interface DomainsCheckOptions {
    */
   dkim?: DomainsCheckDkim[] | DomainsCheckDkim;
   /**
+   * Optional envelope-from domain. During message delivery, SPF is evaluated against the envelope sender domain.
+   * If your envelope-from domain differs from the domain used for sending messages, provide it here to ensure SPF
+   * is checked against the correct domain. Otherwise, SPF failures may cause recipient servers to reject messages.
+   */
+  envelopeFromDomain?: string;
+  /**
    * Used exclusively for [Domain Lockdown](https://docs.mailchannels.com/email-api/domain-lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field. The corresponding value is included in the `X-MailChannels-SenderId` header of emails sent via MailChannels.
    */
   senderId?: string;

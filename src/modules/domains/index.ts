@@ -62,6 +62,7 @@ export class Domains {
         dkim_selector: dkim.selector
       })),
       domain,
+      envelope_from_domain: options?.envelopeFromDomain,
       sender_id: options?.senderId
     };
 
