@@ -48,7 +48,7 @@ const { data, error } = await mailchannels.domains.check('example.com', {
 
 - `domain` `string` <Badge type="danger">required</Badge>: Domain used for sending emails. If `dkim` settings are not provided, or `dkim` settings are provided with no `domain`, the stored dkim settings for this domain will be used.
 - `options` `DomainsCheckOptions` <Badge type="info">optional</Badge>: Check domain options.
-  - `dkim` `DomainsCheck[] | DomainsCheck` <Badge type="info">optional</Badge>: The DKIM settings for the domain.
+  - `dkim` `DomainsCheckDkim[] | DomainsCheckDkim` <Badge type="info">optional</Badge>: The DKIM settings for the domain.
     - `domain` `string` <Badge type="info">optional</Badge>: The DKIM domain to sign the email with.
     - `privateKey` `string` <Badge type="info">optional</Badge>: The DKIM private key to sign the email with. Encoded in Base64.
     - `selector` `string` <Badge type="info">optional</Badge>: The DKIM selector to use.
@@ -109,7 +109,7 @@ const { data, error } = await mailchannels.domains.check('example.com', {
 
 **Check Domain type declarations**
 
-<<< @/snippets/domains-check.ts
+<<< @/snippets/domains-check-dkim.ts
 <<< @/snippets/domains-check-options.ts
 <<< @/snippets/domains-check-verdict.ts
 <<< @/snippets/domains-check-response.ts
