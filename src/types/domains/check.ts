@@ -28,7 +28,7 @@ export interface DomainsCheckOptions {
    */
   dkim?: DomainsCheck[] | DomainsCheck;
   /**
-   * Used exclusively for [Domain Lockdown](https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field. The corresponding value is included in the `X-MailChannels-SenderId` header of emails sent via MailChannels.
+   * Used exclusively for [Domain Lockdown](https://docs.mailchannels.com/email-api/domain-lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field. The corresponding value is included in the `X-MailChannels-SenderId` header of emails sent via MailChannels.
    */
   senderId?: string;
 }
@@ -57,7 +57,7 @@ export type DomainsCheckResponse = DataResponse<{
     verdict: Extract<DomainsCheckVerdict, "passed" | "failed">;
   };
   /**
-   * These results are here to help avoid [SDNF](https://support.mailchannels.com/hc/en-us/articles/203155500-550-5-2-1-SDNF-Sender-Domain-Not-Found) (Sender Domain Not Found) blocks. For messages not to get blocked by SDNF, we require either an MX or A record to exist for the sender domain.
+   * These results are here to help avoid [SDNF](https://docs.mailchannels.com/email-api/troubleshooting#550-5-1-2-sdnf-sender-domain-not-found) (Sender Domain Not Found) blocks. For messages not to get blocked by SDNF, we require either an MX or A record to exist for the sender domain.
    */
   senderDomain: {
     a: {
