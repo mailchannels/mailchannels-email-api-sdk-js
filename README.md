@@ -57,7 +57,7 @@ Some of the things you can do with the SDK:
 ## <a name="prerequisites">📏 Prerequisites</a>
 
 - [Create a MailChannels account](https://www.mailchannels.com/pricing/#for_devs)
-- [Create an API key](https://console.mailchannels.net/settings/accountSettings#APIKeys)
+- [Create an API key](https://dash.mailchannels.com/account/api-keys)
 
 ## <a name="installation">📦 Installation</a>
 

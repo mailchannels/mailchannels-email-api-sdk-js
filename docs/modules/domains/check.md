@@ -60,7 +60,7 @@ const { data, error } = await mailchannels.domains.check('example.com', {
     > 4. If none are present, use all stored keys for the `domain` provided in the domain field of the request.
     > 5. If `privateKey` is present, `selector` must be present.
     > 6. If `selector` is present and `domain` is not, the domain will be taken from the domain field of the request.
-  - `senderId` `string` <Badge type="info">optional</Badge>: Used exclusively for [Domain Lockdown](https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field.
+  - `senderId` `string` <Badge type="info">optional</Badge>: Used exclusively for [Domain Lockdown](https://docs.mailchannels.com/email-api/domain-lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field.
     > [!INFO]
     > Your `senderId` is the `X-MailChannels-Sender-Id` header value in emails sent via MailChannels.
 
@@ -76,7 +76,7 @@ const { data, error } = await mailchannels.domains.check('example.com', {
   - `domainLockdown` `object` <Badge>guaranteed</Badge>
     - `reason` `string` <Badge type="info">optional</Badge>: A human-readable explanation of Domain Lockdown check.
     - `verdict` `"passed" | "failed"` <Badge>guaranteed</Badge>
-  - `senderDomain` `object` <Badge>guaranteed</Badge>: These results are here to help avoid [SDNF](https://support.mailchannels.com/hc/en-us/articles/203155500-550-5-2-1-SDNF-Sender-Domain-Not-Found) (Sender Domain Not Found) blocks. For messages not to get blocked by SDNF, we require either an MX or A record to exist for the sender domain.
+  - `senderDomain` `object` <Badge>guaranteed</Badge>: These results are here to help avoid [SDNF](https://docs.mailchannels.com/email-api/troubleshooting#550-5-1-2-sdnf-sender-domain-not-found) (Sender Domain Not Found) blocks. For messages not to get blocked by SDNF, we require either an MX or A record to exist for the sender domain.
     - `a` `object` <Badge>guaranteed</Badge>
       - `reason` `string` <Badge type="info">optional</Badge>: A human-readable explanation of A record check.
       - `verdict` `"passed" | "failed"` <Badge>guaranteed</Badge>

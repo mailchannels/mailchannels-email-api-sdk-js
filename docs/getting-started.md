@@ -17,7 +17,7 @@ Getting started with `mailchannels-sdk`
 ## Prerequisites
 
 - [Create a MailChannels account](https://www.mailchannels.com/pricing/#for_devs)
-- [Create an API key](https://console.mailchannels.net/settings/accountSettings#APIKeys)
+- [Create an API key](https://dash.mailchannels.com/account/api-keys)
 
 ## Installation
 

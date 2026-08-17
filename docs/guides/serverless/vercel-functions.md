@@ -12,7 +12,7 @@ In this guide we use [Next.js](https://nextjs.org/) route handlers to create Ver
 ## Prerequisites
 
 - [Create a MailChannels account](https://www.mailchannels.com/pricing/#for_devs)
-- [Create an API key](https://console.mailchannels.net/settings/accountSettings#APIKeys)
+- [Create an API key](https://dash.mailchannels.com/account/api-keys)
 - [Install the Vercel CLI](https://vercel.com/docs/cli#installing-vercel-cli)
 
 ## 1. Install
