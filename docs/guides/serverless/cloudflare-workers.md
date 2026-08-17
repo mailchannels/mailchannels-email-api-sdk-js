@@ -10,7 +10,7 @@ Send emails using [Cloudflare Workers](https://developers.cloudflare.com/workers
 ## Prerequisites
 
 - [Create a MailChannels account](https://www.mailchannels.com/pricing/#for_devs)
-- [Create an API key](https://console.mailchannels.net/settings/accountSettings#APIKeys)
+- [Create an API key](https://dash.mailchannels.com/account/api-keys)
 - [Create a Cloudflare Worker](https://developers.cloudflare.com/workers/get-started/guide/)
 
 ## 1. Install

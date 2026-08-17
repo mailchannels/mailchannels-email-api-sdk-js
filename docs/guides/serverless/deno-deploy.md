@@ -10,7 +10,7 @@ Send emails using [Deno Deploy](https://deno.com/deploy) and the MailChannels No
 ## Prerequisites
 
 - [Create a MailChannels account](https://www.mailchannels.com/pricing/#for_devs)
-- [Create an API key](https://console.mailchannels.net/settings/accountSettings#APIKeys)
+- [Create an API key](https://dash.mailchannels.com/account/api-keys)
 
 ## 1. Create a Deno Deploy project
 
