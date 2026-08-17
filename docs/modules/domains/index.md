@@ -25,7 +25,7 @@ This module allows you to check a domain's email authentication, manage DKIM key
 
   **Domain check type declarations**
 
-  <<< @/snippets/domains-check.ts
+  <<< @/snippets/domains-check-dkim.ts
   <<< @/snippets/domains-check-options.ts
   <<< @/snippets/domains-check-verdict.ts
   <<< @/snippets/domains-check-response.ts

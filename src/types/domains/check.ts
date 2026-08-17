@@ -1,7 +1,7 @@
 import type { DataResponse } from "../responses";
 import type { DomainsDkimKey } from "./dkim-create";
 
-interface DomainsCheck {
+interface DomainsCheckDkim {
   /**
    * Domain used for DKIM signing.
    */
@@ -26,7 +26,7 @@ export interface DomainsCheckOptions {
    * 5. If `privateKey` is present, `selector` must be present.
    * 6. If `selector` is present and `domain` is not, the domain will be taken from the domain field of the request.
    */
-  dkim?: DomainsCheck[] | DomainsCheck;
+  dkim?: DomainsCheckDkim[] | DomainsCheckDkim;
   /**
    * Used exclusively for [Domain Lockdown](https://docs.mailchannels.com/email-api/domain-lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field. The corresponding value is included in the `X-MailChannels-SenderId` header of emails sent via MailChannels.
    */
