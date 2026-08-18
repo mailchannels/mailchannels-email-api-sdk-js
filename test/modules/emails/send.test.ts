@@ -26,6 +26,7 @@ const fake = {
   apiResponse: {
     request_id: "test-request-id",
     results: [{
+      index: 0,
       message_id: "test-message-id",
       status: "sent"
     }]
@@ -34,6 +35,7 @@ const fake = {
     data: {
       requestId: "test-request-id",
       results: [{
+        index: 0,
         messageId: "test-message-id",
         status: "sent"
       }]
