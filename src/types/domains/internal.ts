@@ -8,6 +8,7 @@ export interface DomainsCheckPayload {
     dkim_selector?: string;
   }[];
   domain: string;
+  envelope_from_domain?: string;
   sender_id?: string;
 }
 

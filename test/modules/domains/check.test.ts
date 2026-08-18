@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Domains } from "~/modules/domains";
 import { ErrorCode } from "~/internal/errors";
-import type { DomainsCheckResponse } from "~/types/domains/check";
+import type { DomainsCheckOptions, DomainsCheckResponse } from "~/types/domains/check";
+import type { DomainsCheckApiResponse, DomainsCheckPayload } from "~/types/domains/internal";
 
 const fake = {
   domain: "example.com",
@@ -16,7 +17,7 @@ const fake = {
       sender_domain: { a: { verdict: "failed" }, mx: { verdict: "passed" }, verdict: "passed" },
       dkim: [{ dkim_domain: "example.com", dkim_key_status: "provided", dkim_selector: "selector", verdict: "passed" }]
     }
-  },
+  } satisfies DomainsCheckApiResponse,
   expectedResponse: {
     data: {
       spf: {
@@ -31,17 +32,19 @@ const fake = {
   } satisfies DomainsCheckResponse,
   options: {
     dkim: { domain: "example.com", privateKey: "private-key", selector: "selector" },
-    senderId: "sender-id"
-  },
-  payload: expect.objectContaining({
+    senderId: "sender-id",
+    envelopeFromDomain: "example.net"
+  } satisfies DomainsCheckOptions,
+  payload: {
     dkim_settings: [{
       dkim_domain: "example.com",
       dkim_private_key: "private-key",
       dkim_selector: "selector"
     }],
     domain: "example.com",
-    sender_id: "sender-id"
-  })
+    sender_id: "sender-id",
+    envelope_from_domain: "example.net"
+  } satisfies DomainsCheckPayload
 };
 
 describe("check", () => {
