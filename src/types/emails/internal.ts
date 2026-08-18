@@ -59,7 +59,7 @@ export interface EmailsSendApiResponse {
   data?: string[];
   request_id?: string;
   results?: {
-    index?: number;
+    index: number;
     message_id: string;
     reason?: string;
     status: "sent" | "failed";
