@@ -1,6 +1,33 @@
 # Changelog
 
 
+## v1.5.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.5.0%0Dv1.4.0)
+
+### 🚀 Enhancements
+
+- **domains:** Add optional `envelopeFromDomain` field in `check` options ([e720d56](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/e720d56))
+
+### 🩹 Fixes
+
+- **emails:** Mark `index` field as non-optional in send response ([341db55](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/341db55))
+
+### 📖 Documentation
+
+- Update references of legacy support links ([213ee6f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/213ee6f))
+- Update API key console links to new dashboard ([1460691](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/1460691))
+- Bump Email API version to 1.7.0 ([8aa390b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/8aa390b))
+
+### 🏡 Chore
+
+- **types:** Rename domain check dkim type ([60750a2](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/60750a2))
+- Update all dependencies ([c87f712](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/c87f712))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+
 ## v1.4.0
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.4.0%0Dv1.3.1)

@@ -15,7 +15,7 @@
     "send": "node dist/index.js"
   },
   "dependencies": {
-    "mailchannels-sdk": "^1.4.0",
+    "mailchannels-sdk": "^1.5.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-email": "6.9.2"

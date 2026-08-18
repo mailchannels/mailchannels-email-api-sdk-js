@@ -8,7 +8,7 @@
     "deploy": "netlify deploy"
   },
   "dependencies": {
-    "mailchannels-sdk": "^1.4.0"
+    "mailchannels-sdk": "^1.5.0"
   },
   "devDependencies": {
     "@netlify/edge-functions": "^4.0.0",
