@@ -88,9 +88,10 @@ If your lockdown record uses `auth=` (account-wide authorization), omit `senderI
 
 ## With A Different Envelope-From Domain
 
-If the envelope-from domain used during delivery differs from the domain you are
-checking, provide it with `envelopeFromDomain` so SPF is evaluated against the
-correct domain:
+If the envelope-from domain differs from the domain you pass as `domain`, provide
+it as `envelopeFromDomain` so SPF and Domain Lockdown are evaluated against the
+correct domain — otherwise SPF or Domain Lockdown failures may cause message delivery
+to fail.
 
 ```ts
 const { data, error } = await mc.domains.check('example.com', {

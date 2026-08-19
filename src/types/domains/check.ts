@@ -28,9 +28,10 @@ export interface DomainsCheckOptions {
    */
   dkim?: DomainsCheckDkim[] | DomainsCheckDkim;
   /**
-   * Optional envelope-from domain. During message delivery, SPF is evaluated against the envelope sender domain.
-   * If your envelope-from domain differs from the domain used for sending messages, provide it here to ensure SPF
-   * is checked against the correct domain. Otherwise, SPF failures may cause recipient servers to reject messages.
+   * Optional envelope-from domain. During message delivery, SPF and Domain Lockdown verification are evaluated
+   * against the envelope sender domain. If your envelope-from domain differs from the domain used for sending
+   * messages, provide it here to ensure both checks are run against the correct domain. Otherwise, SPF or Domain
+   * Lockdown failures may cause message delivery to fail.
    */
   envelopeFromDomain?: string;
   /**
