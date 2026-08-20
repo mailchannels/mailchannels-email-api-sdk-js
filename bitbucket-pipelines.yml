@@ -1,4 +1,4 @@
-image: node:lts
+image: ghcr.io/pnpm/pnpm:latest
 
 definitions:
   caches:
@@ -10,11 +10,37 @@ definitions:
         caches:
           - pnpm
         script:
-          - corepack enable
-          - corepack prepare pnpm@latest --activate
+          - pnpm runtime set node lts -g
           - pnpm install
           - pnpm lint
           - pnpm test:types
+          - pnpm test
+
+    - step: &node20
+        name: Tests (Node 20)
+        caches:
+          - pnpm
+        script:
+          - pnpm runtime set node 20 -g
+          - pnpm install
+          - pnpm test
+    
+    - step: &node22
+        name: Tests (Node 22)
+        caches:
+          - pnpm
+        script:
+          - pnpm runtime set node 22 -g
+          - pnpm install
+          - pnpm test
+
+    - step: &node24
+        name: Tests (Node 24)
+        caches:
+          - pnpm
+        script:
+          - pnpm runtime set node 24 -g
+          - pnpm install
           - pnpm test
 
     - step: &release
@@ -22,8 +48,7 @@ definitions:
         caches:
           - pnpm
         script:
-          - corepack enable
-          - corepack prepare pnpm@latest --activate
+          - pnpm runtime set node lts -g
           - pnpm config set registry https://registry.npmjs.org
           - pnpm config set '//registry.npmjs.org/:_authToken' "$NPM_TOKEN"
           - pnpm install
@@ -36,6 +61,10 @@ pipelines:
   branches:
     main:
       - step: *checks
+      - parallel:
+          - step: *node20
+          - step: *node22
+          - step: *node24
 
   tags:
     'v*':
