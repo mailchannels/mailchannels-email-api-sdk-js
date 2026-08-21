@@ -24,6 +24,6 @@
     "tsdown": "0.22.14",
     "typescript": "7.0.2",
     "unplugin-vue": "^7.2.0",
-    "vue-tsc": "^3.3.10"
+    "vue-tsc": "^3.3.11"
   }
 }
