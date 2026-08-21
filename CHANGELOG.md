@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v1.5.1
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.5.1%0Dv1.5.0)
+
+### 📖 Documentation
+
+- **domains:** Update `envelopeFromDomain` JSDoc description ([b347d92](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/b347d92))
+
+### 🏡 Chore
+
+- **scripts:** Run tsc once for all skill snippet blocks ([23e05ab](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/23e05ab))
+- Update all dependencies ([e9d9d72](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/e9d9d72))
+
+### 🤖 CI
+
+- Drop corepack and add node 20/22/24 tests ([b525426](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/b525426))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+
 ## v1.5.0
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.5.0%0Dv1.4.0)
