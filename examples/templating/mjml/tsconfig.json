@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "composite": false,
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "strictNullChecks": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["dist", "build", "node_modules"]
+}

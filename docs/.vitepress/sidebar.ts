@@ -143,7 +143,8 @@ export default [
         collapsed: true,
         items: [
           { text: "React Email", link: "/guides/templating/react-email" },
-          { text: "Vue Email", link: "/guides/templating/vue-email" }
+          { text: "Vue Email", link: "/guides/templating/vue-email" },
+          { text: "MJML", link: "/guides/templating/mjml" }
         ]
       },
       {
