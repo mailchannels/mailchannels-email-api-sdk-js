@@ -69,7 +69,6 @@ export class SubAccountsLimits {
       body: options,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }

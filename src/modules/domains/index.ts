@@ -70,7 +70,6 @@ export class Domains {
       body: payload,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Forbidden]: "User does not have access to this feature."
         });
       }

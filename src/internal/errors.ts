@@ -25,6 +25,11 @@ const STATUS_ERROR_TYPE_MAP: Record<number, ErrorType> = {
   [ErrorCode.InternalServerError]: "internal_server_error"
 };
 
+const STATUS_DEFAULT_TEXT_MAP: Record<number, string> = {
+  [ErrorCode.BadRequest]: "Bad request.",
+  [ErrorCode.Unauthorized]: "Authorization required."
+};
+
 /** Create a standardized error response object. */
 const createError = (
   message: string,
@@ -47,7 +52,7 @@ export const getStatusError = (
   response: FetchResponse<MailChannelsErrorResponse>,
   errors: Record<number, string> = {}
 ) => {
-  const statusText = errors[response.status] || "Unknown error.";
+  const statusText = errors[response.status] || STATUS_DEFAULT_TEXT_MAP[response.status] || "Unknown error.";
 
   const payload = response._data ?? (response as { data?: MailChannelsErrorResponse }).data;
 

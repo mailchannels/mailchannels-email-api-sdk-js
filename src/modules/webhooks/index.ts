@@ -122,7 +122,6 @@ export class Webhooks {
       },
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: `The key '${id}' is not found.`
         });
       }
@@ -164,7 +163,6 @@ export class Webhooks {
       },
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: "No webhooks found for the account."
         });
       }
@@ -300,9 +298,7 @@ export class Webhooks {
         offset: options?.offset
       },
       onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request."
-        });
+        error = getStatusError(response);
       }
     }).catch((e) => {
       error ||= getResultError(e, "Failed to fetch webhook batches.");
@@ -340,7 +336,7 @@ export class Webhooks {
     const response = await this.mailchannels.post<WebhooksResendBatchApiResponse>(`/tx/v1/webhook-batch/${encodeURIComponent(batchId)}/resend`, {
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request. The batch ID is invalid.",
+          [ErrorCode.BadRequest]: "The batch ID is invalid.",
           [ErrorCode.NotFound]: `The batch '${batchId}' is not found for the customer.`
         });
       }

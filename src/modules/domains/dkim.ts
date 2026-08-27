@@ -47,7 +47,6 @@ export class DomainsDkim {
       body: payload,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Conflict]: "Key pair already created for domain, and selector."
         });
       }
@@ -102,9 +101,7 @@ export class DomainsDkim {
     const response = await this.mailchannels.get<{ keys: DomainsDkimCreateApiResponse[] }>(`/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys`, {
       query: payload,
       onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request."
-        });
+        error = getStatusError(response);
       }
     }).catch((e) => {
       error ||= getResultError(e, "Failed to fetch DKIM keys.");
@@ -151,7 +148,6 @@ export class DomainsDkim {
       body: payload,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: "Specified key pair not found, or no active key for rotation. This may also occur if the DKIM domain or selector path parameter is missing."
         });
       }
@@ -206,7 +202,6 @@ export class DomainsDkim {
       body: payload,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: "Specified key pair not found.",
           [ErrorCode.Conflict]: "Key pair already created for domain, and provided new key selector."
         });
