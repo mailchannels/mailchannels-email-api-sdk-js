@@ -33,9 +33,7 @@ export class DomainsCustomTracking {
     const response = await this.mailchannels.get<DomainsCustomTrackingListApiResponse>("/tx/v1/custom-tracking-domains", {
       query: options,
       onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request."
-        });
+        error = getStatusError(response);
       }
     }).catch((e) => {
       error ||= getResultError(e, "Failed to fetch custom tracking domains.");
@@ -108,7 +106,6 @@ export class DomainsCustomTracking {
       },
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Invalid request body.",
           [ErrorCode.Forbidden]: "No permission to register this domain.",
           [ErrorCode.Conflict]: "A domain with the same name already exists, or the hostname and scope combination is already registered.",
           [ErrorCode.UnprocessableEntity]: "DNS verification incomplete. Either the TXT ownership record has not propagated yet or the hostname CNAME does not point to the required target."
@@ -198,7 +195,6 @@ export class DomainsCustomTracking {
       },
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Forbidden]: "No permission to update this domain.",
           [ErrorCode.NotFound]: `Custom tracking domain for hostname '${hostname}' and scope '${scope}' not found.`,
           [ErrorCode.Conflict]: "Name already used by another domain.",

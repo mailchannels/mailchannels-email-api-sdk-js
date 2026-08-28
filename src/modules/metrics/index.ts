@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import { getResultError, getStatusError, validatePagination } from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import { mapBucket } from "../../internal/map-bucket";
 import { parseDateInputs } from "../../internal/parse-date-inputs";
@@ -43,9 +43,7 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request."
-        });
+        error = getStatusError(response);
       }
     }).catch((e) => {
       error ||= getResultError(e, "Failed to fetch engagement metrics.");
@@ -107,9 +105,7 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request."
-        });
+        error = getStatusError(response);
       }
     }).catch((e) => {
       error ||= getResultError(e, "Failed to fetch performance metrics.");
@@ -163,9 +159,7 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request."
-        });
+        error = getStatusError(response);
       }
     }).catch((e) => {
       error ||= getResultError(e, "Failed to fetch recipient behaviour metrics.");
@@ -215,9 +209,7 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request."
-        });
+        error = getStatusError(response);
       }
     }).catch((e) => {
       error ||= getResultError(e, "Failed to fetch volume metrics.");
@@ -306,9 +298,7 @@ export class Metrics {
         sort_order: options?.sortOrder
       },
       onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request."
-        });
+        error = getStatusError(response);
       }
     }).catch((e) => {
       error ||= getResultError(e, "Failed to fetch senders metrics.");

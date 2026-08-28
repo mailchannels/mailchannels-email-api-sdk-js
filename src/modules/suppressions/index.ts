@@ -53,7 +53,6 @@ export class Suppressions {
       body: payload,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Conflict]: "Conflict. One or more suppression entries in the request already exist and cannot be created again.",
           [ErrorCode.PayloadTooLarge]: "Payload too large. The request exceeds the maximum allowed total of 1000 suppression entries for the parent account and/or its sub-accounts."
         });
@@ -83,9 +82,7 @@ export class Suppressions {
         source
       },
       onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request."
-        });
+        error = getStatusError(response);
       }
     }).catch((e) => {
       error ||= getResultError(e, "Failed to delete suppression entry.");
@@ -133,9 +130,7 @@ export class Suppressions {
     const response = await this.mailchannels.get<SuppressionsListApiResponse>("/tx/v1/suppression-list", {
       query: payload,
       onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request."
-        });
+        error = getStatusError(response);
       }
     }).catch((e) => {
       error ||= getResultError(e, "Failed to fetch suppression entries.");

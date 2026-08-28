@@ -32,7 +32,7 @@ describe("getStatusError", () => {
     const response = { status: ErrorCode.Unauthorized };
     const error = getStatusError(response as ErrorResponse);
     expect(error).toStrictEqual({
-      message: "Unknown error.",
+      message: "Invalid API key.",
       statusCode: ErrorCode.Unauthorized,
       type: "authentication_error",
       response: null
