@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v1.5.2
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.5.2%0Dv1.5.1)
+
+### 🩹 Fixes
+
+- **errors:** Ignore html response body data as error details ([f42f71f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f42f71f))
+
+### 💅 Refactors
+
+- **errors:** Add shared default error texts by status ([278c211](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/278c211))
+
+### 📖 Documentation
+
+- **examples:** Add MJML templating example ([1ab85aa](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/1ab85aa))
+- **modules:** Add missing domains module ([ab7c955](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/ab7c955))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+
 ## v1.5.1
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.5.1%0Dv1.5.0)
