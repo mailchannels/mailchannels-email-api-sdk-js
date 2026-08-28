@@ -20,6 +20,12 @@ Leverage the power, scale, and reputation of MailChannels to get your mission-cr
 
 <VPButton href="/modules/emails" text="Read documentation" theme="alt" style="text-decoration:none" />
 
+### 🌐 Domains
+
+<!-- @include: modules/domains/index.md#description -->
+
+<VPButton href="/modules/domains" text="Read documentation" theme="alt" style="text-decoration:none" />
+
 ### 📢 Webhooks
 
 <!-- @include: modules/webhooks/index.md#description -->
