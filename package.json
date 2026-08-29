@@ -48,7 +48,7 @@
     "build": "obuild",
     "parity:fixtures": "node scripts/generate-parity-fixtures.ts",
     "prepack": "pnpm build",
-    "release": "pnpm lint && pnpm test && pnpm build && changelogen --bump",
+    "release": "pnpm lint && pnpm test && pnpm build && changelogen --bump && node scripts/update-examples-sdk-version.ts",
     "cli": "pnpx jiti src/cli/index.ts",
     "simulate": "pnpx jiti src/cli/index.ts simulate",
     "lint": "oxlint",
