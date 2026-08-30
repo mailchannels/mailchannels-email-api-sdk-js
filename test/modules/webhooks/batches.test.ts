@@ -149,6 +149,20 @@ describe("batches", () => {
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
+  it("should contain error for invalid status filter", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    // @ts-expect-error Intentionally passing an invalid status
+    const { data, error } = await webhooks.batches({ statuses: ["invalid_status"] });
+
+    expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
   it("should contain error for invalid createdAfter", async () => {
     const mockClient = {
       get: vi.fn()
