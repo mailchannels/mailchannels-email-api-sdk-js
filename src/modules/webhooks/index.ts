@@ -292,7 +292,7 @@ export class Webhooks {
       query: {
         created_after: dates.createdAfter,
         created_before: dates.createdBefore,
-        statuses: options?.statuses,
+        statuses: options?.statuses?.join(","),
         webhook: options?.webhook,
         limit: options?.limit,
         offset: options?.offset

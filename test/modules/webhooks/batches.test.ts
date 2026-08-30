@@ -63,7 +63,7 @@ describe("batches", () => {
           webhook: fake.options.webhook,
           created_after: formatDateInput(fake.options.createdAfter),
           created_before: formatDateInput(fake.options.createdBefore),
-          statuses: fake.options.statuses,
+          statuses: fake.options.statuses?.join(","),
           limit: fake.options.limit,
           offset: fake.options.offset
         }
