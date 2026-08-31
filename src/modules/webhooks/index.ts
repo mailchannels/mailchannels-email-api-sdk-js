@@ -8,11 +8,13 @@ import type { WebhooksListResponse } from "../../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../../types/webhooks/signing-key";
 import type { WebhooksValidateResponse } from "../../types/webhooks/validate";
 import type { WebhooksVerifyOptions, WebhooksVerifyResponse } from "../../types/webhooks/verify";
-import type { WebhooksBatchesOptions, WebhooksBatchesResponse } from "../../types/webhooks/batches";
+import type { WebhooksBatchStatus, WebhooksBatchesOptions, WebhooksBatchesResponse } from "../../types/webhooks/batches";
 import type { WebhooksResendBatchResponse } from "../../types/webhooks/resend-batch";
 import type { WebhookEventReceived, WebhooksBatchesApiResponse, WebhooksResendBatchApiResponse, WebhooksValidateApiResponse } from "../../types/webhooks/internal";
 
 export class Webhooks {
+  private static readonly STATUS_VALUES: Set<WebhooksBatchStatus> = new Set(["1xx", "2xx", "3xx", "4xx", "5xx", "no_response"]);
+
   constructor (protected mailchannels: MailChannelsClient) {}
 
   /**
@@ -259,12 +261,23 @@ export class Webhooks {
     error = validatePagination({ ...options, max: 500 });
     if (error) return { data: null, error };
 
-    if (options?.statuses && options.statuses.length > 6) {
-      return { data: null, error: createValidationError("A maximum of 6 status filters can be provided.") };
-    }
+    if (options?.statuses !== undefined) {
+      if (!Array.isArray(options.statuses)) {
+        return { data: null, error: createValidationError("Status filters must be an array.") };
+      }
 
-    if (options?.statuses && new Set(options.statuses).size !== options.statuses.length) {
-      return { data: null, error: createValidationError("Status filters must be unique.") };
+      if (options.statuses.length > 6) {
+        return { data: null, error: createValidationError("A maximum of 6 status filters can be provided.") };
+      }
+
+      if (new Set(options.statuses).size !== options.statuses.length) {
+        return { data: null, error: createValidationError("Status filters must be unique.") };
+      }
+
+      if (!options.statuses.every(status => Webhooks.STATUS_VALUES.has(status))) {
+        const validValues = Array.from(Webhooks.STATUS_VALUES).map(status => `'${status}'`).join(", ");
+        return { data: null, error: createValidationError(`Invalid status filter provided. Valid values are: ${validValues}.`) };
+      }
     }
 
     const { dates, error: dateError } = parseDateInputs({
