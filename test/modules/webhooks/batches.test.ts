@@ -136,6 +136,20 @@ describe("batches", () => {
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
+  it("should contain error for non-array statuses", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    // @ts-ignore Intentionally passing a non-array value
+    const { data, error } = await webhooks.batches({ statuses: "abc" });
+
+    expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
   it("should contain error for duplicate statuses", async () => {
     const mockClient = {
       get: vi.fn()

@@ -261,7 +261,11 @@ export class Webhooks {
     error = validatePagination({ ...options, max: 500 });
     if (error) return { data: null, error };
 
-    if (options?.statuses) {
+    if (options?.statuses !== undefined) {
+      if (!Array.isArray(options.statuses)) {
+        return { data: null, error: createValidationError("Status filters must be an array.") };
+      }
+
       if (options.statuses.length > 6) {
         return { data: null, error: createValidationError("A maximum of 6 status filters can be provided.") };
       }
