@@ -102,12 +102,23 @@ export const validatePagination = (pagination: Partial<{
   offset: number;
 }> = {}) => {
   const { limit, offset, max } = pagination;
-  if (typeof limit === "number" && (limit < 1 || (max && limit > max))) {
-    return createValidationError("The limit value " + (max ? `must be between 1 and ${max}.` : "is invalid. Only positive values are allowed."));
+
+  if (limit !== undefined) {
+    if (!Number.isInteger(limit))
+      return createValidationError("The limit value must be an integer.");
+
+    if (limit < 1 || (max != null && limit > max))
+      return createValidationError("The limit value " + (max != null ? `must be between 1 and ${max}.` : "is invalid. Only positive values are allowed."));
   }
-  if (typeof offset === "number" && offset < 0) {
-    return createValidationError("Offset must be greater than or equal to 0.");
+
+  if (offset !== undefined) {
+    if (!Number.isInteger(offset))
+      return createValidationError("The offset value must be an integer.");
+
+    if (offset < 0)
+      return createValidationError("The offset value must be greater than or equal to 0.");
   }
+
   return null;
 };
 

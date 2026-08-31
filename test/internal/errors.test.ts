@@ -127,6 +127,36 @@ describe("validatePagination", () => {
       response: null
     });
   });
+
+  it("should return error for non-integer pagination value", () => {
+    const error = validatePagination({ limit: 5.5 });
+    expect(error).toStrictEqual({
+      message: "The limit value must be an integer.",
+      statusCode: null,
+      type: "validation_error",
+      response: null
+    });
+  });
+
+  it("should return error for a non-finite pagination value", () => {
+    const error = validatePagination({ limit: Number.POSITIVE_INFINITY });
+    expect(error).toStrictEqual({
+      message: "The limit value must be an integer.",
+      statusCode: null,
+      type: "validation_error",
+      response: null
+    });
+  });
+
+  it("should return error for a NaN pagination value", () => {
+    const error = validatePagination({ offset: Number.NaN });
+    expect(error).toStrictEqual({
+      message: "The offset value must be an integer.",
+      statusCode: null,
+      type: "validation_error",
+      response: null
+    });
+  });
 });
 
 describe("validateCustomTrackingName", () => {
