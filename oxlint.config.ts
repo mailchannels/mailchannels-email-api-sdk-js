@@ -6,7 +6,7 @@ export default defineConfig({
     "@stylistic/eslint-plugin"
   ],
   rules: {
-    "no-console": ["error", { allow: ["info", "warn", "error"] }],
+    "no-console": ["error", { allow: ["info", "warn", "error", "table"] }],
     "sort-imports": ["error", { ignoreDeclarationSort: true }],
     "no-unused-vars": "error",
     "import/first": "error",
