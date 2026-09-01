@@ -13,7 +13,7 @@ export const emailArgs = {
   "tracking-open": { type: "boolean", default: false },
   "tracking-open-custom-domain-name": { type: "string", valueHint: "name" },
   "from": { type: "string", required: true, valueHint: "address" },
-  "headers": { type: "string", alias: "h", valueHint: "json" },
+  "headers": { type: "string", valueHint: "json" },
   "to": { type: "string", required: true, valueHint: "addresses" },
   "subject": { type: "string", required: true },
   "text": { type: "string", default: "" },

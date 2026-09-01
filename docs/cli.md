@@ -109,7 +109,7 @@ These options are available for both sending and queuing emails.
 | `--cc <addresses>` | Comma-separated CC addresses | No | |
 | `--bcc <addresses>` | Comma-separated BCC addresses | No | |
 | `--reply-to <address>` | Reply-to address | No | |
-| `--headers <json>` (`-h`) | Custom headers as a JSON object | No | |
+| `--headers <json>` | Custom headers as a JSON object | No | |
 | `--attachments` (`-a`) | Read a JSON array of attachments from stdin | No | `false` |
 | `--campaign-id <id>` | Campaign identifier | No | |
 | `--envelope-from <address>` | Envelope-from address | No | |
