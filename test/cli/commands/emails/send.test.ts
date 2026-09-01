@@ -1,17 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import emails from "~/cli/commands/emails";
+import type { EmailsSendResponse } from "~/types/emails/send";
 
 // @ts-expect-error defineCommand does not handle well sub command types
 const send = await emails.subCommands?.send;
-
-const mockSend = vi.fn().mockResolvedValue({ error: null });
-
-vi.mock("~/mailchannels", async () => ({
-  ...(await vi.importActual("~/mailchannels")),
-  MailChannelsClient: class {},
-  Emails: class { send = mockSend;}
-}));
 
 const fake = {
   args: [
@@ -21,13 +14,32 @@ const fake = {
     "--subject", "Test Email",
     "--text", "This is a test email."
   ],
-  response: {
+  options: {
     from: "test@example.com",
     to: ["recipient@example.com"],
     subject: "Test Email",
     text: "This is a test email."
-  }
+  },
+  response: {
+    data: {
+      requestId: "test-request-id",
+      results: [{
+        index: 0,
+        messageId: "test-message-id",
+        status: "sent"
+      }]
+    },
+    error: null
+  } satisfies EmailsSendResponse
 };
+
+const mockSend = vi.fn().mockResolvedValue(fake.response);
+
+vi.mock("~/mailchannels", async () => ({
+  ...(await vi.importActual("~/mailchannels")),
+  MailChannelsClient: class {},
+  Emails: class { send = mockSend;}
+}));
 
 describe("send", () => {
   beforeAll(() => {
@@ -41,7 +53,7 @@ describe("send", () => {
 
   it("should send an email with valid arguments", async () => {
     await runCommand(send, { rawArgs: fake.args });
-    expect(mockSend).toHaveBeenCalledWith(expect.objectContaining(fake.response), false);
+    expect(mockSend).toHaveBeenCalledWith(expect.objectContaining(fake.options), false);
   });
 
   it("should send email with multiple recipients", async () => {
@@ -190,7 +202,8 @@ describe("send", () => {
   });
 
   it("should exit with error on API send failure", async () => {
-    mockSend.mockResolvedValueOnce({ error: new Error("API Error") });
+    mockSend.mockResolvedValueOnce({ error: { message: "API Error" } });
+
     await expect(
       runCommand(send, { rawArgs: fake.args })
     ).rejects.toThrow();

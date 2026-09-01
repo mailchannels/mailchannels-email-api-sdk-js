@@ -1,7 +1,8 @@
 import type { ArgsDef } from "citty";
+import { sharedArgs } from "../shared/args";
 
 export const emailArgs = {
-  "api-key": { type: "string", alias: "k" },
+  ...sharedArgs,
   "campaign-id": { type: "string" },
   "dkim-domain": { type: "string" },
   "dkim-selector": { type: "string" },
