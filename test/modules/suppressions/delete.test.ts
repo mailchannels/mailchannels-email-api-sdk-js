@@ -6,7 +6,7 @@ import type { SuppressionsSource } from "~/types/suppressions/list";
 
 const fake = {
   recipient: "test@example.com",
-  source: "api" as SuppressionsSource
+  source: "api" as const satisfies SuppressionsSource | "all"
 };
 
 describe("delete", () => {

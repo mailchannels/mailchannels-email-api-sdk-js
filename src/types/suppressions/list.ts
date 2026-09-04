@@ -1,7 +1,7 @@
 import type { DataResponse } from "../responses";
 import type { SuppressionsTypes } from "./create";
 
-export type SuppressionsSource = "api" | "unsubscribe_link" | "list_unsubscribe" | "hard_bounce" | "spam_complaint" | "all";
+export type SuppressionsSource = "api" | "unsubscribe_link" | "list_unsubscribe" | "hard_bounce" | "spam_complaint";
 
 export interface SuppressionsListOptions {
   /**
@@ -11,7 +11,7 @@ export interface SuppressionsListOptions {
   /**
    * The source of the suppression entries to filter by. If not provided, suppression entries from all sources will be returned.
    */
-  source?: Exclude<SuppressionsSource, "all">;
+  source?: SuppressionsSource;
   /**
    * The date and/or time before which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` or a `Date` object.
    */
