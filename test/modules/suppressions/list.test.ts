@@ -110,6 +110,20 @@ describe("list", () => {
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
+  it("should contain error when source is invalid", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const suppressions = new Suppressions(mockClient);
+    // @ts-expect-error Testing invalid source value
+    const { data, error } = await suppressions.list({ ...fake.options, source: "all" });
+
+    expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
   it("should contain error for invalid offset", async () => {
     const mockClient = {
       get: vi.fn()
