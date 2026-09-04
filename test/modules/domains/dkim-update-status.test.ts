@@ -40,6 +40,21 @@ describe("dkim.updateStatus", () => {
     expect(mockClient.patch).not.toHaveBeenCalled();
   });
 
+  it("should return error if status is invalid", async () => {
+    const mockClient = { patch: vi.fn() } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.dkim.updateStatus("example.com", {
+      selector: "mailchannels-test",
+      // @ts-expect-error
+      status: "invalid-status"
+    });
+
+    expect(success).toBe(false);
+    expect(error).toBeTruthy();
+    expect(mockClient.patch).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       patch: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
