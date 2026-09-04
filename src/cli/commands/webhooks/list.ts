@@ -1,6 +1,7 @@
 import { defineCommand } from "citty";
 import { getApiKey } from "../../utils/shared/get-api-key";
 import { sharedArgs } from "../../utils/shared/args";
+import { toWordsKeys } from "../../utils/shared/style";
 import { MailChannelsClient, Webhooks } from "../../../mailchannels";
 
 export default defineCommand({
@@ -29,6 +30,6 @@ export default defineCommand({
     }
 
     console.info("[Webhooks] Registered webhook endpoints:");
-    console.table(data);
+    console.table(toWordsKeys(data));
   }
 });

@@ -1,6 +1,7 @@
 import { defineCommand } from "citty";
 import { getApiKey } from "../../utils/shared/get-api-key";
 import { sharedArgs } from "../../utils/shared/args";
+import { toWordsKeys } from "../../utils/shared/style";
 import { MailChannelsClient, Webhooks } from "../../../mailchannels";
 
 export default defineCommand({
@@ -25,13 +26,13 @@ export default defineCommand({
     }
 
     console.info("[Webhooks] Webhook validation result:");
-    console.table(
+    console.table(toWordsKeys(
       data.results.map(({ result, webhook, response }) => ({
         result,
         webhook,
         status: response?.status
       }))
-    );
+    ));
     console.info("[Webhooks] Total webhooks validated:", data.results.length, "all passed?:", data.allPassed);
   }
 });

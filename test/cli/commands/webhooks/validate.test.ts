@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import webhooks from "~/cli/commands/webhooks";
+import { toWordsKeys } from "~/cli/utils/shared/style";
 import type { WebhooksValidateResponse } from "~/types/webhooks/validate";
 
 // @ts-expect-error defineCommand does not handle well sub command types
@@ -58,7 +59,7 @@ describe("validate", () => {
     await runCommand(validate, { rawArgs: fake.args });
 
     expect(mockValidate).toHaveBeenCalledWith("request-123");
-    expect(console.table).toHaveBeenCalledWith([
+    expect(console.table).toHaveBeenCalledWith(toWordsKeys([
       {
         result: "passed",
         webhook: "https://example.com/webhook",
@@ -69,7 +70,7 @@ describe("validate", () => {
         webhook: "https://example.org/webhook",
         status: 200
       }
-    ]);
+    ]));
   });
 
   it("should exit with error on API validation failure", async () => {

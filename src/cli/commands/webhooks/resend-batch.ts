@@ -1,6 +1,7 @@
 import { defineCommand } from "citty";
 import { getApiKey } from "../../utils/shared/get-api-key";
 import { sharedArgs } from "../../utils/shared/args";
+import { tabulatedSections } from "../../utils/shared/sections";
 import { MailChannelsClient, Webhooks } from "../../../mailchannels";
 
 export default defineCommand({
@@ -24,7 +25,8 @@ export default defineCommand({
       process.exit(1);
     }
 
-    console.info("[Webhooks] Webhook batch resent:");
-    console.table(data);
+    console.info("[Webhooks] Webhook batch resent:"
+      + tabulatedSections(data)
+    );
   }
 });
