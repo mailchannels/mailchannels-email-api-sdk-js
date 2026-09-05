@@ -10,7 +10,10 @@ export default defineBuildConfig({
         "./src/cli/index.ts",
         "./src/simulator/index.ts",
         "./src/plugins/nodemailer/index.ts"
-      ]
+      ],
+      rolldown: {
+        external: [/^nodemailer(?:\/|$)/]
+      }
     }
   ],
   hooks: {

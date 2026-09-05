@@ -1,9 +1,9 @@
 import { createPrivateKey } from "node:crypto";
 import { Buffer } from "node:buffer";
-import type Mail from "nodemailer/lib/mailer";
+import type { SendMailOptions } from "nodemailer";
 import type { EmailsSendAttachment, EmailsSendDkim, EmailsSendRecipient } from "../../mailchannels";
 
-export const parseAddress = (address: Mail.Options["from"]): EmailsSendRecipient | string => {
+export const parseAddress = (address: SendMailOptions["from"]): EmailsSendRecipient | string => {
   if (!address) return "";
 
   if (Array.isArray(address)) return parseAddress(address[0]);
@@ -13,7 +13,7 @@ export const parseAddress = (address: Mail.Options["from"]): EmailsSendRecipient
   return { email: address.address, name: address.name || undefined };
 };
 
-export const parseAddresses = (addresses?: Mail.Options["to"]): (EmailsSendRecipient | string)[] => {
+export const parseAddresses = (addresses?: SendMailOptions["to"]): (EmailsSendRecipient | string)[] => {
   if (!addresses) return [];
 
   if (typeof addresses === "string") {
@@ -31,7 +31,7 @@ export const parseAddresses = (addresses?: Mail.Options["to"]): (EmailsSendRecip
   return [];
 };
 
-export const parseAttachments = (attachments: Mail.Options["attachments"]): EmailsSendAttachment[] | undefined => {
+export const parseAttachments = (attachments: SendMailOptions["attachments"]): EmailsSendAttachment[] | undefined => {
   if (!attachments) return;
 
   return attachments.map((attachment): EmailsSendAttachment => {
@@ -54,7 +54,7 @@ export const parseAttachments = (attachments: Mail.Options["attachments"]): Emai
   });
 };
 
-export const parseDkim = (dkim: Mail.Options["dkim"]): EmailsSendDkim | undefined => {
+export const parseDkim = (dkim: SendMailOptions["dkim"]): EmailsSendDkim | undefined => {
   if (!dkim) return;
 
   if ("keys" in dkim) {
@@ -88,7 +88,7 @@ export const parseDkim = (dkim: Mail.Options["dkim"]): EmailsSendDkim | undefine
   };
 };
 
-export const parseHeaders = (headers: Mail.Options["headers"]): Record<string, string> | undefined => {
+export const parseHeaders = (headers: SendMailOptions["headers"]): Record<string, string> | undefined => {
   if (!headers) return;
 
   if (Array.isArray(headers)) {
@@ -108,7 +108,7 @@ export const parseHeaders = (headers: Mail.Options["headers"]): Record<string, s
   );
 };
 
-export const parseIcalEvent = (icalEvent: Mail.Options["icalEvent"]): EmailsSendAttachment => {
+export const parseIcalEvent = (icalEvent: SendMailOptions["icalEvent"]): EmailsSendAttachment => {
   if (typeof icalEvent === "string") {
     return {
       content: Buffer.from(icalEvent).toString("base64"),

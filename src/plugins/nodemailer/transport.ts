@@ -1,5 +1,4 @@
 import type { Transport } from "nodemailer";
-import type MailMessage from "nodemailer/lib/mailer/mail-message";
 import { parseAddress, parseAddresses, parseAttachments, parseDkim, parseHeaders, parseIcalEvent } from "./utils";
 import type { MailChannelsTransportInfo, MailChannelsTransportOptions, MailChannelsTransportSendMode } from "./types";
 import { Emails, MailChannelsClient } from "../../mailchannels";
@@ -21,12 +20,12 @@ export const mailchannelsTransport = <T extends MailChannelsTransportSendMode = 
   const transport: Transport<MailChannelsTransportInfo<T>> = {
     name: "MailChannelsTransport",
     version: pkg.version,
-    send (mail: MailMessage, callback) {
+    send (mail, callback) {
       const sentMessageInfo: MailChannelsTransportInfo<T> = {
         messageId: null,
         accepted: [],
         rejected: [],
-        envelope: mail.message.getEnvelope(),
+        envelope: mail.message?.getEnvelope() ?? { from: false, to: [] },
         response: null
       };
 

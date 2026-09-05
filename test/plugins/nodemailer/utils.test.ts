@@ -2,6 +2,7 @@ import { Buffer } from "node:buffer";
 import { Readable } from "node:stream";
 import { createPrivateKey, generateKeyPairSync } from "node:crypto";
 import { describe, expect, it } from "vitest";
+import type { SendMailOptions } from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
 import MailMessage from "nodemailer/lib/mailer/mail-message";
 import MailComposer from "nodemailer/lib/mail-composer";
@@ -15,7 +16,7 @@ const fake = {
 
 const mailer = new Mail(fake.transport);
 
-const normalize = async (raw: Mail.Options): Promise<Mail.Options> => {
+const normalize = async (raw: SendMailOptions): Promise<SendMailOptions> => {
   const mailMessage = new MailMessage(mailer, raw);
   mailMessage.message = new MailComposer(mailMessage.data).compile();
   return new Promise((resolve, reject) => {
@@ -130,7 +131,6 @@ describe("parseHeaders", () => {
 
   it("should convert header value objects to their `value` property", () => {
     const headers = { "x-obj": { value: "objval" } };
-    // @ts-expect-error - testing object value conversion
     expect(parseHeaders(headers)).toEqual({ "x-obj": "objval" });
   });
 });
@@ -275,7 +275,6 @@ describe("parseDkim", () => {
 
   it("parses missing privateKey as undefined", () => {
     expect(
-      // @ts-expect-error - testing missing privateKey
       parseDkim({ keySelector: "sel", domainName: "example.com" }))
       .toStrictEqual({
         selector: "sel",

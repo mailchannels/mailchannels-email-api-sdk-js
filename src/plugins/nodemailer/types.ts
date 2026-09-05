@@ -1,3 +1,4 @@
+import type { Transport, TransportOptions, Transporter } from "nodemailer";
 import type MimeNode from "nodemailer/lib/mime-node";
 import type { EmailsQueueResponse, EmailsSendOptions, EmailsSendResponse, MailChannelsClientOptions } from "../../mailchannels";
 
@@ -29,7 +30,11 @@ declare module "nodemailer" {
   function createTransport<T> (
     transport: Transport<T> | TransportOptions,
     defaults?: TransportOptions
-  ): Transporter<T, TransportOptions>;
+  ): Transporter<T>;
+
+  interface SendMailOptions {
+    mailchannels?: MailChannelsTransportSendOptions;
+  }
 }
 
 declare module "nodemailer/lib/mailer" {

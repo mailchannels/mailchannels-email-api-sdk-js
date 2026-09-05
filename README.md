@@ -205,13 +205,13 @@ The SDK provides a transport for Nodemailer that allows you to send emails using
 
 ```sh
 # npm
-npm i mailchannels-sdk nodemailer && npm i -D @types/nodemailer
+npm i mailchannels-sdk nodemailer
 
 # yarn
-yarn add mailchannels-sdk nodemailer && yarn add -D @types/nodemailer
+yarn add mailchannels-sdk nodemailer
 
 # pnpm
-pnpm add mailchannels-sdk nodemailer && pnpm add -D @types/nodemailer
+pnpm add mailchannels-sdk nodemailer
 ```
 
 ### Sending

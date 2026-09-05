@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import nodemailer from "nodemailer";
+import nodemailer, { type SendMailOptions } from "nodemailer";
 import MailMessage from "nodemailer/lib/mailer/mail-message";
-import type { Options } from "nodemailer/lib/mailer";
 import { type MailChannelsTransportInfo, mailchannelsTransport } from "~/plugins/nodemailer";
 import type { EmailsQueueResponse } from "~/types/emails/queue";
 import type { EmailsSendResponse } from "~/types/emails/send";
@@ -52,7 +51,7 @@ const fake = {
         }
       }
     }
-  } satisfies Options,
+  } satisfies SendMailOptions,
   sendResponse: {
     data: {
       requestId: "request_b99e660774cb",
@@ -294,6 +293,20 @@ describe("transport", () => {
 
     await expect(transport.sendMail(fake.options)).rejects.toThrow(
       "Internal Server Error"
+    );
+  });
+
+  it("should return an empty envelope when the mail message is missing", async () => {
+    const transport = mailchannelsTransport({ apiKey: fake.apiKey });
+    const mail = {
+      message: null,
+      normalize: callback => callback(null, {})
+    } as MailMessage<MailChannelsTransportInfo<"async">>;
+
+    await Promise.resolve(
+      transport.send(mail, (_error, info) => {
+        expect(info?.envelope).toStrictEqual({ from: false, to: [] });
+      })
     );
   });
 
