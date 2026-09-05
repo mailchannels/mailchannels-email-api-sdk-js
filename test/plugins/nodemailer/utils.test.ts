@@ -30,6 +30,7 @@ const normalize = async (raw: SendMailOptions): Promise<SendMailOptions> => {
 describe("parseAddress", () => {
   it("should return empty string for falsy input", () => {
     expect(parseAddress(undefined)).toBe("");
+    expect(parseAddress({ name: "name" })).toBe("");
   });
 
   it("should return string address unchanged", () => {
@@ -121,7 +122,8 @@ describe("parseHeaders", () => {
   it("should convert array of headers to object", () => {
     const headersArray = [
       { key: "x-header1", value: "value1" },
-      { key: "x-header2", value: "value2" }
+      { key: "x-header2", value: "value2" },
+      { key: "x-empty", value: undefined }
     ];
     expect(parseHeaders(headersArray)).toStrictEqual({
       "x-header1": "value1",

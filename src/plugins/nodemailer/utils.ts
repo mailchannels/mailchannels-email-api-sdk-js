@@ -10,7 +10,9 @@ export const parseAddress = (address: SendMailOptions["from"]): EmailsSendRecipi
 
   if (typeof address === "string") return address;
 
-  return { email: address.address, name: address.name || undefined };
+  if (!address.address) return "";
+
+  return { email: address.address, name: address.name };
 };
 
 export const parseAddresses = (addresses?: SendMailOptions["to"]): (EmailsSendRecipient | string)[] => {
@@ -66,7 +68,7 @@ export const parseDkim = (dkim: SendMailOptions["dkim"]): EmailsSendDkim | undef
   if (typeof dkim.privateKey === "string") {
     privateKey = dkim.privateKey;
   }
-  else if (dkim.privateKey?.key && dkim.privateKey?.passphrase) {
+  else if (dkim.privateKey && "key" in dkim.privateKey && "passphrase" in dkim.privateKey) {
     try {
       privateKey = createPrivateKey({
         key: dkim.privateKey.key,
@@ -93,7 +95,8 @@ export const parseHeaders = (headers: SendMailOptions["headers"]): Record<string
 
   if (Array.isArray(headers)) {
     return headers.reduce<Record<string, string>>((acc, { key, value }) => {
-      acc[key] = value;
+      if (value == undefined) return acc;
+      acc[key] = value.toString();
       return acc;
     }, {});
   }
