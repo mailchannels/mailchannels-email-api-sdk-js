@@ -138,8 +138,8 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2(patch_hash=2727998bd0a3e81a13b1f78cac35ca02f8fa6b262b748e213d9d2b74bd60ce11)(magicast@0.5.4)
       nodemailer:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^10.0.1
+        version: 10.0.1
       obuild:
         specifier: ^0.4.38
         version: 0.4.39(chokidar@5.0.0)(dotenv@17.4.2)(giget@3.3.1)(jiti@2.7.0)(magicast@0.5.4)(typescript@6.0.3)
@@ -1567,8 +1567,8 @@ packages:
   node-fetch-native@1.6.7:
     resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
 
-  nodemailer@10.0.0:
-    resolution: {integrity: sha512-wdv+hXBg0iIPIOf108FaZyTxqjQpCvQeAJt9pHHTooPy/y3vQtI9eiImM9AIVKR3e/0FeMA1oueNfBjFJcaK+Q==}
+  nodemailer@10.0.1:
+    resolution: {integrity: sha512-c+gU9cL9HLDax3vjxL88kW+6NOgdtEUWaZ+AUtxdJR6LLhf0kGdCLExof7yiKW7zdO9EfXCSIgmhGyFmUM0mYQ==}
     engines: {node: '>=20.0.0'}
 
   obug@2.1.4:
@@ -3322,7 +3322,7 @@ snapshots:
 
   node-fetch-native@1.6.7: {}
 
-  nodemailer@10.0.0: {}
+  nodemailer@10.0.1: {}
 
   obug@2.1.4: {}
 
