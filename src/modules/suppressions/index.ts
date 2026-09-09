@@ -2,11 +2,15 @@ import type { MailChannelsClient } from "../../client";
 import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import { parseDateInputs } from "../../internal/parse-date-inputs";
+import { quoteValues } from "../../internal/quote-values";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
 import type { SuppressionsCreateEntry, SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../../types/suppressions";
 import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../../types/suppressions/internal";
 
 export class Suppressions {
+  private static readonly SOURCE_VALUES = new Set<SuppressionsSource>(["api", "unsubscribe_link", "list_unsubscribe", "hard_bounce", "spam_complaint"]);
+  private static readonly DELETE_SOURCE_VALUES = new Set<SuppressionsSource | "all">([...Suppressions.SOURCE_VALUES, "all"]);
+
   constructor (protected mailchannels: MailChannelsClient) {}
 
   /**
@@ -74,8 +78,13 @@ export class Suppressions {
    * const { success, error } = await mailchannels.suppressions.delete('name@example.com', 'api');
    * ```
    */
-  async delete (recipient: string, source?: SuppressionsSource): Promise<SuccessResponse> {
+  async delete (recipient: string, source?: SuppressionsSource | "all"): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
+
+    if (source !== undefined && !Suppressions.DELETE_SOURCE_VALUES.has(source)) {
+      error = createValidationError(`Source must be one of ${quoteValues(Suppressions.DELETE_SOURCE_VALUES)}.`);
+      return { success: false, error };
+    }
 
     await this.mailchannels.delete(`/tx/v1/suppression-list/recipients/${encodeURIComponent(recipient)}`, {
       query: {
@@ -105,6 +114,11 @@ export class Suppressions {
 
     if (options?.recipient && options.recipient.length > 255) {
       error = createValidationError("The recipient must not exceed 255 characters.");
+      return { data: null, error };
+    }
+
+    if (options?.source !== undefined && !Suppressions.SOURCE_VALUES.has(options.source)) {
+      error = createValidationError(`Source must be one of ${quoteValues(Suppressions.SOURCE_VALUES)}.`);
       return { data: null, error };
     }
 

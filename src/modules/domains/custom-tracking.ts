@@ -1,6 +1,7 @@
 import type { MailChannelsClient } from "../../client";
 import { ErrorCode, createValidationError, getResultError, getStatusError, validateCustomTrackingName, validatePagination } from "../../internal/errors";
 import { clean } from "../../internal/clean";
+import { quoteValues } from "../../internal/quote-values";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
 import type { DomainsCustomTrackingApiResponse, DomainsCustomTrackingListApiResponse } from "../../types/domains/internal";
 import type { DomainsCustomTrackingCreateResponse, DomainsCustomTrackingScope, DomainsCustomTrackingWithDnsSetupRequired } from "../../types/domains/custom-tracking-create";
@@ -8,7 +9,7 @@ import type { DomainsCustomTrackingListOptions, DomainsCustomTrackingListRespons
 import type { DomainsCustomTrackingUpdateOptions, DomainsCustomTrackingUpdateResponse } from "../../types/domains/custom-tracking-update";
 
 export class DomainsCustomTracking {
-  private static readonly SCOPE_VALUES: Set<DomainsCustomTrackingScope> = new Set(["click", "open", "unsubscribe"]);
+  private static readonly SCOPE_VALUES = new Set<DomainsCustomTrackingScope>(["click", "open", "unsubscribe"]);
 
   constructor (private mailchannels: MailChannelsClient) {}
 
@@ -167,7 +168,7 @@ export class DomainsCustomTracking {
     }
 
     if (!scope || !DomainsCustomTracking.SCOPE_VALUES.has(scope)) {
-      error = createValidationError("Scope must be one of 'click', 'open', or 'unsubscribe'.");
+      error = createValidationError(`Scope must be one of ${quoteValues(DomainsCustomTracking.SCOPE_VALUES)}.`);
       return { data: null, error };
     }
 

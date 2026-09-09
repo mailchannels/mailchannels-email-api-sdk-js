@@ -6,7 +6,7 @@ import type { SuppressionsSource } from "~/types/suppressions/list";
 
 const fake = {
   recipient: "test@example.com",
-  source: "api" as SuppressionsSource
+  source: "api" as const satisfies SuppressionsSource | "all"
 };
 
 describe("delete", () => {
@@ -27,6 +27,20 @@ describe("delete", () => {
         }
       })
     );
+  });
+
+  it("should contain error when source is invalid", async () => {
+    const mockClient = {
+      delete: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const suppressions = new Suppressions(mockClient);
+    // @ts-expect-error Testing invalid source value
+    const { success, error } = await suppressions.delete(fake.recipient, "invalid-source");
+
+    expect(success).toBe(false);
+    expect(error).toBeTruthy();
+    expect(mockClient.delete).not.toHaveBeenCalled();
   });
 
   it("should handle API error response on delete", async () => {

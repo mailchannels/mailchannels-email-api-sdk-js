@@ -3,6 +3,7 @@ import { ErrorCode, createValidationError, getResultError, getStatusError, valid
 import { clean } from "../../internal/clean";
 import { isValidWebhook } from "../../internal/webhook-validator";
 import { parseDateInputs } from "../../internal/parse-date-inputs";
+import { quoteValues } from "../../internal/quote-values";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
 import type { WebhooksListResponse } from "../../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../../types/webhooks/signing-key";
@@ -13,7 +14,7 @@ import type { WebhooksResendBatchResponse } from "../../types/webhooks/resend-ba
 import type { WebhookEventReceived, WebhooksBatchesApiResponse, WebhooksResendBatchApiResponse, WebhooksValidateApiResponse } from "../../types/webhooks/internal";
 
 export class Webhooks {
-  private static readonly STATUS_VALUES: Set<WebhooksBatchStatus> = new Set(["1xx", "2xx", "3xx", "4xx", "5xx", "no_response"]);
+  private static readonly STATUS_VALUES = new Set<WebhooksBatchStatus>(["1xx", "2xx", "3xx", "4xx", "5xx", "no_response"]);
 
   constructor (protected mailchannels: MailChannelsClient) {}
 
@@ -275,7 +276,7 @@ export class Webhooks {
       }
 
       if (!options.statuses.every(status => Webhooks.STATUS_VALUES.has(status))) {
-        const validValues = Array.from(Webhooks.STATUS_VALUES).map(status => `'${status}'`).join(", ");
+        const validValues = quoteValues(Webhooks.STATUS_VALUES);
         return { data: null, error: createValidationError(`Invalid status filter provided. Valid values are: ${validValues}.`) };
       }
     }

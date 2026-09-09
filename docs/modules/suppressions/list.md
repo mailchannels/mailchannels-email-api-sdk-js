@@ -47,7 +47,7 @@ const { data, error } = await mailchannels.suppressions.list()
   - `notes` `string` <Badge type="info">optional</Badge>
   - `recipient` `string` <Badge>guaranteed</Badge>: The email address that is suppressed.
   - `sender` `string` <Badge type="info">optional</Badge>
-  - `source` `"api" | "unsubscribe_link" | "list_unsubscribe" | "hard_bounce" | "spam_complaint" | "all"` <Badge>guaranteed</Badge>
+  - `source` `"api" | "unsubscribe_link" | "list_unsubscribe" | "hard_bounce" | "spam_complaint"` <Badge>guaranteed</Badge>
   - `types` `("transactional" | "non-transactional")[]` <Badge>guaranteed</Badge>
 <!-- @include: ../_parts/error-response.md -->
 
