@@ -10,7 +10,7 @@
     "send": "tsx src/index.ts"
   },
   "dependencies": {
-    "mailchannels-sdk": "^1.5.2",
+    "mailchannels-sdk": "^1.6.0",
     "mjml": "^5.4.1"
   },
   "devDependencies": {

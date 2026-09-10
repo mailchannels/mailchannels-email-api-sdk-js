@@ -1,6 +1,42 @@
 # Changelog
 
 
+## v1.6.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.6.0%0Dv1.5.2)
+
+### 🚀 Enhancements
+
+- **nodemailer:** Support v10 with backward-compatible augmented types ([7a907fa](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7a907fa))
+
+### 🩹 Fixes
+
+- **webhooks:** Serialize batch statuses ([c0accd0](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/c0accd0))
+- **webhooks:** Validate batch status filters ([0979d4f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/0979d4f))
+- **errors:** Reject non-integer pagination values ([8bd8a59](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/8bd8a59))
+- **webhooks:** Validate status filters array ([6682b32](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/6682b32))
+- **suppressions:** Remove `all` from `SuppressionsSource` and require it for `delete` method param ([171072c](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/171072c))
+- **suppressions:** Validate source values ([46a8d72](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/46a8d72))
+- **domains.dkim:** Validate status values ([d20e711](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d20e711))
+- **nodemailer:** Harden parse utils ([499e902](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/499e902))
+
+### 💅 Refactors
+
+- Add quoted values internal helper and simplify typed set ([f486dae](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/f486dae))
+
+### 🏡 Chore
+
+- **scripts:** Add script to sync sdk version across examples ([1f2af08](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/1f2af08))
+- Update all dependencies ([d3b1de0](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d3b1de0))
+
+### ✅ Tests
+
+- **config:** Fix exclude simulator files from coverage ([4edd209](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/4edd209))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+
 ## v1.5.2
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.5.2%0Dv1.5.1)

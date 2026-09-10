@@ -9,7 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "mailchannels-sdk": "^1.5.2",
+    "mailchannels-sdk": "^1.6.0",
     "next": "^16.3.4",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"

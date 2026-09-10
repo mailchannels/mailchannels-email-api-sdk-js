@@ -9,7 +9,7 @@
   "dependencies": {
     "@hono/node-server": "^2.1.1",
     "hono": "^4.13.7",
-    "mailchannels-sdk": "^1.5.2"
+    "mailchannels-sdk": "^1.6.0"
   },
   "devDependencies": {
     "@types/node": "^26.5.0",
