@@ -11,6 +11,6 @@
     "mailchannels-sdk": "^1.5.2"
   },
   "devDependencies": {
-    "@types/bun": "^1.4.0"
+    "@types/bun": "^1.4.2"
   }
 }

@@ -16,13 +16,13 @@
   },
   "dependencies": {
     "mailchannels-sdk": "^1.5.2",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "react-email": "6.9.3"
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-email": "6.9.5"
   },
   "devDependencies": {
-    "@types/react": "^19.2.18",
-    "tsdown": "0.22.14",
+    "@types/react": "^19.3.0",
+    "tsdown": "0.23.0",
     "typescript": "7.0.2"
   }
 }
