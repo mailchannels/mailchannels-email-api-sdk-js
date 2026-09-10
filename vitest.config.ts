@@ -10,7 +10,7 @@ export default defineConfig({
       include: ["src/**/*.ts"],
       exclude: [
         "src/**/types*", // No runtime code to test
-        "src/simulator", // Do no test simulator
+        "src/simulator/**/*", // Do no test simulator
         "src/cli/index.ts" // CLI entry point not directly testable
       ]
     },
