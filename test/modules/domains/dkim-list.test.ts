@@ -99,6 +99,18 @@ describe("dkim.list", () => {
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
+  it("should return error if status is invalid", async () => {
+    const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    // @ts-expect-error Testing invalid status value
+    const { data, error } = await domains.dkim.list("example.com", { status: "invalid-status" });
+
+    expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
   it("should return error if limit is out of range", async () => {
     const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
 

@@ -2,14 +2,18 @@ import type { MailChannelsClient } from "../../client";
 import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import { mapDkimKey } from "../../internal/map-dkim-key";
+import { quoteValues } from "../../internal/quote-values";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
 import type { DomainsDkimCreateApiResponse, DomainsDkimCreatePayload, DomainsDkimListPayload, DomainsDkimRotateApiResponse } from "../../types/domains/internal";
-import type { DomainsDkimCreateOptions, DomainsDkimCreateResponse } from "../../types/domains/dkim-create";
+import type { DomainsDkimCreateOptions, DomainsDkimCreateResponse, DomainsDkimKeyStatus } from "../../types/domains/dkim-create";
 import type { DomainsDkimListOptions, DomainsDkimListResponse } from "../../types/domains/dkim-list";
 import type { DomainsDkimUpdateStatusOptions } from "../../types/domains/dkim-update-status";
 import type { DomainsDkimRotateOptions, DomainsDkimRotateResponse } from "../../types/domains/dkim-rotate";
 
 export class DomainsDkim {
+  private static readonly UPDATE_STATUS_VALUES = new Set<Exclude<DomainsDkimKeyStatus, "active">>(["retired", "revoked", "rotated"]);
+  private static readonly STATUS_VALUES = new Set<DomainsDkimKeyStatus>(["active", ...DomainsDkim.UPDATE_STATUS_VALUES]);
+
   constructor (private mailchannels: MailChannelsClient) {}
 
   /**
@@ -87,6 +91,11 @@ export class DomainsDkim {
       return { data: null, error };
     }
 
+    if (options?.status !== undefined && !DomainsDkim.STATUS_VALUES.has(options.status)) {
+      error = createValidationError(`Status must be one of ${quoteValues(DomainsDkim.STATUS_VALUES)}.`);
+      return { data: null, error };
+    }
+
     error = validatePagination({ ...options, max: 100 });
     if (error) return { data: null, error };
 
@@ -137,6 +146,11 @@ export class DomainsDkim {
 
     if (!options.selector || options.selector.length > 63) {
       error = createValidationError("Selector must be between 1 and 63 characters.");
+      return { success: false, error };
+    }
+
+    if (options?.status !== undefined && !DomainsDkim.UPDATE_STATUS_VALUES.has(options.status)) {
+      error = createValidationError(`Status must be one of ${quoteValues(DomainsDkim.UPDATE_STATUS_VALUES)}.`);
       return { success: false, error };
     }
 
