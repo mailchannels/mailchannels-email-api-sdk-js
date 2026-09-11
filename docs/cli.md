@@ -57,8 +57,8 @@ mailchannels webhooks list \
 
 When both are provided, `--api-key` takes precedence.
 
-| Flag | Description | Required |
-| --- | --- | --- |
+| Flag              | Description          | Required                                  |
+| ----------------- | -------------------- | ----------------------------------------- |
 | `--api-key <key>` | MailChannels API key | Yes if `MAILCHANNELS_API_KEY` is not set. |
 
 ## Emails
@@ -99,34 +99,34 @@ Queued messages are processed asynchronously. Delivery status events are deliver
 
 These options are available for both sending and queuing emails.
 
-| Flag | Description | Required | Default |
-| --- | --- | --- | --- |
-| `--from <address>` | Sender address | Yes | |
-| `--to <addresses>` | Comma-separated recipient addresses | Yes | |
-| `--subject <subject>` | Email subject | Yes | |
-| `--text <text>` | Plain-text message body | Yes if `--html` is not provided. | Empty |
-| `--html <html>` | HTML message body | Yes if `--text` is not provided. | Empty |
-| `--cc <addresses>` | Comma-separated CC addresses | No | |
-| `--bcc <addresses>` | Comma-separated BCC addresses | No | |
-| `--reply-to <address>` | Reply-to address | No | |
-| `--headers <json>` | Custom headers as a JSON object | No | |
-| `--attachments` (`-a`) | Read a JSON array of attachments from stdin | No | `false` |
-| `--campaign-id <id>` | Campaign identifier | No | |
-| `--envelope-from <address>` | Envelope-from address | No | |
-| `--dkim-domain <domain>` | DKIM signing domain | No | |
-| `--dkim-selector <selector>` | DKIM selector | No | |
-| `--dkim-private-key <key>` | DKIM private key | No | |
-| `--tracking-click` | Enable click tracking | No | `false` |
-| `--tracking-click-custom-domain-name <name>` | Custom domain for click tracking | No | |
-| `--tracking-open` | Enable open tracking | No | `false` |
-| `--tracking-open-custom-domain-name <name>` | Custom domain for open tracking | No | |
-| `--unsubscribe-custom-domain-name <name>` | Custom domain for unsubscribe links | No | |
-| `--transactional` | Mark the message as transactional | No | `true` |
+| Flag                                         | Description                                 | Required                         | Default |
+| -------------------------------------------- | ------------------------------------------- | -------------------------------- | ------- |
+| `--from <address>`                           | Sender address                              | Yes                              |         |
+| `--to <addresses>`                           | Comma-separated recipient addresses         | Yes                              |         |
+| `--subject <subject>`                        | Email subject                               | Yes                              |         |
+| `--text <text>`                              | Plain-text message body                     | Yes if `--html` is not provided. | Empty   |
+| `--html <html>`                              | HTML message body                           | Yes if `--text` is not provided. | Empty   |
+| `--cc <addresses>`                           | Comma-separated CC addresses                | No                               |         |
+| `--bcc <addresses>`                          | Comma-separated BCC addresses               | No                               |         |
+| `--reply-to <address>`                       | Reply-to address                            | No                               |         |
+| `--headers <json>`                           | Custom headers as a JSON object             | No                               |         |
+| `--attachments` (`-a`)                       | Read a JSON array of attachments from stdin | No                               | `false` |
+| `--campaign-id <id>`                         | Campaign identifier                         | No                               |         |
+| `--envelope-from <address>`                  | Envelope-from address                       | No                               |         |
+| `--dkim-domain <domain>`                     | DKIM signing domain                         | No                               |         |
+| `--dkim-selector <selector>`                 | DKIM selector                               | No                               |         |
+| `--dkim-private-key <key>`                   | DKIM private key                            | No                               |         |
+| `--tracking-click`                           | Enable click tracking                       | No                               | `false` |
+| `--tracking-click-custom-domain-name <name>` | Custom domain for click tracking            | No                               |         |
+| `--tracking-open`                            | Enable open tracking                        | No                               | `false` |
+| `--tracking-open-custom-domain-name <name>`  | Custom domain for open tracking             | No                               |         |
+| `--unsubscribe-custom-domain-name <name>`    | Custom domain for unsubscribe links         | No                               |         |
+| `--transactional`                            | Mark the message as transactional           | No                               | `true`  |
 
 The `emails send` command also supports:
 
-| Option | Description | Default |
-| --- | --- | --- |
+| Option      | Description                                        | Default |
+| ----------- | -------------------------------------------------- | ------- |
 | `--dry-run` | Validate and render the message without sending it | `false` |
 
 ### Custom headers
@@ -196,9 +196,9 @@ mailchannels webhooks create \
   --endpoint "https://example.com/mailchannels/webhook"
 ```
 
-| Flag | Description | Required |
-| --- | --- | --- |
-| `--endpoint <url>` (`-e`) | Webhook endpoint URL | Yes |
+| Flag                      | Description          | Required |
+| ------------------------- | -------------------- | -------- |
+| `--endpoint <url>` (`-e`) | Webhook endpoint URL | Yes      |
 
 ### List webhooks
 
@@ -229,9 +229,9 @@ mailchannels webhooks validate \
   --request-id "1234567890"
 ```
 
-| Flag | Description | Required |
-| --- | --- | --- |
-| `--request-id <id>` (`-r`) | Request ID to use for validation | No |
+| Flag                       | Description                      | Required |
+| -------------------------- | -------------------------------- | -------- |
+| `--request-id <id>` (`-r`) | Request ID to use for validation | No       |
 
 The result includes each endpoint's validation result and response status.
 
@@ -251,14 +251,14 @@ mailchannels webhooks batches \
   --offset 0
 ```
 
-| Flag | Description | Required |
-| --- | --- | --- |
-| `--created-after <datetime>` | Return batches created after this date | No |
-| `--created-before <datetime>` | Return batches created before this date | No |
-| `--statuses <statuses>`, `-s` | Comma-separated response status groups to filter by | No |
-| `--webhook <url>`, `-e`, `--endpoint` | Filter by webhook endpoint | No |
-| `--limit <number>`, `-l` | Maximum number of batches to return | No |
-| `--offset <number>`, `-o` | Number of batches to skip | No |
+| Flag                                  | Description                                         | Required |
+| ------------------------------------- | --------------------------------------------------- | -------- |
+| `--created-after <datetime>`          | Return batches created after this date              | No       |
+| `--created-before <datetime>`         | Return batches created before this date             | No       |
+| `--statuses <statuses>`, `-s`         | Comma-separated response status groups to filter by | No       |
+| `--webhook <url>`, `-e`, `--endpoint` | Filter by webhook endpoint                          | No       |
+| `--limit <number>`, `-l`              | Maximum number of batches to return                 | No       |
+| `--offset <number>`, `-o`             | Number of batches to skip                           | No       |
 
 Results are printed as a table. The default pagination is a limit of `500` and an offset of `0`.
 
@@ -273,9 +273,9 @@ mailchannels webhooks resend-batch \
   --batch-id "1234567890"
 ```
 
-| Flag | Description | Required |
-| --- | --- | --- |
-| `--batch-id <id>`, `-b` | Batch ID to resend | Yes |
+| Flag                    | Description        | Required |
+| ----------------------- | ------------------ | -------- |
+| `--batch-id <id>`, `-b` | Batch ID to resend | Yes      |
 
 The CLI prints the response returned after the batch is queued for resend.
 
