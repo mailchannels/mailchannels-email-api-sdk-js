@@ -1,9 +1,9 @@
-import { styleText } from "node:util";
 import { defineCommand } from "citty";
 import { getApiKey } from "../../utils/shared/get-api-key";
 import { sharedArgs } from "../../utils/shared/args";
 import { parsePagination } from "../../utils/shared/parse-pagination";
 import { tabulatedSections } from "../../utils/shared/sections";
+import { styleText } from "../../utils/shared/style";
 import { MailChannelsClient, Webhooks, type WebhooksBatchStatus } from "../../../mailchannels";
 
 export default defineCommand({
