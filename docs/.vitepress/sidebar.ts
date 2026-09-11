@@ -14,6 +14,10 @@ export default [
     link: "/simulator"
   },
   {
+    text: "CLI",
+    link: "/cli"
+  },
+  {
     text: "Modules",
     collapsed: false,
     link: "/modules",

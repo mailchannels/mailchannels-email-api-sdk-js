@@ -5,7 +5,7 @@ import queue from "./queue";
 export default defineCommand({
   meta: {
     name: "emails",
-    description: "Commands for sending emails using the MailChannels Email API"
+    description: "Commands for sending emails"
   },
   args: {},
   subCommands: {

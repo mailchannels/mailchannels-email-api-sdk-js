@@ -3,6 +3,7 @@ import { defineCommand, runMain } from "citty";
 import pkg from "../../package.json";
 import simulate from "./commands/simulate";
 import emails from "./commands/emails";
+import webhooks from "./commands/webhooks";
 
 const main = defineCommand({
   meta: {
@@ -12,7 +13,8 @@ const main = defineCommand({
   },
   subCommands: {
     simulate,
-    emails
+    emails,
+    webhooks
   },
   setup () {
     const LOGGER_NAME = "[MailChannels-CLI]";

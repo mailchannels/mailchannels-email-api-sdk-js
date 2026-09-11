@@ -1,13 +1,13 @@
 import { defineCommand } from "citty";
+import { getApiKey } from "../../utils/shared/get-api-key";
 import { emailArgs } from "../../utils/emails/args";
-import { getApiKey } from "../../utils/emails/get-api-key";
 import { parseOptions } from "../../utils/emails/parse-options";
 import { Emails, MailChannelsClient } from "../../../mailchannels";
 
 export default defineCommand({
   meta: {
     name: "send",
-    description: "Send an email using the MailChannels Email API"
+    description: "Send an email"
   },
   args: {
     ...emailArgs,
