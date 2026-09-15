@@ -104,8 +104,10 @@ These options are available for both sending and queuing emails.
 | `--from <address>`                           | Sender address                              | Yes                              |         |
 | `--to <addresses>`                           | Comma-separated recipient addresses         | Yes                              |         |
 | `--subject <subject>`                        | Email subject                               | Yes                              |         |
-| `--text <text>`                              | Plain-text message body                     | Yes if `--html` is not provided. | Empty   |
-| `--html <html>`                              | HTML message body                           | Yes if `--text` is not provided. | Empty   |
+| `--text <text>`                              | Plain-text message body                     | Yes if no HTML body is provided  | Empty   |
+| `--text-file <path>`                         | Path to a plain-text file                   | Yes if no HTML body is provided  |         |
+| `--html <html>`                              | HTML message body                           | Yes if no text body is provided  | Empty   |
+| `--html-file <path>`                         | Path to an HTML file                        | Yes if no text body is provided  |         |
 | `--cc <addresses>`                           | Comma-separated CC addresses                | No                               |         |
 | `--bcc <addresses>`                          | Comma-separated BCC addresses               | No                               |         |
 | `--reply-to <address>`                       | Reply-to address                            | No                               |         |
@@ -125,9 +127,23 @@ These options are available for both sending and queuing emails.
 
 The `emails send` command also supports:
 
-| Option      | Description                                        | Default |
+| Flag        | Description                                        | Default |
 | ----------- | -------------------------------------------------- | ------- |
 | `--dry-run` | Validate and render the message without sending it | `false` |
+
+### Read email content from files
+
+Using `--text` and `--html` flags allows you to provide the email content directly in the command but may not be suitable for large content.
+Alternatively, you can read the email content from files using the `--text-file` and `--html-file` flags.
+
+```sh
+mailchannels emails queue \
+  --from "sender@example.com" \
+  --to "recipient@example.com" \
+  --subject "Test Email" \
+  --text-file "./emails/hello.txt" \
+  --html-file "./emails/hello.html"
+```
 
 ### Custom headers
 
