@@ -60,7 +60,7 @@ export class SubAccountsLimits {
       return { success: false, error };
     }
 
-    if (options.sends < 0) {
+    if (!Number.isInteger(options.sends) || options.sends < 0) {
       error = createValidationError("The sends value must be at least 0.");
       return { success: false, error };
     }

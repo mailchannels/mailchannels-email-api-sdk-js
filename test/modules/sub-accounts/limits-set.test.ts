@@ -53,6 +53,25 @@ describe("limits.set", () => {
     expect(mockClient.put).not.toHaveBeenCalled();
   });
 
+  it.each([
+    ["NaN", Number.NaN],
+    ["undefined", undefined],
+    ["a string", "invalid"],
+    ["fractional", 1.5]
+  ])("should contain error when sends is %s", async (_description, sends) => {
+    const mockClient = {
+      put: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    // @ts-expect-error Testing invalid sends values
+    const { success, error } = await subAccounts.limits.set(fake.validHandle, { sends });
+
+    expect(error).toBeTruthy();
+    expect(success).toBe(false);
+    expect(mockClient.put).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       put: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
