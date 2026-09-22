@@ -17,7 +17,11 @@ describe("styleValue", () => {
       ["text", styleText("green", "'text'")],
       [null, "null"],
       [undefined, "undefined"],
-      [{ key: "value" }, "{\"key\":\"value\"}"]
+      [{ key: "value" }, `{ key: ${styleText("green", "'value'")} }`],
+      [
+        { nested: { count: 42 }, values: ["text", true] },
+        `{ nested: { count: ${styleText("yellow", "42")} }, values: [ ${styleText("green", "'text'")}, ${styleText("yellow", "true")} ] }`
+      ]
     ];
 
     for (const [value, expected] of cases) {
