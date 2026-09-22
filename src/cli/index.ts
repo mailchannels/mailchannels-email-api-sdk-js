@@ -3,6 +3,7 @@ import { defineCommand, runMain } from "citty";
 import pkg from "../../package.json";
 import simulate from "./commands/simulate";
 import emails from "./commands/emails";
+import suppressions from "./commands/suppressions";
 import webhooks from "./commands/webhooks";
 
 const main = defineCommand({
@@ -14,11 +15,13 @@ const main = defineCommand({
   subCommands: {
     simulate,
     emails,
+    suppressions,
     webhooks
   },
   setup () {
     const LOGGER_NAME = "[MailChannels-CLI]";
     console.info = console.info.bind(console, LOGGER_NAME);
+    console.warn = console.warn.bind(console, LOGGER_NAME);
     console.error = console.error.bind(console, LOGGER_NAME);
   }
 });

@@ -181,6 +181,113 @@ Or using input redirection:
   --attachments < attachments.json
 ```
 
+## Suppressions
+
+Manage account suppressions list.
+
+### Create suppression entries
+
+`mailchannels suppressions create`
+
+Create a single suppression entry:
+
+```sh
+mailchannels suppressions create \
+  --recipient "recipient@example.com" \
+  --types "non-transactional" \
+  --notes "Opted out through the preference center" \
+  --add-to-sub-accounts
+```
+
+| Flag                          | Description                                          | Required                             | Default |
+| ----------------------------- | -----------------------------------------------------| ------------------------------------ | ------- |
+| `--recipient <address>`       | Recipient to suppress for a single entry             | Yes if `--entries` is not provided   |         |
+| `--types <types>`             | Comma-separated suppression types for a single entry | No                                   |         |
+| `--notes <notes>`             | Optional note for a single entry                     | No                                   |         |
+| `--entries`                   | Read a JSON array of suppression entries from stdin  | Yes if `--recipient` is not provided | `false` |
+| `--add-to-sub-accounts`       | Create entries for all associated sub-accounts       | No                                   | `false` |
+
+The supported suppression types are `transactional` and `non-transactional`.
+
+When both `--entries` and `--recipient` are provided, `--entries` takes precedence ignoring  `--recipient`, `--types`, and `--notes`.
+
+#### Bulk creation
+
+For bulk creation, the CLI reads a JSON array from standard input when `--entries` is provided.
+
+Every entry requires `recipient`. Optional properties include `types` and `notes`.
+
+```json
+[
+  {
+    "recipient": "recipient1@example.com",
+    "types": ["non-transactional"],
+    "notes": "Opted out through the preference center"
+  },
+  {
+    "recipient": "recipient2@example.com",
+    "types": ["transactional", "non-transactional"]
+  }
+]
+```
+
+Save the JSON as a file (for example, `suppressions.json`) and pipe it to the CLI:
+
+```sh
+cat suppressions.json | mailchannels suppressions create \
+  --entries \
+  --add-to-sub-accounts
+```
+
+Or use input redirection:
+
+```sh
+mailchannels suppressions create \
+  --add-to-sub-accounts \
+  --entries < suppressions.json
+```
+
+### List suppression entries
+
+`mailchannels suppressions list`
+
+```sh
+mailchannels suppressions list \
+  --source "api" \
+  --limit 100 \
+  --offset 0
+```
+
+| Flag                          | Description                             | Required |
+| ----------------------------- | ----------------------------------------| -------- |
+| `--recipient <address>`       | Filter by recipient                     | No       |
+| `--source <source>`           | Filter by suppression source            | No       |
+| `--created-after <datetime>`  | Return entries created after this date  | No       |
+| `--created-before <datetime>` | Return entries created before this date | No       |
+| `--limit <number>`, `-l`      | Maximum number of entries to return     | No       |
+| `--offset <number>`, `-o`     | Number of entries to skip               | No       |
+
+Results are printed as a table. The default pagination is a limit of `1000` and an offset of `0`.
+
+### Delete a suppression entry
+
+`mailchannels suppressions delete`
+
+```sh
+mailchannels suppressions delete \
+  --recipient "recipient@example.com" \
+  --source "api"
+```
+
+| Flag                    | Description                                         | Required | Default |
+| ----------------------- | --------------------------------------------------- | -------- | ------- |
+| `--recipient <address>` | Recipient whose suppression entry should be deleted | Yes      |         |
+| `--source <source>`     | The source of the suppression entry to be deleted   | No       | `api`   |
+
+Possible values for `--source` are `api`, `unsubscribe_link`, `list_unsubscribe`, `hard_bounce`, `spam_complaint`, or `all`.
+
+If `--source` is set to `all`, all suppression entries related to the specified recipient will be deleted.
+
 ## Webhooks
 
 Register webhook endpoints to receive notifications about email delivery events.
