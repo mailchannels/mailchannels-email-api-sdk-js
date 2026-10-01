@@ -1,6 +1,8 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import suppressions from "~/cli/commands/suppressions";
+import { tabulatedSections } from "~/cli/utils/shared/sections";
+import { styleText } from "~/cli/utils/shared/style";
 import type { SuppressionsListResponse } from "~/types/suppressions/list";
 
 // @ts-expect-error defineCommand does not handle well sub command types
@@ -66,6 +68,16 @@ describe("list", () => {
     await runCommand(list, { rawArgs: fake.args });
 
     expect(mockList).toHaveBeenCalledWith(fake.options);
+
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining("[Suppressions] Retrieved suppression entries:"
+        + tabulatedSections(fake.response.data)
+      )
+    );
+    expect(console.info).toHaveBeenCalledWith(
+      "[Suppressions] Total suppression entries retrieved:", fake.response.data.length,
+      `(with limit: ${styleText("yellow", String(fake.options.limit))}, offset: ${styleText("yellow", String(fake.options.offset))})`
+    );
   });
 
   it("should use default pagination when it is not provided", async () => {
@@ -75,6 +87,11 @@ describe("list", () => {
       limit: undefined,
       offset: undefined
     });
+
+    expect(console.info).toHaveBeenCalledWith(
+      "[Suppressions] Total suppression entries retrieved:", fake.response.data.length,
+      `(with limit: ${styleText("yellow", "1000")}, offset: ${styleText("yellow", "0")})`
+    );
   });
 
   it("should report when no suppression entries are found", async () => {
