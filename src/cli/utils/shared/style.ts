@@ -21,7 +21,18 @@ export const styleText = (format: StyleTextFormat | StyleTextFormat[], text: str
 };
 
 export const styleValue = (value: unknown): string => {
-  const text = value !== null && typeof value === "object" ? JSON.stringify(value) : String(value);
+  if (Array.isArray(value)) {
+    return `[ ${value.map(styleValue).join(", ")} ]`;
+  }
+
+  if (value !== null && typeof value === "object") {
+    const entries = Object.entries(value)
+      .map(([key, nestedValue]) => `${key}: ${styleValue(nestedValue)}`);
+
+    return `{ ${entries.join(", ")} }`;
+  }
+
+  const text = String(value);
 
   switch (typeof value) {
     case "number":
