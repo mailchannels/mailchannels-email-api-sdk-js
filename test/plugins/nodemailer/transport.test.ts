@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import nodemailer, { type SendMailOptions } from "nodemailer";
-import MailMessage from "nodemailer/lib/mailer/mail-message";
+import MailMessage, { type MailMessageDataCallback } from "nodemailer/lib/mailer/mail-message";
 import { type MailChannelsTransportInfo, mailchannelsTransport } from "~/plugins/nodemailer";
 import type { EmailsQueueResponse } from "~/types/emails/queue";
 import type { EmailsSendResponse } from "~/types/emails/send";
@@ -299,9 +299,9 @@ describe("transport", () => {
   it("should return an empty envelope when the mail message is missing", async () => {
     const transport = mailchannelsTransport({ apiKey: fake.apiKey });
     const mail = {
-      message: null,
-      normalize: callback => callback(null, {})
-    } as MailMessage<MailChannelsTransportInfo<"async">>;
+      message: undefined,
+      normalize: (callback: MailMessageDataCallback) => callback(null, {})
+    } as unknown as MailMessage<MailChannelsTransportInfo<"async">>;
 
     await Promise.resolve(
       transport.send(mail, (_error, info) => {
