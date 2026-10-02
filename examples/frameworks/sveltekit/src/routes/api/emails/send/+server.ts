@@ -1,6 +1,5 @@
-import { json } from "@sveltejs/kit";
 import { MailChannels } from "mailchannels-sdk";
-import { MAILCHANNELS_API_KEY } from "$env/static/private";
+import { MAILCHANNELS_API_KEY } from "$app/env/private";
 import type { RequestHandler } from "./$types";
 
 const mailchannels = new MailChannels(MAILCHANNELS_API_KEY);
@@ -14,10 +13,10 @@ export const POST: RequestHandler = async () => {
   });
 
   if (error) {
-    return json(error, {
+    return Response.json(error, {
       status: error.statusCode || 500
     });
   }
 
-  return json(data);
+  return Response.json(data);
 };

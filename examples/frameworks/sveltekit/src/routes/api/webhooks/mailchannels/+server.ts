@@ -1,4 +1,3 @@
-import { json } from "@sveltejs/kit";
 import { Webhooks } from "mailchannels-sdk";
 import type { RequestHandler } from "./$types";
 
@@ -8,7 +7,7 @@ export const POST: RequestHandler = async ({ request }) => {
   const signatureInput = request.headers.get("signature-input");
 
   if (!contentDigest || !signature || !signatureInput) {
-    return json({ message: "Missing webhook headers" }, {
+    return Response.json({ message: "Missing webhook headers" }, {
       status: 400
     });
   }
@@ -23,7 +22,7 @@ export const POST: RequestHandler = async ({ request }) => {
   });
 
   if (error) {
-    return json(error, {
+    return Response.json(error, {
       status: error.statusCode || 500
     });
   }
@@ -63,7 +62,7 @@ export const POST: RequestHandler = async ({ request }) => {
     }
   }
 
-  return json({
+  return Response.json({
     received: true,
     types: data.map(event => event.event)
   });
