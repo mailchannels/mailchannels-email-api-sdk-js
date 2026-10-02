@@ -11,9 +11,9 @@
     "mailchannels-sdk": "^1.6.0"
   },
   "devDependencies": {
-    "@netlify/edge-functions": "^4.0.0",
-    "@types/node": "^26.5.0",
-    "netlify-cli": "^27.5.2",
+    "@netlify/edge-functions": "^4.0.2",
+    "@types/node": "^26.6.4",
+    "netlify-cli": "^27.10.2",
     "typescript": "^7.0.2"
   }
 }
