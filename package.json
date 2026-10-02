@@ -1,6 +1,6 @@
 {
   "name": "mailchannels-sdk",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Official MailChannels Email API SDK for sending transactional email from server-side JavaScript and TypeScript applications.",
   "type": "module",
   "license": "MIT",
