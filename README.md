@@ -18,7 +18,10 @@ This library provides a simple way to interact with the [MailChannels Email API]
 <!-- #endregion overview -->
 
 - [✨ Release Notes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/src/HEAD/CHANGELOG.md)
-- [📖 Documentation](https://mailchannels.yizack.com)
+- [📖 Official quickstart](https://docs.mailchannels.com/email-api/javascript/quickstart)
+- [📦 npm package](https://www.npmjs.com/package/mailchannels-sdk)
+- [📚 SDK reference](https://mailchannels.yizack.com)
+- [Nuxt community module](https://nuxt.com/modules/mailchannels) — maintained separately from this SDK.
 
 ## Contents
 

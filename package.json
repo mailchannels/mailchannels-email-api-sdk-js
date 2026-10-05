@@ -1,7 +1,7 @@
 {
   "name": "mailchannels-sdk",
   "version": "1.6.0",
-  "description": "Node.js SDK to integrate MailChannels Email API into your JavaScript or TypeScript server-side applications.",
+  "description": "Official MailChannels Email API SDK for sending transactional email from server-side JavaScript and TypeScript applications.",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -9,13 +9,16 @@
     "typescript",
     "email",
     "transactional-email",
-    "sdk"
+    "sdk",
+    "email-api",
+    "javascript",
+    "nodejs"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js.git"
   },
-  "homepage": "https://mailchannels.yizack.com",
+  "homepage": "https://docs.mailchannels.com/email-api/javascript/quickstart",
   "author": {
     "name": "MailChannels",
     "email": "dev@mailchannels.com"
