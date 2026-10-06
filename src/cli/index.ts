@@ -4,6 +4,7 @@ import pkg from "../../package.json";
 import simulate from "./commands/simulate";
 import emails from "./commands/emails";
 import suppressions from "./commands/suppressions";
+import subAccounts from "./commands/sub-accounts";
 import webhooks from "./commands/webhooks";
 
 const main = defineCommand({
@@ -16,6 +17,7 @@ const main = defineCommand({
     simulate,
     emails,
     suppressions,
+    "sub-accounts": subAccounts,
     webhooks
   },
   setup () {
