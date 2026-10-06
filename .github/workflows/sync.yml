@@ -1,0 +1,24 @@
+name: Sync public Bitbucket source
+on:
+  schedule:
+    - cron: '31 7 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: upstream-mirror
+  cancel-in-progress: false
+jobs:
+  sync:
+    if: github.repository == 'mailchannels/mailchannels-email-api-sdk-js' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - name: Synchronize canonical source and immutable tags
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 .github/sync.py https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js.git
