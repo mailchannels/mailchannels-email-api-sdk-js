@@ -288,6 +288,139 @@ Possible values for `--source` are `api`, `unsubscribe_link`, `list_unsubscribe`
 
 If `--source` is set to `all`, all suppression entries related to the specified recipient will be deleted.
 
+## Sub-Accounts
+
+Manage sub-accounts associated with your parent account.
+
+### Create a sub-account
+
+`mailchannels sub-accounts create`
+
+```sh
+mailchannels sub-accounts create \
+  --company-name "Acme Corporation" \
+  --handle "acme"
+```
+
+| Flag                    | Description                      | Required |
+| ----------------------- | -------------------------------- | -------- |
+| `--company-name <name>` | Company name for the sub-account | Yes      |
+| `--handle <handle>`     | Unique lowercase alphanumeric ID | No       |
+
+If `--handle` is omitted, a random handle will be generated.
+
+### List sub-accounts
+
+`mailchannels sub-accounts list`
+
+```sh
+mailchannels sub-accounts list \
+  --limit 100 \
+  --offset 0 \
+```
+
+| Flag                       | Description                | Required |
+| -------------------------- | -------------------------- | -------- |
+| `--limit <number>` (`-l`)  | Maximum number of accounts | No       |
+| `--offset <number>` (`-o`) | Number of accounts to skip | No       |
+
+The default pagination is a limit of `1000` and an offset of `0`.
+
+### Delete, suspend, or activate a sub-account
+
+```sh
+mailchannels sub-accounts delete --handle "acme"
+mailchannels sub-accounts suspend --handle "acme"
+mailchannels sub-accounts activate --handle "acme"
+```
+
+| Flag                    | Description        | Required |
+| ----------------------- | ------------------ | -------- |
+| `--handle <handle>`     | Sub-account handle | Yes      |
+
+Suspending disables email sending for the sub-account; activating restores it.
+
+### Retrieve sub-account usage
+
+`mailchannels sub-accounts usage`
+
+```sh
+mailchannels sub-accounts usage --handle "acme"
+```
+
+| Flag                    | Description        | Required |
+| ----------------------- | ------------------ | -------- |
+| `--handle <handle>`     | Sub-account handle | Yes      |
+
+The result includes usage and the effective monthly limit for the current billing period.
+
+### Manage sub-account limits
+
+```sh
+mailchannels sub-accounts limits get --handle "acme"
+mailchannels sub-accounts limits set --handle "acme" --sends 5000
+mailchannels sub-accounts limits delete --handle "acme"
+```
+
+All limits commands require `--handle`.
+
+#### Set sub-account limits flags
+
+| Flag                    | Description        | Required |
+| ----------------------- | ------------------ | -------- |
+| `--handle <handle>`     | Sub-account handle | Yes      |
+| `--sends <number>`      | Maximum sends      | Yes      |
+
+### Manage sub-account API keys
+
+```sh
+mailchannels sub-accounts api-keys create --handle "acme"
+mailchannels sub-accounts api-keys list --handle "acme" --limit 50 --offset 0
+mailchannels sub-accounts api-keys delete --handle "acme" --id 123
+```
+
+All API keys commands require `--handle`.
+
+#### Retrieve sub-account API keys flags
+
+`mailchannels sub-accounts api-keys list`
+
+| Flag                       | Description                | Required |
+| -------------------------- | -------------------------- | -------- |
+| `--handle <handle>`        | Sub-account handle         | Yes      |
+| `--limit <number>` (`-l`)  | Maximum number of API keys | No       |
+| `--offset <number>` (`-o`) | Number of API keys to skip | No       |
+
+The default pagination is a limit of `100` and an offset of `0`.
+
+#### Delete sub-account API keys flags
+
+`mailchannels sub-accounts api-keys delete`
+
+| Flag                | Description        | Required |
+| ------------------- | ------------------ | -------- |
+| `--handle <handle>` | Sub-account handle | Yes      |
+| `--id <id>`         | API key ID         | Yes      |
+
+### Manage sub-account SMTP passwords
+
+```sh
+mailchannels sub-accounts smtp-passwords create --handle "acme"
+mailchannels sub-accounts smtp-passwords list --handle "acme"
+mailchannels sub-accounts smtp-passwords delete --handle "acme" --id 123
+```
+
+All SMTP passwords commands require `--handle`.
+
+#### Delete sub-account SMTP passwords flags
+
+`mailchannels sub-accounts smtp-passwords delete`
+
+| Flag                | Description        | Required |
+| ------------------- | ------------------ | -------- |
+| `--handle <handle>` | Sub-account handle | Yes      |
+| `--id <id>`         | SMTP password ID   | Yes      |
+
 ## Webhooks
 
 Register webhook endpoints to receive notifications about email delivery events.
