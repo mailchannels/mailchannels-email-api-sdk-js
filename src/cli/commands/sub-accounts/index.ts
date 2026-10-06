@@ -6,6 +6,7 @@ import list from "./list";
 import suspend from "./suspend";
 import usage from "./usage";
 import apiKeys from "./api-keys";
+import limits from "./limits";
 
 export default defineCommand({
   meta: {
@@ -20,6 +21,7 @@ export default defineCommand({
     suspend,
     activate,
     usage,
-    "api-keys": apiKeys
+    "api-keys": apiKeys,
+    limits
   }
 });
