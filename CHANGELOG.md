@@ -1,6 +1,45 @@
 # Changelog
 
 
+## v1.7.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.7.0%0Dv1.6.0)
+
+### 🚀 Enhancements
+
+- **cli:** Add webhook commands ([#99](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/99))
+- **cli:** Add suppressions commands ([#87](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/87))
+
+### 🩹 Fixes
+
+- **cli:** Prioritize `--api-key` flag ([e8df626](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/e8df626))
+- **cli:** Remove conflicting -h emails alias with help flag ([4cc188a](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/4cc188a))
+- **sub-accounts:** Validate sends when setting limits ([abc088a](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/abc088a))
+
+### 💅 Refactors
+
+- **cli:** Share common utilities + simplify descriptions ([5562465](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/5562465))
+
+### 📖 Documentation
+
+- **cli:** Add CLI docs page ([6cf5bfe](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/6cf5bfe))
+- Improve official SDK discovery links and metadata ([82110da](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/82110da))
+
+### 🏡 Chore
+
+- **cli:** Add argument value hints for emails ([579c8bf](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/579c8bf))
+- **examples:** Add missing `node_modules` ignore ([a1de74e](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/a1de74e))
+- Update all dependencies ([81601ff](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/81601ff))
+
+### ✅ Tests
+
+- **nodemailer:** Fix mocked typing ([7b93e3b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7b93e3b))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+- Ken Simpson [ksimpson@mailchannels.com](mailto:ksimpson@mailchannels.com)
+
 ## v1.6.0
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.6.0%0Dv1.5.2)

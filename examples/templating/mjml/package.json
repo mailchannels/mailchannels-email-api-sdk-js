@@ -10,12 +10,12 @@
     "send": "tsx src/index.ts"
   },
   "dependencies": {
-    "mailchannels-sdk": "^1.6.0",
+    "mailchannels-sdk": "^1.7.0",
     "mjml": "^5.4.1"
   },
   "devDependencies": {
     "@types/mjml": "^5.0.0",
-    "tsx": "^4.23.13",
+    "tsx": "^4.23.15",
     "typescript": "7.0.2"
   }
 }
