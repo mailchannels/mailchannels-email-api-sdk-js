@@ -172,3 +172,9 @@ fields:
 Return any 2xx status code quickly. MailChannels treats anything else as a failure and may
 retry. Keep your handler thin: enqueue the event and return, then do the actual processing
 on a worker.
+
+The verifier requires the `Signature` entry matching the `Signature-Input` label
+and supports the signed `"content-digest"` component. It verifies the original
+signature parameters without rewriting them; altered covered components or
+timestamp text are rejected even when the body digest is unchanged. Signature
+verification does not replace application-level event idempotency.

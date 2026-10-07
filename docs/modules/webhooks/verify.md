@@ -134,3 +134,9 @@ const { data, error } = await mailchannels.webhooks.verify({
 
 <<< @/snippets/webhooks-verify-options.ts
 <<< @/snippets/webhooks-verify-response.ts
+
+The verifier requires the `Signature` entry matching the `Signature-Input` label
+and supports the signed `"content-digest"` component. It verifies the original
+signature parameters without rewriting them; altered covered components or
+timestamp text are rejected even when the body digest is unchanged. Signature
+verification does not replace application-level event idempotency.
