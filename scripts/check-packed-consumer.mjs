@@ -7,9 +7,11 @@ import { execFileSync } from "node:child_process";
 // hide missing dependencies in the public declarations. No provider calls.
 const root = process.cwd();
 const temporary = mkdtempSync(join(tmpdir(), "mailchannels-consumer-"));
-const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+const pnpm = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+// The pnpm CI image has no npm binary. Provision the consumer tool explicitly.
+const npmArgs = ["--silent", "--package=npm@10.9.9", "dlx", "npm"];
 try {
-  const packed = JSON.parse(execFileSync(npm, ["pack", "--ignore-scripts", "--json", "--pack-destination", temporary], { cwd: root, encoding: "utf8" }));
+  const packed = JSON.parse(execFileSync(pnpm, [...npmArgs, "pack", "--ignore-scripts", "--json", "--pack-destination", temporary], { cwd: root, encoding: "utf8" }));
   const tarball = resolve(temporary, packed[0].filename);
   writeFileSync(join(temporary, "package.json"), JSON.stringify({
     private: true,
@@ -17,7 +19,7 @@ try {
     dependencies: { "mailchannels-sdk": `file:${tarball}` },
     devDependencies: { "typescript": "6.0.3", "@types/node": "26.6.3" }
   }));
-  execFileSync(process.argv.includes("--pnpm") ? "pnpm" : npm, process.argv.includes("--pnpm") ? ["install", "--config.hoist=false", "--ignore-scripts"] : ["install", "--ignore-scripts", "--no-audit", "--no-fund"], { cwd: temporary, stdio: "inherit" });
+  execFileSync(pnpm, process.argv.includes("--pnpm") ? ["install", "--config.hoist=false", "--ignore-scripts"] : [...npmArgs, "install", "--ignore-scripts", "--no-audit", "--no-fund"], { cwd: temporary, stdio: "inherit" });
   writeFileSync(join(temporary, "consumer.ts"), `
 import { MailChannels, MailChannelsClient } from 'mailchannels-sdk';
 const sdk = new MailChannels('fixture-only-key');
