@@ -15,6 +15,7 @@ definitions:
           - pnpm lint
           - pnpm test:types
           - pnpm test
+          - pnpm test:package
 
     - step: &node20
         name: Tests (Node 20)
