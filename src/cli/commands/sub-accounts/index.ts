@@ -5,6 +5,7 @@ import deleteSubAccount from "./delete";
 import list from "./list";
 import suspend from "./suspend";
 import usage from "./usage";
+import apiKeys from "./api-keys";
 
 export default defineCommand({
   meta: {
@@ -15,9 +16,10 @@ export default defineCommand({
   subCommands: {
     create,
     list,
-    delete: deleteSubAccount,
+    "delete": deleteSubAccount,
     suspend,
     activate,
-    usage
+    usage,
+    "api-keys": apiKeys
   }
 });
