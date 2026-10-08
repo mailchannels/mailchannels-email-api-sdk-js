@@ -354,17 +354,17 @@ mailchannels sub-accounts usage --handle "acme"
 
 The result includes usage and the effective monthly limit for the current billing period.
 
-### Manage sub-account limits
+### Manage sub-account limit
 
 ```sh
-mailchannels sub-accounts limits get --handle "acme"
-mailchannels sub-accounts limits set --handle "acme" --sends 5000
-mailchannels sub-accounts limits delete --handle "acme"
+mailchannels sub-accounts limit get --handle "acme"
+mailchannels sub-accounts limit set --handle "acme" --sends 5000
+mailchannels sub-accounts limit delete --handle "acme"
 ```
 
-All limits commands require `--handle`.
+All limit commands require `--handle`.
 
-#### Set sub-account limits flags
+#### Set sub-account limit flags
 
 | Flag                    | Description        | Required |
 | ----------------------- | ------------------ | -------- |

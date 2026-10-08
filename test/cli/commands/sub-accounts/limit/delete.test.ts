@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import type { SuccessResponse } from "~/types/responses";
-import deleteLimits from "~/cli/commands/sub-accounts/limits/delete";
+import deleteLimit from "~/cli/commands/sub-accounts/limit/delete";
 
 const fake = {
   args: ["--api-key", "test-api-key"],
@@ -35,7 +35,7 @@ describe("limits delete", () => {
   });
 
   it("should delete a sub-account limit", async () => {
-    await runCommand(deleteLimits, {
+    await runCommand(deleteLimit, {
       rawArgs: [...fake.args, "--handle", fake.handle]
     });
 
@@ -46,7 +46,7 @@ describe("limits delete", () => {
     mockDelete.mockResolvedValueOnce({ success: false, error: { message: "API Error" } });
 
     await expect(
-      runCommand(deleteLimits, {
+      runCommand(deleteLimit, {
         rawArgs: [...fake.args, "--handle", fake.handle]
       })
     ).rejects.toThrow();

@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import type { SuccessResponse } from "~/types/responses";
-import set from "~/cli/commands/sub-accounts/limits/set";
+import set from "~/cli/commands/sub-accounts/limit/set";
 
 const fake = {
   args: ["--api-key", "test-api-key"],

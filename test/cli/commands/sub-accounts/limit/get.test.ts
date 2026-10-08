@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
-import get from "~/cli/commands/sub-accounts/limits/get";
+import get from "~/cli/commands/sub-accounts/limit/get";
 import { tabulatedSections } from "~/cli/utils/shared/sections";
 import type { SubAccountsLimitsGetResponse } from "~/types/sub-accounts/limits";
 

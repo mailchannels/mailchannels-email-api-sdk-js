@@ -6,7 +6,7 @@ import list from "./list";
 import suspend from "./suspend";
 import usage from "./usage";
 import apiKeys from "./api-keys";
-import limits from "./limits";
+import limit from "./limit";
 import smtpPasswords from "./smtp-passwords";
 
 export default defineCommand({
@@ -23,7 +23,7 @@ export default defineCommand({
     activate,
     usage,
     "api-keys": apiKeys,
-    limits,
+    limit,
     "smtp-passwords": smtpPasswords
   }
 });
