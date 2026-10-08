@@ -212,6 +212,28 @@ describe("verify", () => {
     expect(error).toBeTruthy();
   });
 
+  it.each([
+    { signature: fake.options.headers.signature.replace("sig_123456=", "sig_654321=") },
+    { "signature-input": fake.options.headers["signature-input"].replace("\"content-digest\"", "\"x-other\"") },
+    { "signature-input": fake.options.headers["signature-input"].replace("created=", "created=0") }
+  ])("rejects modified signature metadata: %j", async (changed) => {
+    const { data, error } = await Webhooks.verify({
+      ...fake.options,
+      headers: { ...fake.options.headers, ...changed }
+    });
+    expect(data).toBeNull();
+    expect(error).toBeTruthy();
+  });
+
+  it("selects the signature entry matching the input label", async () => {
+    const { data, error } = await Webhooks.verify({
+      ...fake.options,
+      headers: { ...fake.options.headers, signature: `sig_999=:AAAA:, ${fake.options.headers.signature}` }
+    });
+    expect(error).toBeNull();
+    expect(data).toEqual(fake.expectedResponse.data);
+  });
+
   it("should contain error on missing signature input", async () => {
     const { data, error } = await Webhooks.verify({
       ...fake.options,
