@@ -40,12 +40,25 @@ describe("create", () => {
     vi.restoreAllMocks();
   });
 
-  it("should create a sub-account with an optional handle", async () => {
+  it("should create a sub-account with the specified handle", async () => {
     await runCommand(create, {
       rawArgs: [...fake.args, "--company-name", fake.companyName, "--handle", fake.handle]
     });
 
     expect(mockCreate).toHaveBeenCalledWith(fake.companyName, fake.handle);
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining("[Sub-Accounts] Sub-account created successfully:"
+        + tabulatedSections(fake.response.data)
+      )
+    );
+  });
+
+  it("should create a sub-account without a handle", async () => {
+    await runCommand(create, {
+      rawArgs: [...fake.args, "--company-name", fake.companyName]
+    });
+
+    expect(mockCreate).toHaveBeenCalledWith(fake.companyName, undefined);
     expect(console.info).toHaveBeenCalledWith(
       expect.stringContaining("[Sub-Accounts] Sub-account created successfully:"
         + tabulatedSections(fake.response.data)
