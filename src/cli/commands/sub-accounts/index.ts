@@ -7,6 +7,7 @@ import suspend from "./suspend";
 import usage from "./usage";
 import apiKeys from "./api-keys";
 import limits from "./limits";
+import smtpPasswords from "./smtp-passwords";
 
 export default defineCommand({
   meta: {
@@ -22,6 +23,7 @@ export default defineCommand({
     activate,
     usage,
     "api-keys": apiKeys,
-    limits
+    limits,
+    "smtp-passwords": smtpPasswords
   }
 });
