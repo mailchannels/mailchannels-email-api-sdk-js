@@ -13,6 +13,12 @@ All webhooks are signed by default. There are three HTTP headers to consider dur
 - `Signature-Input`: describes what parts of the message are signed, along with other data about the signing method
 - `Signature`: the cryptographic signature
 
+The verifier requires the `Signature` entry matching the `Signature-Input` label
+and supports the signed `"content-digest"` component. It verifies the original
+signature parameters without rewriting them; altered covered components or
+timestamp text are rejected even when the body digest is unchanged. Signature
+verification does not replace application-level event idempotency.
+
 ## Usage
 
 ::: code-group
