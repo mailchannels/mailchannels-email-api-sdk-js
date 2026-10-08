@@ -6,7 +6,7 @@ import { MailChannelsClient, SubAccounts } from "../../../../mailchannels";
 export default defineCommand({
   meta: {
     name: "set",
-    description: "Set sub-account limits"
+    description: "Set sub-account limit"
   },
   args: {
     ...sharedArgs,
@@ -27,6 +27,6 @@ export default defineCommand({
       process.exit(1);
     }
 
-    console.info("[Sub-Accounts] Sub-account limits set successfully.");
+    console.info("[Sub-Accounts] Sub-account limit set successfully.");
   }
 });

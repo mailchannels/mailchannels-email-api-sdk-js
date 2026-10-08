@@ -6,7 +6,7 @@ import { MailChannelsClient, SubAccounts } from "../../../../mailchannels";
 export default defineCommand({
   meta: {
     name: "delete",
-    description: "Delete sub-account limits"
+    description: "Delete sub-account limit"
   },
   args: {
     ...sharedArgs,
@@ -24,6 +24,6 @@ export default defineCommand({
       process.exit(1);
     }
 
-    console.info("[Sub-Accounts] Sub-account limits deleted successfully.");
+    console.info("[Sub-Accounts] Sub-account limit deleted successfully.");
   }
 });

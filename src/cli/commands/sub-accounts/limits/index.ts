@@ -6,7 +6,7 @@ import set from "./set";
 export default defineCommand({
   meta: {
     name: "limits",
-    description: "Manage sub-account limits"
+    description: "Manage sub-account limit"
   },
   args: {},
   subCommands: {

@@ -7,7 +7,7 @@ import { MailChannelsClient, SubAccounts } from "../../../../mailchannels";
 export default defineCommand({
   meta: {
     name: "get",
-    description: "Retrieve sub-account limits"
+    description: "Retrieve sub-account limit"
   },
   args: {
     ...sharedArgs,
@@ -25,6 +25,6 @@ export default defineCommand({
       process.exit(1);
     }
 
-    console.info("[Sub-Accounts] Sub-account limits:" + tabulatedSections(data));
+    console.info("[Sub-Accounts] Sub-account limit:" + tabulatedSections(data));
   }
 });

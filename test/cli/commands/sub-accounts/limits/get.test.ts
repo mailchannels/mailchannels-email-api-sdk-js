@@ -43,7 +43,7 @@ describe("limits get", () => {
     });
 
     expect(mockGet).toHaveBeenCalledWith(fake.handle);
-    expect(console.info).toHaveBeenCalledWith("[Sub-Accounts] Sub-account limits:"
+    expect(console.info).toHaveBeenCalledWith("[Sub-Accounts] Sub-account limit:"
       + tabulatedSections(fake.response.data)
     );
   });
