@@ -31,8 +31,9 @@ const validateContentDigest = async (header: string, body: string) => {
   return computedHash === hash;
 };
 
-const extractSignature = (signatureHeader: string): string | null => {
-  const signatureMatch = signatureHeader.match(/sig_\d+=:([^:]+):/);
+const extractSignature = (signatureHeader: string, name: string): string | null => {
+  // The input parser restricts names to word characters before interpolation.
+  const signatureMatch = signatureHeader.match(new RegExp(`(?:^|,\\s*)${name}=:([^:]+):(?=\\s*(?:,|$))`));
   return signatureMatch && signatureMatch[1] ? signatureMatch[1] : null;
 };
 
@@ -40,10 +41,11 @@ const extractInputValues = (header: string) => {
   const regex = /^(\w+)=\(([^)]+)\);created=(\d+);alg="([^"]+)";keyid="([^"]+)"$/;
   const match = header.match(regex);
 
-  if (!match) return null;
+  if (!match || match[2] !== "\"content-digest\"") return null;
 
   return {
-    name: match[1],
+    name: match[1]!,
+    parameters: header.slice(header.indexOf("=") + 1),
     timestamp: Number.parseInt(match[3]!, 10),
     algorithm: match[4],
     keyId: match[5]
@@ -61,17 +63,17 @@ export async function isValidWebhook (options: WebhooksVerifyOptions) {
   || !(await validateContentDigest(contentDigest, payload))
   ) return false;
 
-  const signature = extractSignature(messageSignature);
-  if (!signature) return false;
-
   const values = extractInputValues(signatureInput);
   if (!values) return false;
+
+  const signature = extractSignature(messageSignature, values.name);
+  if (!signature) return false;
 
   const now = Math.floor(Date.now() / 1000);
   if (now - values.timestamp > DEFAULT_TOLERANCE) return false;
 
   const signingString = `"content-digest": ${contentDigest}
-"@signature-params": ("content-digest");created=${values.timestamp};alg="${values.algorithm}";keyid="${values.keyId}"`;
+"@signature-params": ${values.parameters}`;
 
   let publicKey = options.publicKey;
 
