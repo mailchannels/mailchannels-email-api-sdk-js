@@ -493,6 +493,16 @@ All SMTP passwords commands require `--handle`.
 | `--handle <handle>` | Sub-account handle | Yes      |
 | `--id <id>`         | SMTP password ID   | Yes      |
 
+## Usage Stats
+
+Retrieve usage stats for the authenticated account:
+
+```sh
+mailchannels usage
+```
+
+The result includes the current billing-period dates, total usage, and effective monthly limit.
+
 ## Webhooks
 
 Register webhook endpoints to receive notifications about email delivery events.

@@ -6,6 +6,7 @@ import emails from "./commands/emails";
 import metrics from "./commands/metrics";
 import suppressions from "./commands/suppressions";
 import subAccounts from "./commands/sub-accounts";
+import usage from "./commands/usage";
 import webhooks from "./commands/webhooks";
 
 const main = defineCommand({
@@ -20,6 +21,7 @@ const main = defineCommand({
     metrics,
     suppressions,
     "sub-accounts": subAccounts,
+    usage,
     webhooks
   },
   setup () {
