@@ -62,6 +62,23 @@ describe("recipientBehaviour", () => {
     );
   });
 
+  it("should contain error for invalid interval", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    // @ts-expect-error Runtime validation rejects invalid intervals from untyped callers.
+    const { data, error } = await metrics.recipientBehaviour({ interval: "invalid" });
+
+    expect(data).toBeNull();
+    expect(error).toMatchObject({
+      message: "Interval must be one of 'hour', 'day', 'week', 'month'.",
+      type: "validation_error"
+    });
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
   it("should contain error for invalid startTime date", async () => {
     const mockClient = {
       get: vi.fn()

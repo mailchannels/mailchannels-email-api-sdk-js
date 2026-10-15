@@ -1,8 +1,9 @@
 import type { MailChannelsClient } from "../../client";
-import { getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import { createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import { mapBucket } from "../../internal/map-bucket";
 import { parseDateInputs } from "../../internal/parse-date-inputs";
+import { quoteValues } from "../../internal/quote-values";
 import type { ErrorResponse } from "../../types/responses";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../../types/metrics/internal";
 import type { MetricsOptions } from "../../types/metrics";
@@ -14,6 +15,10 @@ import type { MetricsUsageResponse } from "../../types/metrics/usage";
 import type { MetricsSendersOptions, MetricsSendersResponse, MetricsSendersType } from "../../types/metrics/senders";
 
 export class Metrics {
+  private static readonly SORT_ORDER_VALUES = new Set<MetricsSendersOptions["sortOrder"]>(["asc", "desc"]);
+  private static readonly SENDER_TYPE_VALUES = new Set<MetricsSendersType>(["campaigns", "sub-accounts"]);
+  private static readonly INTERVAL_VALUES = new Set<MetricsOptions["interval"]>(["hour", "day", "week", "month"]);
+
   constructor (protected mailchannels: MailChannelsClient) {}
 
   /**
@@ -27,6 +32,11 @@ export class Metrics {
    */
   async engagement (options?: MetricsOptions): Promise<MetricsEngagementResponse> {
     let error: ErrorResponse | null = null;
+
+    if (options?.interval !== undefined && !Metrics.INTERVAL_VALUES.has(options.interval)) {
+      error = createValidationError(`Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`);
+      return { data: null, error };
+    }
 
     const { dates, error: dateError } = parseDateInputs({
       startTime: options?.startTime,
@@ -90,6 +100,11 @@ export class Metrics {
   async performance (options?: MetricsOptions): Promise<MetricsPerformanceResponse> {
     let error: ErrorResponse | null = null;
 
+    if (options?.interval !== undefined && !Metrics.INTERVAL_VALUES.has(options.interval)) {
+      error = createValidationError(`Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`);
+      return { data: null, error };
+    }
+
     const { dates, error: dateError } = parseDateInputs({
       startTime: options?.startTime,
       endTime: options?.endTime
@@ -144,6 +159,11 @@ export class Metrics {
   async recipientBehaviour (options?: MetricsOptions): Promise<MetricsRecipientBehaviourResponse> {
     let error: ErrorResponse | null = null;
 
+    if (options?.interval !== undefined && !Metrics.INTERVAL_VALUES.has(options.interval)) {
+      error = createValidationError(`Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`);
+      return { data: null, error };
+    }
+
     const { dates, error: dateError } = parseDateInputs({
       startTime: options?.startTime,
       endTime: options?.endTime
@@ -193,6 +213,11 @@ export class Metrics {
    */
   async volume (options?: MetricsOptions): Promise<MetricsVolumeResponse> {
     let error: ErrorResponse | null = null;
+
+    if (options?.interval !== undefined && !Metrics.INTERVAL_VALUES.has(options.interval)) {
+      error = createValidationError(`Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`);
+      return { data: null, error };
+    }
 
     const { dates, error: dateError } = parseDateInputs({
       startTime: options?.startTime,
@@ -278,6 +303,21 @@ export class Metrics {
    */
   async senders (type: MetricsSendersType, options?: MetricsSendersOptions): Promise<MetricsSendersResponse> {
     let error: ErrorResponse | null = null;
+
+    if (!type) {
+      error = createValidationError("No sender type provided.");
+      return { data: null, error };
+    }
+
+    if (!Metrics.SENDER_TYPE_VALUES.has(type)) {
+      error = createValidationError(`Sender type must be one of ${quoteValues(Metrics.SENDER_TYPE_VALUES)}.`);
+      return { data: null, error };
+    }
+
+    if (options?.sortOrder !== undefined && !Metrics.SORT_ORDER_VALUES.has(options.sortOrder)) {
+      error = createValidationError(`Sort order must be one of ${quoteValues(Metrics.SORT_ORDER_VALUES)}.`);
+      return { data: null, error };
+    }
 
     const { dates, error: dateError } = parseDateInputs({
       startTime: options?.startTime,

@@ -75,6 +75,57 @@ describe("senders", () => {
     );
   });
 
+  it("should contain error when sender type is omitted", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    // @ts-expect-error Runtime validation rejects a missing sender type.
+    const { data, error } = await metrics.senders();
+
+    expect(data).toBeNull();
+    expect(error).toMatchObject({
+      message: "No sender type provided.",
+      type: "validation_error"
+    });
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid sender type", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    // @ts-expect-error Runtime validation rejects sender types outside the public type.
+    const { data, error } = await metrics.senders("invalid");
+
+    expect(data).toBeNull();
+    expect(error).toMatchObject({
+      message: "Sender type must be one of 'campaigns', 'sub-accounts'.",
+      type: "validation_error"
+    });
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid sort order", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    // @ts-expect-error Runtime validation rejects sort orders outside the public type.
+    const { data, error } = await metrics.senders("campaigns", { sortOrder: "invalid" });
+
+    expect(data).toBeNull();
+    expect(error).toMatchObject({
+      message: "Sort order must be one of 'asc', 'desc'.",
+      type: "validation_error"
+    });
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
   it("should contain error for invalid startTime date", async () => {
     const mockClient = {
       get: vi.fn()
