@@ -99,35 +99,53 @@ Queued messages are processed asynchronously. Delivery status events are deliver
 
 These options are available for both sending and queuing emails.
 
-| Flag                                         | Description                                 | Required                         | Default |
-| -------------------------------------------- | ------------------------------------------- | -------------------------------- | ------- |
-| `--from <address>`                           | Sender address                              | Yes                              |         |
-| `--to <addresses>`                           | Comma-separated recipient addresses         | Yes                              |         |
-| `--subject <subject>`                        | Email subject                               | Yes                              |         |
-| `--text <text>`                              | Plain-text message body                     | Yes if `--html` is not provided. | Empty   |
-| `--html <html>`                              | HTML message body                           | Yes if `--text` is not provided. | Empty   |
-| `--cc <addresses>`                           | Comma-separated CC addresses                | No                               |         |
-| `--bcc <addresses>`                          | Comma-separated BCC addresses               | No                               |         |
-| `--reply-to <address>`                       | Reply-to address                            | No                               |         |
-| `--headers <json>`                           | Custom headers as a JSON object             | No                               |         |
-| `--attachments` (`-a`)                       | Read a JSON array of attachments from stdin | No                               | `false` |
-| `--campaign-id <id>`                         | Campaign identifier                         | No                               |         |
-| `--envelope-from <address>`                  | Envelope-from address                       | No                               |         |
-| `--dkim-domain <domain>`                     | DKIM signing domain                         | No                               |         |
-| `--dkim-selector <selector>`                 | DKIM selector                               | No                               |         |
-| `--dkim-private-key <key>`                   | DKIM private key                            | No                               |         |
-| `--tracking-click`                           | Enable click tracking                       | No                               | `false` |
-| `--tracking-click-custom-domain-name <name>` | Custom domain for click tracking            | No                               |         |
-| `--tracking-open`                            | Enable open tracking                        | No                               | `false` |
-| `--tracking-open-custom-domain-name <name>`  | Custom domain for open tracking             | No                               |         |
-| `--unsubscribe-custom-domain-name <name>`    | Custom domain for unsubscribe links         | No                               |         |
-| `--transactional`                            | Mark the message as transactional           | No                               | `true`  |
+| Flag                                         | Description                                 | Required                        | Default |
+| -------------------------------------------- | ------------------------------------------- | ------------------------------- | ------- |
+| `--from <address>`                           | Sender address                              | Yes                             |         |
+| `--to <addresses>`                           | Comma-separated recipient addresses         | Yes                             |         |
+| `--subject <subject>`                        | Email subject                               | Yes                             |         |
+| `--text <text>`                              | Plain-text message body                     | Yes if no HTML body is provided | Empty   |
+| `--text-file <path>` (preferred)             | Path to a plain-text file                   | Yes if no HTML body is provided |         |
+| `--html <html>`                              | HTML message body                           | Yes if no text body is provided | Empty   |
+| `--html-file <path>` (preferred)             | Path to an HTML file                        | Yes if no text body is provided |         |
+| `--cc <addresses>`                           | Comma-separated CC addresses                | No                              |         |
+| `--bcc <addresses>`                          | Comma-separated BCC addresses               | No                              |         |
+| `--reply-to <address>`                       | Reply-to address                            | No                              |         |
+| `--headers <json>`                           | Custom headers as a JSON object             | No                              |         |
+| `--attachments` (`-a`)                       | Read a JSON array of attachments from stdin | No                              | `false` |
+| `--campaign-id <id>`                         | Campaign identifier                         | No                              |         |
+| `--envelope-from <address>`                  | Envelope-from address                       | No                              |         |
+| `--dkim-domain <domain>`                     | DKIM signing domain                         | No                              |         |
+| `--dkim-selector <selector>`                 | DKIM selector                               | No                              |         |
+| `--dkim-private-key <key>`                   | DKIM private key                            | No                              |         |
+| `--tracking-click`                           | Enable click tracking                       | No                              | `false` |
+| `--tracking-click-custom-domain-name <name>` | Custom domain for click tracking            | No                              |         |
+| `--tracking-open`                            | Enable open tracking                        | No                              | `false` |
+| `--tracking-open-custom-domain-name <name>`  | Custom domain for open tracking             | No                              |         |
+| `--unsubscribe-custom-domain-name <name>`    | Custom domain for unsubscribe links         | No                              |         |
+| `--transactional`                            | Mark the message as transactional           | No                              | `true`  |
 
 The `emails send` command also supports:
 
-| Option      | Description                                        | Default |
+| Flag        | Description                                        | Default |
 | ----------- | -------------------------------------------------- | ------- |
 | `--dry-run` | Validate and render the message without sending it | `false` |
+
+### Read email content from files
+
+Prefer `--text-file` and `--html-file` for message bodies, especially for longer content. Reading
+from files avoids shell quoting issues and command-line length limits. Use `--text` and `--html` for
+short bodies or quick commands. If both forms of a body are provided, the file option takes
+precedence.
+
+```sh
+mailchannels emails queue \
+  --from "sender@example.com" \
+  --to "recipient@example.com" \
+  --subject "Test Email" \
+  --text-file "./emails/hello.txt" \
+  --html-file "./emails/hello.html"
+```
 
 ### Custom headers
 
