@@ -1,3 +1,6 @@
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import emails from "~/cli/commands/emails";
@@ -45,6 +48,7 @@ describe("send", () => {
   beforeAll(() => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.spyOn(console, "info").mockImplementation(() => {});
+    vi.spyOn(console, "warn").mockImplementation(() => {});
   });
 
   afterAll(() => {
@@ -54,6 +58,84 @@ describe("send", () => {
   it("should send an email with valid arguments", async () => {
     await runCommand(send, { rawArgs: fake.args });
     expect(mockSend).toHaveBeenCalledWith(expect.objectContaining(fake.options), false);
+  });
+
+  it("should send an email with file content", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "mailchannels-cli-"));
+    const textPath = join(tempDir, "hello.txt");
+    const htmlPath = join(tempDir, "hello.html");
+    const args = fake.args.filter((arg, i, arr) => arg !== "--text" && arr[i - 1] !== "--text");
+
+    try {
+      await writeFile(textPath, "Hello from a file");
+      await writeFile(htmlPath, "<p>Hello from a file</p>");
+
+      await runCommand(send, {
+        rawArgs: [
+          ...args,
+          "--text-file", textPath,
+          "--html-file", htmlPath
+        ]
+      });
+
+      expect(mockSend).toHaveBeenCalledWith(expect.objectContaining({
+        text: "Hello from a file",
+        html: "<p>Hello from a file</p>"
+      }), false);
+    }
+    finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("should use file content when inline and file contents are provided", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "mailchannels-cli-"));
+    const textPath = join(tempDir, "content.txt");
+    const htmlPath = join(tempDir, "content.html");
+    const args = fake.args.filter((arg, i, arr) => arg !== "--text" && arr[i - 1] !== "--text");
+
+    try {
+      await writeFile(textPath, "Hello from a file");
+      await writeFile(htmlPath, "<p>Hello from a file</p>");
+
+      await runCommand(send, {
+        rawArgs: [
+          ...args,
+          "--text", "Inline content",
+          "--text-file", textPath,
+          "--html", "<p>Inline content</p>",
+          "--html-file", htmlPath
+        ]
+      });
+
+      expect(mockSend).toHaveBeenCalledWith(expect.objectContaining({
+        text: "Hello from a file",
+        html: "<p>Hello from a file</p>"
+      }), false);
+    }
+    finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("should error on file read failure", async () => {
+    const tempDir = await mkdtemp(join(tmpdir(), "mailchannels-cli-"));
+    const textPath = join(tempDir, "not-found.txt");
+    const args = fake.args.filter((arg, i, arr) => arg !== "--text" && arr[i - 1] !== "--text");
+
+    try {
+      await expect(
+        runCommand(send, {
+          rawArgs: [
+            ...args,
+            "--text-file", textPath
+          ]
+        })
+      ).rejects.toThrow();
+    }
+    finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
   });
 
   it("should send email with multiple recipients", async () => {

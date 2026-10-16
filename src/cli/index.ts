@@ -3,6 +3,7 @@ import { defineCommand, runMain } from "citty";
 import pkg from "../../package.json";
 import simulate from "./commands/simulate";
 import emails from "./commands/emails";
+import metrics from "./commands/metrics";
 import suppressions from "./commands/suppressions";
 import subAccounts from "./commands/sub-accounts";
 import webhooks from "./commands/webhooks";
@@ -16,6 +17,7 @@ const main = defineCommand({
   subCommands: {
     simulate,
     emails,
+    metrics,
     suppressions,
     "sub-accounts": subAccounts,
     webhooks
