@@ -199,6 +199,60 @@ Or using input redirection:
   --attachments < attachments.json
 ```
 
+## Metrics
+
+### Time-series metrics
+
+```sh
+mailchannels metrics engagement
+mailchannels metrics performance
+mailchannels metrics recipient-behaviour
+mailchannels metrics volume
+```
+
+```sh
+mailchannels metrics engagement \
+  --start-time "2026-10-01" \
+  --end-time "2026-11-01" \
+  --interval "day" \
+  --campaign-id "spring-campaign"
+```
+
+The `engagement`, `performance`, `recipient-behaviour`, and `volume` commands accept these optional
+filters:
+
+| Flag                      | Description                         | Default       |
+| ------------------------- | ----------------------------------- | ------------- |
+| `--start-time <datetime>` | Inclusive start of the time range   | One month ago |
+| `--end-time <datetime>`   | Exclusive end of the time range     | Current time  |
+| `--campaign-id <id>`      | Filter metrics to a campaign        | All campaigns |
+| `--interval <interval>`   | Bucket interval for metrics reports | `day`         |
+
+### Sender metrics
+
+Retrieve metrics for campaigns or sub-accounts
+
+`mailchannels metrics senders`
+
+```sh
+mailchannels metrics senders \
+  --type "campaigns" \
+  --start-time "2026-10-01" \
+  --limit 25 \
+  --sort-order "desc"
+```
+
+The sender metrics command supports these flags:
+
+| Flag                       | Description                                     | Required | Default       |
+| -------------------------- | ----------------------------------------------- | -------- | ------------- |
+| `--type <type>`            | Sender group: `campaigns` or `sub-accounts`     | Yes      | None          |
+| `--start-time <datetime>`  | Inclusive start of the time range               | No       | One month ago |
+| `--end-time <datetime>`    | Exclusive end of the time range                 | No       | Current time  |
+| `--limit <number>` (`-l`)  | Number of senders to return (1-1000)            | No       | `10`          |
+| `--offset <number>` (`-o`) | Number of senders to skip                       | No       | `0`           |
+| `--sort-order <order>`     | Sort by total messages; accepts `asc` or `desc` | No       | `desc`        |
+
 ## Suppressions
 
 Manage account suppressions list.
