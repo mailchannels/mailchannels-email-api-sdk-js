@@ -199,6 +199,82 @@ Or using input redirection:
   --attachments < attachments.json
 ```
 
+## Custom Tracking
+
+Manage branded domains used for click tracking, open tracking, and unsubscribe links.
+
+### List custom tracking domains
+
+```sh
+mailchannels custom-tracking list \
+  --status active \
+  --scope click \
+  --limit 100 \
+  --offset 0
+```
+
+| Flag                       | Description                                        | Required | Default |
+| -------------------------- | -------------------------------------------------- | -------- | ------- |
+| `--name <name>`            | Filter by custom tracking domain name              | No       |         |
+| `--status <status>`        | Filter by status: `active` or `disabled`           | No       |         |
+| `--scope <scope>`          | Filter by scope: `click`, `open`, or `unsubscribe` | No       |         |
+| `--limit <number>` (`-l`)  | Maximum number of domains to return (1-1000)       | No       | `100`   |
+| `--offset <number>` (`-o`) | Number of domains to skip                          | No       | `0`     |
+
+### Create a custom tracking domain
+
+```sh
+mailchannels custom-tracking create \
+  --name "clickdemo" \
+  --hostname "click.example.com" \
+  --scope click
+```
+
+| Flag                    | Description                                                         | Required |
+| ----------------------- | ------------------------------------------------------------------- | -------- |
+| `--name <name>`         | Unique label (1-64 lowercase letters, numbers, or hyphens)          | Yes      |
+| `--hostname <hostname>` | Tracking hostname with a CNAME pointing to `links.mailchannels.net` | Yes      |
+| `--scope <scope>`       | Event type: `click`, `open`, or `unsubscribe`                       | Yes      |
+
+The command prints the registered domain or, when DNS setup is required, the TXT record details and
+instructions.
+
+### Update a custom tracking domain
+
+```sh
+mailchannels custom-tracking update \
+  --hostname "click.example.com" \
+  --scope click \
+  --name "click-links" \
+  --status disabled
+```
+
+| Flag                    | Description                                         | Required                      |
+| ----------------------- | --------------------------------------------------- | ----------------------------- |
+| `--hostname <hostname>` | Hostname of the domain to update                    | Yes                           |
+| `--scope <scope>`       | Scope of the domain: `click`, `open`, `unsubscribe` | Yes                           |
+| `--name <name>`         | New custom tracking domain label                    | One of `--name` or `--status` |
+| `--status <status>`     | New status: `active` or `disabled`                  | One of `--name` or `--status` |
+
+Re-activating a domain may require DNS verification. The command prints the required DNS record
+details when verification is pending.
+
+### Delete a custom tracking domain
+
+```sh
+mailchannels custom-tracking delete \
+  --hostname "click.example.com" \
+  --scope click
+```
+
+| Flag                    | Description                                         | Required |
+| ----------------------- | --------------------------------------------------- | -------- |
+| `--hostname <hostname>` | Hostname of the domain to delete                    | Yes      |
+| `--scope <scope>`       | Scope of the domain: `click`, `open`, `unsubscribe` | Yes      |
+
+Deleting a domain immediately stops previously sent emails' tracking links and unsubscribe URLs from
+working.
+
 ## Metrics
 
 ### Time-series metrics
