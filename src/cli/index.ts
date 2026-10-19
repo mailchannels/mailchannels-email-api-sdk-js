@@ -3,6 +3,7 @@ import { defineCommand, runMain } from "citty";
 import pkg from "../../package.json";
 import simulate from "./commands/simulate";
 import emails from "./commands/emails";
+import dkim from "./commands/dkim";
 import customTracking from "./commands/custom-tracking";
 import metrics from "./commands/metrics";
 import suppressions from "./commands/suppressions";
@@ -20,6 +21,7 @@ const main = defineCommand({
   subCommands: {
     simulate,
     emails,
+    dkim,
     "custom-tracking": customTracking,
     metrics,
     suppressions,
