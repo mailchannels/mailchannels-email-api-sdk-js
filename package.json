@@ -68,8 +68,7 @@
   "dependencies": {
     "citty": "^0.2.2",
     "mime": "^4.1.0",
-    "ofetch": "^2.0.0-alpha.3",
-    "undici": "^6.29.0"
+    "ofetch": "^2.0.0-alpha.3"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.10.0",
