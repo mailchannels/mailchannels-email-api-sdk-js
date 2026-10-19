@@ -1,4 +1,5 @@
 import { defineCommand } from "citty";
+import checkDomain from "./check-domain";
 import create from "./create";
 import list from "./list";
 import rotate from "./rotate";
@@ -11,6 +12,7 @@ export default defineCommand({
   },
   args: {},
   subCommands: {
+    "check-domain": checkDomain,
     list,
     create,
     "update-status": updateStatus,

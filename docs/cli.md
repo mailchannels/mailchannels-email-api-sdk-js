@@ -207,7 +207,28 @@ Or using input redirection:
 
 ## DKIM
 
-Manage hosted DKIM keys for a domain.
+Manage hosted DKIM keys and validate email authentication for a domain.
+
+### Check domain authentication
+
+`mailchannels dkim check-domain`
+
+```sh
+mailchannels dkim check-domain \
+  --domain "example.com"
+```
+
+| Flag                              | Description                                                   | Required |
+| --------------------------------- | ------------------------------------------------------------- | -------- |
+| `--domain <domain>`               | Domain used for sending email                                 | Yes      |
+| `--dkim-domain <domain>`          | Domain used for DKIM verification                             | No       |
+| `--dkim-private-key <key>`        | Private key for DKIM verification; requires `--dkim-selector` | No       |
+| `--dkim-selector <selector>`      | Selector of the DKIM key to verify                            | No       |
+| `--envelope-from-domain <domain>` | Envelope-from domain, if different from `--domain`            | No       |
+| `--sender-id <id>`                | Sender ID to check with Domain Lockdown                       | No       |
+
+By default, stored DKIM keys for `--domain` are checked. The command outputs SPF, Domain Lockdown,
+Sender Domain, and DKIM results, along with reference links when available.
 
 ### List DKIM keys
 
