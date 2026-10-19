@@ -80,7 +80,8 @@ describe("custom-tracking create", () => {
     await runCommand(create, { rawArgs: fake.args });
 
     expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining(tabulatedSections(response.data))
+      expect.stringContaining("[Custom Tracking] DNS setup required to complete domain creation."
+        + tabulatedSections(response.data))
     );
   });
 

@@ -35,7 +35,8 @@ export default defineCommand({
       process.exit(1);
     }
 
-    console.info("[Custom Tracking] Custom tracking domain created successfully:"
+    const message = data.dnsSetupRequired ? "DNS setup required to complete domain creation." : "Custom tracking domain created successfully:";
+    console.info(`[Custom Tracking] ${message}`
       + tabulatedSections(data)
     );
   }
