@@ -164,6 +164,7 @@ settings:
 
 patchedDependencies:
   changelogen: 2727998bd0a3e81a13b1f78cac35ca02f8fa6b262b748e213d9d2b74bd60ce11
+  ofetch@2.0.0-alpha.3: 84d36788ba63b27be9a8c689fb83dfc647df0b7d4c09b515455f65f67f63ff6d
 
 importers:
 
@@ -177,7 +178,7 @@ importers:
         version: 4.1.0
       ofetch:
         specifier: ^2.0.0-alpha.3
-        version: 2.0.0-alpha.3
+        version: 2.0.0-alpha.3(patch_hash=84d36788ba63b27be9a8c689fb83dfc647df0b7d4c09b515455f65f67f63ff6d)
     devDependencies:
       '@stylistic/eslint-plugin':
         specifier: ^5.10.0
@@ -3398,7 +3399,7 @@ snapshots:
       node-fetch-native: 1.6.7
       ufo: 1.6.4
 
-  ofetch@2.0.0-alpha.3: {}
+  ofetch@2.0.0-alpha.3(patch_hash=84d36788ba63b27be9a8c689fb83dfc647df0b7d4c09b515455f65f67f63ff6d): {}
 
   ohash@2.0.12: {}
 

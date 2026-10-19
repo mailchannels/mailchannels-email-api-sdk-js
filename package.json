@@ -62,7 +62,8 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "(git fetch --unshallow -q || git fetch --all -q) && vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "docs:snippets": "node docs/scripts/snippets.ts"
+    "docs:snippets": "node docs/scripts/snippets.ts",
+    "test:package": "pnpm build && node scripts/check-packed-consumer.mjs && node scripts/check-packed-consumer.mjs --pnpm"
   },
   "dependencies": {
     "citty": "^0.2.2",
