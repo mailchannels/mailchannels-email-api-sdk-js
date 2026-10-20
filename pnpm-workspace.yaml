@@ -6,3 +6,4 @@ allowBuilds:
 
 patchedDependencies:
   changelogen: patches/changelogen.patch
+  ofetch@2.0.0-alpha.3: patches/ofetch.patch
