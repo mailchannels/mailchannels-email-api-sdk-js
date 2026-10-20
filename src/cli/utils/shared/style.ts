@@ -7,6 +7,7 @@ const styles = {
   green: createStyle(32),
   yellow: createStyle(33),
   blue: createStyle(34),
+  cyan: createStyle(36),
   underline: createStyle(4, 24)
 };
 

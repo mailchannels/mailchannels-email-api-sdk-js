@@ -33,6 +33,12 @@ mailchannels emails --help
 mailchannels emails queue --help
 ```
 
+Open the MailChannels documentation in your default browser:
+
+```sh
+mailchannels docs
+```
+
 ## Authentication
 
 Commands that call the Email API require an API key. Provide it with `--api-key`, or set the `MAILCHANNELS_API_KEY` environment variable:
