@@ -9,6 +9,7 @@ import suppressions from "./commands/suppressions";
 import subAccounts from "./commands/sub-accounts";
 import usage from "./commands/usage";
 import webhooks from "./commands/webhooks";
+import docs from "./commands/docs";
 
 const main = defineCommand({
   meta: {
@@ -24,7 +25,8 @@ const main = defineCommand({
     suppressions,
     "sub-accounts": subAccounts,
     usage,
-    webhooks
+    webhooks,
+    docs
   },
   setup () {
     const LOGGER_NAME = "[MailChannels-CLI]";
