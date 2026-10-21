@@ -205,6 +205,86 @@ Or using input redirection:
   --attachments < attachments.json
 ```
 
+## DKIM
+
+Manage hosted DKIM keys for a domain.
+
+### List DKIM keys
+
+`mailchannels dkim list`
+
+```sh
+mailchannels dkim list \
+  --domain "example.com" \
+  --limit 10 \
+  --offset 0
+```
+
+| Flag                       | Description                                                    | Required | Default |
+| -------------------------- | -------------------------------------------------------------- | -------- | ------- |
+| `--domain <domain>`        | Domain to search                                               | Yes      |         |
+| `--selector <selector>`    | Filter by selector                                             | No       |         |
+| `--status <status>`        | Filter by status: `active`, `retired`, `revoked`, or `rotated` | No       |         |
+| `--include-dns-record`     | Include the suggested DNS TXT record                           | No       | `false` |
+| `--limit <number>` (`-l`)  | Maximum number of keys to return                               | No       | `10`    |
+| `--offset <number>` (`-o`) | Number of keys to skip                                         | No       | `0`     |
+
+### Create a DKIM key
+
+`mailchannels dkim create`
+
+```sh
+mailchannels dkim create \
+  --domain "example.com" \
+  --selector "mailchannels"
+```
+
+| Flag                      | Description                                       | Required | Default |
+| ------------------------- | ------------------------------------------------- | -------- | ------- |
+| `--domain <domain>`       | Domain for the key pair                           | Yes      |         |
+| `--selector <selector>`   | Selector for the key pair                         | Yes      |         |
+| `--algorithm <algorithm>` | Key algorithm; currently only `rsa`               | No       | `rsa`   |
+| `--length <bits>`         | RSA key length: `1024`, `2048`, `3072`, or `4096` | No       | `2048`  |
+
+The result includes the public key and suggested DNS TXT record. Publish the DNS record yourself.
+
+### Update a DKIM key status
+
+`mailchannels dkim update-status`
+
+```sh
+mailchannels dkim update-status \
+  --domain "example.com" \
+  --selector "mailchannels" \
+  --status "retired"
+```
+
+| Flag                    | Description                                    | Required |
+| ----------------------- | ---------------------------------------------- | -------- |
+| `--domain <domain>`     | Domain associated with the key                 | Yes      |
+| `--selector <selector>` | Selector of the key to update                  | Yes      |
+| `--status <status>`     | New status: `retired`, `revoked`, or `rotated` | Yes      |
+
+### Rotate a DKIM key
+
+`mailchannels dkim rotate`
+
+```sh
+mailchannels dkim rotate \
+  --domain "example.com" \
+  --selector "mailchannels" \
+  --new-selector "mailchannels2"
+```
+
+| Flag                        | Description                    | Required |
+| --------------------------- | ------------------------------ | -------- |
+| `--domain <domain>`         | Domain associated with the key | Yes      |
+| `--selector <selector>`     | Selector of the active key     | Yes      |
+| `--new-selector <selector>` | Selector for the new key pair  | Yes      |
+
+The command prints both key details. Publish the new key's DNS TXT record before the rotated key's
+`gracePeriodExpiresAt` time.
+
 ## Custom Tracking
 
 Manage branded domains used for click tracking, open tracking, and unsubscribe links.
