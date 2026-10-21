@@ -8,7 +8,8 @@ const styles = {
   yellow: createStyle(33),
   blue: createStyle(34),
   cyan: createStyle(36),
-  underline: createStyle(4, 24)
+  underline: createStyle(4, 24),
+  dim: createStyle(2, 22)
 };
 
 type StyleTextFormat = keyof typeof styles;
