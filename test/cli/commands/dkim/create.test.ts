@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import create from "~/cli/commands/dkim/create";
+import { tabulatedSections } from "~/cli/utils/shared/sections";
 import type { DomainsDkimCreateResponse } from "~/types/domains/dkim-create";
 
 const fake = {
@@ -30,6 +31,8 @@ const fake = {
     error: null
   } satisfies DomainsDkimCreateResponse
 };
+
+const { dnsRecords, ...dkimData } = fake.response.data;
 
 const mockCreate = vi.fn().mockResolvedValue(fake.response);
 
@@ -76,6 +79,24 @@ describe("create", () => {
     });
   });
 
+  it("should print DNS records when the response includes them", async () => {
+    mockCreate.mockResolvedValueOnce(fake.response);
+    vi.mocked(console.info).mockClear();
+
+    await runCommand(create, { rawArgs: fake.args });
+
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining("[DKIM] DKIM key created successfully:"
+        + tabulatedSections(dkimData)
+      )
+    );
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining("[DKIM] DNS Records:"
+        + tabulatedSections(dnsRecords)
+      )
+    );
+  });
+
   it("should omit DNS output when the response has no DNS records", async () => {
     mockCreate.mockResolvedValueOnce({
       data: { ...fake.response.data, dnsRecords: [] },
@@ -86,7 +107,9 @@ describe("create", () => {
     await runCommand(create, { rawArgs: fake.args });
 
     expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining("[DKIM] DKIM key created successfully:")
+      expect.stringContaining("[DKIM] DKIM key created successfully:"
+        + tabulatedSections(dkimData)
+      )
     );
     expect(console.info).not.toHaveBeenCalledWith(
       expect.stringContaining("[DKIM] DNS Records:")

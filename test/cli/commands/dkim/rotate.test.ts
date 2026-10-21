@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import rotate from "~/cli/commands/dkim/rotate";
+import { tabulatedSections } from "~/cli/utils/shared/sections";
 import type { DomainsDkimRotateResponse } from "~/types/domains/dkim-rotate";
 
 const fake = {
@@ -42,6 +43,8 @@ const fake = {
   } satisfies DomainsDkimRotateResponse
 };
 
+const { dnsRecords: newDnsRecords, ...newDkimData } = fake.response.data.new;
+
 const mockRotate = vi.fn().mockResolvedValue(fake.response);
 
 vi.mock("~/mailchannels", async () => ({
@@ -68,6 +71,17 @@ describe("rotate", () => {
     await runCommand(rotate, { rawArgs: fake.args });
 
     expect(mockRotate).toHaveBeenCalledWith(fake.domain, fake.selector, fake.options);
+    expect(console.info).toHaveBeenCalledWith("[DKIM] DKIM key rotated successfully.");
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining("[DKIM] New DKIM key details:"
+        + tabulatedSections(newDkimData)
+      )
+    );
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining("[DKIM] DNS Records for the new key:"
+        + tabulatedSections(newDnsRecords)
+      )
+    );
   });
 
   it("should omit DNS output when the new key has no DNS records", async () => {
@@ -84,7 +98,9 @@ describe("rotate", () => {
 
     expect(console.info).toHaveBeenCalledWith("[DKIM] DKIM key rotated successfully.");
     expect(console.info).toHaveBeenCalledWith(
-      expect.stringContaining("[DKIM] New DKIM key details:")
+      expect.stringContaining("[DKIM] New DKIM key details:"
+        + tabulatedSections(newDkimData)
+      )
     );
     expect(console.info).not.toHaveBeenCalledWith(
       expect.stringContaining("[DKIM] DNS Records for the new key:")
