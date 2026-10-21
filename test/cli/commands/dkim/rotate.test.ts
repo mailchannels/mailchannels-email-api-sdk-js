@@ -55,7 +55,7 @@ vi.mock("~/mailchannels", async () => ({
 
 describe("rotate", () => {
   beforeEach(() => {
-    mockRotate.mockClear();
+    vi.clearAllMocks();
   });
 
   beforeAll(() => {

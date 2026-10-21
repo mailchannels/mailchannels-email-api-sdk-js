@@ -44,7 +44,7 @@ vi.mock("~/mailchannels", async () => ({
 
 describe("create", () => {
   beforeEach(() => {
-    mockCreate.mockClear();
+    vi.clearAllMocks();
   });
 
   beforeAll(() => {

@@ -32,7 +32,7 @@ vi.mock("~/mailchannels", async () => ({
 
 describe("update-status", () => {
   beforeEach(() => {
-    mockUpdateStatus.mockClear();
+    vi.clearAllMocks();
   });
 
   beforeAll(() => {
