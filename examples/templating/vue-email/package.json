@@ -18,12 +18,12 @@
     "@vue-email/components": "^0.0.21",
     "@vue-email/render": "^0.0.9",
     "mailchannels-sdk": "^1.7.0",
-    "vue": "^3.5.43"
+    "vue": "^3.5.44"
   },
   "devDependencies": {
-    "tsdown": "0.23.0",
+    "tsdown": "0.23.1",
     "typescript": "7.0.2",
     "unplugin-vue": "^8.0.0",
-    "vue-tsc": "^3.3.12"
+    "vue-tsc": "^3.3.13"
   }
 }

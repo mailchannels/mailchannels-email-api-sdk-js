@@ -12,10 +12,10 @@
   },
   "dependencies": {
     "mailchannels-sdk": "^1.7.0",
-    "nuxt": "^4.5.2"
+    "nuxt": "^4.6.2"
   },
   "devDependencies": {
-    "@types/node": "^26.6.4",
+    "@types/node": "^26.6.5",
     "typescript": "^6.0.3"
   }
 }
