@@ -1,6 +1,40 @@
 # Changelog
 
 
+## v1.8.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.8.0%0Dv1.7.0)
+
+### 🚀 Enhancements
+
+- **cli:** Add sub-accounts commands ([#106](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/106))
+- **cli:** Support reading email contents from files ([c02fcc3](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/c02fcc3))
+- **cli:** Add metrics commands ([#115](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/115))
+- **cli:** Add usage command ([#116](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/116))
+- **cli:** Add custom tracking commands ([#122](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/122))
+- **cli:** Add docs command ([#127](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/127))
+- **cli:** Add update notification ([#128](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/128))
+- **cli:** Add dkim commands ([#123](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/123))
+- **cli:** Add `check-domain` command to `dkim` ([#126](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/126))
+
+### 🩹 Fixes
+
+- **webhooks:** Verify matching labels and original signature parameters ([7189c33](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7189c33))
+- **metrics:** Validate interval, sender type, and sort order values ([55499d1](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/55499d1))
+- **types:** Resolve transport declarations in isolated consumers ([ac1d88d](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/ac1d88d))
+- **types:** Patch ofetch undici dependency ([0cfeb81](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/0cfeb81))
+- **dkim:** Validate algorithm and key length creation options ([30a5232](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/30a5232))
+
+### 🏡 Chore
+
+- **examples:** Migrate SvelteKit example to v3 ([da9f0ce](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/da9f0ce))
+- Update all deps ([2ba8778](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/2ba8778))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+- Ken Simpson [ksimpson@ttul.org](mailto:ksimpson@ttul.org)
+
 ## v1.7.0
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.7.0%0Dv1.6.0)
