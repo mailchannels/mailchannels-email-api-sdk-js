@@ -13,6 +13,8 @@ import type { DomainsDkimRotateOptions, DomainsDkimRotateResponse } from "../../
 export class DomainsDkim {
   private static readonly UPDATE_STATUS_VALUES = new Set<Exclude<DomainsDkimKeyStatus, "active">>(["retired", "revoked", "rotated"]);
   private static readonly STATUS_VALUES = new Set<DomainsDkimKeyStatus>(["active", ...DomainsDkim.UPDATE_STATUS_VALUES]);
+  private static readonly KEY_ALGORITHM_VALUES = new Set<DomainsDkimCreateOptions["algorithm"]>(["rsa"]);
+  private static readonly RSA_LENGTH_VALUES = new Set<DomainsDkimCreateOptions["length"]>([1024, 2048, 3072, 4096]);
 
   constructor (private mailchannels: MailChannelsClient) {}
 
@@ -39,6 +41,21 @@ export class DomainsDkim {
     if (!options.selector || options.selector.length > 63) {
       error = createValidationError("Selector must be between 1 and 63 characters.");
       return { data: null, error };
+    }
+
+    if (options.algorithm !== undefined && !DomainsDkim.KEY_ALGORITHM_VALUES.has(options.algorithm)) {
+      error = createValidationError(`Algorithm must be ${quoteValues(DomainsDkim.KEY_ALGORITHM_VALUES)}.`);
+      return { data: null, error };
+    }
+
+    if (options.length !== undefined) {
+      if (
+        (options.algorithm === undefined || options.algorithm === "rsa")
+        && !DomainsDkim.RSA_LENGTH_VALUES.has(options.length)
+      ) {
+        error = createValidationError(`RSA key length must be one of ${quoteValues(DomainsDkim.RSA_LENGTH_VALUES)}.`);
+        return { data: null, error };
+      }
     }
 
     const payload: DomainsDkimCreatePayload = {

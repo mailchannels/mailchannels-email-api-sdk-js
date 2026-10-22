@@ -119,6 +119,43 @@ describe("dkim.create", () => {
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
+  it("should return error if algorithm is unsupported", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.dkim.create("example.com", {
+      selector:
+      "mailchannels-test",
+      // @ts-expect-error Testing unsupported algorithm
+      algorithm: "ed25519"
+    });
+
+    expect(error).toMatchObject({
+      message: "Algorithm must be 'rsa'.",
+      type: "validation_error"
+    });
+    expect(data).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should return error if key length is unsupported", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.dkim.create("example.com", {
+      selector: "mailchannels-test",
+      // @ts-expect-error Testing unsupported key length
+      length: 512
+    });
+
+    expect(error).toMatchObject({
+      message: "RSA key length must be one of '1024', '2048', '3072', '4096'.",
+      type: "validation_error"
+    });
+    expect(data).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
   it("should handle catch block errors", async () => {
     const mockClient = {
       post: vi.fn().mockRejectedValueOnce(new Error("failure"))
