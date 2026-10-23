@@ -4,6 +4,7 @@ const createStyle = (code: number, reset: number = 39) => (text: string) => {
 };
 
 const styles = {
+  red: createStyle(31),
   green: createStyle(32),
   yellow: createStyle(33),
   blue: createStyle(34),
@@ -61,4 +62,8 @@ export const toWordsKeys = <T extends object | object[]>(record: T): T => {
       camelCaseToWords(key), typeof value === "object" && value !== null ? toWordsKeys(value) : value
     ])
   ) as T;
+};
+
+export const styleUrls = (text: string) => {
+  return text.replace(/\bhttps?:\/\/[^\s]+/g, url => styleText(["cyan", "underline"], url));
 };
