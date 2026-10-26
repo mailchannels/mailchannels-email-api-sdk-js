@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { WebhooksListResponse } from "mailchannels-sdk";
+import type { WebhooksListResponse } from "@mailchannels/sdk";
 
 export default function () {
   const [loading, setLoading] = useState(false);

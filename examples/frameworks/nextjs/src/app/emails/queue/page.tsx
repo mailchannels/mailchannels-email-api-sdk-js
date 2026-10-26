@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { EmailsQueueResponse } from "mailchannels-sdk";
+import type { EmailsQueueResponse } from "@mailchannels/sdk";
 
 export default function () {
   const [loading, setLoading] = useState(false);

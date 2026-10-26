@@ -11,7 +11,7 @@ Retrieve engagement metrics for messages sent from your account, including count
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
+import { MailChannelsClient, Metrics } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
@@ -20,7 +20,7 @@ const { data, error } = await metrics.engagement()
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

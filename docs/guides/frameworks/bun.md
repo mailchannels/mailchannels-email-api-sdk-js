@@ -9,11 +9,11 @@ Send emails using [Bun](https://bun.sh/) and the MailChannels Node.js SDK.
 
 ## 1. Install
 
-Add the `mailchannels-sdk` package dependency to your Bun project.
+Add the `@mailchannels/sdk` package dependency to your Bun project.
 
 ::: code-group
 ```sh [bun]
-bun add mailchannels-sdk
+bun add @mailchannels/sdk
 ```
 :::
 
@@ -32,7 +32,7 @@ Register a `/api/send` [Route handler](https://bun.sh/docs/runtime/http/server) 
 Use the `html` property to send an email with HTML content.
 
 ```ts [src/index.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY as string)
 

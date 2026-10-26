@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { MailChannels } from "mailchannels-sdk";
+import { MailChannels } from "@mailchannels/sdk";
 import mjml2html from "mjml";
 
 process.loadEnvFile();

@@ -6,7 +6,7 @@ MailChannels posts batched delivery events to a URL you register. Events cover b
 ## Enroll And Manage
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 
@@ -90,7 +90,7 @@ does the full verification — content digest, freshness, and signature — in o
 **Always verify before processing.**
 
 ```ts
-import { Webhooks } from 'mailchannels-sdk'
+import { Webhooks } from '@mailchannels/sdk'
 
 // In your HTTP handler (example using Node.js / Express):
 app.post('/mailchannels/events', express.raw({ type: '*/*' }), async (req, res) => {

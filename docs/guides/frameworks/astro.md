@@ -9,27 +9,27 @@ Send emails using [Astro](https://astro.build/) and the MailChannels Node.js SDK
 
 ## 1. Install
 
-Add the `mailchannels-sdk` package dependency to your Astro project.
+Add the `@mailchannels/sdk` package dependency to your Astro project.
 
 ::: code-group
 ```sh [npm]
-npm i mailchannels-sdk
+npm i @mailchannels/sdk
 ```
 
 ```sh [yarn]
-yarn add mailchannels-sdk
+yarn add @mailchannels/sdk
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk
+pnpm add @mailchannels/sdk
 ```
 
 ```sh [bun]
-bun add mailchannels-sdk
+bun add @mailchannels/sdk
 ```
 
 ```sh [deno]
-deno add npm:mailchannels-sdk
+deno add npm:@mailchannels/sdk
 ```
 :::
 
@@ -65,7 +65,7 @@ Use the `html` property to send an email with HTML content.
 
 ```ts [src/actions/emails/send.ts]
 import { ActionError, defineAction } from 'astro:actions'
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels(import.meta.env.MAILCHANNELS_API_KEY)
 

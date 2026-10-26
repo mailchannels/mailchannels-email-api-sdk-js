@@ -1,6 +1,6 @@
 import express from "express";
 import type { Request, Response } from "express";
-import { MailChannels } from "mailchannels-sdk";
+import { MailChannels } from "@mailchannels/sdk";
 
 process.loadEnvFile();
 

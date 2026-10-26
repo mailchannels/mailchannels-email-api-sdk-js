@@ -17,27 +17,27 @@ In this guide we use [Next.js](https://nextjs.org/) route handlers to create Ver
 
 ## 1. Install
 
-Add the `mailchannels-sdk` package dependency to your Next.js project.
+Add the `@mailchannels/sdk` package dependency to your Next.js project.
 
 ::: code-group
 ```sh [npm]
-npm i mailchannels-sdk
+npm i @mailchannels/sdk
 ```
 
 ```sh [yarn]
-yarn add mailchannels-sdk
+yarn add @mailchannels/sdk
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk
+pnpm add @mailchannels/sdk
 ```
 
 ```sh [bun]
-bun add mailchannels-sdk
+bun add @mailchannels/sdk
 ```
 
 ```sh [deno]
-deno add npm:mailchannels-sdk
+deno add npm:@mailchannels/sdk
 ```
 :::
 
@@ -56,7 +56,7 @@ Register an [App route handler](https://nextjs.org/docs/app/getting-started/rout
 Use the `html` property to send an email with HTML content.
 
 ```ts [app/api/send/route.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY)
 

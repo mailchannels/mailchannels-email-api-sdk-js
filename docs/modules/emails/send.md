@@ -11,7 +11,7 @@ Sends an email message to one or more recipients.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Emails } from 'mailchannels-sdk'
+import { MailChannelsClient, Emails } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
@@ -26,7 +26,7 @@ const { data, error } = await emails.send({
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
@@ -45,7 +45,7 @@ const { data, error } = await mailchannels.emails.send({
 To include attachments in your email, add an `attachments` array property to your send request.
 
 ```ts [send-attachments.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
@@ -75,7 +75,7 @@ For example, to send an email with attachments from remote URLs:
 
 ::: code-group
 ```ts [attachment-remote-array-buffer.ts]
-import { Attachment, MailChannels } from 'mailchannels-sdk'
+import { Attachment, MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
@@ -93,7 +93,7 @@ const { data, error } = await mailchannels.emails.send({
 ```
 
 ```ts [attachment-remote-blob.ts]
-import { Attachment, MailChannels } from 'mailchannels-sdk'
+import { Attachment, MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

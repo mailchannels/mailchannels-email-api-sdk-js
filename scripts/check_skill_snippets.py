@@ -4,7 +4,7 @@ For each Markdown file under `.agents/skills/mailchannels-js/`:
 
 1. Extract every fenced TypeScript code block (```ts … ``` or ```typescript … ```).
 2. Strip boilerplate lines that would conflict with or duplicate the preamble:
-   - `import … from 'mailchannels-sdk'` — preamble provides all SDK exports.
+   - `import … from '@mailchannels/sdk'` — preamble provides all SDK exports.
    - `import process from 'node:process'` — preamble provides `process`.
    - `import … from 'vitest'` — preamble provides test globals.
    - `let mc: MailChannels` at top level — preamble declares `mc`.
@@ -18,7 +18,7 @@ For each Markdown file under `.agents/skills/mailchannels-js/`:
    documentation can reference them without inline boilerplate. See
    "Documentation Dummies" below.
 5. Write the assembled source to a temporary `.ts` file in the project root
-   alongside a temporary `tsconfig.json` that maps `mailchannels-sdk` to
+   alongside a temporary `tsconfig.json` that maps `@mailchannels/sdk` to
    the local source tree.
 6. Run `tsc` (project-local preferred, system fallback) with the temp config
    and report failures, attributing errors back to the source Markdown file.
@@ -78,8 +78,8 @@ PLACEHOLDER = re.compile(r"\{\s*\.\.\.\s*\}")
 
 # Lines stripped entirely from blocks before assembly.
 _STRIP_PATTERNS: list[re.Pattern[str]] = [
-    re.compile(r"^import\s.*from\s+['\"]mailchannels-sdk['\"]"),
-    re.compile(r"^import\s.*from\s+['\"]mailchannels-sdk/[^'\"]+['\"]"),
+    re.compile(r"^import\s.*from\s+['\"]@mailchannels/sdk['\"]"),
+    re.compile(r"^import\s.*from\s+['\"]@mailchannels/sdk/[^'\"]+['\"]"),
     re.compile(r"^import\s+process\s+from\s+['\"]node:process['\"]"),
     re.compile(r"^import\s.*from\s+['\"]vitest['\"]"),
     re.compile(r"^let\s+mc\s*:\s*MailChannels\b"),
@@ -91,10 +91,10 @@ _STRIP_PATTERNS: list[re.Pattern[str]] = [
 # docstring above.
 PREAMBLE = """\
 // Auto-injected preamble for documentation snippet type-checking.
-import { MailChannels, Attachment, MailChannelsClient, Webhooks } from 'mailchannels-sdk'
-import type { EmailsSendAttachment, ErrorResponse, EmailsSendResponse, EmailsQueueResponse } from 'mailchannels-sdk'
-import { createSimulator } from 'mailchannels-sdk/simulator'
-import { mailchannelsTransport, type MailChannelsTransportSendMode } from 'mailchannels-sdk/nodemailer'
+import { MailChannels, Attachment, MailChannelsClient, Webhooks } from '@mailchannels/sdk'
+import type { EmailsSendAttachment, ErrorResponse, EmailsSendResponse, EmailsQueueResponse } from '@mailchannels/sdk'
+import { createSimulator } from '@mailchannels/sdk/simulator'
+import { mailchannelsTransport, type MailChannelsTransportSendMode } from '@mailchannels/sdk/nodemailer'
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
@@ -157,9 +157,9 @@ _TSCONFIG: dict = {
         "skipLibCheck": True,
         "verbatimModuleSyntax": True,
         "paths": {
-            "mailchannels-sdk": ["./src/mailchannels.ts"],
-            "mailchannels-sdk/simulator": ["./src/simulator/index.ts"],
-            "mailchannels-sdk/nodemailer": ["./src/plugins/nodemailer/index.ts"],
+            "@mailchannels/sdk": ["./src/mailchannels.ts"],
+            "@mailchannels/sdk/simulator": ["./src/simulator/index.ts"],
+            "@mailchannels/sdk/nodemailer": ["./src/plugins/nodemailer/index.ts"],
         },
     },
 }

@@ -4,7 +4,7 @@ outline: deep
 
 # Getting Started
 
-Getting started with `mailchannels-sdk`
+Getting started with `@mailchannels/sdk`
 
 ## Overview
 
@@ -21,27 +21,27 @@ Getting started with `mailchannels-sdk`
 
 ## Installation
 
-Add `mailchannels-sdk` dependency to your project
+Add `@mailchannels/sdk` dependency to your project
 
 ::: code-group
 ```sh [npm]
-npm i mailchannels-sdk
+npm i @mailchannels/sdk
 ```
 
 ```sh [yarn]
-yarn add mailchannels-sdk
+yarn add @mailchannels/sdk
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk
+pnpm add @mailchannels/sdk
 ```
 
 ```sh [bun]
-bun add mailchannels-sdk
+bun add @mailchannels/sdk
 ```
 
 ```sh [deno]
-deno add npm:mailchannels-sdk
+deno add npm:@mailchannels/sdk
 ```
 :::
 
@@ -57,7 +57,7 @@ This library can be used in two ways:
 In this example, we import the whole library and use the `MailChannels` class to send an email.
 
 ```ts {1}
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
@@ -76,7 +76,7 @@ This approach is useful when building an application on top of MailChannels and 
 In this example, we import the `MailChannelsClient` and the `Emails` module to send an email.
 
 ```ts {1}
-import { MailChannelsClient, Emails } from 'mailchannels-sdk'
+import { MailChannelsClient, Emails } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
@@ -96,7 +96,7 @@ This approach is tree-shakable and is useful when you only need to use specific 
 Both `MailChannels` and `MailChannelsClient` accept an optional second argument to configure the client.
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key', {
   baseUrl: 'http://localhost:8787', // default: 'https://api.mailchannels.net'
@@ -142,7 +142,7 @@ All methods in this SDK return an object with both `data` and `error` properties
   - `type`: A string identifier for the type of error
 
 ```ts {5,13-15,18}
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

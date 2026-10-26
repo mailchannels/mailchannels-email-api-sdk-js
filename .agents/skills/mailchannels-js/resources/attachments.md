@@ -9,7 +9,7 @@ type from the filename.
 `fromBytes` is synchronous and accepts any `ArrayBuffer` or `Uint8Array`:
 
 ```ts
-import { MailChannels, Attachment } from 'mailchannels-sdk'
+import { MailChannels, Attachment } from '@mailchannels/sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 

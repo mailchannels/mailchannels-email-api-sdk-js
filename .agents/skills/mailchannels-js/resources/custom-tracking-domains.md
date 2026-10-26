@@ -8,7 +8,7 @@ select it by `name` via `customDomainName` on the send payload — see
 ## Register A Domain
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 

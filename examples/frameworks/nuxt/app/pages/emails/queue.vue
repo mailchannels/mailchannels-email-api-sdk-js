@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { EmailsQueueResponse } from "mailchannels-sdk";
+import type { EmailsQueueResponse } from "@mailchannels/sdk";
 
 const loading = ref(false);
 const result = ref<EmailsQueueResponse["data"]>();

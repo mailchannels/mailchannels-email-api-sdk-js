@@ -15,19 +15,19 @@ Send emails using [Cloudflare Workers](https://developers.cloudflare.com/workers
 
 ## 1. Install
 
-Add the `mailchannels-sdk` package dependency to your Cloudflare Workers project.
+Add the `@mailchannels/sdk` package dependency to your Cloudflare Workers project.
 
 ::: code-group
 ```sh [npm]
-npm install mailchannels-sdk
+npm install @mailchannels/sdk
 ```
 
 ```sh [yarn]
-yarn add mailchannels-sdk
+yarn add @mailchannels/sdk
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk
+pnpm add @mailchannels/sdk
 ```
 :::
 
@@ -48,7 +48,7 @@ Use the `html` property to send an email with HTML content.
 We recommend using the [modular approach](/getting-started#importing-only-the-modules-you-need) to import only the `Emails` module from the SDK to reduce your Worker bundle size.
 
 ```ts [src/index.ts]
-import { Emails, MailChannelsClient } from 'mailchannels-sdk'
+import { Emails, MailChannelsClient } from '@mailchannels/sdk'
 
 export default {
   async fetch (request, env): Promise<Response> {

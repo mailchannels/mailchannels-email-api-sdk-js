@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { Webhooks } from "mailchannels-sdk";
+import { Webhooks } from "@mailchannels/sdk";
 
 export const POST: APIRoute = async ({ request }) => {
   const contentDigest = request.headers.get("content-digest");

@@ -19,7 +19,7 @@ This library provides a simple way to interact with the [MailChannels Email API]
 
 - [✨ Release Notes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/src/HEAD/CHANGELOG.md)
 - [📖 Official quickstart](https://docs.mailchannels.com/email-api/javascript/quickstart)
-- [📦 npm package](https://www.npmjs.com/package/mailchannels-sdk)
+- [📦 npm package](https://www.npmjs.com/package/@mailchannels/sdk)
 - [📚 SDK reference](https://mailchannels.yizack.com)
 - [Nuxt community module](https://nuxt.com/modules/mailchannels) — maintained separately from this SDK.
 
@@ -64,17 +64,17 @@ Some of the things you can do with the SDK:
 
 ## <a name="installation">📦 Installation</a>
 
-Add `mailchannels-sdk` dependency to your project
+Add `@mailchannels/sdk` dependency to your project
 
 ```sh
 # npm
-npm i mailchannels-sdk
+npm i @mailchannels/sdk
 
 # yarn
-yarn add mailchannels-sdk
+yarn add @mailchannels/sdk
 
 # pnpm
-pnpm add mailchannels-sdk
+pnpm add @mailchannels/sdk
 ```
 
 ## <a name="usage">📚 Usage</a>
@@ -84,7 +84,7 @@ To authenticate, you'll need an API key. You can create and manage API keys in *
 Pass your API key while initializing a new MailChannels client.
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 ```
@@ -128,13 +128,13 @@ CLI:
 
 ```sh
 # default: http://127.0.0.1:8787
-npx mailchannels-sdk simulate
+npx @mailchannels/sdk simulate
 ```
 
 Programmatically:
 
 ```ts
-import { createSimulator } from 'mailchannels-sdk/simulator'
+import { createSimulator } from '@mailchannels/sdk/simulator'
 
 const simulator = createSimulator()
 const simulatorUrl = await simulator.listen()
@@ -151,13 +151,13 @@ const simulatorUrl = await simulator.listen()
 You can override the bind address with the `--host` and `--port` options:
 
 ```sh
-npx mailchannels-sdk simulate --host 127.0.0.1 --port 8787
+npx @mailchannels/sdk simulate --host 127.0.0.1 --port 8787
 ```
 
 Disable logs with the `--silent` option:
 
 ```sh
-npx mailchannels-sdk simulate --silent
+npx @mailchannels/sdk simulate --silent
 ```
 
 ### Point the SDK at the simulator
@@ -165,7 +165,7 @@ npx mailchannels-sdk simulate --silent
 Use the optional `baseUrl` constructor option when creating the client:
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('local-test-key', {
   baseUrl: 'http://127.0.0.1:8787'
@@ -208,20 +208,20 @@ The SDK provides a transport for Nodemailer that allows you to send emails using
 
 ```sh
 # npm
-npm i mailchannels-sdk nodemailer
+npm i @mailchannels/sdk nodemailer
 
 # yarn
-yarn add mailchannels-sdk nodemailer
+yarn add @mailchannels/sdk nodemailer
 
 # pnpm
-pnpm add mailchannels-sdk nodemailer
+pnpm add @mailchannels/sdk nodemailer
 ```
 
 ### Sending
 
 ```ts
 import nodemailer from 'nodemailer'
-import { mailchannelsTransport } from 'mailchannels-sdk/nodemailer'
+import { mailchannelsTransport } from '@mailchannels/sdk/nodemailer'
 
 const transport = nodemailer.createTransport(
   mailchannelsTransport({
@@ -263,7 +263,7 @@ The MailChannels Nodemailer transport maps a subset of Nodemailer features to th
 
 This repository ships a complete agent skill at
 [`.agents/skills/mailchannels-js/`](.agents/skills/mailchannels-js/).
-It teaches an AI coding agent how to use the `mailchannels-sdk` package
+It teaches an AI coding agent how to use the `@mailchannels/sdk` package
 correctly by breaking the documentation down into focused
 per-topic files with a decision tree so the agent loads only the
 parts the task actually needs.
@@ -282,7 +282,7 @@ Aider, Continue, and similar tools all consume it without modification.
 
 ### Install
 
-The skill ships inside the `mailchannels-sdk` npm package. Use `npm pack` to
+The skill ships inside the `@mailchannels/sdk` npm package. Use `npm pack` to
 download the tarball, extract it, and copy the skill directory wherever your
 agent looks for skills, rules, or context files:
 
@@ -292,7 +292,7 @@ mkdir /tmp/mc-js-sdk
 
 # Pin the version to match the SDK you have installed — omit the pin to
 # grab the latest release:
-npm pack --pack-destination /tmp/mc-js-sdk mailchannels-sdk
+npm pack --pack-destination /tmp/mc-js-sdk @mailchannels/sdk
 
 # Extract the tarball:
 tar -xzf /tmp/mc-js-sdk/mailchannels-sdk-*.tgz -C /tmp/mc-js-sdk
@@ -361,20 +361,20 @@ pnpm release
 ```
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
-[npm-version-href]: https://npmjs.com/package/mailchannels-sdk
+[npm-version-src]: https://img.shields.io/npm/v/@mailchannels/sdk.svg?style=flat&colorA=070a30&colorB=35a047
+[npm-version-href]: https://npmjs.com/package/@mailchannels/sdk
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
-[npm-downloads-href]: https://npmjs.com/package/mailchannels-sdk
+[npm-downloads-src]: https://img.shields.io/npm/dm/@mailchannels/sdk.svg?style=flat&colorA=070a30&colorB=35a047
+[npm-downloads-href]: https://npmjs.com/package/@mailchannels/sdk
 
 [build-status-src]: https://img.shields.io/bitbucket/pipelines/mailchannels/mailchannels-email-api-sdk-js/main.svg?style=flat&colorA=070a30
 [build-status-href]: https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pipelines
 
-[license-src]: https://img.shields.io/npm/l/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
+[license-src]: https://img.shields.io/npm/l/@mailchannels/sdk.svg?style=flat&colorA=070a30&colorB=35a047
 [license-href]: https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/src/HEAD/LICENSE
 
 [typescript-src]: https://img.shields.io/badge/TypeScript-supported-35a047?style=flat&colorA=070a30
 [typescript-href]: https://www.typescriptlang.org
 
-[node-src]: https://img.shields.io/node/v/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
+[node-src]: https://img.shields.io/node/v/@mailchannels/sdk.svg?style=flat&colorA=070a30&colorB=35a047
 [node-href]: https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/src/HEAD/package.json

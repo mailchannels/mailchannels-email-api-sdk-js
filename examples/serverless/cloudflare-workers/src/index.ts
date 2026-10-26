@@ -11,7 +11,7 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import { Emails, MailChannelsClient } from "mailchannels-sdk";
+import { Emails, MailChannelsClient } from "@mailchannels/sdk";
 
 export default {
   async fetch (request, env): Promise<Response> {
