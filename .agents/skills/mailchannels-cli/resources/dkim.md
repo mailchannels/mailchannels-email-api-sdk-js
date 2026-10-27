@@ -118,8 +118,12 @@ Rotation:
 2. Creates a new active key with the new selector, reusing the same algorithm and key length.
 3. Auto-retires the rotated key **2 weeks** after rotation.
 
-**Publish the new DNS record before the grace period ends** or mail signed with the new key
-fails DKIM at receiving providers.
+Before the old key's **3-day signing grace period** ends, publish the new key's DNS TXT record
+using the `Name` and `Value` printed by `rotate`, wait for DNS propagation, then verify it with
+`mailchannels dkim check-domain --domain "example.com" --dkim-selector "mcdkim2"`. Then update
+every sending command or configuration that explicitly selects the old key to use
+`--dkim-selector "mcdkim2"`; for example, change the selector in the sending command below.
+Otherwise, those callers keep selecting the old key and mail may fail DKIM after the grace period.
 
 The command prints only the **new** key's details and its DNS record. To read the old key's
 `Grace Period Expires At`, list it afterwards:
