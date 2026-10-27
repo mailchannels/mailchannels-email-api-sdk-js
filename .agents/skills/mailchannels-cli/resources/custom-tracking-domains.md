@@ -49,8 +49,9 @@ Before registration can complete, two DNS records must be in place:
   `Txt Record Name`, `Txt Record Value`, and `Instructions` (a CNAME-only failure can omit the
   TXT fields). `create` says `DNS setup required to complete domain creation.`
 
-When setup is required, add the TXT record alongside the CNAME, wait for propagation, then run
-the **same** `create` command again.
+When setup is required, add the TXT record alongside the CNAME and wait for propagation. For a
+new registration, run the **same** `create` command again. To reactivate a disabled domain, repeat
+the `update` command with the same `--hostname` and `--scope`, plus `--status active`.
 
 If DNS is still incomplete on that retry, MailChannels answers with a real error: the command
 exits `1`, prints the error, and then prints the instructions it received:
@@ -102,7 +103,8 @@ Providing neither `--name` nor `--status` fails with
 
 `update` always prints `Custom tracking domain updated successfully:` — **even when re-activating
 a domain whose DNS verification has lapsed**. Check the `Dns Setup Required` field in the output:
-when it is `true`, follow the same DNS flow as for `create`.
+when it is `true`, complete the DNS setup described above, then repeat the update with the same
+`--hostname` and `--scope`, plus `--status active`.
 
 ## Delete
 

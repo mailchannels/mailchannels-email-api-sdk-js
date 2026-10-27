@@ -22,8 +22,11 @@ mailchannels webhooks delete-all
 | `delete-all` | none | `[Webhooks] All webhooks deleted successfully.` |
 
 There is no per-URL delete — `delete-all` removes **every** enrolled webhook for the account.
-Enroll the replacement first if you are swapping URLs, and confirm with the user before running
-it.
+Accounts can have only one registered webhook, so swapping URLs requires this order: confirm the
+change with the user, run `mailchannels webhooks delete-all`, enroll the replacement with
+`mailchannels webhooks create --endpoint "<new-url>"`, then validate it with
+`mailchannels webhooks validate`. Webhook delivery is interrupted after deletion until the new
+endpoint is successfully enrolled, so plan the change accordingly.
 
 Enrolling an endpoint that already exists fails with
 `Endpoint '<url>' is already enrolled to receive notifications.`
