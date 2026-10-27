@@ -24,7 +24,7 @@ mailchannels usage
 
 ```sh
 # One-off override with a different key (for example a sub-account's)
-mailchannels usage --api-key "$TENANT_A_API_KEY"
+MAILCHANNELS_API_KEY="$TENANT_A_API_KEY" mailchannels usage
 ```
 
 A missing key stops the command before any request is made, with exit code `1`:
@@ -33,9 +33,12 @@ A missing key stops the command before any request is made, with exit code `1`:
 [MailChannels-CLI] Missing API key. Provide it using the '--api-key' flag or set the 'MAILCHANNELS_API_KEY' environment variable.
 ```
 
-A key that is present but wrong, revoked, or for another account is only detected by the API.
-The command then fails with `Invalid API key.` (the message may carry extra details) and exits
-`1`.
+An invalid or revoked key is only detected by the API. The command then fails with
+`Invalid API key.` (the message may carry extra details) and exits `1`.
+
+A valid key for another account can authenticate successfully and run the command against that
+account. Select the credential for the intended account; successful authentication alone does
+not verify that you selected the right account.
 
 ## Keeping The Key Safe
 
@@ -59,15 +62,15 @@ The key decides whose account a command acts on:
 - Use a **sub-account's own API key** when a command should act as that tenant, for example
   `emails queue` sending on its behalf.
 
-Name the variables distinctly so the wrong key can't be used by accident, and pass the one you
-need with `--api-key`:
+Name the variables distinctly so the wrong key can't be used by accident, and set
+`MAILCHANNELS_API_KEY` to the key each command should use:
 
 ```sh
 export PARENT_API_KEY="…"
 export TENANT_A_API_KEY="…"
 
 MAILCHANNELS_API_KEY="$PARENT_API_KEY" mailchannels sub-accounts list
-mailchannels emails queue --api-key "$TENANT_A_API_KEY" \
+MAILCHANNELS_API_KEY="$TENANT_A_API_KEY" mailchannels emails queue \
   --from "sender@client.example" \
   --to "recipient@example.net" \
   --subject "From a tenant" \
