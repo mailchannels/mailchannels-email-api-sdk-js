@@ -1,8 +1,10 @@
 # Sub-Accounts
 
 Sub-accounts are first-class on MailChannels. Use them for tenants, customers, or isolated
-senders so that one customer's reputation, limits, and bad traffic don't contaminate the parent
-account or other tenants.
+senders so that one customer's reputation and bad traffic don't contaminate the parent account
+or other tenants. Sending capacity is shared across the parent and its sub-accounts: one tenant
+can exhaust the remaining parent allocation and block sends from the parent and every other
+sub-account.
 
 All commands live under `mailchannels sub-accounts` and need the **parent account's** API key
 (see [authentication](authentication.md#parent-and-sub-account-keys)).
@@ -103,8 +105,12 @@ need to be sure how many were requested.
 
 ## Limits
 
-Per-sub-account monthly send caps. A sub-account without a limit inherits the parent's
-capacity.
+Per-sub-account monthly send caps are individual ceilings, not reserved capacity. The parent's
+monthly allocation remains a shared hard ceiling across the parent and its sub-accounts, even
+when individual caps are configured. Budget tenant caps and expected combined usage against the
+parent's allocation. See [MailChannels sending-limit documentation](https://docs.mailchannels.com/email-api/sub-accounts-limits).
+
+A sub-account without a limit inherits the parent's capacity.
 
 ```sh
 mailchannels sub-accounts limit get --handle "acme"
@@ -140,11 +146,11 @@ period. `usage` (without `sub-accounts`) is for the account whose key is in use.
 
 ## Sending As A Sub-Account
 
-Pass the sub-account's own API key so the account boundary is explicit in the command:
+Set `MAILCHANNELS_API_KEY` to the sub-account's own API key for this command, so the account
+boundary is explicit without exposing the key in the process arguments:
 
 ```sh
-mailchannels emails queue \
-  --api-key "$TENANT_A_API_KEY" \
+MAILCHANNELS_API_KEY="$TENANT_A_API_KEY" mailchannels emails queue \
   --from "sender@client.example" \
   --to "recipient@example.net" \
   --subject "From a tenant" \
