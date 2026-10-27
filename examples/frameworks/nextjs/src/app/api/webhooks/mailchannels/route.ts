@@ -1,4 +1,4 @@
-import { Webhooks } from "mailchannels-sdk";
+import { Webhooks } from "@mailchannels/sdk";
 
 export async function POST (request: Request) {
   const contentDigest = request.headers.get("content-digest");

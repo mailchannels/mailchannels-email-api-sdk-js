@@ -11,7 +11,7 @@ Deletes all registered webhook endpoints for the user.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
+import { MailChannelsClient, Webhooks } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
@@ -20,7 +20,7 @@ const { success, error } = await webhooks.deleteAll()
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

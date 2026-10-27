@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
-import { MailChannels } from "mailchannels-sdk";
+import { MailChannels } from "@mailchannels/sdk";
 
 const app = new Hono();
 

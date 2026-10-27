@@ -7,8 +7,8 @@
     "start": "node src/app.ts"
   },
   "dependencies": {
-    "express": "^5.3.0",
-    "mailchannels-sdk": "^1.8.0"
+    "@mailchannels/sdk": "^1.8.0",
+    "express": "^5.3.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",

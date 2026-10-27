@@ -1,4 +1,4 @@
-import { MailChannels } from "mailchannels-sdk";
+import { MailChannels } from "@mailchannels/sdk";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event);

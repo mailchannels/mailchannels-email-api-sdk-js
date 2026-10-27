@@ -1,4 +1,4 @@
-import { MailChannels } from "mailchannels-sdk";
+import { MailChannels } from "@mailchannels/sdk";
 
 const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY as string);
 

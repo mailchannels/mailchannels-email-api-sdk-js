@@ -1,19 +1,19 @@
 # MailChannels CLI
 
-The `mailchannels-sdk` package includes a command-line interface for sending emails and performing Email API operations directly from the terminal.
+The `@mailchannels/sdk` package includes a command-line interface for sending emails and performing Email API operations directly from the terminal.
 
 ## Installation
 
 For one-off use, run the CLI with `npx`.
 
 ```sh
-npx mailchannels-sdk --help
+npx @mailchannels/sdk --help
 ```
 
 For frequent use, the package also provides `mailchannels` as an alias when installed. Install the package globally to use it directly:
 
 ```sh
-npm install mailchannels-sdk -g
+npm install @mailchannels/sdk -g
 mailchannels --help
 ```
 

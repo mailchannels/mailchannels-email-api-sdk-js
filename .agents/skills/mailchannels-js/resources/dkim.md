@@ -7,7 +7,7 @@ you must publish it yourself in whatever DNS provider holds the zone.
 ## Create A Hosted Key
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 

@@ -1,6 +1,6 @@
 ## Scope
 
-- For SDK consumers (app code using `mailchannels-sdk`), use `.agents/skills/mailchannels-js/SKILL.md`.
+- For SDK consumers (app code using `@mailchannels/sdk`), use `.agents/skills/mailchannels-js/SKILL.md`.
 - For SDK maintainers and contributors (changing `src`, `test`, packaging, docs), follow this file.
 
 ## Dev Environment Tips

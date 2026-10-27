@@ -5,7 +5,7 @@ environment-variable auto-configuration. Create one `MailChannels` instance per 
 set and reuse it for the lifetime of the process.
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 import process from 'node:process'
 
 const mc = new MailChannels(process.env.MAILCHANNELS_API_KEY)
@@ -79,7 +79,7 @@ intercept, proxy, or instrument requests you can subclass `MailChannelsClient` a
 `_fetch<T>()` (a `protected` method).
 
 ```ts
-import { MailChannelsClient } from 'mailchannels-sdk'
+import { MailChannelsClient } from '@mailchannels/sdk'
 
 class InstrumentedClient extends MailChannelsClient {
   protected override async _fetch<T>(path: string, options: FetchOptions<'json'>) {

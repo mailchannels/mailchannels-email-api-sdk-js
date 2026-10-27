@@ -11,7 +11,7 @@ Search for DKIM keys by domain, with optional filters. If selector is provided, 
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Domains } from 'mailchannels-sdk'
+import { MailChannelsClient, Domains } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -22,7 +22,7 @@ const { data, error } = await domains.dkim.list('example.com', {
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

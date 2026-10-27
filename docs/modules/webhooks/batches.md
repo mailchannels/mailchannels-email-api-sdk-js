@@ -11,7 +11,7 @@ Retrieves paged webhook batches associated with the customer. The time range spe
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
+import { MailChannelsClient, Webhooks } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
@@ -20,7 +20,7 @@ const { data, error } = await webhooks.batches()
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

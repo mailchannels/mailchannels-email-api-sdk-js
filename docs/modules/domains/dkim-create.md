@@ -11,7 +11,7 @@ Create a DKIM key pair for a specified domain and selector using the specified a
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Domains } from 'mailchannels-sdk'
+import { MailChannelsClient, Domains } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -22,7 +22,7 @@ const { data, error } = await domains.dkim.create('example.com', {
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

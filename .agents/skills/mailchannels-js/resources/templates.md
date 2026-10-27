@@ -11,7 +11,7 @@ The only supported template type is `'mustache'`.
 ## Single Recipient
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 

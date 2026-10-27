@@ -8,7 +8,7 @@ MailChannels API. Use it for integration tests without hitting the live API.
 Start the simulator as a background process before your test run:
 
 ```bash
-npx mailchannels-sdk simulate --port 8787 --silent
+npx @mailchannels/sdk simulate --port 8787 --silent
 ```
 
 | Flag | Env var | Default |
@@ -22,7 +22,7 @@ alongside your test runner:
 
 ```bash
 # package.json script example
-"test:integration": "start-server-and-test 'npx mailchannels-sdk simulate --silent' http://localhost:8787 vitest"
+"test:integration": "start-server-and-test 'npx @mailchannels/sdk simulate --silent' http://localhost:8787 vitest"
 ```
 
 ### Example Test: CLI (Vitest / Jest)
@@ -31,9 +31,9 @@ Point the `MailChannels` client at the running simulator via `baseUrl`:
 
 ```ts
 import { it, expect } from 'vitest'
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
-// Simulator must already be running: npx mailchannels-sdk simulate --port 8787 --silent
+// Simulator must already be running: npx @mailchannels/sdk simulate --port 8787 --silent
 const mc = new MailChannels('test-key', { baseUrl: 'http://localhost:8787' })
 
 it('queues an email', async () => {
@@ -51,13 +51,13 @@ it('queues an email', async () => {
 
 ## Starting The Simulator (Programmatic)
 
-Import `createSimulator` from the `mailchannels-sdk/simulator` entrypoint and start the
+Import `createSimulator` from the `@mailchannels/sdk/simulator` entrypoint and start the
 simulator directly within your code. This gives you deterministic control over its
 lifecycle, making it ideal for integration tests that need a fresh simulator instance
 per run or when running in CI without a separate background process.
 
 ```ts
-import { createSimulator } from 'mailchannels-sdk/simulator'
+import { createSimulator } from '@mailchannels/sdk/simulator'
 
 const simulator = createSimulator({ port: 8787, silent: true })
 const simulatorUrl = await simulator.listen()
@@ -67,8 +67,8 @@ const simulatorUrl = await simulator.listen()
 
 ```ts
 import { afterAll, beforeAll, expect, it } from 'vitest'
-import { createSimulator } from 'mailchannels-sdk/simulator'
-import { MailChannels } from 'mailchannels-sdk'
+import { createSimulator } from '@mailchannels/sdk/simulator'
+import { MailChannels } from '@mailchannels/sdk'
 
 let simulator: ReturnType<typeof createSimulator>
 let mc: MailChannels

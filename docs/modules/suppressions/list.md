@@ -11,7 +11,7 @@ Retrieve suppression entries associated with the specified account. Supports fil
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Suppressions } from 'mailchannels-sdk'
+import { MailChannelsClient, Suppressions } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
@@ -20,7 +20,7 @@ const { data, error } = await suppressions.list()
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

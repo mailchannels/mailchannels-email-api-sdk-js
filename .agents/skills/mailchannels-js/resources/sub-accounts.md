@@ -16,7 +16,7 @@ A handle uniquely identifies a sub-account. Rules:
 ## Lifecycle
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mc = new MailChannels('PARENT-ACCOUNT-API-KEY')
 

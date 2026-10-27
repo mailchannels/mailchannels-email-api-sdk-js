@@ -9,27 +9,27 @@ Send emails using [Nuxt](https://nuxt.com/) and the MailChannels Node.js SDK.
 
 ## 1. Install
 
-Add the `mailchannels-sdk` package dependency to your Nuxt project.
+Add the `@mailchannels/sdk` package dependency to your Nuxt project.
 
 ::: code-group
 ```sh [npm]
-npm i mailchannels-sdk
+npm i @mailchannels/sdk
 ```
 
 ```sh [yarn]
-yarn add mailchannels-sdk
+yarn add @mailchannels/sdk
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk
+pnpm add @mailchannels/sdk
 ```
 
 ```sh [bun]
-bun add mailchannels-sdk
+bun add @mailchannels/sdk
 ```
 
 ```sh [deno]
-deno add npm:mailchannels-sdk
+deno add npm:@mailchannels/sdk
 ```
 :::
 
@@ -60,7 +60,7 @@ Register a [Server handler](https://nuxt.com/docs/guide/directory-structure/serv
 Use the `html` property to send an email with HTML content.
 
 ```ts [server/api/emails/send.post.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
@@ -91,7 +91,7 @@ Create a form in your Nuxt app to call the `send` API route.
 
 ```vue [app/pages/emails/send.vue]
 <script setup lang="ts">
-import type { EmailsSendResponse } from 'mailchannels-sdk'
+import type { EmailsSendResponse } from '@mailchannels/sdk'
 
 const loading = ref(false)
 const result = ref<EmailsSendResponse['data']>()

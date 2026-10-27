@@ -1,4 +1,4 @@
-import { MailChannels } from "mailchannels-sdk";
+import { MailChannels } from "@mailchannels/sdk";
 import { render } from "@vue-email/render";
 import EmailTemplate from "./EmailTemplate.vue";
 

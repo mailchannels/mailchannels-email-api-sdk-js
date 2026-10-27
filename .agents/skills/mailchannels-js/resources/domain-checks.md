@@ -14,7 +14,7 @@ sending from it. The check covers four things:
 ## Basic Check
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 

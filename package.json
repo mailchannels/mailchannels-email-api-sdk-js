@@ -1,5 +1,5 @@
 {
-  "name": "mailchannels-sdk",
+  "name": "@mailchannels/sdk",
   "version": "1.8.0",
   "description": "Official MailChannels Email API SDK for sending transactional email from server-side JavaScript and TypeScript applications.",
   "type": "module",
@@ -40,7 +40,7 @@
   },
   "types": "./dist/mailchannels.d.mts",
   "bin": {
-    "mailchannels-sdk": "./dist/cli/index.mjs",
+    "@mailchannels/sdk": "./dist/cli/index.mjs",
     "mailchannels": "./dist/cli/index.mjs"
   },
   "files": [

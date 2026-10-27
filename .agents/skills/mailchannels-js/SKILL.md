@@ -1,12 +1,12 @@
 ---
 name: mailchannels-js
-description: JavaScript/TypeScript SDK for the MailChannels Email API (npm `mailchannels-sdk`; `import { MailChannels } from 'mailchannels-sdk'`). Use when sending or queueing email, working with attachments, mustache templates, unsubscribe, custom headers, DKIM keys, sub-accounts, domain checks, metrics, usage, suppressions, or webhooks (incl. signature verification); also configuring clients, testing with the built-in simulator, and error handling. Skip when (a) developing the SDK itself — defer to the repo's root AGENTS.md; (b) the user is in a non-JavaScript/TypeScript language — MailChannels publishes separate SDKs for other ecosystems and the JS types/patterns here don't apply.
+description: JavaScript/TypeScript SDK for the MailChannels Email API (npm `@mailchannels/sdk`; `import { MailChannels } from '@mailchannels/sdk'`). Use when sending or queueing email, working with attachments, mustache templates, unsubscribe, custom headers, DKIM keys, sub-accounts, domain checks, metrics, usage, suppressions, or webhooks (incl. signature verification); also configuring clients, testing with the built-in simulator, and error handling. Skip when (a) developing the SDK itself — defer to the repo's root AGENTS.md; (b) the user is in a non-JavaScript/TypeScript language — MailChannels publishes separate SDKs for other ecosystems and the JS types/patterns here don't apply.
 ---
 
 # MailChannels JavaScript SDK
 
-This skill helps you write **JavaScript/TypeScript** code that uses the `mailchannels-sdk`
-package (npm: `mailchannels-sdk`, importable as `import { MailChannels } from 'mailchannels-sdk'`).
+This skill helps you write **JavaScript/TypeScript** code that uses the `@mailchannels/sdk`
+package (npm: `@mailchannels/sdk`, importable as `import { MailChannels } from '@mailchannels/sdk'`).
 It is specific to the official JavaScript SDK — MailChannels publishes separate SDKs for
 other languages and their APIs differ.
 
@@ -91,5 +91,5 @@ You're about to write JS/TS SDK code. What does it need to do?
 ## Beyond This Skill
 
 When a resource leaves something ambiguous, the SDK source itself is the final authority.
-The published `mailchannels-sdk` package on npm also ships with its own README and TypeScript
+The published `@mailchannels/sdk` package on npm also ships with its own README and TypeScript
 type definitions — hover-docs in your editor are authoritative for parameter shapes.

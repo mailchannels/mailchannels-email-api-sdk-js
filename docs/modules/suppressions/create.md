@@ -11,7 +11,7 @@ Creates suppression entries for the specified account. Parent accounts can creat
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Suppressions } from 'mailchannels-sdk'
+import { MailChannelsClient, Suppressions } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
@@ -26,7 +26,7 @@ const { success, error } = await suppressions.create([
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

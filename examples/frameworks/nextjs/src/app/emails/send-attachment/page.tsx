@@ -1,7 +1,7 @@
 "use client";
 
 import { type ChangeEvent, useState } from "react";
-import type { EmailsSendResponse } from "mailchannels-sdk";
+import type { EmailsSendResponse } from "@mailchannels/sdk";
 
 export default function () {
   const [to, setTo] = useState("");
