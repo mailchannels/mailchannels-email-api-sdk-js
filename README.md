@@ -261,30 +261,33 @@ The MailChannels Nodemailer transport maps a subset of Nodemailer features to th
 
 ## <a name="using-with-an-ai-agent">🤖 Using with an AI agent</a>
 
-This repository ships a complete agent skill at
-[`.agents/skills/mailchannels-js/`](.agents/skills/mailchannels-js/).
-It teaches an AI coding agent how to use the `@mailchannels/sdk` package
-correctly by breaking the documentation down into focused
-per-topic files with a decision tree so the agent loads only the
-parts the task actually needs.
+This repository ships two complete agent skills:
 
-Layout:
+| Skill | Teaches an AI coding agent to… |
+| --- | --- |
+| [`.agents/skills/mailchannels-js/`](.agents/skills/mailchannels-js/) | use the `@mailchannels/sdk` package correctly in JavaScript/TypeScript code. |
+| [`.agents/skills/mailchannels-cli/`](.agents/skills/mailchannels-cli/) | run the bundled `mailchannels` command-line interface from a terminal, script, or CI job. |
+
+Each skill breaks the documentation down into focused per-topic files with a
+decision tree so the agent loads only the parts the task actually needs.
+
+Layout (the same for both skills):
 
 ```
-.agents/skills/mailchannels-js/
+.agents/skills/mailchannels-js/    # or mailchannels-cli/
 ├── SKILL.md              # entry point: scope, decision tree, conventions
 └── resources/            # focused recipes (sending, attachments, webhooks, …)
 ```
 
-Every file is plain Markdown. The skill works with any agent that can be
+Every file is plain Markdown. The skills work with any agent that can be
 pointed at a directory of context files — Claude Code, Cursor, Codex CLI,
-Aider, Continue, and similar tools all consume it without modification.
+Aider, Continue, and similar tools all consume them without modification.
 
 ### Install
 
-The skill ships inside the `@mailchannels/sdk` npm package. Use `npm pack` to
-download the tarball, extract it, and copy the skill directory wherever your
-agent looks for skills, rules, or context files:
+The skills ship inside the `@mailchannels/sdk` npm package. Use `npm pack` to
+download the tarball, extract it, and copy the skill directories you need
+wherever your agent looks for skills, rules, or context files:
 
 ```bash
 # Make a temp directory to hold the tarball and extracted files:
@@ -300,12 +303,13 @@ tar -xzf /tmp/mc-js-sdk/mailchannels-sdk-*.tgz -C /tmp/mc-js-sdk
 # Replace the destination with your agent's path:
 mkdir -p <your-agent's-skills-dir>
 cp -r /tmp/mc-js-sdk/package/.agents/skills/mailchannels-js <your-agent's-skills-dir>/
+cp -r /tmp/mc-js-sdk/package/.agents/skills/mailchannels-cli <your-agent's-skills-dir>/
 
 # Clean up:
 rm -r /tmp/mc-js-sdk
 ```
 
-Re-run the same commands when you upgrade the SDK so the skill stays in step
+Re-run the same commands when you upgrade the SDK so the skills stay in step
 with the installed version.
 
 Common destinations:
