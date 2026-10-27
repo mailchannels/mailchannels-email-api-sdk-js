@@ -45,7 +45,8 @@
   },
   "files": [
     "dist",
-    ".agents/skills/mailchannels-js"
+    ".agents/skills/mailchannels-js",
+    ".agents/skills/mailchannels-cli"
   ],
   "scripts": {
     "build": "obuild",
