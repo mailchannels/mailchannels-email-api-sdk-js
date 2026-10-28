@@ -14,7 +14,7 @@ Permanently delete an existing custom tracking domain for the given hostname and
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Domains } from 'mailchannels-sdk'
+import { MailChannelsClient, Domains } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -23,7 +23,7 @@ const { success, error } = await domains.customTracking.delete('click.example.co
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

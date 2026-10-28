@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { DomainsCheckResponse } from "mailchannels-sdk";
+import type { DomainsCheckResponse } from "@mailchannels/sdk";
 
 export default function () {
   const [domain, setDomain] = useState("");

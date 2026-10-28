@@ -1,4 +1,4 @@
-import { MailChannels } from "mailchannels-sdk";
+import { MailChannels } from "@mailchannels/sdk";
 import type { Config } from "@netlify/edge-functions";
 
 export default async (request: Request) => {

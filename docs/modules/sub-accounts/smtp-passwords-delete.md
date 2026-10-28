@@ -11,7 +11,7 @@ Deletes the SMTP password identified by its ID for the specified sub-account.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
+import { MailChannelsClient, SubAccounts } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -20,7 +20,7 @@ const { success, error } = await subAccounts.smtpPasswords.delete('validhandle12
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

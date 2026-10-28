@@ -9,27 +9,27 @@ Send emails using [Next.js](https://nextjs.org/) and the MailChannels Node.js SD
 
 ## 1. Install
 
-Add the `mailchannels-sdk` package dependency to your Next.js project.
+Add the `@mailchannels/sdk` package dependency to your Next.js project.
 
 ::: code-group
 ```sh [npm]
-npm i mailchannels-sdk
+npm i @mailchannels/sdk
 ```
 
 ```sh [yarn]
-yarn add mailchannels-sdk
+yarn add @mailchannels/sdk
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk
+pnpm add @mailchannels/sdk
 ```
 
 ```sh [bun]
-bun add mailchannels-sdk
+bun add @mailchannels/sdk
 ```
 
 ```sh [deno]
-deno add npm:mailchannels-sdk
+deno add npm:@mailchannels/sdk
 ```
 :::
 
@@ -49,7 +49,7 @@ Use the `html` property to send an email with HTML content.
 
 ::: code-group
 ```ts [app/api/emails/send/route.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY)
 
@@ -72,7 +72,7 @@ export async function POST () {
 ```
 ```ts [pages/api/send.ts]
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY)
 
@@ -106,7 +106,7 @@ Create a form in your Next.js app to call the `send` API route.
 'use client'
 
 import { useState } from 'react'
-import type { EmailsSendResponse } from 'mailchannels-sdk';
+import type { EmailsSendResponse } from '@mailchannels/sdk';
 
 export default function SendEmail () {
   const [loading, setLoading] = useState(false)

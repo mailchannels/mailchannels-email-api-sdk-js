@@ -21,7 +21,7 @@ Go to [deno.com/deploy](https://deno.com/deploy) and create a new Deno Deploy pr
 Edit the `main.ts` file and add the following code:
 
 ```ts [main.ts]
-import { MailChannels } from 'npm:mailchannels-sdk'
+import { MailChannels } from 'npm:@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

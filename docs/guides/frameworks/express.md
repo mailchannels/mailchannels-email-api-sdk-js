@@ -9,27 +9,27 @@ Send emails using [Express](https://expressjs.com/) and the MailChannels Node.js
 
 ## 1. Install
 
-Add the `mailchannels-sdk` package dependency to your Express project.
+Add the `@mailchannels/sdk` package dependency to your Express project.
 
 ::: code-group
 ```sh [npm]
-npm i mailchannels-sdk
+npm i @mailchannels/sdk
 ```
 
 ```sh [yarn]
-yarn add mailchannels-sdk
+yarn add @mailchannels/sdk
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk
+pnpm add @mailchannels/sdk
 ```
 
 ```sh [bun]
-bun add mailchannels-sdk
+bun add @mailchannels/sdk
 ```
 
 ```sh [deno]
-deno add npm:mailchannels-sdk
+deno add npm:@mailchannels/sdk
 ```
 :::
 
@@ -50,7 +50,7 @@ Use the `html` property to send an email with HTML content.
 ```ts [src/app.ts]
 import express from 'express'
 import type { Request, Response } from 'express'
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 process.loadEnvFile()
 

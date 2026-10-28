@@ -1,4 +1,4 @@
-import { Attachment, MailChannels } from "mailchannels-sdk";
+import { Attachment, MailChannels } from "@mailchannels/sdk";
 
 export default defineEventHandler(async (event) => {
   const formData = await readFormData(event);

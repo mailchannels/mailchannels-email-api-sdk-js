@@ -13,12 +13,12 @@ Add the SDK and other dependencies to your project:
 
 ::: code-group
 ```sh [npm]
-npm i mailchannels-sdk react react-dom react-email
+npm i @mailchannels/sdk react react-dom react-email
 npm i -D tsdown typescript @types/react
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk react react-dom react-email
+pnpm add @mailchannels/sdk react react-dom react-email
 pnpm add -D tsdown typescript @types/react
 ```
 :::
@@ -62,7 +62,7 @@ export const Email: React.FC<Readonly<EmailProps>> = (props) => {
 Create an entry point file that uses the `react-email` package to render a React component to HTML and send it using the MailChannels SDK.
 
 ```tsx [src/index.tsx]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 import { render } from 'react-email'
 import { Email } from './email'
 

@@ -13,12 +13,12 @@ Add the SDK, MJML, and the tools needed to run the TypeScript entry point:
 
 ::: code-group
 ```sh [npm]
-npm i mailchannels-sdk mjml
+npm i @mailchannels/sdk mjml
 npm i -D @types/mjml tsx typescript
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk mjml
+pnpm add @mailchannels/sdk mjml
 pnpm add -D @types/mjml tsx typescript
 ```
 :::
@@ -54,7 +54,7 @@ Read the MJML file, convert it to HTML with `mjml2html`, and pass the rendered H
 
 ```ts [src/index.ts]
 import { readFile } from 'node:fs/promises'
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 import mjml2html from 'mjml'
 
 process.loadEnvFile()

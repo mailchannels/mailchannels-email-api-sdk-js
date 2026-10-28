@@ -2,7 +2,7 @@
 
 The SDK ships a transport for Nodemailer so existing code that uses Nodemailer can be
 easily adapted to send via MailChannels Email API. The transport method
-`mailchannelsTransport` can be imported from `mailchannels-sdk/nodemailer`. This
+`mailchannelsTransport` can be imported from `@mailchannels/sdk/nodemailer`. This
 integration is optional — it requires the `nodemailer` package which the SDK does not
 include as a dependency.
 
@@ -10,7 +10,7 @@ include as a dependency.
 
 ```ts
 import nodemailer from 'nodemailer'
-import { mailchannelsTransport } from 'mailchannels-sdk/nodemailer'
+import { mailchannelsTransport } from '@mailchannels/sdk/nodemailer'
 
 const transport = nodemailer.createTransport(
   mailchannelsTransport({

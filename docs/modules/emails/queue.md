@@ -15,7 +15,7 @@ Use this endpoint when you need to send emails without waiting for processing to
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Emails } from 'mailchannels-sdk'
+import { MailChannelsClient, Emails } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
@@ -30,7 +30,7 @@ const { data, error } = await emails.queue({
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

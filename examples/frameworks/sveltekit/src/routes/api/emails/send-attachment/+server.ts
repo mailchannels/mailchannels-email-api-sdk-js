@@ -1,4 +1,4 @@
-import { Attachment, MailChannels } from "mailchannels-sdk";
+import { Attachment, MailChannels } from "@mailchannels/sdk";
 import { MAILCHANNELS_API_KEY } from "$app/env/private";
 import type { RequestHandler } from "./$types";
 

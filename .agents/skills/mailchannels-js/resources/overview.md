@@ -1,10 +1,10 @@
 # SDK Overview
 
-The `mailchannels-sdk` npm package exports a `MailChannels` class. Instantiate it once with
+The `@mailchannels/sdk` npm package exports a `MailChannels` class. Instantiate it once with
 your API key and use the attached module properties for every operation.
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mc = new MailChannels(process.env.MAILCHANNELS_API_KEY)
     

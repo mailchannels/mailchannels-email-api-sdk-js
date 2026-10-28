@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DomainsCheckResponse } from "mailchannels-sdk";
+import type { DomainsCheckResponse } from "@mailchannels/sdk";
 
 const form = ref({
   domain: ""

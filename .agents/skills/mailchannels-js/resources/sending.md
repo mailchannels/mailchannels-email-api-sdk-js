@@ -6,7 +6,7 @@ specifically need immediate results for a small number of messages, or the dry-r
 ## Quickest Send
 
 ```ts
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 

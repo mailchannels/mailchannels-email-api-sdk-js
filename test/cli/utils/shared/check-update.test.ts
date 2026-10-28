@@ -59,8 +59,8 @@ describe("checkUpdate", () => {
     await checkUpdate();
 
     expect(fetchMock).toHaveBeenCalled();
-    expect(stderrWrite).toHaveBeenCalledWith(expect.stringContaining("npm install -g mailchannels-sdk"));
-    expect(stderrWrite).toHaveBeenCalledWith(expect.stringContaining("npx mailchannels-sdk@latest"));
+    expect(stderrWrite).toHaveBeenCalledWith(expect.stringContaining("npm install -g @mailchannels/sdk"));
+    expect(stderrWrite).toHaveBeenCalledWith(expect.stringContaining("npx @mailchannels/sdk@latest"));
   });
 
   it.each([

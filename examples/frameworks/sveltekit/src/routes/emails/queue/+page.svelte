@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { EmailsQueueResponse } from "mailchannels-sdk";
+import type { EmailsQueueResponse } from "@mailchannels/sdk";
 
 let loading = $state(false);
 let result = $state<EmailsQueueResponse["data"]>();

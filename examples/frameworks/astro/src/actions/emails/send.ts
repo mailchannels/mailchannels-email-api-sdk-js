@@ -1,5 +1,5 @@
 import { ActionError, defineAction } from "astro:actions";
-import { MailChannels } from "mailchannels-sdk";
+import { MailChannels } from "@mailchannels/sdk";
 
 const mailchannels = new MailChannels(import.meta.env.MAILCHANNELS_API_KEY);
 

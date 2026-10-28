@@ -11,7 +11,7 @@ Deletes suppression entry associated with the account based on the specified rec
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Suppressions } from 'mailchannels-sdk'
+import { MailChannelsClient, Suppressions } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
@@ -20,7 +20,7 @@ const { success, error } = await suppressions.delete("name@example.com", "api")
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

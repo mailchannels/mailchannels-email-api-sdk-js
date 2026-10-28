@@ -10,23 +10,23 @@ Send emails using [Netlify Edge Functions](https://docs.netlify.com/build/edge-f
 
 ## 1. Install
 
-Add the `mailchannels-sdk` package dependency to your Netlify project.
+Add the `@mailchannels/sdk` package dependency to your Netlify project.
 
 ::: code-group
 ```sh [npm]
-npm install mailchannels-sdk
+npm install @mailchannels/sdk
 ```
 
 ```sh [yarn]
-yarn add mailchannels-sdk
+yarn add @mailchannels/sdk
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk
+pnpm add @mailchannels/sdk
 ```
 
 ```sh [deno]
-deno add npm:mailchannels-sdk
+deno add npm:@mailchannels/sdk
 ```
 :::
 
@@ -50,7 +50,7 @@ Each route file you create under `netlify/edge-functions/` is automatically depl
 Use the `html` property to send an email with HTML content.
 
 ```ts [netlify/edge-functions/send.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 import type { Config } from '@netlify/edge-functions'
 
 export default async (request: Request) => {

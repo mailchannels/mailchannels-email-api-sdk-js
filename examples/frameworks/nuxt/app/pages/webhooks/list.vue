@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WebhooksListResponse } from "mailchannels-sdk";
+import type { WebhooksListResponse } from "@mailchannels/sdk";
 
 const loading = ref(false);
 const result = ref<WebhooksListResponse["data"]>();

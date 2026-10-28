@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { EmailsSendResponse } from "mailchannels-sdk";
+import type { EmailsSendResponse } from "@mailchannels/sdk";
 
 const loading = ref(false);
 const result = ref<EmailsSendResponse["data"]>();

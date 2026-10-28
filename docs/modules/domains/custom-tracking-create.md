@@ -16,7 +16,7 @@ Before registration completes, two DNS records must be in place:
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Domains } from 'mailchannels-sdk'
+import { MailChannelsClient, Domains } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -40,7 +40,7 @@ else {
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

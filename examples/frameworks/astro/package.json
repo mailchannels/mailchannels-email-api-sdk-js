@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@astrojs/node": "^11.1.9",
-    "astro": "^7.4.2",
-    "mailchannels-sdk": "^1.8.0"
+    "@mailchannels/sdk": "^1.8.0",
+    "astro": "^7.4.2"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

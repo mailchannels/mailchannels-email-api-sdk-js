@@ -1,6 +1,7 @@
 ## Scope
 
-- For SDK consumers (app code using `mailchannels-sdk`), use `.agents/skills/mailchannels-js/SKILL.md`.
+- For SDK consumers (app code using `@mailchannels/sdk`), use `.agents/skills/mailchannels-js/SKILL.md`.
+- For CLI users (running `mailchannels` / `npx @mailchannels/sdk` commands in a terminal, script, or CI job), use `.agents/skills/mailchannels-cli/SKILL.md`.
 - For SDK maintainers and contributors (changing `src`, `test`, packaging, docs), follow this file.
 
 ## Dev Environment Tips
@@ -11,6 +12,7 @@
 - This repository is hosted on **Bitbucket**.
 - Keep `README.md` focused on user-facing SDK documentation, not release history. Release notes in `CHANGELOG.md` are automatically generated via changelogen scripts and should be the source of truth for changes per version.
 - Update the agent-facing skill under `.agents/skills/mailchannels-js/` when SDK behavior or public API usage changes. `SKILL.md` is the entry point and topic recipes live in `resources/`.
+- Update the agent-facing skill under `.agents/skills/mailchannels-cli/` when CLI commands, flags, defaults, output, or exit behavior change. It follows the same `SKILL.md` + `resources/` layout.
 
 ## Dev Rules
 
@@ -29,6 +31,7 @@
 - Keep functions focused and composable; split logic when a function starts doing multiple jobs.
 - Keep comments high-signal and sparse; prefer readable code over explanatory noise.
 - If SDK behavior or public API usage changes, update docs and `.agents/skills/mailchannels-js/` guidance in the same change.
+- If CLI behavior changes, update `docs/cli.md` and `.agents/skills/mailchannels-cli/` guidance in the same change.
 - Use conventional commits for all changes to the SDK, even if the change is a non-code change like documentation or tests. This keeps the changelog accurate and helps with release note generation. Commit title should be in the format `<type>(<scope>): <description>`, where:
   - `<type>` is one of `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`, `ci`, `build`, or `revert`.
   - `<scope>` is optional but can be used to indicate the area of the codebase affected (e.g., `client`, `webhooks`, `metrics`).

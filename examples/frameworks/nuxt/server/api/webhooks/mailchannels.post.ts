@@ -1,4 +1,4 @@
-import { Webhooks } from "mailchannels-sdk";
+import { Webhooks } from "@mailchannels/sdk";
 
 export default defineEventHandler(async (event) => {
   const headers = getHeaders(event);

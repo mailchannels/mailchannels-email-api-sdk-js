@@ -9,27 +9,27 @@ Send emails using [SvelteKit](https://svelte.dev/docs/kit) and the MailChannels 
 
 ## 1. Install
 
-Add the `mailchannels-sdk` package dependency to your SvelteKit project.
+Add the `@mailchannels/sdk` package dependency to your SvelteKit project.
 
 ::: code-group
 ```sh [npm]
-npm i mailchannels-sdk
+npm i @mailchannels/sdk
 ```
 
 ```sh [yarn]
-yarn add mailchannels-sdk
+yarn add @mailchannels/sdk
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk
+pnpm add @mailchannels/sdk
 ```
 
 ```sh [bun]
-bun add mailchannels-sdk
+bun add @mailchannels/sdk
 ```
 
 ```sh [deno]
-deno add npm:mailchannels-sdk
+deno add npm:@mailchannels/sdk
 ```
 :::
 
@@ -49,7 +49,7 @@ Use the `html` property to send an email with HTML content.
 
 ```ts [src/routes/api/emails/send/+server.ts]
 import { json } from '@sveltejs/kit'
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 import { MAILCHANNELS_API_KEY } from '$env/static/private'
 import type { RequestHandler } from './$types'
 
@@ -79,7 +79,7 @@ Create a form in your SvelteKit app to call the `send` API route.
 
 ```svelte [src/routes/emails/send/+page.svelte]
 <script lang="ts">
-import type { EmailsSendResponse } from 'mailchannels-sdk'
+import type { EmailsSendResponse } from '@mailchannels/sdk'
 
 let loading = $state(false)
 let result = $state<EmailsSendResponse['data']>()

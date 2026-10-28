@@ -77,7 +77,7 @@ export default defineConfig({
     sidebar: sidebarConfig,
     socialLinks: [
       { icon: "bitbucket", link: SITE.repo },
-      { icon: "npm", link: "https://www.npmjs.com/package/mailchannels-sdk" }
+      { icon: "npm", link: "https://www.npmjs.com/package/@mailchannels/sdk" }
     ],
     editLink: {
       pattern: `${SITE.repo}/src/main/docs/:path?at=main&mode=edit`,

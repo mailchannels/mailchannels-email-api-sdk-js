@@ -9,19 +9,19 @@ Send emails using [Hono](https://hono.dev/) and the MailChannels Node.js SDK.
 
 ## 1. Install
 
-Add the `mailchannels-sdk` package dependency to your Hono project.
+Add the `@mailchannels/sdk` package dependency to your Hono project.
 
 ::: code-group
 ```sh [npm]
-npm i mailchannels-sdk
+npm i @mailchannels/sdk
 ```
 
 ```sh [yarn]
-yarn add mailchannels-sdk
+yarn add @mailchannels/sdk
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk
+pnpm add @mailchannels/sdk
 ```
 :::
 
@@ -42,7 +42,7 @@ Use the `html` property to send an email with HTML content.
 ```ts [src/index.ts]
 import { Hono } from 'hono'
 import { serve } from '@hono/node-server'
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const app = new Hono()
 

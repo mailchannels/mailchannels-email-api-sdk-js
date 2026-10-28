@@ -8,7 +8,7 @@ hero:
   tagline: "Integrate MailChannels Email API into your JavaScript or TypeScript server-side applications."
   image:
     src: /favicon.svg
-    alt: "mailchannels-sdk"
+    alt: "@mailchannels/sdk"
   actions:
     - theme: brand
       text: Get Started

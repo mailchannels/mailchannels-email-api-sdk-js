@@ -1,4 +1,4 @@
-import { Webhooks } from "mailchannels-sdk";
+import { Webhooks } from "@mailchannels/sdk";
 import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ request }) => {

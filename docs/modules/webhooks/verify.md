@@ -23,7 +23,7 @@ verification does not replace application-level event idempotency.
 
 ::: code-group
 ```ts [static.ts]
-import { Webhooks } from 'mailchannels-sdk'
+import { Webhooks } from '@mailchannels/sdk'
 
 const { data, error } = await Webhooks.verify({
   payload: rawBody,
@@ -37,7 +37,7 @@ const { data, error } = await Webhooks.verify({
 ```
 
 ```ts [modular.ts]
-import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
+import { MailChannelsClient, Webhooks } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
@@ -54,7 +54,7 @@ const { data, error } = await webhooks.verify({
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

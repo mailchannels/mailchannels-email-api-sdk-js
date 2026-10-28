@@ -11,7 +11,7 @@ Rotate an active DKIM key pair. Mark the original key as `rotated`, and create a
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient, Domains } from 'mailchannels-sdk'
+import { MailChannelsClient, Domains } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -24,7 +24,7 @@ const { data, error } = await domains.dkim.rotate('example.com', 'mailchannels',
 ```
 
 ```ts [full.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 

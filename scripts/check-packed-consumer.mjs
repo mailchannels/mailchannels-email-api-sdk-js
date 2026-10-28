@@ -16,12 +16,12 @@ try {
   writeFileSync(join(temporary, "package.json"), JSON.stringify({
     private: true,
     type: "module",
-    dependencies: { "mailchannels-sdk": `file:${tarball}` },
+    dependencies: { "@mailchannels/sdk": `file:${tarball}` },
     devDependencies: { "typescript": "6.0.3", "@types/node": "26.6.3" }
   }));
   execFileSync(pnpm, process.argv.includes("--pnpm") ? ["install", "--config.hoist=false", "--ignore-scripts"] : [...npmArgs, "install", "--ignore-scripts", "--no-audit", "--no-fund"], { cwd: temporary, stdio: "inherit", shell: process.platform === "win32" });
   writeFileSync(join(temporary, "consumer.ts"), `
-import { MailChannels, MailChannelsClient } from 'mailchannels-sdk';
+import { MailChannels, MailChannelsClient } from '@mailchannels/sdk';
 const sdk = new MailChannels('fixture-only-key');
 void sdk.emails.queue({ from: 'sender@example.test', to: 'recipient@example.test', subject: 'Fixture', text: 'Fixture' });
 void sdk.emails.send({ from: 'sender@example.test', to: 'recipient@example.test', subject: 'Fixture', text: 'Fixture' }, true);
@@ -47,7 +47,7 @@ globalThis.fetch = async (url, options) => {
   assert.equal(new Headers(options.headers).get("X-Api-Key"), "fixture-only-key");
   return new Response(JSON.stringify({ request_id: "fixture-request", queued_at: "2026-10-07T00:00:00Z" }), { status: 202, headers: { "Content-Type": "application/json" } });
 };
-const { MailChannels } = await import("mailchannels-sdk");
+const { MailChannels } = await import("@mailchannels/sdk");
 const client = new MailChannels("fixture-only-key");
 const result = await client.emails.queue({ from: "sender@example.test", to: "recipient@example.test", subject: "Fixture", text: "Fixture" });
 assert.equal(result.error, null);
@@ -55,7 +55,7 @@ assert.equal(result.data.requestId, "fixture-request");
 assert.equal(attempts, 1);
 `);
   execFileSync(process.execPath, [join(temporary, "smoke.mjs")], { cwd: temporary, stdio: "inherit" });
-  const installed = JSON.parse(readFileSync(join(temporary, "node_modules/mailchannels-sdk/package.json"), "utf8"));
+  const installed = JSON.parse(readFileSync(join(temporary, "node_modules/@mailchannels/sdk/package.json"), "utf8"));
   console.info(JSON.stringify({ packedConsumer: "pass", packageManager: process.argv.includes("--pnpm") ? "pnpm (hoist=false)" : "npm", mockedRequests: 1, version: installed.version, strict: true, skipLibCheck: false, explicitConsumerUndiciDependency: false, liveRequests: 0 }));
 }
 finally {

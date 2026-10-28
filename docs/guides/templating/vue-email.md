@@ -13,12 +13,12 @@ Add the SDK and other dependencies to your project:
 
 ::: code-group
 ```sh [npm]
-npm i mailchannels-sdk @vue-email/components @vue-email/render vue
+npm i @mailchannels/sdk @vue-email/components @vue-email/render vue
 npm i -D tsdown typescript unplugin-vue vue-tsc
 ```
 
 ```sh [pnpm]
-pnpm add mailchannels-sdk @vue-email/components @vue-email/render vue
+pnpm add @mailchannels/sdk @vue-email/components @vue-email/render vue
 pnpm add -D tsdown typescript unplugin-vue vue-tsc
 ```
 :::
@@ -63,7 +63,7 @@ defineProps<{
 Create an entry point file that uses the `@vue-email/render` package to render a Vue component to HTML and send it using the MailChannels SDK.
 
 ```ts [src/index.ts]
-import { MailChannels } from 'mailchannels-sdk'
+import { MailChannels } from '@mailchannels/sdk'
 import { render } from '@vue-email/render'
 import EmailTemplate from './EmailTemplate.vue'
 
