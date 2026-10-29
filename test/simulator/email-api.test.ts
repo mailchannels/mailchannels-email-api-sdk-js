@@ -12,7 +12,8 @@ describe("Email API simulator", () => {
   beforeAll(async () => {
     simulator = createSimulator({ port: 0, silent: true });
     const simulatorUrl = await simulator.listen();
-    if (!simulatorUrl) throw new Error("Expected the email API simulator to return a listening URL.");
+    if (!simulatorUrl)
+      throw new Error("Expected the email API simulator to return a listening URL.");
     baseUrl = simulatorUrl;
   });
 
@@ -25,7 +26,9 @@ describe("Email API simulator", () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
     const createInvalidSimulator = () => createSimulator({ port: -1 });
     expect(createInvalidSimulator).toThrow();
-    expect(errorSpy).toHaveBeenCalledWith("[Simulator] Invalid port '-1': must be an integer between 0 and 65535.");
+    expect(errorSpy).toHaveBeenCalledWith(
+      "[Simulator] Invalid port '-1': must be an integer between 0 and 65535."
+    );
     errorSpy.mockRestore();
   });
 
@@ -94,7 +97,9 @@ describe("Email API simulator", () => {
     const checkDomainResult = await mailchannels.domains.check("example.com");
     expect(checkDomainResult.error).toBeNull();
     expect(checkDomainResult.data?.spf.verdict).toBe("passed");
-    expect(checkDomainResult.data?.spf.spfRecord).toBe("v=spf1 a mx include:relay.mailchannels.local ~all");
+    expect(checkDomainResult.data?.spf.spfRecord).toBe(
+      "v=spf1 a mx include:relay.mailchannels.local ~all"
+    );
 
     const getDkimKeysResult = await mailchannels.domains.dkim.list("example.com", {
       includeDnsRecord: true
@@ -102,11 +107,15 @@ describe("Email API simulator", () => {
     expect(getDkimKeysResult.error).toBeNull();
     expect(getDkimKeysResult.data?.length || 0).toBeGreaterThan(0);
 
-    const rotateDkimKeyResult = await mailchannels.domains.dkim.rotate("example.com", "mailchannels", {
-      newKey: {
-        selector: "mailchannels-next"
+    const rotateDkimKeyResult = await mailchannels.domains.dkim.rotate(
+      "example.com",
+      "mailchannels",
+      {
+        newKey: {
+          selector: "mailchannels-next"
+        }
       }
-    });
+    );
     expect(rotateDkimKeyResult.error).toBeNull();
     expect(rotateDkimKeyResult.data?.new.selector).toBe("mailchannels-next");
     expect(rotateDkimKeyResult.data?.rotated.status).toBe("rotated");
@@ -145,10 +154,14 @@ describe("Email API simulator", () => {
       hostname: "click.example.com"
     });
 
-    const updateCustomTrackingResult = await mailchannels.domains.customTracking.update("click.example.com", "click", {
-      name: "clickdemo-renamed",
-      status: "disabled"
-    });
+    const updateCustomTrackingResult = await mailchannels.domains.customTracking.update(
+      "click.example.com",
+      "click",
+      {
+        name: "clickdemo-renamed",
+        status: "disabled"
+      }
+    );
     expect(updateCustomTrackingResult.error).toBeNull();
     expect(updateCustomTrackingResult.data).toMatchObject({
       dnsSetupRequired: false,
@@ -158,7 +171,10 @@ describe("Email API simulator", () => {
       status: "disabled"
     });
 
-    const deleteCustomTrackingResult = await mailchannels.domains.customTracking.delete("click.example.com", "click");
+    const deleteCustomTrackingResult = await mailchannels.domains.customTracking.delete(
+      "click.example.com",
+      "click"
+    );
     expect(deleteCustomTrackingResult).toEqual({
       success: true,
       error: null
@@ -208,7 +224,6 @@ describe("Email API simulator", () => {
 
   it("should support sub-account, metrics, and suppression workflows against a local server", async () => {
     const mailchannels = new MailChannels(parentApiKey, { baseUrl });
-
     const parentSendResult = await mailchannels.emails.send({
       campaignId: "welcome-campaign",
       from: "sender@example.com",
@@ -218,7 +233,10 @@ describe("Email API simulator", () => {
     });
     expect(parentSendResult.data?.requestId).toBeTruthy();
 
-    const createSubAccountResult = await mailchannels.subAccounts.create("Simulator Company", "simacct");
+    const createSubAccountResult = await mailchannels.subAccounts.create(
+      "Simulator Company",
+      "simacct"
+    );
     expect(createSubAccountResult.data?.handle).toBe("simacct");
 
     const listSubAccountsResult = await mailchannels.subAccounts.list();
@@ -235,7 +253,9 @@ describe("Email API simulator", () => {
     expect(apiKey).toBeDefined();
     if (!apiKey) throw new Error("Expected an API key for the simulator sub-account.");
 
-    const createSmtpPasswordResult = await mailchannels.subAccounts.smtpPasswords.create("simacct");
+    const createSmtpPasswordResult = await mailchannels.subAccounts.smtpPasswords.create(
+      "simacct"
+    );
     expect(createSmtpPasswordResult.data?.smtpPassword).toBeTruthy();
 
     const listSmtpPasswordsResult = await mailchannels.subAccounts.smtpPasswords.list("simacct");
@@ -281,10 +301,14 @@ describe("Email API simulator", () => {
     expect(volumeResult.data?.delivered).toBeDefined();
 
     const senderCampaignsResult = await mailchannels.metrics.senders("campaigns");
-    expect(senderCampaignsResult.data?.senders.some(sender => sender.name === "welcome-campaign")).toBe(true);
+    expect(
+      senderCampaignsResult.data?.senders.some(sender => sender.name === "welcome-campaign")
+    ).toBe(true);
 
     const senderSubAccountsResult = await mailchannels.metrics.senders("sub-accounts");
-    expect(senderSubAccountsResult.data?.senders.some(sender => sender.name === "simacct")).toBe(true);
+    expect(
+      senderSubAccountsResult.data?.senders.some(sender => sender.name === "simacct")
+    ).toBe(true);
 
     const createSuppressionResult = await mailchannels.suppressions.create([{
       notes: "local simulator",
@@ -297,7 +321,10 @@ describe("Email API simulator", () => {
     });
     expect(listSuppressionsResult.data).toHaveLength(1);
 
-    const deleteSuppressionResult = await mailchannels.suppressions.delete("suppressed@example.com", "all");
+    const deleteSuppressionResult = await mailchannels.suppressions.delete(
+      "suppressed@example.com",
+      "all"
+    );
     expect(deleteSuppressionResult.success).toBe(true);
 
     const subAccountUsageResult = await mailchannels.subAccounts.getUsage("simacct");
@@ -306,8 +333,13 @@ describe("Email API simulator", () => {
     expect((await mailchannels.subAccounts.suspend("simacct")).success).toBe(true);
     expect((await mailchannels.subAccounts.activate("simacct")).success).toBe(true);
     expect((await mailchannels.subAccounts.limits.delete("simacct")).success).toBe(true);
-    expect((await mailchannels.subAccounts.apiKeys.delete("simacct", apiKey.id)).success).toBe(true);
-    expect((await mailchannels.subAccounts.smtpPasswords.delete("simacct", smtpPassword.id)).success).toBe(true);
+    expect(
+      (await mailchannels.subAccounts.apiKeys.delete("simacct", apiKey.id)).success
+    ).toBe(true);
+    expect(
+      (await mailchannels.subAccounts.smtpPasswords.delete("simacct", smtpPassword.id)).success
+    ).toBe(true);
     expect((await mailchannels.subAccounts.delete("simacct")).success).toBe(true);
-  });
+  }
+  );
 });

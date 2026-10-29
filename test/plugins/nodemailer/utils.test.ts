@@ -6,7 +6,14 @@ import type { SendMailOptions } from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
 import MailMessage from "nodemailer/lib/mailer/mail-message";
 import MailComposer from "nodemailer/lib/mail-composer";
-import { parseAddress, parseAddresses, parseAttachments, parseDkim, parseHeaders, parseIcalEvent } from "~/plugins/nodemailer/utils";
+import {
+  parseAddress,
+  parseAddresses,
+  parseAttachments,
+  parseDkim,
+  parseHeaders,
+  parseIcalEvent
+} from "~/plugins/nodemailer/utils";
 import type { EmailsSendRecipient, EmailsSendRecipientInput } from "~/types/emails/send";
 
 const fake = {
@@ -65,7 +72,9 @@ describe("parseAddresses", () => {
   });
 
   it("should wrap string address in an array", () => {
-    expect(parseAddresses(fake.nodemailerAddress.address)).toEqual([fake.nodemailerAddress.address]);
+    expect(parseAddresses(fake.nodemailerAddress.address)).toEqual([
+      fake.nodemailerAddress.address
+    ]);
   });
 
   it("should parse array of mixed addresses", () => {

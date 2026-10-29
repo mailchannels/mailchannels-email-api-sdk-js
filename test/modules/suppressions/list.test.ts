@@ -143,7 +143,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { data, error } = await suppressions.list({ ...fake.options, createdBefore: "invalid-date" });
+    const { data, error } = await suppressions.list({
+      ...fake.options,
+      createdBefore: "invalid-date"
+    });
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -156,7 +159,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { data, error } = await suppressions.list({ ...fake.options, createdAfter: "invalid-date" });
+    const { data, error } = await suppressions.list({
+      ...fake.options,
+      createdAfter: "invalid-date"
+    });
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -165,10 +171,11 @@ describe("list", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: ErrorCode.BadRequest } });
-        reject();
-      }))
+      get: vi.fn().mockImplementationOnce(
+        async (url, { onResponseError }) => new Promise((_, reject) => {
+          onResponseError({ response: { status: ErrorCode.BadRequest } });
+          reject();
+        }))
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);

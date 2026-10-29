@@ -25,14 +25,19 @@ export const formatDateInput = (value?: Date | string) => {
   return value;
 };
 
-export const parseDateInputs = <T extends Record<string, string | Date | undefined>>(options: T) => {
+export const parseDateInputs = <T extends Record<string, string | Date | undefined>>(
+  options: T
+) => {
   const dates: Record<string, string | undefined> = {};
   const keys = Object.keys(options);
 
   for (const key of keys) {
     const formatted = formatDateInput(options?.[key]);
     if (formatted === null) {
-      return { dates: null, error: createValidationError(`The '${key}' value is not a valid date.`) };
+      return {
+        dates: null,
+        error: createValidationError(`The '${key}' value is not a valid date.`)
+      };
     }
     dates[key] = formatted;
   }

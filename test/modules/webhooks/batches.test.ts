@@ -77,7 +77,10 @@ describe("batches", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { data, error } = await webhooks.batches({ createdAfter: "2024-07-01", createdBefore: "2024-07-08" });
+    const { data, error } = await webhooks.batches({
+      createdAfter: "2024-07-01",
+      createdBefore: "2024-07-08"
+    });
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
@@ -129,7 +132,9 @@ describe("batches", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { data, error } = await webhooks.batches({ statuses: ["1xx", "2xx", "3xx", "4xx", "5xx", "no_response", "1xx"] });
+    const { data, error } = await webhooks.batches({
+      statuses: ["1xx", "2xx", "3xx", "4xx", "5xx", "no_response", "1xx"]
+    });
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -209,7 +214,10 @@ describe("batches", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { data, error } = await webhooks.batches({ createdAfter: "2024-07-29", createdBefore: "2024-07-28" });
+    const { data, error } = await webhooks.batches({
+      createdAfter: "2024-07-29",
+      createdBefore: "2024-07-28"
+    });
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -222,7 +230,10 @@ describe("batches", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { data, error } = await webhooks.batches({ createdAfter: "2024-07-01", createdBefore: "2024-08-02" });
+    const { data, error } = await webhooks.batches({
+      createdAfter: "2024-07-01",
+      createdBefore: "2024-08-02"
+    });
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -231,10 +242,11 @@ describe("batches", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: ErrorCode.BadRequest } });
-        reject();
-      }))
+      get: vi.fn().mockImplementationOnce(
+        async (url, { onResponseError }) => new Promise((_, reject) => {
+          onResponseError({ response: { status: ErrorCode.BadRequest } });
+          reject();
+        }))
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);

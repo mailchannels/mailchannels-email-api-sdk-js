@@ -1,9 +1,20 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError } from "../../internal/errors";
+import {
+  ErrorCode,
+  createValidationError,
+  getResultError,
+  getStatusError
+} from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { SubAccountsLimitsGetResponse, SubAccountsLimitsSetOptions } from "../../types/sub-accounts/limits";
-import type { SubAccountsLimitsGetApiResponse, SubAccountsLimitsSetApiResponse } from "../../types/sub-accounts/internal";
+import type {
+  SubAccountsLimitsGetResponse,
+  SubAccountsLimitsSetOptions
+} from "../../types/sub-accounts/limits";
+import type {
+  SubAccountsLimitsGetApiResponse,
+  SubAccountsLimitsSetApiResponse
+} from "../../types/sub-accounts/internal";
 
 export class SubAccountsLimits {
   constructor (private mailchannels: MailChannelsClient) {}
@@ -24,13 +35,16 @@ export class SubAccountsLimits {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.get<SubAccountsLimitsGetApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
-        });
+    const response = await this.mailchannels.get<SubAccountsLimitsGetApiResponse>(
+      `/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`,
+      {
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch sub-account limit.");
       return null;
     });
@@ -65,14 +79,17 @@ export class SubAccountsLimits {
       return { success: false, error };
     }
 
-    await this.mailchannels.put<SubAccountsLimitsSetApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`, {
-      body: options,
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
-        });
+    await this.mailchannels.put<SubAccountsLimitsSetApiResponse>(
+      `/tx/v1/sub-account/${encodeURIComponent(handle)}/limit`,
+      {
+        body: options,
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to set sub-account limit.");
     });
 

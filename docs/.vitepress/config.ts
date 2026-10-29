@@ -22,7 +22,9 @@ export default defineConfig({
     const relativePath = pageData.relativePath.replace(/\.md$/, "").replace(/index$/, "");
     const path = relativePath === "index" ? "" : `/${relativePath}`;
     const baseTitle = pageData.title ? `${pageData.title} | ${SITE.name}` : SITE.name;
-    const title = pageData.titleTemplate ? `${pageData.title} | ${pageData.titleTemplate}` : baseTitle;
+    const title = pageData.titleTemplate
+      ? `${pageData.title} | ${pageData.titleTemplate}`
+      : baseTitle;
     const url = `${SITE.host}` + path;
     const cover = `${SITE.host}/${SITE.cover}`;
     const tags: HeadConfig[] = [

@@ -50,7 +50,9 @@ describe("smtp-passwords list", () => {
       rawArgs: [...fake.args, "--handle", fake.handle]
     });
 
-    expect(console.info).toHaveBeenCalledWith("[Sub-Accounts] No SMTP passwords found for this sub-account.");
+    expect(console.info).toHaveBeenCalledWith(
+      "[Sub-Accounts] No SMTP passwords found for this sub-account."
+    );
   });
 
   it("should exit with error when listing SMTP passwords fails", async () => {

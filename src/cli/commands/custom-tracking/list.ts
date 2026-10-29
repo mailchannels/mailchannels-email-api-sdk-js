@@ -4,7 +4,12 @@ import { sharedArgs } from "../../utils/shared/args";
 import { parsePagination } from "../../utils/shared/parse-pagination";
 import { tabulatedSections } from "../../utils/shared/sections";
 import { styleText } from "../../utils/shared/style";
-import { Domains, type DomainsCustomTrackingListOptions, type DomainsCustomTrackingScope, MailChannelsClient } from "../../../mailchannels";
+import {
+  Domains,
+  type DomainsCustomTrackingListOptions,
+  type DomainsCustomTrackingScope,
+  MailChannelsClient
+} from "../../../mailchannels";
 
 export default defineCommand({
   meta: {
@@ -45,7 +50,8 @@ export default defineCommand({
       + tabulatedSections(data.customTrackingDomains)
     );
     console.info(
-      "[Custom Tracking] Total custom tracking domains retrieved:", data.customTrackingDomains.length,
+      "[Custom Tracking] Total custom tracking domains retrieved:",
+      data.customTrackingDomains.length,
       `(with limit: ${styleText("yellow", args["limit"] ?? "100")}, offset: ${styleText("yellow", args["offset"] ?? "0")})`
     );
   }

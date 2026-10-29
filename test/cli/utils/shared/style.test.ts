@@ -5,7 +5,9 @@ describe("styleText", () => {
   it("styles supported colors", () => {
     expect(styleText("yellow", "42")).toBe("\u001b[33m42\u001b[39m");
     expect(styleText("green", "text")).toBe("\u001b[32mtext\u001b[39m");
-    expect(styleText(["underline", "blue"], "text")).toBe("\u001b[4m\u001b[34mtext\u001b[39m\u001b[24m");
+    expect(styleText(["underline", "blue"], "text")).toBe(
+      "\u001b[4m\u001b[34mtext\u001b[39m\u001b[24m"
+    );
   });
 });
 

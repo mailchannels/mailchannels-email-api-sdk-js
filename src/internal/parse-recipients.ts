@@ -45,13 +45,15 @@ export const parseRecipient = (recipient?: EmailsSendRecipient | string) => {
 export const parseArrayRecipients = (recipients?: EmailsSendRecipientInput) => {
   if (!recipients) return undefined;
 
-  const arr = typeof recipients === "string" ? (
-    [parseRecipientString(recipients)]
-  ) : Array.isArray(recipients) ? (
-    recipients.map(parseRecipient)
-  ) : [recipients];
+  const arr = typeof recipients === "string"
+    ? [parseRecipientString(recipients)]
+    : Array.isArray(recipients)
+      ? recipients.map(parseRecipient)
+      : [recipients];
 
-  const filtered = arr.filter((recipient): recipient is NonNullable<typeof recipient> => Boolean(recipient));
+  const filtered = arr.filter(
+    (recipient): recipient is NonNullable<typeof recipient> => Boolean(recipient)
+  );
 
   return filtered.length > 0 ? filtered : undefined;
 };

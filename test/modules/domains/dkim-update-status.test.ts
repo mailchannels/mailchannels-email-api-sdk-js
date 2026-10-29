@@ -17,7 +17,8 @@ describe("dkim.updateStatus", () => {
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.patch).toHaveBeenCalledWith("/tx/v1/domains/example.com/dkim-keys/mailchannels-test",
+    expect(mockClient.patch).toHaveBeenCalledWith(
+      "/tx/v1/domains/example.com/dkim-keys/mailchannels-test",
       expect.objectContaining({
         body: {
           status: "retired"

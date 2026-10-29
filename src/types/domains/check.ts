@@ -40,7 +40,15 @@ export interface DomainsCheckOptions {
   senderId?: string;
 }
 
-export type DomainsCheckVerdict = "passed" | "failed" | "soft failed" | "temporary error" | "permanent error" | "neutral" | "none" | "unknown";
+export type DomainsCheckVerdict =
+  | "passed"
+  | "failed"
+  | "soft failed"
+  | "temporary error"
+  | "permanent error"
+  | "neutral"
+  | "none"
+  | "unknown";
 
 export type DomainsCheckResponse = DataResponse<{
   dkim: {

@@ -14,8 +14,17 @@ const fake = {
         spfRecord: "v=spf1 include:relay.mailchannels.net a mx ~all"
       },
       domain_lockdown: { verdict: "passed" },
-      sender_domain: { a: { verdict: "failed" }, mx: { verdict: "passed" }, verdict: "passed" },
-      dkim: [{ dkim_domain: "example.com", dkim_key_status: "provided", dkim_selector: "selector", verdict: "passed" }]
+      sender_domain: {
+        a: { verdict: "failed" },
+        mx: { verdict: "passed" },
+        verdict: "passed"
+      },
+      dkim: [{
+        dkim_domain: "example.com",
+        dkim_key_status: "provided",
+        dkim_selector: "selector",
+        verdict: "passed"
+      }]
     }
   } satisfies DomainsCheckApiResponse,
   expectedResponse: {
@@ -26,7 +35,12 @@ const fake = {
       },
       domainLockdown: { verdict: "passed" },
       senderDomain: { a: { verdict: "failed" }, mx: { verdict: "passed" }, verdict: "passed" },
-      dkim: [{ domain: "example.com", keyStatus: "provided", selector: "selector", verdict: "passed" }]
+      dkim: [{
+        domain: "example.com",
+        keyStatus: "provided",
+        selector: "selector",
+        verdict: "passed"
+      }]
     },
     error: null
   } satisfies DomainsCheckResponse,
@@ -156,10 +170,11 @@ describe("check", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: ErrorCode.BadRequest } });
-        reject();
-      }))
+      post: vi.fn().mockImplementationOnce(
+        async (url, { onResponseError }) => new Promise((_, reject) => {
+          onResponseError({ response: { status: ErrorCode.BadRequest } });
+          reject();
+        }))
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);

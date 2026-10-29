@@ -1,9 +1,22 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import {
+  ErrorCode,
+  createValidationError,
+  getResultError,
+  getStatusError,
+  validatePagination
+} from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { SubAccountsApiKeysCreateResponse, SubAccountsApiKeysListOptions, SubAccountsApiKeysListResponse } from "../../types/sub-accounts/api-keys";
-import type { SubAccountsApiKeysCreateApiResponse, SubAccountsApiKeysListApiResponse } from "../../types/sub-accounts/internal";
+import type {
+  SubAccountsApiKeysCreateResponse,
+  SubAccountsApiKeysListOptions,
+  SubAccountsApiKeysListResponse
+} from "../../types/sub-accounts/api-keys";
+import type {
+  SubAccountsApiKeysCreateApiResponse,
+  SubAccountsApiKeysListApiResponse
+} from "../../types/sub-accounts/internal";
 
 export class SubAccountsApiKeys {
   constructor (private mailchannels: MailChannelsClient) {}
@@ -25,15 +38,18 @@ export class SubAccountsApiKeys {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.post<SubAccountsApiKeysCreateApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.Forbidden]: "You can't create API keys for this sub-account.",
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`,
-          [ErrorCode.UnprocessableEntity]: "You have reached the limit of API keys you can create for this sub-account."
-        });
+    const response = await this.mailchannels.post<SubAccountsApiKeysCreateApiResponse>(
+      `/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`,
+      {
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.Forbidden]: "You can't create API keys for this sub-account.",
+            [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`,
+            [ErrorCode.UnprocessableEntity]: "You have reached the limit of API keys you can create for this sub-account."
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to create sub-account API key.");
       return null;
     });
@@ -55,7 +71,10 @@ export class SubAccountsApiKeys {
    * const { data, error } = await mailchannels.subAccounts.apiKeys.list('validhandle123')
    * ```
    */
-  async list (handle: string, options?: SubAccountsApiKeysListOptions): Promise<SubAccountsApiKeysListResponse> {
+  async list (
+    handle: string,
+    options?: SubAccountsApiKeysListOptions
+  ): Promise<SubAccountsApiKeysListResponse> {
     let error: ErrorResponse | null = null;
 
     if (!handle) {
@@ -66,14 +85,17 @@ export class SubAccountsApiKeys {
     error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
 
-    const response = await this.mailchannels.get<SubAccountsApiKeysListApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`, {
-      query: options,
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
-        });
+    const response = await this.mailchannels.get<SubAccountsApiKeysListApiResponse>(
+      `/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key`,
+      {
+        query: options,
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch sub-account API keys.");
       return null;
     });
@@ -106,13 +128,16 @@ export class SubAccountsApiKeys {
       return { success: false, error };
     }
 
-    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key/${encodeURIComponent(id)}`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Missing or invalid API key ID."
-        });
+    await this.mailchannels.delete<void>(
+      `/tx/v1/sub-account/${encodeURIComponent(handle)}/api-key/${encodeURIComponent(id)}`,
+      {
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.BadRequest]: "Missing or invalid API key ID."
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to delete sub-account API key.");
     });
 

@@ -45,14 +45,19 @@ const createError = (
   };
 };
 
-type MailChannelsErrorResponse = { message?: string, errors?: string[] } | string | Record<string, unknown>;
+type MailChannelsErrorResponse =
+  | { message?: string, errors?: string[] }
+  | string
+  | Record<string, unknown>;
 
 /** Create an error response based on the HTTP response status code and payload. */
 export const getStatusError = (
   response: FetchResponse<MailChannelsErrorResponse>,
   errors: Record<number, string> = {}
 ) => {
-  const statusText = errors[response.status] || STATUS_DEFAULT_TEXT_MAP[response.status] || "Unknown error.";
+  const statusText = errors[response.status]
+    || STATUS_DEFAULT_TEXT_MAP[response.status]
+    || "Unknown error.";
   const contentType = response.headers?.get("content-type")?.toLowerCase();
 
   const payload = response._data ?? (response as { data?: MailChannelsErrorResponse }).data;
@@ -108,7 +113,12 @@ export const validatePagination = (pagination: Partial<{
       return createValidationError("The limit value must be an integer.");
 
     if (limit < 1 || (max != null && limit > max))
-      return createValidationError("The limit value " + (max != null ? `must be between 1 and ${max}.` : "is invalid. Only positive values are allowed."));
+      return createValidationError(
+        "The limit value "
+        + (max != null
+          ? `must be between 1 and ${max}.`
+          : "is invalid. Only positive values are allowed.")
+      );
   }
 
   if (offset !== undefined) {
@@ -127,7 +137,9 @@ const CUSTOM_TRACKING_NAME_PATTERN = /^[a-z0-9-]+$/;
 /** Validate a custom tracking name and return an error response if invalid. */
 export const validateCustomTrackingName = (name: string): ErrorResponse | null => {
   if (!name || name.length < 1 || name.length > 64) {
-    return createValidationError("The custom tracking domain name must be between 1 and 64 characters.");
+    return createValidationError(
+      "The custom tracking domain name must be between 1 and 64 characters."
+    );
   }
   if (!CUSTOM_TRACKING_NAME_PATTERN.test(name)) {
     return createValidationError("The custom tracking domain name must match ^[a-z0-9-]+$");

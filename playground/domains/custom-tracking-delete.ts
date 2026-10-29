@@ -11,6 +11,9 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { success, error } = await mailchannels.domains.customTracking.delete("click.example.com", "click");
+const { success, error } = await mailchannels.domains.customTracking.delete(
+  "click.example.com",
+  "click"
+);
 
 console.info(JSON.stringify({ success, error }, null, 2));

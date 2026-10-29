@@ -1,15 +1,39 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validateCustomTrackingName, validatePagination } from "../../internal/errors";
+import {
+  ErrorCode,
+  createValidationError,
+  getResultError,
+  getStatusError,
+  validateCustomTrackingName,
+  validatePagination
+} from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import { quoteValues } from "../../internal/quote-values";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { DomainsCustomTrackingApiResponse, DomainsCustomTrackingListApiResponse } from "../../types/domains/internal";
-import type { DomainsCustomTrackingCreateResponse, DomainsCustomTrackingScope, DomainsCustomTrackingWithDnsSetupRequired } from "../../types/domains/custom-tracking-create";
-import type { DomainsCustomTrackingListOptions, DomainsCustomTrackingListResponse } from "../../types/domains/custom-tracking-list";
-import type { DomainsCustomTrackingUpdateOptions, DomainsCustomTrackingUpdateResponse } from "../../types/domains/custom-tracking-update";
+import type {
+  DomainsCustomTrackingApiResponse,
+  DomainsCustomTrackingListApiResponse
+} from "../../types/domains/internal";
+import type {
+  DomainsCustomTrackingCreateResponse,
+  DomainsCustomTrackingScope,
+  DomainsCustomTrackingWithDnsSetupRequired
+} from "../../types/domains/custom-tracking-create";
+import type {
+  DomainsCustomTrackingListOptions,
+  DomainsCustomTrackingListResponse
+} from "../../types/domains/custom-tracking-list";
+import type {
+  DomainsCustomTrackingUpdateOptions,
+  DomainsCustomTrackingUpdateResponse
+} from "../../types/domains/custom-tracking-update";
 
 export class DomainsCustomTracking {
-  private static readonly SCOPE_VALUES = new Set<DomainsCustomTrackingScope>(["click", "open", "unsubscribe"]);
+  private static readonly SCOPE_VALUES = new Set<DomainsCustomTrackingScope>([
+    "click",
+    "open",
+    "unsubscribe"
+  ]);
 
   constructor (private mailchannels: MailChannelsClient) {}
 
@@ -25,18 +49,23 @@ export class DomainsCustomTracking {
    * })
    * ```
    */
-  async list (options?: DomainsCustomTrackingListOptions): Promise<DomainsCustomTrackingListResponse> {
+  async list (
+    options?: DomainsCustomTrackingListOptions
+  ): Promise<DomainsCustomTrackingListResponse> {
     let error: ErrorResponse | null = null;
 
     error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
 
-    const response = await this.mailchannels.get<DomainsCustomTrackingListApiResponse>("/tx/v1/custom-tracking-domains", {
-      query: options,
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response);
+    const response = await this.mailchannels.get<DomainsCustomTrackingListApiResponse>(
+      "/tx/v1/custom-tracking-domains",
+      {
+        query: options,
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response);
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch custom tracking domains.");
       return null;
     });
@@ -76,7 +105,11 @@ export class DomainsCustomTracking {
    * )
    * ```
    */
-  async create (name: string, hostname: string, scope: DomainsCustomTrackingScope): Promise<DomainsCustomTrackingCreateResponse> {
+  async create (
+    name: string,
+    hostname: string,
+    scope: DomainsCustomTrackingScope
+  ): Promise<DomainsCustomTrackingCreateResponse> {
     let error: ErrorResponse | null = null;
 
     error = validateCustomTrackingName(name);
@@ -100,19 +133,22 @@ export class DomainsCustomTracking {
 
     let statusCode: number | null = null;
 
-    const response = await this.mailchannels.post<DomainsCustomTrackingApiResponse>("/tx/v1/custom-tracking-domains", {
-      body: payload,
-      onResponse: async ({ response }) => {
-        statusCode = response.status;
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.Forbidden]: "No permission to register this domain.",
-          [ErrorCode.Conflict]: "A domain with the same name already exists, or the hostname and scope combination is already registered.",
-          [ErrorCode.UnprocessableEntity]: "DNS verification incomplete. Either the TXT ownership record has not propagated yet or the hostname CNAME does not point to the required target."
-        });
+    const response = await this.mailchannels.post<DomainsCustomTrackingApiResponse>(
+      "/tx/v1/custom-tracking-domains",
+      {
+        body: payload,
+        onResponse: async ({ response }) => {
+          statusCode = response.status;
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.Forbidden]: "No permission to register this domain.",
+            [ErrorCode.Conflict]: "A domain with the same name already exists, or the hostname and scope combination is already registered.",
+            [ErrorCode.UnprocessableEntity]: "DNS verification incomplete. Either the TXT ownership record has not propagated yet or the hostname CNAME does not point to the required target."
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to create custom tracking domain.");
       return null;
     });
@@ -159,7 +195,11 @@ export class DomainsCustomTracking {
    * })
    * ```
    */
-  async update (hostname: string, scope: DomainsCustomTrackingScope, options: DomainsCustomTrackingUpdateOptions): Promise<DomainsCustomTrackingUpdateResponse> {
+  async update (
+    hostname: string,
+    scope: DomainsCustomTrackingScope,
+    options: DomainsCustomTrackingUpdateOptions
+  ): Promise<DomainsCustomTrackingUpdateResponse> {
     let error: ErrorResponse | null = null;
 
     if (!hostname) {
@@ -168,7 +208,9 @@ export class DomainsCustomTracking {
     }
 
     if (!scope || !DomainsCustomTracking.SCOPE_VALUES.has(scope)) {
-      error = createValidationError(`Scope must be one of ${quoteValues(DomainsCustomTracking.SCOPE_VALUES)}.`);
+      error = createValidationError(
+        `Scope must be one of ${quoteValues(DomainsCustomTracking.SCOPE_VALUES)}.`
+      );
       return { data: null, error };
     }
 
@@ -189,20 +231,23 @@ export class DomainsCustomTracking {
 
     let statusCode: number | null = null;
 
-    const response = await this.mailchannels.patch<DomainsCustomTrackingApiResponse>(`/tx/v1/custom-tracking-domains/${encodeURIComponent(hostname)}/${encodeURIComponent(scope)}`, {
-      body: payload,
-      onResponse: async ({ response }) => {
-        statusCode = response.status;
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.Forbidden]: "No permission to update this domain.",
-          [ErrorCode.NotFound]: `Custom tracking domain for hostname '${hostname}' and scope '${scope}' not found.`,
-          [ErrorCode.Conflict]: "Name already used by another domain.",
-          [ErrorCode.UnprocessableEntity]: "DNS verification incomplete. Either the TXT ownership record has not propagated yet or the hostname CNAME does not point to the required target."
-        });
+    const response = await this.mailchannels.patch<DomainsCustomTrackingApiResponse>(
+      `/tx/v1/custom-tracking-domains/${encodeURIComponent(hostname)}/${encodeURIComponent(scope)}`,
+      {
+        body: payload,
+        onResponse: async ({ response }) => {
+          statusCode = response.status;
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.Forbidden]: "No permission to update this domain.",
+            [ErrorCode.NotFound]: `Custom tracking domain for hostname '${hostname}' and scope '${scope}' not found.`,
+            [ErrorCode.Conflict]: "Name already used by another domain.",
+            [ErrorCode.UnprocessableEntity]: "DNS verification incomplete. Either the TXT ownership record has not propagated yet or the hostname CNAME does not point to the required target."
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to update custom tracking domain.");
       return null;
     });
@@ -260,13 +305,16 @@ export class DomainsCustomTracking {
       return { success: false, error };
     }
 
-    await this.mailchannels.delete(`/tx/v1/custom-tracking-domains/${encodeURIComponent(hostname)}/${encodeURIComponent(scope)}`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Invalid hostname or scope value"
-        });
+    await this.mailchannels.delete(
+      `/tx/v1/custom-tracking-domains/${encodeURIComponent(hostname)}/${encodeURIComponent(scope)}`,
+      {
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.BadRequest]: "Invalid hostname or scope value"
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to delete custom tracking domain.");
     });
 

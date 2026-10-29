@@ -1,5 +1,8 @@
 import type { DataResponse } from "../responses";
-import type { DomainsCustomTrackingDomain, DomainsCustomTrackingScope } from "./custom-tracking-create";
+import type {
+  DomainsCustomTrackingDomain,
+  DomainsCustomTrackingScope
+} from "./custom-tracking-create";
 
 export interface DomainsCustomTrackingListOptions {
   /**

@@ -1,8 +1,18 @@
 import { parseArrayRecipients, parseRecipient } from "./parse-recipients";
 import { stripPemHeaders } from "./strip-pem-headers";
 import { validateCustomTrackingName } from "./errors";
-import type { EmailsSendAttachment, EmailsSendDkim, EmailsSendOptions, EmailsSendPersonalization, EmailsSendTemplate } from "../types/emails/send";
-import type { EmailsSendPayload, EmailsSendPayloadAttachment, EmailsSendPayloadPersonalization } from "../types/emails/internal";
+import type {
+  EmailsSendAttachment,
+  EmailsSendDkim,
+  EmailsSendOptions,
+  EmailsSendPersonalization,
+  EmailsSendTemplate
+} from "../types/emails/send";
+import type {
+  EmailsSendPayload,
+  EmailsSendPayloadAttachment,
+  EmailsSendPayloadPersonalization
+} from "../types/emails/internal";
 
 const RESERVED_HEADER_NAMES = new Set([
   "authentication-results",
@@ -24,12 +34,19 @@ const MAX_PERSONALIZATIONS = 1000;
 const MAX_RECIPIENTS = 1000;
 const MAX_CAMPAIGN_ID_LENGTH = 48;
 
-const getRecipientCount = (recipients?: EmailsSendPayload["personalizations"][number]["to"]) => recipients?.length || 0;
+const getRecipientCount = (
+  recipients?: EmailsSendPayload["personalizations"][number]["to"]
+) => recipients?.length || 0;
 
 const isValidTemplateValue = (value: unknown): boolean => {
-  if (typeof value === "string" || typeof value === "boolean" || typeof value === "number") return true;
+  if (
+    typeof value === "string"
+    || typeof value === "boolean"
+    || typeof value === "number"
+  ) return true;
   if (Array.isArray(value)) return value.every(isValidTemplateValue);
-  if (value !== null && typeof value === "object") return Object.values(value).every(isValidTemplateValue);
+  if (value !== null && typeof value === "object")
+    return Object.values(value).every(isValidTemplateValue);
   return false;
 };
 
@@ -41,7 +58,9 @@ const validateTemplateData = (data: EmailsSendTemplate["data"] | undefined, labe
 
   for (const [key, value] of Object.entries(data)) {
     if (!isValidTemplateValue(value)) {
-      return `${label} template data key '${key}' has an invalid value. Values must be strings, booleans, numbers, lists, or maps.`;
+      return (
+        `${label} template data key '${key}' has an invalid value. Values must be strings, booleans, numbers, lists, or maps.`
+      );
     }
   }
   return null;
@@ -90,42 +109,65 @@ const mapAttachment = (attachment: EmailsSendAttachment): EmailsSendPayloadAttac
   content_id: attachment.contentId
 });
 
-const mapPersonalization = (personalization: EmailsSendPersonalization, index: number, rootTemplateData?: EmailsSendTemplate["data"]) => {
+const mapPersonalization = (
+  personalization: EmailsSendPersonalization,
+  index: number,
+  rootTemplateData?: EmailsSendTemplate["data"]
+) => {
   const to = parseArrayRecipients(personalization.to);
   if (!to || !to.length) {
-    return `Personalization at index ${index} must include at least one recipient in the 'to' field.`;
+    return (
+      `Personalization at index ${index} must include at least one recipient in the 'to' field.`
+    );
   }
 
   if (to.length > MAX_RECIPIENTS) {
-    return `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'to' recipients.`;
+    return (
+      `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'to' recipients.`
+    );
   }
 
   const cc = parseArrayRecipients(personalization.cc);
   if (cc && cc.length > MAX_RECIPIENTS) {
-    return `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'cc' recipients.`;
+    return (
+      `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'cc' recipients.`
+    );
   }
 
   const bcc = parseArrayRecipients(personalization.bcc);
   if (bcc && bcc.length > MAX_RECIPIENTS) {
-    return `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'bcc' recipients.`;
+    return (
+      `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'bcc' recipients.`
+    );
   }
 
-  const headerError = validateHeaderMap(personalization.headers, `Personalization at index ${index}`);
+  const headerError = validateHeaderMap(
+    personalization.headers,
+    `Personalization at index ${index}`
+  );
   if (headerError) {
     return headerError;
   }
 
-  const dkimError = validateSendDkim(personalization.dkim, `Personalization at index ${index}`);
+  const dkimError = validateSendDkim(
+    personalization.dkim,
+    `Personalization at index ${index}`
+  );
   if (dkimError) {
     return dkimError;
   }
 
-  const templateDataError = validateTemplateData(personalization.template?.data, `Personalization at index ${index}`);
+  const templateDataError = validateTemplateData(
+    personalization.template?.data,
+    `Personalization at index ${index}`
+  );
   if (templateDataError) {
     return templateDataError;
   }
 
-  const dynamic_template_data = (rootTemplateData || personalization.template?.data) ? { ...rootTemplateData, ...personalization.template?.data } : undefined;
+  const dynamic_template_data = (rootTemplateData || personalization.template?.data)
+    ? { ...rootTemplateData, ...personalization.template?.data }
+    : undefined;
 
   return {
     bcc,
@@ -141,16 +183,22 @@ const mapPersonalization = (personalization: EmailsSendPersonalization, index: n
   } satisfies EmailsSendPayloadPersonalization;
 };
 
-const resolveAttachments = async (attachments?: (EmailsSendAttachment | Promise<EmailsSendAttachment>)[]) => {
+const resolveAttachments = async (
+  attachments?: (EmailsSendAttachment | Promise<EmailsSendAttachment>)[]
+) => {
   if (!attachments) return;
   return Promise
     .all(attachments.map(a => Promise.resolve(a)))
     .catch(e => (e as Error).message);
 };
 
-export const buildSendPayload = async (options: EmailsSendOptions): Promise<EmailsSendPayload | string> => {
+export const buildSendPayload = async (
+  options: EmailsSendOptions
+): Promise<EmailsSendPayload | string> => {
   const { from, html, text } = options;
-  const contentTypes = options.content ? new Set(options.content.map(item => item.type.toLowerCase())) : undefined;
+  const contentTypes = options.content
+    ? new Set(options.content.map(item => item.type.toLowerCase()))
+    : undefined;
 
   const parsedFrom = parseRecipient(from);
   if (!parsedFrom || !parsedFrom.email) {
@@ -177,8 +225,16 @@ export const buildSendPayload = async (options: EmailsSendOptions): Promise<Emai
     return `The maximum number of attachments is ${MAX_ATTACHMENTS}.`;
   }
 
-  if (options.campaignId && (options.campaignId.length > MAX_CAMPAIGN_ID_LENGTH || /\s/.test(options.campaignId))) {
-    return `campaignId must be ${MAX_CAMPAIGN_ID_LENGTH} characters or fewer and must not contain spaces.`;
+  if (
+    options.campaignId
+    && (
+      options.campaignId.length > MAX_CAMPAIGN_ID_LENGTH
+      || /\s/.test(options.campaignId)
+    )
+  ) {
+    return (
+      `campaignId must be ${MAX_CAMPAIGN_ID_LENGTH} characters or fewer and must not contain spaces.`
+    );
   }
 
   const rootHeaderError = validateHeaderMap(options.headers, "Root");
@@ -196,7 +252,9 @@ export const buildSendPayload = async (options: EmailsSendOptions): Promise<Emai
     return rootTemplateDataError;
   }
 
-  const hasPersonalizationTemplateData = options.personalizations?.some(p => p.template?.data !== undefined);
+  const hasPersonalizationTemplateData = options.personalizations?.some(
+    p => p.template?.data !== undefined
+  );
   if (hasPersonalizationTemplateData && !options.template?.type) {
     return "A root template type is required when using per-personalization template data.";
   }
@@ -213,7 +271,11 @@ export const buildSendPayload = async (options: EmailsSendOptions): Promise<Emai
 
     personalizations = [];
     for (let index = 0; index < options.personalizations.length; index++) {
-      const mappedPersonalization = mapPersonalization(options.personalizations[index]!, index, options.template?.data);
+      const mappedPersonalization = mapPersonalization(
+        options.personalizations[index]!,
+        index,
+        options.template?.data
+      );
       if (typeof mappedPersonalization === "string") {
         return mappedPersonalization;
       }
@@ -261,7 +323,9 @@ export const buildSendPayload = async (options: EmailsSendOptions): Promise<Emai
     }
 
     const hasInvalidRecipientCount = personalizations.some((personalization) => {
-      const recipientCount = getRecipientCount(personalization.to) + getRecipientCount(personalization.cc) + getRecipientCount(personalization.bcc);
+      const recipientCount = getRecipientCount(personalization.to)
+        + getRecipientCount(personalization.cc)
+        + getRecipientCount(personalization.bcc);
       return recipientCount !== 1;
     });
 
@@ -271,21 +335,27 @@ export const buildSendPayload = async (options: EmailsSendOptions): Promise<Emai
   }
 
   if (options.tracking?.click?.customDomainName !== undefined) {
-    const clickCustomTrackingNameError = validateCustomTrackingName(options.tracking.click.customDomainName);
+    const clickCustomTrackingNameError = validateCustomTrackingName(
+      options.tracking.click.customDomainName
+    );
     if (clickCustomTrackingNameError) {
       return `Invalid click tracking: ${clickCustomTrackingNameError.message}`;
     }
   }
 
   if (options.tracking?.open?.customDomainName !== undefined) {
-    const openCustomTrackingNameError = validateCustomTrackingName(options.tracking.open.customDomainName);
+    const openCustomTrackingNameError = validateCustomTrackingName(
+      options.tracking.open.customDomainName
+    );
     if (openCustomTrackingNameError) {
       return `Invalid open tracking: ${openCustomTrackingNameError.message}`;
     }
   }
 
   if (options.unsubscribe?.customDomainName !== undefined) {
-    const unsubscribeCustomTrackingNameError = validateCustomTrackingName(options.unsubscribe.customDomainName);
+    const unsubscribeCustomTrackingNameError = validateCustomTrackingName(
+      options.unsubscribe.customDomainName
+    );
     if (unsubscribeCustomTrackingNameError) {
       return `Invalid unsubscribe settings: ${unsubscribeCustomTrackingNameError.message}`;
     }

@@ -28,7 +28,8 @@ export default defineCommand({
     const { data, error } = await webhooks.batches({
       createdAfter: args["created-after"],
       createdBefore: args["created-before"],
-      statuses: args["statuses"]?.split(",").map(s => s.trim()) as WebhooksBatchStatus[] | undefined,
+      statuses: args["statuses"]?.split(",")
+        .map(s => s.trim()) as WebhooksBatchStatus[] | undefined,
       webhook: args["webhook"],
       ...parsePagination(args["limit"], args["offset"])
     });

@@ -75,7 +75,11 @@ describe("buildSendPayload", async () => {
 
     const payload = await getPayload(options);
 
-    expect(payload.content).toStrictEqual([{ type: "text/plain", value: fake.options.text, template_type: undefined }]);
+    expect(payload.content).toStrictEqual([{
+      type: "text/plain",
+      value: fake.options.text,
+      template_type: undefined
+    }]);
   });
 
   it("should contain error when from field is missing", async () => {
@@ -97,7 +101,9 @@ describe("buildSendPayload", async () => {
     const payload = await buildSendPayload(options);
 
     expect(typeof payload).toBe("string");
-    expect(payload).toBe("No recipients provided. Use the 'to' option to specify at least one recipient");
+    expect(payload).toBe(
+      "No recipients provided. Use the 'to' option to specify at least one recipient"
+    );
   });
 
   it("should contain error when no content provided", async () => {
@@ -116,7 +122,11 @@ describe("buildSendPayload", async () => {
       content: [{ type: "text/html", value: "<p>Hello</p>" }]
     });
 
-    expect(payload.content).toStrictEqual([{ type: "text/html", value: "<p>Hello</p>", template_type: undefined }]);
+    expect(payload.content).toStrictEqual([{
+      type: "text/html",
+      value: "<p>Hello</p>",
+      template_type: undefined
+    }]);
   });
 
   it("should build payload with html, text and extra content parts", async () => {
@@ -139,7 +149,9 @@ describe("buildSendPayload", async () => {
     });
 
     expect(typeof payload).toBe("string");
-    expect(payload).toBe("Cannot provide both 'html' and a 'content' entry with type 'text/html'.");
+    expect(payload).toBe(
+      "Cannot provide both 'html' and a 'content' entry with type 'text/html'."
+    );
   });
 
   it("should contain error when text and content both have text/plain", async () => {
@@ -149,7 +161,9 @@ describe("buildSendPayload", async () => {
     });
 
     expect(typeof payload).toBe("string");
-    expect(payload).toBe("Cannot provide both 'text' and a 'content' entry with type 'text/plain'.");
+    expect(payload).toBe(
+      "Cannot provide both 'text' and a 'content' entry with type 'text/plain'."
+    );
   });
 
   it("should build payload with trackings disabled", async () => {
@@ -185,11 +199,21 @@ describe("buildSendPayload", async () => {
     });
 
     expect(payload.content).toEqual(expect.arrayContaining([
-      expect.objectContaining({ type: "text/plain", value: fake.options.text, template_type: "mustache" }),
-      expect.objectContaining({ type: "text/html", value: fake.options.html, template_type: "mustache" })
+      expect.objectContaining({
+        type: "text/plain",
+        value: fake.options.text,
+        template_type: "mustache"
+      }),
+      expect.objectContaining({
+        type: "text/html",
+        value: fake.options.html,
+        template_type: "mustache"
+      })
     ]));
     expect(payload.personalizations).toEqual(expect.arrayContaining([
-      expect.objectContaining({ dynamic_template_data: expect.objectContaining({ name: "World" }) })
+      expect.objectContaining({
+        dynamic_template_data: expect.objectContaining({ name: "World" })
+      })
     ]));
   });
 
@@ -226,7 +250,10 @@ describe("buildSendPayload", async () => {
   it("should contain error when attachments exceed 1000", async () => {
     const payload = await buildSendPayload({
       ...fake.options,
-      attachments: Array.from({ length: 1001 }, () => ({ content: "data", filename: "file.txt", type: "text/plain" }))
+      attachments: Array.from(
+        { length: 1001 },
+        () => ({ content: "data", filename: "file.txt", type: "text/plain" })
+      )
     });
 
     expect(typeof payload).toBe("string");
@@ -248,7 +275,10 @@ describe("buildSendPayload", async () => {
   });
 
   it("should contain error when headers includes a reserved header name", async () => {
-    const payload = await buildSendPayload({ ...fake.options, headers: { from: "test@example.com" } });
+    const payload = await buildSendPayload({
+      ...fake.options,
+      headers: { from: "test@example.com" }
+    });
 
     expect(typeof payload).toBe("string");
     expect(payload).toBe("Root headers cannot include the reserved header 'from'.");
@@ -273,28 +303,49 @@ describe("buildSendPayload", async () => {
   });
 
   it("should contain error when dkim has privateKey without domain", async () => {
-    const payload = await buildSendPayload({ ...fake.options, dkim: { privateKey: "private-key" } });
+    const payload = await buildSendPayload({
+      ...fake.options,
+      dkim: { privateKey: "private-key" }
+    });
 
     expect(typeof payload).toBe("string");
     expect(payload).toBe("Root DKIM privateKey requires both a domain and selector.");
   });
 
   it("should contain error when to recipients exceed 1000", async () => {
-    const payload = await buildSendPayload({ ...fake.options, to: Array.from({ length: 1001 }, (_, i) => `to${i}@example.com`) });
+    const payload = await buildSendPayload({
+      ...fake.options,
+      to: Array.from(
+        { length: 1001 },
+        (_, i) => `to${i}@example.com`
+      )
+    });
 
     expect(typeof payload).toBe("string");
     expect(payload).toBe("The maximum number of 'to' recipients is 1000.");
   });
 
   it("should contain error when cc recipients exceed 1000", async () => {
-    const payload = await buildSendPayload({ ...fake.options, cc: Array.from({ length: 1001 }, (_, i) => `cc${i}@example.com`) });
+    const payload = await buildSendPayload({
+      ...fake.options,
+      cc: Array.from(
+        { length: 1001 },
+        (_, i) => `cc${i}@example.com`
+      )
+    });
 
     expect(typeof payload).toBe("string");
     expect(payload).toBe("The maximum number of 'cc' recipients is 1000.");
   });
 
   it("should contain error when bcc recipients exceed 1000", async () => {
-    const payload = await buildSendPayload({ ...fake.options, bcc: Array.from({ length: 1001 }, (_, i) => `bcc${i}@example.com`) });
+    const payload = await buildSendPayload({
+      ...fake.options,
+      bcc: Array.from(
+        { length: 1001 },
+        (_, i) => `bcc${i}@example.com`
+      )
+    });
 
     expect(typeof payload).toBe("string");
     expect(payload).toBe("The maximum number of 'bcc' recipients is 1000.");
@@ -316,7 +367,9 @@ describe("buildSendPayload", async () => {
     });
 
     expect(typeof payload).toBe("string");
-    expect(payload).toBe("Non-transactional messages must have exactly one recipient per personalization.");
+    expect(payload).toBe(
+      "Non-transactional messages must have exactly one recipient per personalization."
+    );
   });
 
   it("should build payload for a valid non-transactional email", async () => {
@@ -336,12 +389,22 @@ describe("buildSendPayload", async () => {
 
   it("should build payload with tracking object but no click or open defined", async () => {
     const payload = await getPayload({ ...fake.options, tracking: {} });
-    expect(payload.tracking_settings).toStrictEqual({ click_tracking: undefined, open_tracking: undefined });
+    expect(payload.tracking_settings).toStrictEqual({
+      click_tracking: undefined,
+      open_tracking: undefined
+    });
   });
 
   it("should contain error when personalizations is empty", async () => {
     const { from, subject, html, text, tracking } = fake.options;
-    const payload = await buildSendPayload({ from, subject, html, text, tracking, personalizations: [] });
+    const payload = await buildSendPayload({
+      from,
+      subject,
+      html,
+      text,
+      tracking,
+      personalizations: []
+    });
 
     expect(typeof payload).toBe("string");
     expect(payload).toBe("At least one personalization must be provided.");
@@ -374,7 +437,9 @@ describe("buildSendPayload", async () => {
     });
 
     expect(typeof payload).toBe("string");
-    expect(payload).toBe("Personalization at index 0 must include at least one recipient in the 'to' field.");
+    expect(payload).toBe(
+      "Personalization at index 0 must include at least one recipient in the 'to' field."
+    );
   });
 
   it("should contain error when personalization to recipients exceed 1000", async () => {
@@ -389,7 +454,9 @@ describe("buildSendPayload", async () => {
     });
 
     expect(typeof payload).toBe("string");
-    expect(payload).toBe("Personalization at index 0 cannot include more than 1000 'to' recipients.");
+    expect(payload).toBe(
+      "Personalization at index 0 cannot include more than 1000 'to' recipients."
+    );
   });
 
   it("should contain error when personalization cc recipients exceed 1000", async () => {
@@ -400,11 +467,19 @@ describe("buildSendPayload", async () => {
       html,
       text,
       tracking,
-      personalizations: [{ to: "recipient@example.com", cc: Array.from({ length: 1001 }, (_, i) => `cc${i}@example.com`) }]
+      personalizations: [{
+        to: "recipient@example.com",
+        cc: Array.from(
+          { length: 1001 },
+          (_, i) => `cc${i}@example.com`
+        )
+      }]
     });
 
     expect(typeof payload).toBe("string");
-    expect(payload).toBe("Personalization at index 0 cannot include more than 1000 'cc' recipients.");
+    expect(payload).toBe(
+      "Personalization at index 0 cannot include more than 1000 'cc' recipients."
+    );
   });
 
   it("should contain error when personalization bcc recipients exceed 1000", async () => {
@@ -415,11 +490,19 @@ describe("buildSendPayload", async () => {
       html,
       text,
       tracking,
-      personalizations: [{ to: "recipient@example.com", bcc: Array.from({ length: 1001 }, (_, i) => `bcc${i}@example.com`) }]
+      personalizations: [{
+        to: "recipient@example.com",
+        bcc: Array.from(
+          { length: 1001 },
+          (_, i) => `bcc${i}@example.com`
+        )
+      }]
     });
 
     expect(typeof payload).toBe("string");
-    expect(payload).toBe("Personalization at index 0 cannot include more than 1000 'bcc' recipients.");
+    expect(payload).toBe(
+      "Personalization at index 0 cannot include more than 1000 'bcc' recipients."
+    );
   });
 
   it("should contain error when personalization headers include a reserved header", async () => {
@@ -430,11 +513,16 @@ describe("buildSendPayload", async () => {
       html,
       text,
       tracking,
-      personalizations: [{ to: "recipient@example.com", headers: { from: "test@example.com" } }]
+      personalizations: [{
+        to: "recipient@example.com",
+        headers: { from: "test@example.com" }
+      }]
     });
 
     expect(typeof payload).toBe("string");
-    expect(payload).toBe("Personalization at index 0 headers cannot include the reserved header 'from'.");
+    expect(payload).toBe(
+      "Personalization at index 0 headers cannot include the reserved header 'from'."
+    );
   });
 
   it("should contain error when personalization dkim has domain without selector", async () => {
@@ -472,22 +560,27 @@ describe("buildSendPayload", async () => {
     ]));
   });
 
-  it("should contain error when personalization template data is provided without a root template type", async () => {
-    const { from, subject, html } = fake.options;
-    // @ts-expect-error Testing missing root template type error
-    const payload = await buildSendPayload({
-      from,
-      subject,
-      html,
-      personalizations: [{
-        to: "recipient@example.com",
-        template: { data: { name: "World" } }
-      }]
-    });
+  it(
+    "should contain error when personalization template data is provided without a root template type",
+    async () => {
+      const { from, subject, html } = fake.options;
+      // @ts-expect-error Testing missing root template type error
+      const payload = await buildSendPayload({
+        from,
+        subject,
+        html,
+        personalizations: [{
+          to: "recipient@example.com",
+          template: { data: { name: "World" } }
+        }]
+      });
 
-    expect(typeof payload).toBe("string");
-    expect(payload).toBe("A root template type is required when using per-personalization template data.");
-  });
+      expect(typeof payload).toBe("string");
+      expect(payload).toBe(
+        "A root template type is required when using per-personalization template data."
+      );
+    }
+  );
 
   it("should reject invalid root template data values", async () => {
     const payload = await buildSendPayload({
@@ -524,7 +617,9 @@ describe("buildSendPayload", async () => {
     });
 
     expect(typeof payload).toBe("string");
-    expect(payload).toContain("Personalization at index 0 template data key 'key' has an invalid value");
+    expect(payload).toContain(
+      "Personalization at index 0 template data key 'key' has an invalid value"
+    );
   });
 
   it("should merge root and per-personalization template data", async () => {
@@ -566,7 +661,9 @@ describe("buildSendPayload", async () => {
       template: { type: "mustache", data: { items: ["a", "b", "c"] } }
     });
 
-    expect(payload.personalizations[0]?.dynamic_template_data).toStrictEqual({ items: ["a", "b", "c"] });
+    expect(payload.personalizations[0]?.dynamic_template_data).toStrictEqual({
+      items: ["a", "b", "c"]
+    });
   });
 
   it("should accept map values in template data", async () => {
@@ -575,23 +672,28 @@ describe("buildSendPayload", async () => {
       template: { type: "mustache", data: { nested: { key: "value" } } }
     });
 
-    expect(payload.personalizations[0]?.dynamic_template_data).toStrictEqual({ nested: { key: "value" } });
-  });
-
-  it("should set dynamic_template_data to undefined when no template data is provided", async () => {
-    const { from, subject, html } = fake.options;
-    const payload = await getPayload({
-      from,
-      subject,
-      html,
-      template: { type: "mustache" },
-      personalizations: [{ to: "someone@example.com" }]
+    expect(payload.personalizations[0]?.dynamic_template_data).toStrictEqual({
+      nested: { key: "value" }
     });
-
-    expect(payload.personalizations).toEqual(expect.arrayContaining([
-      expect.not.objectContaining({ dynamic_template_data: expect.anything() })
-    ]));
   });
+
+  it(
+    "should set dynamic_template_data to undefined when no template data is provided",
+    async () => {
+      const { from, subject, html } = fake.options;
+      const payload = await getPayload({
+        from,
+        subject,
+        html,
+        template: { type: "mustache" },
+        personalizations: [{ to: "someone@example.com" }]
+      });
+
+      expect(payload.personalizations).toEqual(expect.arrayContaining([
+        expect.not.objectContaining({ dynamic_template_data: expect.anything() })
+      ]));
+    }
+  );
 
   it("should set template_type on content items when template is specified", async () => {
     const payload = await getPayload({
@@ -673,7 +775,9 @@ describe("buildSendPayload", async () => {
     });
 
     expect(typeof payloadClick).toBe("string");
-    expect(payloadClick).toBe("Invalid click tracking: The custom tracking domain name must match ^[a-z0-9-]+$");
+    expect(payloadClick).toBe(
+      "Invalid click tracking: The custom tracking domain name must match ^[a-z0-9-]+$"
+    );
 
     const payloadOpen = await buildSendPayload({
       ...fake.options,
@@ -686,7 +790,9 @@ describe("buildSendPayload", async () => {
     });
 
     expect(typeof payloadOpen).toBe("string");
-    expect(payloadOpen).toBe("Invalid open tracking: The custom tracking domain name must match ^[a-z0-9-]+$");
+    expect(payloadOpen).toBe(
+      "Invalid open tracking: The custom tracking domain name must match ^[a-z0-9-]+$"
+    );
 
     const payloadUnsubscribe = await buildSendPayload({
       ...fake.options,
@@ -696,6 +802,8 @@ describe("buildSendPayload", async () => {
     });
 
     expect(typeof payloadUnsubscribe).toBe("string");
-    expect(payloadUnsubscribe).toBe("Invalid unsubscribe settings: The custom tracking domain name must match ^[a-z0-9-]+$");
+    expect(payloadUnsubscribe).toBe(
+      "Invalid unsubscribe settings: The custom tracking domain name must match ^[a-z0-9-]+$"
+    );
   });
 });

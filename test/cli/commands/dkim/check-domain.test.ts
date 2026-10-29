@@ -91,11 +91,19 @@ describe("check-domain", () => {
 
     expect(mockCheck).toHaveBeenCalledWith(fake.domain, fake.options);
     expect(console.info).toHaveBeenCalledWith("[DKIM] SPF checks:", styleText(["green"], "PASSED"));
-    expect(console.info).toHaveBeenCalledWith("[DKIM] Domain Lockdown checks:", styleText(["green"], "PASSED"));
-    expect(console.info).toHaveBeenCalledWith("[DKIM] Sender Domain checks:", styleText(["green"], "PASSED"));
-    expect(console.info).toHaveBeenCalledWith("[DKIM] DKIM checks:", styleText(["green"], "PASSED"));
+    expect(console.info).toHaveBeenCalledWith(
+      "[DKIM] Domain Lockdown checks:", styleText(["green"], "PASSED")
+    );
+    expect(console.info).toHaveBeenCalledWith(
+      "[DKIM] Sender Domain checks:", styleText(["green"], "PASSED")
+    );
+    expect(console.info).toHaveBeenCalledWith(
+      "[DKIM] DKIM checks:", styleText(["green"], "PASSED")
+    );
     expect(console.table).toHaveBeenNthCalledWith(1, toWordsKeys(fake.response.data.spf));
-    expect(console.table).toHaveBeenNthCalledWith(2, toWordsKeys({ result: fake.response.data.domainLockdown }));
+    expect(console.table).toHaveBeenNthCalledWith(2, toWordsKeys({
+      result: fake.response.data.domainLockdown
+    }));
     expect(console.table).toHaveBeenNthCalledWith(3, toWordsKeys({
       result: { verdict: fake.response.data.senderDomain.verdict },
       a: fake.response.data.senderDomain.a,
@@ -116,7 +124,10 @@ describe("check-domain", () => {
 
     await runCommand(checkDomain, { rawArgs: fake.args });
 
-    const expectedVerdict = format ? styleText(format, verdict.toUpperCase()) : verdict.toUpperCase();
+    const expectedVerdict = format
+      ? styleText(format, verdict.toUpperCase())
+      : verdict.toUpperCase();
+
     expect(console.info).toHaveBeenCalledWith("[DKIM] SPF checks:", expectedVerdict);
   });
 

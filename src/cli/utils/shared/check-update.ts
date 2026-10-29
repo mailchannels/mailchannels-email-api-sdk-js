@@ -2,7 +2,11 @@ import pkg from "../../../../package.json";
 import { styleText } from "./style";
 
 const isNewerVersion = (local: string, remote: string) => {
-  const parse = (v: string) => v.replace(/^v/, "").split(".").map(Number) as [number, number, number];
+  const parse = (v: string) => v.replace(/^v/, "").split(".").map(Number) as [
+    number,
+    number,
+    number
+  ];
   const [localMaj, localMin, localPatch] = parse(local);
   const [remoteMaj, remoteMin, remotePatch] = parse(remote);
 

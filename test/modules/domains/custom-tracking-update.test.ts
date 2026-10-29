@@ -2,8 +2,14 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { Domains } from "~/modules/domains";
 import { ErrorCode } from "~/internal/errors";
-import type { DomainsCustomTrackingDnsSetupRequiredApiResponse, DomainsCustomTrackingDomainApiResponse } from "~/types/domains/internal";
-import type { DomainsCustomTrackingScope, DomainsCustomTrackingWithDnsSetupRequired } from "~/types/domains/custom-tracking-create";
+import type {
+  DomainsCustomTrackingDnsSetupRequiredApiResponse,
+  DomainsCustomTrackingDomainApiResponse
+} from "~/types/domains/internal";
+import type {
+  DomainsCustomTrackingScope,
+  DomainsCustomTrackingWithDnsSetupRequired
+} from "~/types/domains/custom-tracking-create";
 import type { DomainsCustomTrackingUpdateOptions } from "~/types/domains/custom-tracking-update";
 
 const fake = {
@@ -50,11 +56,16 @@ describe("customTracking.update", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.customTracking.update(fake.hostname, fake.scope, fake.options);
+    const { data, error } = await domains.customTracking.update(
+      fake.hostname,
+      fake.scope,
+      fake.options
+    );
 
     expect(data).toStrictEqual(fake.expectedResponseUpdated);
     expect(error).toBeNull();
-    expect(mockClient.patch).toHaveBeenCalledWith(`/tx/v1/custom-tracking-domains/${encodeURIComponent(fake.hostname)}/${encodeURIComponent(fake.scope)}`,
+    expect(mockClient.patch).toHaveBeenCalledWith(
+      `/tx/v1/custom-tracking-domains/${encodeURIComponent(fake.hostname)}/${encodeURIComponent(fake.scope)}`,
       expect.objectContaining({
         body: {
           name: fake.options.name,
@@ -72,7 +83,11 @@ describe("customTracking.update", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.customTracking.update(fake.hostname, fake.scope, fake.options);
+    const { data, error } = await domains.customTracking.update(
+      fake.hostname,
+      fake.scope,
+      fake.options
+    );
 
     expect(data).toStrictEqual(fake.expectedResponseDnsSetupRequired);
     expect(error).toBeNull();
@@ -85,7 +100,11 @@ describe("customTracking.update", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.customTracking.update(fake.hostname, fake.scope, { status: "active" });
+    const { data, error } = await domains.customTracking.update(
+      fake.hostname,
+      fake.scope,
+      { status: "active" }
+    );
 
     expect(data).toStrictEqual(fake.expectedResponseUpdated);
     expect(error).toBeNull();
@@ -121,8 +140,12 @@ describe("customTracking.update", () => {
     const mockClient = { patch: vi.fn() } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    // @ts-expect-error Testing invalid scope
-    const { data, error } = await domains.customTracking.update(fake.hostname, "invalid-scope", fake.options);
+    const { data, error } = await domains.customTracking.update(
+      fake.hostname,
+      // @ts-expect-error Testing invalid scope
+      "invalid-scope",
+      fake.options
+    );
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -142,14 +165,19 @@ describe("customTracking.update", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      patch: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: ErrorCode.BadRequest } });
-        reject();
-      }))
+      patch: vi.fn().mockImplementationOnce(
+        async (url, { onResponseError }) => new Promise((_, reject) => {
+          onResponseError({ response: { status: ErrorCode.BadRequest } });
+          reject();
+        }))
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.customTracking.update(fake.hostname, fake.scope, fake.options);
+    const { data, error } = await domains.customTracking.update(
+      fake.hostname,
+      fake.scope,
+      fake.options
+    );
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();

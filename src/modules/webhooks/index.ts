@@ -1,5 +1,11 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import {
+  ErrorCode,
+  createValidationError,
+  getResultError,
+  getStatusError,
+  validatePagination
+} from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import { isValidWebhook } from "../../internal/webhook-validator";
 import { parseDateInputs } from "../../internal/parse-date-inputs";
@@ -9,12 +15,28 @@ import type { WebhooksListResponse } from "../../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../../types/webhooks/signing-key";
 import type { WebhooksValidateResponse } from "../../types/webhooks/validate";
 import type { WebhooksVerifyOptions, WebhooksVerifyResponse } from "../../types/webhooks/verify";
-import type { WebhooksBatchStatus, WebhooksBatchesOptions, WebhooksBatchesResponse } from "../../types/webhooks/batches";
+import type {
+  WebhooksBatchStatus,
+  WebhooksBatchesOptions,
+  WebhooksBatchesResponse
+} from "../../types/webhooks/batches";
 import type { WebhooksResendBatchResponse } from "../../types/webhooks/resend-batch";
-import type { WebhookEventReceived, WebhooksBatchesApiResponse, WebhooksResendBatchApiResponse, WebhooksValidateApiResponse } from "../../types/webhooks/internal";
+import type {
+  WebhookEventReceived,
+  WebhooksBatchesApiResponse,
+  WebhooksResendBatchApiResponse,
+  WebhooksValidateApiResponse
+} from "../../types/webhooks/internal";
 
 export class Webhooks {
-  private static readonly STATUS_VALUES = new Set<WebhooksBatchStatus>(["1xx", "2xx", "3xx", "4xx", "5xx", "no_response"]);
+  private static readonly STATUS_VALUES = new Set<WebhooksBatchStatus>([
+    "1xx",
+    "2xx",
+    "3xx",
+    "4xx",
+    "5xx",
+    "no_response"
+  ]);
 
   constructor (protected mailchannels: MailChannelsClient) {}
 
@@ -40,16 +62,19 @@ export class Webhooks {
       return { success: false, error };
     }
 
-    await this.mailchannels.post<void>("/tx/v1/webhook", {
-      query: {
-        endpoint
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.Conflict]: `Endpoint '${endpoint}' is already enrolled to receive notifications.`
-        });
+    await this.mailchannels.post<void>(
+      "/tx/v1/webhook",
+      {
+        query: {
+          endpoint
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.Conflict]: `Endpoint '${endpoint}' is already enrolled to receive notifications.`
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to create webhook.");
     });
 
@@ -119,16 +144,19 @@ export class Webhooks {
   async getSigningKey (id: string): Promise<WebhooksSigningKeyResponse> {
     let error: ErrorResponse | null = null;
 
-    const response = await this.mailchannels.get<{ id: string, key: string }>("/tx/v1/webhook/public-key", {
-      query: {
-        id
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: `The key '${id}' is not found.`
-        });
+    const response = await this.mailchannels.get<{ id: string, key: string }>(
+      "/tx/v1/webhook/public-key",
+      {
+        query: {
+          id
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.NotFound]: `The key '${id}' is not found.`
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to get signing key.");
       return null;
     });
@@ -160,16 +188,19 @@ export class Webhooks {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.post<WebhooksValidateApiResponse>("/tx/v1/webhook/validate", {
-      body: {
-        request_id: requestId
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: "No webhooks found for the account."
-        });
+    const response = await this.mailchannels.post<WebhooksValidateApiResponse>(
+      "/tx/v1/webhook/validate",
+      {
+        body: {
+          request_id: requestId
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.NotFound]: "No webhooks found for the account."
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to validate webhooks.");
       return null;
     });
@@ -268,7 +299,10 @@ export class Webhooks {
       }
 
       if (options.statuses.length > 6) {
-        return { data: null, error: createValidationError("A maximum of 6 status filters can be provided.") };
+        return {
+          data: null,
+          error: createValidationError("A maximum of 6 status filters can be provided.")
+        };
       }
 
       if (new Set(options.statuses).size !== options.statuses.length) {
@@ -277,7 +311,12 @@ export class Webhooks {
 
       if (!options.statuses.every(status => Webhooks.STATUS_VALUES.has(status))) {
         const validValues = quoteValues(Webhooks.STATUS_VALUES);
-        return { data: null, error: createValidationError(`Invalid status filter provided. Valid values are: ${validValues}.`) };
+        return {
+          data: null,
+          error: createValidationError(
+            `Invalid status filter provided. Valid values are: ${validValues}.`
+          )
+        };
       }
     }
 
@@ -294,27 +333,38 @@ export class Webhooks {
       const maxRangeMs = 31 * 24 * 60 * 60 * 1000;
 
       if (createdBefore <= createdAfter) {
-        return { data: null, error: createValidationError("createdBefore must be later than createdAfter.") };
+        return {
+          data: null,
+          error: createValidationError("createdBefore must be later than createdAfter.")
+        };
       }
 
       if ((createdBefore - createdAfter) > maxRangeMs) {
-        return { data: null, error: createValidationError("The time range between createdAfter and createdBefore must not exceed 31 days.") };
+        return {
+          data: null,
+          error: createValidationError(
+            "The time range between createdAfter and createdBefore must not exceed 31 days."
+          )
+        };
       }
     }
 
-    const response = await this.mailchannels.get<WebhooksBatchesApiResponse>("/tx/v1/webhook-batch", {
-      query: {
-        created_after: dates.createdAfter,
-        created_before: dates.createdBefore,
-        statuses: options?.statuses?.join(","),
-        webhook: options?.webhook,
-        limit: options?.limit,
-        offset: options?.offset
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response);
+    const response = await this.mailchannels.get<WebhooksBatchesApiResponse>(
+      "/tx/v1/webhook-batch",
+      {
+        query: {
+          created_after: dates.createdAfter,
+          created_before: dates.createdBefore,
+          statuses: options?.statuses?.join(","),
+          webhook: options?.webhook,
+          limit: options?.limit,
+          offset: options?.offset
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response);
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch webhook batches.");
       return null;
     });
@@ -347,14 +397,17 @@ export class Webhooks {
   async resendBatch (batchId: number): Promise<WebhooksResendBatchResponse> {
     let error: ErrorResponse | null = null;
 
-    const response = await this.mailchannels.post<WebhooksResendBatchApiResponse>(`/tx/v1/webhook-batch/${encodeURIComponent(batchId)}/resend`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "The batch ID is invalid.",
-          [ErrorCode.NotFound]: `The batch '${batchId}' is not found for the customer.`
-        });
+    const response = await this.mailchannels.post<WebhooksResendBatchApiResponse>(
+      `/tx/v1/webhook-batch/${encodeURIComponent(batchId)}/resend`,
+      {
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.BadRequest]: "The batch ID is invalid.",
+            [ErrorCode.NotFound]: `The batch '${batchId}' is not found for the customer.`
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to resend webhook batch.");
       return null;
     });
