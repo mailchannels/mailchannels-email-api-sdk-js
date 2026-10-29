@@ -3,7 +3,10 @@ import type { MailChannelsClient } from "~/client";
 import { Domains } from "~/modules/domains";
 import { ErrorCode } from "~/internal/errors";
 import type { DomainsCustomTrackingListApiResponse } from "~/types/domains/internal";
-import type { DomainsCustomTrackingListOptions, DomainsCustomTrackingListResponse } from "~/types/domains/custom-tracking-list";
+import type {
+  DomainsCustomTrackingListOptions,
+  DomainsCustomTrackingListResponse
+} from "~/types/domains/custom-tracking-list";
 
 const fake = {
   options: {
@@ -53,23 +56,27 @@ describe("customTracking.list", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalledWith("/tx/v1/custom-tracking-domains", expect.objectContaining({
-      query: {
-        name: fake.options.name,
-        status: fake.options.status,
-        scope: fake.options.scope,
-        limit: fake.options.limit,
-        offset: fake.options.offset
-      }
-    }));
+    expect(mockClient.get).toHaveBeenCalledWith(
+      "/tx/v1/custom-tracking-domains",
+      expect.objectContaining({
+        query: {
+          name: fake.options.name,
+          status: fake.options.status,
+          scope: fake.options.scope,
+          limit: fake.options.limit,
+          offset: fake.options.offset
+        }
+      })
+    );
   });
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: ErrorCode.BadRequest } });
-        reject();
-      }))
+      get: vi.fn().mockImplementationOnce(
+        async (url, { onResponseError }) => new Promise((_, reject) => {
+          onResponseError({ response: { status: ErrorCode.BadRequest } });
+          reject();
+        }))
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);

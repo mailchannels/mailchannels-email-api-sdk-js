@@ -1,7 +1,12 @@
 import type { DataResponse } from "../responses";
 import type { SuppressionsTypes } from "./create";
 
-export type SuppressionsSource = "api" | "unsubscribe_link" | "list_unsubscribe" | "hard_bounce" | "spam_complaint";
+export type SuppressionsSource =
+  | "api"
+  | "unsubscribe_link"
+  | "list_unsubscribe"
+  | "hard_bounce"
+  | "spam_complaint";
 
 export interface SuppressionsListOptions {
   /**

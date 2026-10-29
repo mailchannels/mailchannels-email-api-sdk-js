@@ -35,7 +35,10 @@ describe("getUsage", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalledWith(`/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/usage`, expect.any(Object));
+    expect(mockClient.get).toHaveBeenCalledWith(
+      `/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/usage`,
+      expect.any(Object)
+    );
   });
 
   it("should handle missing billing period dates", async () => {

@@ -18,7 +18,10 @@ describe("activate", () => {
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalledWith(`/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/activate`, expect.any(Object));
+    expect(mockClient.post).toHaveBeenCalledWith(
+      `/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/activate`,
+      expect.any(Object)
+    );
   });
 
   it("should contain error when handle is not provided", async () => {

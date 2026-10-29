@@ -77,7 +77,10 @@ describe("Attachment", () => {
   it("should use guessed content type when blob.type is empty in fromBlob", async () => {
     const bytes = new Uint8Array([80, 81, 82]);
     const blob = new Blob([bytes]);
-    const result = await Attachment.fromBlob(blob, { filename: "file.txt", contentId: "example-id" });
+    const result = await Attachment.fromBlob(blob, {
+      filename: "file.txt",
+      contentId: "example-id"
+    });
 
     expect(result.content).toBe(Buffer.from(bytes).toString("base64"));
     expect(result.filename).toBe("file.txt");

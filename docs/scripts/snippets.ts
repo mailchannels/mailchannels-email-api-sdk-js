@@ -30,7 +30,8 @@ const extractClassWithSignatures = (code: string) => {
   const sourceFile = createSourceFile("temp.ts", code, ScriptTarget.Latest, true);
   let classSignature = "";
   let methodSignatures: { name: string, signature: string }[] = [];
-  const isDeprecated = (node: Node) => getJSDocTags(node).some(tag => tag.tagName.getText(sourceFile) === "deprecated");
+  const isDeprecated = (node: Node) =>
+    getJSDocTags(node).some(tag => tag.tagName.getText(sourceFile) === "deprecated");
 
   const visit = (node: Node) => {
     if (isClassDeclaration(node) && node.name) {
@@ -42,7 +43,9 @@ const extractClassWithSignatures = (code: string) => {
       for (const member of node.members) {
         if (isPropertyDeclaration(member)) {
           if (isDeprecated(member)) continue;
-          const isPrivate = member.modifiers?.some(modifier => modifier.kind === SyntaxKind.PrivateKeyword);
+          const isPrivate = member.modifiers?.some(
+            modifier => modifier.kind === SyntaxKind.PrivateKeyword
+          );
           if (isPrivate) continue;
           const propText = code.substring(member.pos, member.end).replace(/\bpublic\s+/, "").trim();
           classSignature += `  ${propText}\n`;
@@ -50,7 +53,9 @@ const extractClassWithSignatures = (code: string) => {
         else if (isMethodDeclaration(member) || isConstructorDeclaration(member)) {
           if (isDeprecated(member)) continue;
           // Skip private methods
-          const isPrivate = member.modifiers?.some(modifier => modifier.kind === SyntaxKind.PrivateKeyword);
+          const isPrivate = member.modifiers?.some(
+            modifier => modifier.kind === SyntaxKind.PrivateKeyword
+          );
           if (isPrivate) continue;
           // Get method signature
           const methodText = code.substring(member.pos, member.body ? member.body.pos : member.end);

@@ -1,9 +1,20 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError } from "../../internal/errors";
+import {
+  ErrorCode,
+  createValidationError,
+  getResultError,
+  getStatusError
+} from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { SubAccountsSmtpPasswordsCreateResponse, SubAccountsSmtpPasswordsListResponse } from "../../types/sub-accounts/smtp-passwords";
-import type { SubAccountsSmtpPasswordsCreateApiResponse, SubAccountsSmtpPasswordsListApiResponse } from "../../types/sub-accounts/internal";
+import type {
+  SubAccountsSmtpPasswordsCreateResponse,
+  SubAccountsSmtpPasswordsListResponse
+} from "../../types/sub-accounts/smtp-passwords";
+import type {
+  SubAccountsSmtpPasswordsCreateApiResponse,
+  SubAccountsSmtpPasswordsListApiResponse
+} from "../../types/sub-accounts/internal";
 
 export class SubAccountsSmtpPasswords {
   constructor (private mailchannels: MailChannelsClient) {}
@@ -25,15 +36,18 @@ export class SubAccountsSmtpPasswords {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.post<SubAccountsSmtpPasswordsCreateApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.Forbidden]: "You can't create SMTP passwords for this sub-account.",
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`,
-          [ErrorCode.UnprocessableEntity]: "You have reached the limit of SMTP passwords you can create for this sub-account."
-        });
+    const response = await this.mailchannels.post<SubAccountsSmtpPasswordsCreateApiResponse>(
+      `/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`,
+      {
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.Forbidden]: "You can't create SMTP passwords for this sub-account.",
+            [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`,
+            [ErrorCode.UnprocessableEntity]: "You have reached the limit of SMTP passwords you can create for this sub-account."
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to create sub-account SMTP password.");
       return null;
     });
@@ -66,13 +80,16 @@ export class SubAccountsSmtpPasswords {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.get<SubAccountsSmtpPasswordsListApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
-        });
+    const response = await this.mailchannels.get<SubAccountsSmtpPasswordsListApiResponse>(
+      `/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password`,
+      {
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch sub-account SMTP passwords.");
       return null;
     });
@@ -106,13 +123,16 @@ export class SubAccountsSmtpPasswords {
       return { success: false, error };
     }
 
-    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password/${encodeURIComponent(id)}`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Missing or invalid SMTP password ID."
-        });
+    await this.mailchannels.delete<void>(
+      `/tx/v1/sub-account/${encodeURIComponent(handle)}/smtp-password/${encodeURIComponent(id)}`,
+      {
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.BadRequest]: "Missing or invalid SMTP password ID."
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to delete sub-account SMTP password.");
     });
 

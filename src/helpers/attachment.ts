@@ -14,7 +14,10 @@ const guessContentType = (filename: string) => {
 type AttachmentOptions = Omit<EmailsSendAttachment, "content">;
 
 export class Attachment {
-  static fromBytes (data: ArrayBuffer | Uint8Array, options: AttachmentOptions): EmailsSendAttachment {
+  static fromBytes (
+    data: ArrayBuffer | Uint8Array,
+    options: AttachmentOptions
+  ): EmailsSendAttachment {
     const { filename, type, contentId } = options;
 
     return {

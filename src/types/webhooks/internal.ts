@@ -22,7 +22,13 @@ export interface WebhooksBatchesApiResponse {
       value: number;
     };
     event_count: number;
-    status: "no_response" | "1xx_response" | "2xx_response" | "3xx_response" | "4xx_response" | "5xx_response";
+    status:
+      | "no_response"
+      | "1xx_response"
+      | "2xx_response"
+      | "3xx_response"
+      | "4xx_response"
+      | "5xx_response";
     status_code: number | null;
     webhook: string;
   }[];
@@ -58,9 +64,11 @@ interface WebhookEventWithTracking {
   ip?: string;
 }
 
-interface WebhookEventReceivedOpen extends WebhookEventReceivedBase<"open">, WebhookEventWithTracking {}
+interface WebhookEventReceivedOpen
+  extends WebhookEventReceivedBase<"open">, WebhookEventWithTracking {}
 
-interface WebhookEventReceivedClick extends WebhookEventReceivedBase<"click">, WebhookEventWithTracking {
+interface WebhookEventReceivedClick
+  extends WebhookEventReceivedBase<"click">, WebhookEventWithTracking {
   url?: string;
 }
 
@@ -69,17 +77,21 @@ interface WebhookEventReceivedWithStatus {
   reason?: string;
 }
 
-interface WebhookEventReceivedHardBounced extends WebhookEventReceivedBase<"hard-bounced">, WebhookEventReceivedWithStatus {}
+interface WebhookEventReceivedHardBounced
+  extends WebhookEventReceivedBase<"hard-bounced">, WebhookEventReceivedWithStatus {}
 
-interface WebhookEventReceivedSoftBounced extends WebhookEventReceivedBase<"soft-bounced">, WebhookEventReceivedWithStatus {}
+interface WebhookEventReceivedSoftBounced
+  extends WebhookEventReceivedBase<"soft-bounced">, WebhookEventReceivedWithStatus {}
 
-interface WebhookEventReceivedDropped extends WebhookEventReceivedBase<"dropped">, WebhookEventReceivedWithStatus {}
+interface WebhookEventReceivedDropped
+  extends WebhookEventReceivedBase<"dropped">, WebhookEventReceivedWithStatus {}
 
 interface WebhookEventReceivedComplained extends WebhookEventReceivedBase<"complained"> {}
 
 interface WebhookEventReceivedUnsubscribed extends WebhookEventReceivedBase<"unsubscribed"> {}
 
-interface WebhookEventReceivedTest extends Omit<WebhookEventReceivedBase<"test">, "recipients" | "campaign_id"> {}
+interface WebhookEventReceivedTest
+  extends Omit<WebhookEventReceivedBase<"test">, "recipients" | "campaign_id"> {}
 
 export type WebhookEventReceived =
   | WebhookEventReceivedProcessed

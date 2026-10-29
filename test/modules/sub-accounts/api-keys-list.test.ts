@@ -1,7 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { SubAccounts } from "~/modules/sub-accounts";
-import type { SubAccountsApiKeysListOptions, SubAccountsApiKeysListResponse } from "~/types/sub-accounts/api-keys";
+import type {
+  SubAccountsApiKeysListOptions,
+  SubAccountsApiKeysListResponse
+} from "~/types/sub-accounts/api-keys";
 import type { SubAccountsApiKeysListApiResponse } from "~/types/sub-accounts/internal";
 import { ErrorCode } from "~/internal/errors";
 
@@ -32,7 +35,8 @@ describe("apiKeys.list", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalledWith(`/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/api-key`,
+    expect(mockClient.get).toHaveBeenCalledWith(
+      `/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/api-key`,
       expect.objectContaining({
         query: fake.options
       })

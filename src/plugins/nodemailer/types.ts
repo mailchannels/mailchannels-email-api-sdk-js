@@ -1,12 +1,22 @@
 import type { Transport, TransportOptions, Transporter } from "nodemailer";
 import type MimeNode from "nodemailer/lib/mime-node";
-import type { EmailsQueueResponse, EmailsSendOptions, EmailsSendResponse, MailChannelsClientOptions } from "../../mailchannels";
+import type {
+  EmailsQueueResponse,
+  EmailsSendOptions,
+  EmailsSendResponse,
+  MailChannelsClientOptions
+} from "../../mailchannels";
 
-export type MailChannelsTransportSendOptions = Pick<EmailsSendOptions, "campaignId" | "tracking" | "transactional" | "unsubscribe">;
+export type MailChannelsTransportSendOptions = Pick<
+  EmailsSendOptions,
+  "campaignId" | "tracking" | "transactional" | "unsubscribe"
+>;
 
 export type MailChannelsTransportSendMode = "sync" | "async";
 
-export interface MailChannelsTransportOptions<T extends MailChannelsTransportSendMode = "async"> extends MailChannelsClientOptions {
+export interface MailChannelsTransportOptions<
+  T extends MailChannelsTransportSendMode = "async"
+> extends MailChannelsClientOptions {
   /**
    * The MailChannels Email API key.
    */

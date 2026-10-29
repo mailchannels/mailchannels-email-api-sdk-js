@@ -1,6 +1,17 @@
 import type { Transport } from "nodemailer";
-import { parseAddress, parseAddresses, parseAttachments, parseDkim, parseHeaders, parseIcalEvent } from "./utils";
-import type { MailChannelsTransportInfo, MailChannelsTransportOptions, MailChannelsTransportSendMode } from "./types";
+import {
+  parseAddress,
+  parseAddresses,
+  parseAttachments,
+  parseDkim,
+  parseHeaders,
+  parseIcalEvent
+} from "./utils";
+import type {
+  MailChannelsTransportInfo,
+  MailChannelsTransportOptions,
+  MailChannelsTransportSendMode
+} from "./types";
 import { Emails, MailChannelsClient } from "../../mailchannels";
 import type { EmailsQueueResponse, EmailsSendResponse } from "../../mailchannels";
 import pkg from "../../../package.json";
@@ -30,7 +41,11 @@ export const mailchannelsTransport = <T extends MailChannelsTransportSendMode = 
       };
 
       mail.normalize(async (err, data) => {
-        if (!data || err) return callback(err || new Error("Failed to normalize mail data"), sentMessageInfo);
+        if (!data || err)
+          return callback(
+            err || new Error("Failed to normalize mail data"),
+            sentMessageInfo
+          );
         try {
           let attachments = parseAttachments(data.attachments);
 
@@ -54,7 +69,9 @@ export const mailchannelsTransport = <T extends MailChannelsTransportSendMode = 
             dkim: parseDkim(data.dkim)
           });
 
-          sentMessageInfo.response = sdkResponse as T extends "sync" ? EmailsSendResponse : EmailsQueueResponse;
+          sentMessageInfo.response = sdkResponse as T extends "sync"
+            ? EmailsSendResponse
+            : EmailsQueueResponse;
 
           if (sdkResponse.error) {
             callback(new Error(sdkResponse.error.message), sentMessageInfo);

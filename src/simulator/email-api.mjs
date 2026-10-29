@@ -141,10 +141,18 @@ const createCustomTrackingDomain = ({ hostname, name, scope, status = "active" }
 });
 
 const findCustomTrackingDomain = (account, hostname, scope) => {
-  return account.customTrackingDomains.find(domain => domain.hostname === hostname && domain.scope === scope);
+  return account.customTrackingDomains.find(
+    domain => domain.hostname === hostname && domain.scope === scope
+  );
 };
 
-const recordWebhookBatch = (account, webhook, eventCount, status = "2xx_response", statusCode = 200) => {
+const recordWebhookBatch = (
+  account,
+  webhook,
+  eventCount,
+  status = "2xx_response",
+  statusCode = 200
+) => {
   account.webhookBatches.unshift({
     batch_id: account.nextIds.batch++,
     created_at: currentTimestamp(),
@@ -163,7 +171,10 @@ const recordWebhookBatch = (account, webhook, eventCount, status = "2xx_response
 const collectMessages = (account, filters = {}) => {
   return account.messages.filter((message) => {
     if (filters.campaignId && message.campaignId !== filters.campaignId) return false;
-    if (filters.scopeHandle !== undefined && message.scopeHandle !== filters.scopeHandle) return false;
+    if (
+      filters.scopeHandle !== undefined
+      && message.scopeHandle !== filters.scopeHandle
+    ) return false;
     return true;
   });
 };
@@ -172,13 +183,16 @@ const summarizeMessages = messages => ({
   bounced: messages.reduce((total, message) => total + message.bounced, 0),
   complained: messages.reduce((total, message) => total + message.complained, 0),
   click: messages.reduce((total, message) => total + message.click, 0),
-  clickTrackingDelivered: messages.reduce((total, message) => total + message.clickTrackingDelivered, 0),
+  clickTrackingDelivered:
+    messages.reduce((total, message) => total + message.clickTrackingDelivered, 0),
   delivered: messages.reduce((total, message) => total + message.delivered, 0),
   dropped: messages.reduce((total, message) => total + message.dropped, 0),
   open: messages.reduce((total, message) => total + message.open, 0),
-  openTrackingDelivered: messages.reduce((total, message) => total + message.openTrackingDelivered, 0),
+  openTrackingDelivered:
+    messages.reduce((total, message) => total + message.openTrackingDelivered, 0),
   processed: messages.reduce((total, message) => total + message.processed, 0),
-  unsubscribeDelivered: messages.reduce((total, message) => total + message.unsubscribeDelivered, 0),
+  unsubscribeDelivered:
+    messages.reduce((total, message) => total + message.unsubscribeDelivered, 0),
   unsubscribed: messages.reduce((total, message) => total + message.unsubscribed, 0)
 });
 
@@ -247,7 +261,9 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
 
         if (url.searchParams.get("dry-run") === "true") {
           sendJson(response, 200, {
-            data: personalizations.map(personalization => buildRenderedMessage(body, personalization)),
+            data: personalizations.map(
+              personalization => buildRenderedMessage(body, personalization)
+            ),
             request_id: requestId
           });
           return;
@@ -320,16 +336,23 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
 
       if (method === "POST" && url.pathname === "/tx/v1/check-domain") {
         const domain = body?.domain || "example.com";
-        const dkimSettings = body?.dkim_settings?.length ? body.dkim_settings : listDkimKeys(account, domain).map(key => ({
-          dkim_domain: key.domain,
-          dkim_selector: key.selector
-        }));
+        const dkimSettings = body?.dkim_settings?.length
+          ? body.dkim_settings
+          : listDkimKeys(account, domain).map(key => ({
+            dkim_domain: key.domain,
+            dkim_selector: key.selector
+          }));
 
         sendJson(response, 200, {
           check_results: {
             dkim: dkimSettings.map(setting => ({
               dkim_domain: setting.dkim_domain || domain,
-              dkim_key_status: setting.dkim_private_key ? "provided" : (listDkimKeys(account, setting.dkim_domain || domain).find(key => key.selector === setting.dkim_selector)?.status || "active"),
+              dkim_key_status: setting.dkim_private_key
+                ? "provided"
+                : (
+                  listDkimKeys(account, setting.dkim_domain || domain)
+                    .find(key => key.selector === setting.dkim_selector)?.status || "active"
+                ),
               dkim_selector: setting.dkim_selector || "default",
               verdict: "passed"
             })),
@@ -386,7 +409,9 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         }
       }
 
-      const rotateDkimMatch = url.pathname.match(/^\/tx\/v1\/domains\/([^/]+)\/dkim-keys\/([^/]+)\/rotate$/);
+      const rotateDkimMatch = url.pathname.match(
+        /^\/tx\/v1\/domains\/([^/]+)\/dkim-keys\/([^/]+)\/rotate$/
+      );
       if (rotateDkimMatch && method === "POST") {
         const [, domain, selector] = rotateDkimMatch;
         const keys = listDkimKeys(account, domain);
@@ -398,7 +423,9 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
 
         targetKey.status = "rotated";
         targetKey.status_modified_at = currentTimestamp();
-        targetKey.gracePeriodExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+        targetKey.gracePeriodExpiresAt = new Date(
+          Date.now() + 7 * 24 * 60 * 60 * 1000
+        ).toISOString();
         targetKey.retiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
         const newKey = createDkimKey(domain, body?.new_key?.selector || createId("selector"));
@@ -434,8 +461,12 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
             return;
           }
 
-          const hasDuplicateName = account.customTrackingDomains.some(domain => domain.name === name);
-          const hasDuplicateHostnameAndScope = Boolean(findCustomTrackingDomain(account, hostname, scope));
+          const hasDuplicateName = account.customTrackingDomains.some(
+            domain => domain.name === name
+          );
+          const hasDuplicateHostnameAndScope = Boolean(
+            findCustomTrackingDomain(account, hostname, scope)
+          );
           if (hasDuplicateName || hasDuplicateHostnameAndScope) {
             sendJson(response, 409, { error: "Custom tracking domain already exists." });
             return;
@@ -473,19 +504,26 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         }
       }
 
-      const customTrackingDomainMatch = url.pathname.match(/^\/tx\/v1\/custom-tracking-domains\/([^/]+)\/([^/]+)$/);
+      const customTrackingDomainMatch = url.pathname.match(
+        /^\/tx\/v1\/custom-tracking-domains\/([^/]+)\/([^/]+)$/
+      );
       if (customTrackingDomainMatch) {
         const [, hostname, scope] = customTrackingDomainMatch;
         const targetDomain = findCustomTrackingDomain(account, hostname, scope);
 
         if (!targetDomain) {
-          sendJson(response, 404, { error: `Custom tracking domain for hostname '${hostname}' and scope '${scope}' not found.` });
+          sendJson(response, 404, {
+            error:
+              `Custom tracking domain for hostname '${hostname}' and scope '${scope}' not found.`
+          });
           return;
         }
 
         if (method === "PATCH") {
           if (body?.name) {
-            const hasDuplicateName = account.customTrackingDomains.some(domain => domain !== targetDomain && domain.name === body.name);
+            const hasDuplicateName = account.customTrackingDomains.some(
+              domain => domain !== targetDomain && domain.name === body.name
+            );
             if (hasDuplicateName) {
               sendJson(response, 409, { error: "Name already used by another domain." });
               return;
@@ -503,7 +541,9 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         }
 
         if (method === "DELETE") {
-          account.customTrackingDomains = account.customTrackingDomains.filter(domain => domain !== targetDomain);
+          account.customTrackingDomains = account.customTrackingDomains.filter(
+            domain => domain !== targetDomain
+          );
           sendNoContent(response);
           return;
         }
@@ -584,7 +624,9 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
           if (createdBefore && batch.created_at >= createdBefore) return false;
           if (webhook && batch.webhook !== webhook) return false;
           if (statuses.length) {
-            const normalizedStatuses = statuses.map(status => `${status}_response`.replace("no_response_response", "no_response"));
+            const normalizedStatuses = statuses.map(
+              status => `${status}_response`.replace("no_response_response", "no_response")
+            );
             if (!normalizedStatuses.includes(batch.status)) return false;
           }
           return true;
@@ -596,7 +638,9 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         return;
       }
 
-      const webhookBatchResendMatch = url.pathname.match(/^\/tx\/v1\/webhook-batch\/(\d+)\/resend$/);
+      const webhookBatchResendMatch = url.pathname.match(
+        /^\/tx\/v1\/webhook-batch\/(\d+)\/resend$/
+      );
       if (webhookBatchResendMatch && method === "POST") {
         const batchId = Number(webhookBatchResendMatch[1]);
         const batch = account.webhookBatches.find(batch => batch.batch_id === batchId);
@@ -619,7 +663,11 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
       }
 
       if (url.pathname === "/tx/v1/sub-account" && method === "POST") {
-        const subAccount = createSubAccount(account, body?.company_name || "Simulator Company", body?.handle);
+        const subAccount = createSubAccount(
+          account,
+          body?.company_name || "Simulator Company",
+          body?.handle
+        );
         account.subAccounts.set(subAccount.handle, subAccount);
         sendJson(response, 201, clone(subAccount));
         return;
@@ -662,7 +710,9 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         }
 
         if (suffix === "api-key" && method === "POST") {
-          const apiKeyId = subAccount.apiKeys.length ? Math.max(...subAccount.apiKeys.map(key => key.id)) + 1 : account.nextIds.apiKey++;
+          const apiKeyId = subAccount.apiKeys.length
+            ? Math.max(...subAccount.apiKeys.map(key => key.id)) + 1
+            : account.nextIds.apiKey++;
           const keyValue = createId(`subkey_${handle}`);
           subAccount.apiKeys.push({ id: apiKeyId, key: keyValue });
 
@@ -713,7 +763,9 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         const smtpPasswordItemMatch = suffix.match(/^smtp-password\/(\d+)$/);
         if (smtpPasswordItemMatch && method === "DELETE") {
           const smtpPasswordId = Number(smtpPasswordItemMatch[1]);
-          subAccount.smtpPasswords = subAccount.smtpPasswords.filter(password => password.id !== smtpPasswordId);
+          subAccount.smtpPasswords = subAccount.smtpPasswords.filter(
+            password => password.id !== smtpPasswordId
+          );
           sendNoContent(response);
           return;
         }
@@ -766,7 +818,10 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
           end_time: url.searchParams.get("end_time") || currentTimestamp(),
           open: summary.open,
           open_tracking_delivered: summary.openTrackingDelivered,
-          start_time: url.searchParams.get("start_time") || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+          start_time: url.searchParams.get("start_time")
+            || new Date(
+              Date.now() - 30 * 24 * 60 * 60 * 1000
+            ).toISOString()
         });
         return;
       }
@@ -788,7 +843,10 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
           delivered: summary.delivered,
           end_time: url.searchParams.get("end_time") || currentTimestamp(),
           processed: summary.processed,
-          start_time: url.searchParams.get("start_time") || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+          start_time: url.searchParams.get("start_time")
+            || new Date(
+              Date.now() - 30 * 24 * 60 * 60 * 1000
+            ).toISOString()
         });
         return;
       }
@@ -804,7 +862,10 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
             unsubscribed: createMetricsBuckets(summary.unsubscribed)
           },
           end_time: url.searchParams.get("end_time") || currentTimestamp(),
-          start_time: url.searchParams.get("start_time") || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+          start_time: url.searchParams.get("start_time")
+            || new Date(
+              Date.now() - 30 * 24 * 60 * 60 * 1000
+            ).toISOString(),
           unsubscribe_delivered: summary.unsubscribeDelivered,
           unsubscribed: summary.unsubscribed
         });
@@ -826,7 +887,10 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
           dropped: summary.dropped,
           end_time: url.searchParams.get("end_time") || currentTimestamp(),
           processed: summary.processed,
-          start_time: url.searchParams.get("start_time") || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+          start_time: url.searchParams.get("start_time")
+            || new Date(
+              Date.now() - 30 * 24 * 60 * 60 * 1000
+            ).toISOString()
         });
         return;
       }
@@ -838,22 +902,30 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         const offset = Number(url.searchParams.get("offset") || "0");
         const sortOrder = url.searchParams.get("sort_order") || "desc";
 
-        const senders = senderType === "campaigns" ? Array.from(collectMessages(account).reduce((map, message) => {
-          const name = message.campaignId || "uncategorized";
-          const current = map.get(name) || { bounced: 0, delivered: 0, dropped: 0, name, processed: 0 };
-          current.bounced += message.bounced;
-          current.delivered += message.delivered;
-          current.dropped += message.dropped;
-          current.processed += message.processed;
-          map.set(name, current);
-          return map;
-        }, new Map()).values()) : Array.from(account.subAccounts.values()).map(subAccount => ({
-          bounced: 0,
-          delivered: subAccount.usage,
-          dropped: 0,
-          name: subAccount.handle,
-          processed: subAccount.usage
-        }));
+        const senders = senderType === "campaigns"
+          ? Array.from(collectMessages(account).reduce((map, message) => {
+            const name = message.campaignId || "uncategorized";
+            const current = map.get(name) || {
+              bounced: 0,
+              delivered: 0,
+              dropped: 0,
+              name,
+              processed: 0
+            };
+            current.bounced += message.bounced;
+            current.delivered += message.delivered;
+            current.dropped += message.dropped;
+            current.processed += message.processed;
+            map.set(name, current);
+            return map;
+          }, new Map()).values())
+          : Array.from(account.subAccounts.values()).map(subAccount => ({
+            bounced: 0,
+            delivered: subAccount.usage,
+            dropped: 0,
+            name: subAccount.handle,
+            processed: subAccount.usage
+          }));
 
         senders.sort((left, right) => {
           const direction = sortOrder === "asc" ? 1 : -1;
@@ -929,7 +1001,9 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
         return;
       }
 
-      const suppressionDeleteMatch = url.pathname.match(/^\/tx\/v1\/suppression-list\/recipients\/([^/]+)$/);
+      const suppressionDeleteMatch = url.pathname.match(
+        /^\/tx\/v1\/suppression-list\/recipients\/([^/]+)$/
+      );
       if (suppressionDeleteMatch && method === "DELETE") {
         const [, recipient] = suppressionDeleteMatch;
         const source = url.searchParams.get("source");

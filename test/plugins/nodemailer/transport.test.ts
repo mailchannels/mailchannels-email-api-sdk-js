@@ -74,7 +74,9 @@ const fake = {
 
 describe("transport", () => {
   it("should send an email in async mode (queue), parse the correct params and return the expected info", async () => {
-    const queueSpy = vi.spyOn(Emails.prototype, "queue").mockResolvedValueOnce(fake.queueResponse);
+    const queueSpy = vi.spyOn(Emails.prototype, "queue").mockResolvedValueOnce(
+      fake.queueResponse
+    );
 
     const transport = nodemailer.createTransport(
       mailchannelsTransport({

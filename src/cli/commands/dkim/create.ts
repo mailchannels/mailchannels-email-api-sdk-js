@@ -25,7 +25,9 @@ export default defineCommand({
     const { data, error } = await domains.dkim.create(args["domain"], {
       selector: args["selector"],
       algorithm: args["algorithm"] as DomainsDkimCreateOptions["algorithm"],
-      length: args["length"] ? Number(args["length"]) as DomainsDkimCreateOptions["length"] : undefined
+      length: args["length"]
+        ? Number(args["length"]) as DomainsDkimCreateOptions["length"]
+        : undefined
     });
 
     if (error) {

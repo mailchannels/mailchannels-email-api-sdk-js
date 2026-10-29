@@ -22,7 +22,11 @@ const fake = {
     data: {
       new: {
         algorithm: "rsa",
-        dnsRecords: [{ name: "new-selector._domainkey.example.com", type: "TXT", value: "new-public-key" }],
+        dnsRecords: [{
+          name: "new-selector._domainkey.example.com",
+          type: "TXT",
+          value: "new-public-key"
+        }],
         domain: "example.com",
         length: 2048,
         publicKey: "new-public-key",
@@ -31,7 +35,11 @@ const fake = {
       },
       rotated: {
         algorithm: "rsa",
-        dnsRecords: [{ name: "old-selector._domainkey.example.com", type: "TXT", value: "old-public-key" }],
+        dnsRecords: [{
+          name: "old-selector._domainkey.example",
+          type: "TXT",
+          value: "old-public-key"
+        }],
         domain: "example.com",
         length: 2048,
         publicKey: "old-public-key",

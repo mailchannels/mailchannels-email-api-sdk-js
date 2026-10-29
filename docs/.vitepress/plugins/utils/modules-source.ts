@@ -14,7 +14,9 @@ export const addSourceLinks = (src: string, module: string, slug: string): strin
     playgroundUrl += `/${slug}.ts`;
     testsUrl += `/${slug}.test.ts`;
     const subclasses = getModuleSubclassSlugs(module);
-    const subclassMatch = subclasses.length > 0 ? slug.match(new RegExp(`^(${subclasses.join("|")})-`)) : null;
+    const subclassMatch = subclasses.length > 0
+      ? slug.match(new RegExp(`^(${subclasses.join("|")})-`))
+      : null;
     const methodName = camelCase(subclassMatch ? slug.slice(subclassMatch[0].length) : slug);
     const className = subclassMatch ? `${module}${subclassMatch[1]}` : module;
     if (subclassMatch) {

@@ -4,7 +4,12 @@ import { parsePagination } from "../../utils/shared/parse-pagination";
 import { tabulatedSections } from "../../utils/shared/sections";
 import { toWordsKeys } from "../../utils/shared/style";
 import { sharedArgs } from "../../utils/shared/args";
-import { MailChannelsClient, Metrics, type MetricsSendersOptions, type MetricsSendersType } from "../../../mailchannels";
+import {
+  MailChannelsClient,
+  Metrics,
+  type MetricsSendersOptions,
+  type MetricsSendersType
+} from "../../../mailchannels";
 
 export default defineCommand({
   meta: {

@@ -18,7 +18,10 @@ describe("limits.delete", () => {
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.delete).toHaveBeenCalledWith(`/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/limit`, expect.any(Object));
+    expect(mockClient.delete).toHaveBeenCalledWith(
+      `/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/limit`,
+      expect.any(Object)
+    );
   });
 
   it("should contain error when handle is not provided", async () => {

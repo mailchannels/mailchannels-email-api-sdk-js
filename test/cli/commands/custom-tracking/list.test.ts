@@ -73,7 +73,8 @@ describe("custom-tracking list", () => {
       )
     );
     expect(console.info).toHaveBeenCalledWith(
-      "[Custom Tracking] Total custom tracking domains retrieved:", fake.response.data.customTrackingDomains.length,
+      "[Custom Tracking] Total custom tracking domains retrieved:",
+      fake.response.data.customTrackingDomains.length,
       `(with limit: ${styleText("yellow", String(fake.options.limit))}, offset: ${styleText("yellow", String(fake.options.offset))})`
     );
   });
@@ -89,7 +90,8 @@ describe("custom-tracking list", () => {
       offset: undefined
     });
     expect(console.info).toHaveBeenCalledWith(
-      "[Custom Tracking] Total custom tracking domains retrieved:", fake.response.data.customTrackingDomains.length,
+      "[Custom Tracking] Total custom tracking domains retrieved:",
+      fake.response.data.customTrackingDomains.length,
       `(with limit: ${styleText("yellow", "100")}, offset: ${styleText("yellow", "0")})`
     );
   });
@@ -99,7 +101,9 @@ describe("custom-tracking list", () => {
 
     await runCommand(list, { rawArgs: fake.args });
 
-    expect(console.info).toHaveBeenCalledWith("[Custom Tracking] No custom tracking domains found.");
+    expect(console.info).toHaveBeenCalledWith(
+      "[Custom Tracking] No custom tracking domains found."
+    );
   });
 
   it("should exit with error on API list failure", async () => {

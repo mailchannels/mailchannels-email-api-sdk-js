@@ -15,11 +15,15 @@ export const parseOptions = async (args: ParsedArgs<typeof emailArgs>) => {
   const textPath = args["text-file"];
 
   if (textContent && textPath) {
-    console.warn("[Emails] Warning: both '--text' and '--text-file' are provided. Using '--text-file'.");
+    console.warn(
+      "[Emails] Warning: both '--text' and '--text-file' are provided. Using '--text-file'."
+    );
   }
 
   if (htmlContent && htmlPath) {
-    console.warn("[Emails] Warning: both '--html' and '--html-file' are provided. Using '--html-file'.");
+    console.warn(
+      "[Emails] Warning: both '--html' and '--html-file' are provided. Using '--html-file'."
+    );
   }
 
   const [text, html] = await Promise.all([

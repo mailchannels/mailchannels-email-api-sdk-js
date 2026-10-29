@@ -45,10 +45,22 @@ export default [
               { text: "List DKIM Keys", link: "/modules/domains/dkim-list" },
               { text: "Update DKIM Key Status", link: "/modules/domains/dkim-update-status" },
               { text: "Rotate DKIM Key", link: "/modules/domains/dkim-rotate" },
-              { text: "Create Custom Tracking Domain", link: "/modules/domains/custom-tracking-create" },
-              { text: "List Custom Tracking Domains", link: "/modules/domains/custom-tracking-list" },
-              { text: "Delete Custom Tracking Domain", link: "/modules/domains/custom-tracking-delete" },
-              { text: "Update Custom Tracking Domain", link: "/modules/domains/custom-tracking-update" }
+              {
+                text: "Create Custom Tracking Domain",
+                link: "/modules/domains/custom-tracking-create"
+              },
+              {
+                text: "List Custom Tracking Domains",
+                link: "/modules/domains/custom-tracking-list"
+              },
+              {
+                text: "Delete Custom Tracking Domain",
+                link: "/modules/domains/custom-tracking-delete"
+              },
+              {
+                text: "Update Custom Tracking Domain",
+                link: "/modules/domains/custom-tracking-update"
+              }
             ]
           },
           {

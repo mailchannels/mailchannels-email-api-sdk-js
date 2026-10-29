@@ -3,7 +3,12 @@ import { getApiKey } from "../../utils/shared/get-api-key";
 import { sharedArgs } from "../../utils/shared/args";
 import { tabulatedSections } from "../../utils/shared/sections";
 import { styleText } from "../../utils/shared/style";
-import { Domains, type DomainsCustomTrackingScope, type DomainsCustomTrackingUpdateOptions, MailChannelsClient } from "../../../mailchannels";
+import {
+  Domains,
+  type DomainsCustomTrackingScope,
+  type DomainsCustomTrackingUpdateOptions,
+  MailChannelsClient
+} from "../../../mailchannels";
 
 export default defineCommand({
   meta: {
@@ -34,7 +39,9 @@ export default defineCommand({
     if (error) {
       console.error(`[Custom Tracking] ${error.message}`);
       if (error.response && error.response.instructions) {
-        console.info(`[Custom Tracking] Instructions: ${styleText("yellow", error.response.instructions as string)}`);
+        console.info(
+          `[Custom Tracking] Instructions: ${styleText("yellow", error.response.instructions as string)}`
+        );
       }
       process.exit(1);
     }

@@ -33,7 +33,9 @@ const validateContentDigest = async (header: string, body: string) => {
 
 const extractSignature = (signatureHeader: string, name: string): string | null => {
   // The input parser restricts names to word characters before interpolation.
-  const signatureMatch = signatureHeader.match(new RegExp(`(?:^|,\\s*)${name}=:([^:]+):(?=\\s*(?:,|$))`));
+  const signatureMatch = signatureHeader.match(
+    new RegExp(`(?:^|,\\s*)${name}=:([^:]+):(?=\\s*(?:,|$))`)
+  );
   return signatureMatch && signatureMatch[1] ? signatureMatch[1] : null;
 };
 
@@ -83,10 +85,12 @@ export async function isValidWebhook (options: WebhooksVerifyOptions) {
     }
 
     if (!publicKey) {
-      const publicKeyResponse = await $fetch<{ id: string, key: string }>("/tx/v1/webhook/public-key", {
+      type PublicKeyResponse = { id: string, key: string };
+      const publicKeyResponse = await $fetch<PublicKeyResponse>("/tx/v1/webhook/public-key", {
         baseURL: "https://api.mailchannels.net",
         query: { id: values.keyId }
-      }).catch(() => null);
+      }
+      ).catch(() => null);
       if (!publicKeyResponse) return false;
 
       publicKey = publicKeyResponse.key;

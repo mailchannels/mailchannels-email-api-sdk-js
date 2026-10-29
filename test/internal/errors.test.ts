@@ -1,9 +1,16 @@
 import { describe, expect, it } from "vitest";
 import type { FetchResponse } from "ofetch";
-import { ErrorCode, getStatusError, validateCustomTrackingName, validatePagination } from "~/internal/errors";
+import {
+  ErrorCode,
+  getStatusError,
+  validateCustomTrackingName,
+  validatePagination
+} from "~/internal/errors";
 
 describe("getStatusError", () => {
-  type ErrorResponse = FetchResponse<{ message?: string, errors?: string[] } | string | Record<string, unknown>>;
+  type ErrorResponse = FetchResponse<
+    { message?: string, errors?: string[] } | string | Record<string, unknown>
+  >;
   it("should return default error message", () => {
     const response = { status: ErrorCode.InternalServerError };
     const error = getStatusError(response as ErrorResponse);

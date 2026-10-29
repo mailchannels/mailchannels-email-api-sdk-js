@@ -47,7 +47,9 @@ export interface DomainsCustomTrackingDnsSetupRequired {
   instructions?: string;
 }
 
-export type DomainsCustomTrackingWithDnsSetupRequired<T extends 202 | 201 | 200 | undefined = undefined> =
+export type DomainsCustomTrackingWithDnsSetupRequired<
+  T extends 202 | 201 | 200 | undefined = undefined
+> =
   T extends undefined
     ? | DomainsCustomTrackingDomain & { dnsSetupRequired: false }
       | DomainsCustomTrackingDnsSetupRequired & { dnsSetupRequired: true }
@@ -55,4 +57,5 @@ export type DomainsCustomTrackingWithDnsSetupRequired<T extends 202 | 201 | 200 
       ? DomainsCustomTrackingDnsSetupRequired & { dnsSetupRequired: true }
       : DomainsCustomTrackingDomain & { dnsSetupRequired: false };
 
-export type DomainsCustomTrackingCreateResponse = DataResponse<DomainsCustomTrackingWithDnsSetupRequired>;
+export type DomainsCustomTrackingCreateResponse =
+  DataResponse<DomainsCustomTrackingWithDnsSetupRequired>;

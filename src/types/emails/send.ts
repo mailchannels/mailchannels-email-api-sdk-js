@@ -67,7 +67,12 @@ export interface EmailsSendTracking {
 
 export type EmailsSendTemplateType = "mustache";
 
-export type EmailsSendTemplateValue = string | boolean | number | EmailsSendTemplateValue[] | { [key: string]: EmailsSendTemplateValue };
+export type EmailsSendTemplateValue =
+  | string
+  | boolean
+  | number
+  | EmailsSendTemplateValue[]
+  | { [key: string]: EmailsSendTemplateValue };
 
 export interface EmailsSendTemplate {
   /**
@@ -99,7 +104,10 @@ export interface EmailsSendContent {
   value: string;
 }
 
-export type EmailsSendRecipientInput = EmailsSendRecipient | string | (EmailsSendRecipient | string)[];
+export type EmailsSendRecipientInput =
+  | EmailsSendRecipient
+  | string
+  | (EmailsSendRecipient | string)[];
 
 export interface EmailsSendDkim {
   /**

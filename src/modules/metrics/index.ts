@@ -1,23 +1,50 @@
 import type { MailChannelsClient } from "../../client";
-import { createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import {
+  createValidationError,
+  getResultError,
+  getStatusError,
+  validatePagination
+} from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import { mapBucket } from "../../internal/map-bucket";
 import { parseDateInputs } from "../../internal/parse-date-inputs";
 import { quoteValues } from "../../internal/quote-values";
 import type { ErrorResponse } from "../../types/responses";
-import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../../types/metrics/internal";
+import type {
+  MetricsEngagementApiResponse,
+  MetricsPerformanceApiResponse,
+  MetricsRecipientBehaviourApiResponse,
+  MetricsSendersApiResponse,
+  MetricsUsageApiResponse,
+  MetricsVolumeApiResponse
+} from "../../types/metrics/internal";
 import type { MetricsOptions } from "../../types/metrics";
 import type { MetricsEngagementResponse } from "../../types/metrics/engagement";
 import type { MetricsPerformanceResponse } from "../../types/metrics/performance";
 import type { MetricsRecipientBehaviourResponse } from "../../types/metrics/recipient-behaviour";
 import type { MetricsVolumeResponse } from "../../types/metrics/volume";
 import type { MetricsUsageResponse } from "../../types/metrics/usage";
-import type { MetricsSendersOptions, MetricsSendersResponse, MetricsSendersType } from "../../types/metrics/senders";
+import type {
+  MetricsSendersOptions,
+  MetricsSendersResponse,
+  MetricsSendersType
+} from "../../types/metrics/senders";
 
 export class Metrics {
-  private static readonly SORT_ORDER_VALUES = new Set<MetricsSendersOptions["sortOrder"]>(["asc", "desc"]);
-  private static readonly SENDER_TYPE_VALUES = new Set<MetricsSendersType>(["campaigns", "sub-accounts"]);
-  private static readonly INTERVAL_VALUES = new Set<MetricsOptions["interval"]>(["hour", "day", "week", "month"]);
+  private static readonly SORT_ORDER_VALUES = new Set<MetricsSendersOptions["sortOrder"]>([
+    "asc",
+    "desc"
+  ]);
+  private static readonly SENDER_TYPE_VALUES = new Set<MetricsSendersType>([
+    "campaigns",
+    "sub-accounts"
+  ]);
+  private static readonly INTERVAL_VALUES = new Set<MetricsOptions["interval"]>([
+    "hour",
+    "day",
+    "week",
+    "month"
+  ]);
 
   constructor (protected mailchannels: MailChannelsClient) {}
 
@@ -34,7 +61,9 @@ export class Metrics {
     let error: ErrorResponse | null = null;
 
     if (options?.interval !== undefined && !Metrics.INTERVAL_VALUES.has(options.interval)) {
-      error = createValidationError(`Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`);
+      error = createValidationError(
+        `Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`
+      );
       return { data: null, error };
     }
 
@@ -45,17 +74,20 @@ export class Metrics {
 
     if (!dates || dateError) return { data: null, error: dateError };
 
-    const response = await this.mailchannels.get<MetricsEngagementApiResponse>("/tx/v1/metrics/engagement", {
-      query: {
-        start_time: dates.startTime,
-        end_time: dates.endTime,
-        campaign_id: options?.campaignId,
-        interval: options?.interval
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response);
+    const response = await this.mailchannels.get<MetricsEngagementApiResponse>(
+      "/tx/v1/metrics/engagement",
+      {
+        query: {
+          start_time: dates.startTime,
+          end_time: dates.endTime,
+          campaign_id: options?.campaignId,
+          interval: options?.interval
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response);
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch engagement metrics.");
       return null;
     });
@@ -69,7 +101,8 @@ export class Metrics {
         open: response.buckets.open.map(mapBucket),
         openTrackingDelivered: response.buckets.open_tracking_delivered.map(mapBucket),
         uniqueClick: response.buckets.unique_click?.map(mapBucket),
-        uniqueClickTrackingDelivered: response.buckets.unique_click_tracking_delivered?.map(mapBucket),
+        uniqueClickTrackingDelivered:
+          response.buckets.unique_click_tracking_delivered?.map(mapBucket),
         uniqueOpen: response.buckets.unique_open?.map(mapBucket),
         uniqueOpenTrackingDelivered: response.buckets.unique_open_tracking_delivered?.map(mapBucket)
       },
@@ -101,7 +134,9 @@ export class Metrics {
     let error: ErrorResponse | null = null;
 
     if (options?.interval !== undefined && !Metrics.INTERVAL_VALUES.has(options.interval)) {
-      error = createValidationError(`Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`);
+      error = createValidationError(
+        `Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`
+      );
       return { data: null, error };
     }
 
@@ -112,17 +147,20 @@ export class Metrics {
 
     if (!dates || dateError) return { data: null, error: dateError };
 
-    const response = await this.mailchannels.get<MetricsPerformanceApiResponse>("/tx/v1/metrics/performance", {
-      query: {
-        start_time: dates.startTime,
-        end_time: dates.endTime,
-        campaign_id: options?.campaignId,
-        interval: options?.interval
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response);
+    const response = await this.mailchannels.get<MetricsPerformanceApiResponse>(
+      "/tx/v1/metrics/performance",
+      {
+        query: {
+          start_time: dates.startTime,
+          end_time: dates.endTime,
+          campaign_id: options?.campaignId,
+          interval: options?.interval
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response);
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch performance metrics.");
       return null;
     });
@@ -160,7 +198,9 @@ export class Metrics {
     let error: ErrorResponse | null = null;
 
     if (options?.interval !== undefined && !Metrics.INTERVAL_VALUES.has(options.interval)) {
-      error = createValidationError(`Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`);
+      error = createValidationError(
+        `Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`
+      );
       return { data: null, error };
     }
 
@@ -171,17 +211,20 @@ export class Metrics {
 
     if (!dates || dateError) return { data: null, error: dateError };
 
-    const response = await this.mailchannels.get<MetricsRecipientBehaviourApiResponse>("/tx/v1/metrics/recipient-behaviour", {
-      query: {
-        start_time: dates.startTime,
-        end_time: dates.endTime,
-        campaign_id: options?.campaignId,
-        interval: options?.interval
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response);
+    const response = await this.mailchannels.get<MetricsRecipientBehaviourApiResponse>(
+      "/tx/v1/metrics/recipient-behaviour",
+      {
+        query: {
+          start_time: dates.startTime,
+          end_time: dates.endTime,
+          campaign_id: options?.campaignId,
+          interval: options?.interval
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response);
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch recipient behaviour metrics.");
       return null;
     });
@@ -215,7 +258,9 @@ export class Metrics {
     let error: ErrorResponse | null = null;
 
     if (options?.interval !== undefined && !Metrics.INTERVAL_VALUES.has(options.interval)) {
-      error = createValidationError(`Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`);
+      error = createValidationError(
+        `Interval must be one of ${quoteValues(Metrics.INTERVAL_VALUES)}.`
+      );
       return { data: null, error };
     }
 
@@ -226,17 +271,20 @@ export class Metrics {
 
     if (!dates || dateError) return { data: null, error: dateError };
 
-    const response = await this.mailchannels.get<MetricsVolumeApiResponse>("/tx/v1/metrics/volume", {
-      query: {
-        start_time: dates.startTime,
-        end_time: dates.endTime,
-        campaign_id: options?.campaignId,
-        interval: options?.interval
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response);
+    const response = await this.mailchannels.get<MetricsVolumeApiResponse>(
+      "/tx/v1/metrics/volume",
+      {
+        query: {
+          start_time: dates.startTime,
+          end_time: dates.endTime,
+          campaign_id: options?.campaignId,
+          interval: options?.interval
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response);
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch volume metrics.");
       return null;
     });
@@ -301,7 +349,10 @@ export class Metrics {
    * const { data, error } = await mailchannels.metrics.senders('campaigns')
    * ```
    */
-  async senders (type: MetricsSendersType, options?: MetricsSendersOptions): Promise<MetricsSendersResponse> {
+  async senders (
+    type: MetricsSendersType,
+    options?: MetricsSendersOptions
+  ): Promise<MetricsSendersResponse> {
     let error: ErrorResponse | null = null;
 
     if (!type) {
@@ -310,12 +361,16 @@ export class Metrics {
     }
 
     if (!Metrics.SENDER_TYPE_VALUES.has(type)) {
-      error = createValidationError(`Sender type must be one of ${quoteValues(Metrics.SENDER_TYPE_VALUES)}.`);
+      error = createValidationError(
+        `Sender type must be one of ${quoteValues(Metrics.SENDER_TYPE_VALUES)}.`
+      );
       return { data: null, error };
     }
 
     if (options?.sortOrder !== undefined && !Metrics.SORT_ORDER_VALUES.has(options.sortOrder)) {
-      error = createValidationError(`Sort order must be one of ${quoteValues(Metrics.SORT_ORDER_VALUES)}.`);
+      error = createValidationError(
+        `Sort order must be one of ${quoteValues(Metrics.SORT_ORDER_VALUES)}.`
+      );
       return { data: null, error };
     }
 
@@ -329,18 +384,21 @@ export class Metrics {
     error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
 
-    const response = await this.mailchannels.get<MetricsSendersApiResponse>(`/tx/v1/metrics/senders/${encodeURIComponent(type)}`, {
-      query: {
-        start_time: dates.startTime,
-        end_time: dates.endTime,
-        limit: options?.limit,
-        offset: options?.offset,
-        sort_order: options?.sortOrder
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response);
+    const response = await this.mailchannels.get<MetricsSendersApiResponse>(
+      `/tx/v1/metrics/senders/${encodeURIComponent(type)}`,
+      {
+        query: {
+          start_time: dates.startTime,
+          end_time: dates.endTime,
+          limit: options?.limit,
+          offset: options?.offset,
+          sort_order: options?.sortOrder
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response);
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch senders metrics.");
       return null;
     });

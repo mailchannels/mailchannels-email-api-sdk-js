@@ -35,7 +35,9 @@ const getVersionForCommit = (commitHash: string): string | undefined => {
       return undefined;
     }
     // Choose the earliest tag (sorted by version, ascending)
-    const tags = tagsOutput.split("\n").sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    const tags = tagsOutput
+      .split("\n")
+      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
     const tag = tags[0];
     versionCache.set(commitHash, tag);
     return tag;
@@ -130,8 +132,10 @@ export const getChangelog = (filePath: string, minVersion?: string): string => {
   let groups = groupByVersion(commits);
 
   if (minVersion) {
-    groups = groups.filter(({ version }) =>
-      version === "Unreleased" || version.localeCompare(minVersion, undefined, { numeric: true }) >= 0
+    groups = groups.filter(
+      ({ version }) =>
+        version === "Unreleased" ||
+        version.localeCompare(minVersion, undefined, { numeric: true }) >= 0
     );
   }
 
@@ -139,9 +143,13 @@ export const getChangelog = (filePath: string, minVersion?: string): string => {
     .map(({ version, commits }) => {
       // Get the date of the first commit in this version
       const versionDate = commits[0]?.date || "";
-      const dateFormatted = versionDate ? `<small style="color: var(--vp-c-text-2)">on ${versionDate}</small>` : "";
+      const dateFormatted = versionDate
+        ? `<small style="color: var(--vp-c-text-2)">on ${versionDate}</small>`
+        : "";
       const versionLabel = `<Badge>${version}</Badge>`;
-      const versionLink = version === "Unreleased" ? versionLabel : `<a href="${SITE.repo}/commits/tag/${version}" target="_blank">${versionLabel}</a>`;
+      const versionLink = version === "Unreleased"
+        ? versionLabel
+        : `<a href="${SITE.repo}/commits/tag/${version}" target="_blank">${versionLabel}</a>`;
       const versionHeader = `- ${versionLink} ${dateFormatted}\n`;
       const commitsList = commits
         .map(({ hash, message }) => {
