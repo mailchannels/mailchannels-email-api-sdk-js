@@ -82,7 +82,7 @@ console.log(data.requestId)
 const mc = new MailChannels('YOUR-API-KEY', {
   baseUrl: 'https://api.mailchannels.net', // rarely needed
   timeout: 120000,                          // ms, default 120s; false to disable
-  retry: false,                             // ofetch retry options
+  retry: false,                             // retries network errors and retryable HTTP statuses
   signal: controller.signal                 // AbortSignal for cancellation
 })
 ```

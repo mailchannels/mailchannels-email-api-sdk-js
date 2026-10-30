@@ -1,8 +1,8 @@
 import { subtle } from "node:crypto";
 import { Buffer } from "node:buffer";
+import { $fetch } from "./fetch";
 import { stripPemHeaders } from "./strip-pem-headers";
 import type { WebhooksVerifyOptions } from "../types/webhooks/verify";
-import { $fetch } from "ofetch";
 
 export const HMAC_SHA256 = { name: "HMAC", hash: "SHA-256" };
 export const ED25519 = { name: "Ed25519", namedCurve: "Ed25519" };
@@ -89,8 +89,7 @@ export async function isValidWebhook (options: WebhooksVerifyOptions) {
       const publicKeyResponse = await $fetch<PublicKeyResponse>("/tx/v1/webhook/public-key", {
         baseURL: "https://api.mailchannels.net",
         query: { id: values.keyId }
-      }
-      ).catch(() => null);
+      }).catch(() => null);
       if (!publicKeyResponse) return false;
 
       publicKey = publicKeyResponse.key;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { FetchResponse } from "ofetch";
+import type { MailChannelsFetchResponse } from "~/types/fetch";
 import {
   ErrorCode,
   getStatusError,
@@ -8,7 +8,7 @@ import {
 } from "~/internal/errors";
 
 describe("getStatusError", () => {
-  type ErrorResponse = FetchResponse<
+  type ErrorResponse = MailChannelsFetchResponse<
     { message?: string, errors?: string[] } | string | Record<string, unknown>
   >;
   it("should return default error message", () => {
