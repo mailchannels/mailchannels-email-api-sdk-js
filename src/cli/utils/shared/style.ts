@@ -17,7 +17,10 @@ type StyleTextFormat = keyof typeof styles;
 
 export const styleText = (format: StyleTextFormat | StyleTextFormat[], text: string): string => {
   if (Array.isArray(format)) {
-    return format.reduceRight((styledText, currentFormat) => styles[currentFormat](styledText), text);
+    return format.reduceRight(
+      (styledText, currentFormat) => styles[currentFormat](styledText),
+      text
+    );
   }
 
   return styles[format](text);
@@ -54,12 +57,19 @@ const camelCaseToWords = (text: string): string => {
 
 export const toWordsKeys = <T extends object | object[]>(record: T): T => {
   if (Array.isArray(record)) {
-    return record.map(item => typeof item === "object" && item !== null ? toWordsKeys(item) : item) as T;
+    return record.map(item =>
+      typeof item === "object" && item !== null
+        ? toWordsKeys(item)
+        : item
+    ) as T;
   }
 
   return Object.fromEntries(
     Object.entries(record).map(([key, value]) => [
-      camelCaseToWords(key), typeof value === "object" && value !== null ? toWordsKeys(value) : value
+      camelCaseToWords(key),
+      typeof value === "object" && value !== null
+        ? toWordsKeys(value)
+        : value
     ])
   ) as T;
 };

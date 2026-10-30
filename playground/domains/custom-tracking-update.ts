@@ -11,9 +11,13 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { data, error } = await mailchannels.domains.customTracking.update("click.example.com", "click", {
-  name: "clickdemo",
-  status: "disabled"
-});
+const { data, error } = await mailchannels.domains.customTracking.update(
+  "click.example.com",
+  "click",
+  {
+    name: "clickdemo",
+    status: "disabled"
+  }
+);
 
 console.info(JSON.stringify({ data, error }, null, 2));

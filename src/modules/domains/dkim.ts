@@ -1,20 +1,55 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import {
+  ErrorCode,
+  createValidationError,
+  getResultError,
+  getStatusError,
+  validatePagination
+} from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import { mapDkimKey } from "../../internal/map-dkim-key";
 import { quoteValues } from "../../internal/quote-values";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { DomainsDkimCreateApiResponse, DomainsDkimCreatePayload, DomainsDkimListPayload, DomainsDkimRotateApiResponse } from "../../types/domains/internal";
-import type { DomainsDkimCreateOptions, DomainsDkimCreateResponse, DomainsDkimKeyStatus } from "../../types/domains/dkim-create";
-import type { DomainsDkimListOptions, DomainsDkimListResponse } from "../../types/domains/dkim-list";
+import type {
+  DomainsDkimCreateApiResponse,
+  DomainsDkimCreatePayload,
+  DomainsDkimListPayload,
+  DomainsDkimRotateApiResponse
+} from "../../types/domains/internal";
+import type {
+  DomainsDkimCreateOptions,
+  DomainsDkimCreateResponse,
+  DomainsDkimKeyStatus
+} from "../../types/domains/dkim-create";
+import type {
+  DomainsDkimListOptions,
+  DomainsDkimListResponse
+} from "../../types/domains/dkim-list";
 import type { DomainsDkimUpdateStatusOptions } from "../../types/domains/dkim-update-status";
-import type { DomainsDkimRotateOptions, DomainsDkimRotateResponse } from "../../types/domains/dkim-rotate";
+import type {
+  DomainsDkimRotateOptions,
+  DomainsDkimRotateResponse
+} from "../../types/domains/dkim-rotate";
 
 export class DomainsDkim {
-  private static readonly UPDATE_STATUS_VALUES = new Set<Exclude<DomainsDkimKeyStatus, "active">>(["retired", "revoked", "rotated"]);
-  private static readonly STATUS_VALUES = new Set<DomainsDkimKeyStatus>(["active", ...DomainsDkim.UPDATE_STATUS_VALUES]);
-  private static readonly KEY_ALGORITHM_VALUES = new Set<DomainsDkimCreateOptions["algorithm"]>(["rsa"]);
-  private static readonly RSA_LENGTH_VALUES = new Set<DomainsDkimCreateOptions["length"]>([1024, 2048, 3072, 4096]);
+  private static readonly UPDATE_STATUS_VALUES = new Set<Exclude<DomainsDkimKeyStatus, "active">>([
+    "retired",
+    "revoked",
+    "rotated"
+  ]);
+  private static readonly STATUS_VALUES = new Set<DomainsDkimKeyStatus>([
+    "active",
+    ...DomainsDkim.UPDATE_STATUS_VALUES
+  ]);
+  private static readonly KEY_ALGORITHM_VALUES = new Set<DomainsDkimCreateOptions["algorithm"]>([
+    "rsa"
+  ]);
+  private static readonly RSA_LENGTH_VALUES = new Set<DomainsDkimCreateOptions["length"]>([
+    1024,
+    2048,
+    3072,
+    4096
+  ]);
 
   constructor (private mailchannels: MailChannelsClient) {}
 
@@ -30,7 +65,10 @@ export class DomainsDkim {
    * })
    * ```
    */
-  async create (domain: string, options: DomainsDkimCreateOptions): Promise<DomainsDkimCreateResponse> {
+  async create (
+    domain: string,
+    options: DomainsDkimCreateOptions
+  ): Promise<DomainsDkimCreateResponse> {
     let error: ErrorResponse | null = null;
 
     if (!domain) {
@@ -43,8 +81,13 @@ export class DomainsDkim {
       return { data: null, error };
     }
 
-    if (options.algorithm !== undefined && !DomainsDkim.KEY_ALGORITHM_VALUES.has(options.algorithm)) {
-      error = createValidationError(`Algorithm must be ${quoteValues(DomainsDkim.KEY_ALGORITHM_VALUES)}.`);
+    if (
+      options.algorithm !== undefined
+      && !DomainsDkim.KEY_ALGORITHM_VALUES.has(options.algorithm)
+    ) {
+      error = createValidationError(
+        `Algorithm must be ${quoteValues(DomainsDkim.KEY_ALGORITHM_VALUES)}.`
+      );
       return { data: null, error };
     }
 
@@ -53,7 +96,9 @@ export class DomainsDkim {
         (options.algorithm === undefined || options.algorithm === "rsa")
         && !DomainsDkim.RSA_LENGTH_VALUES.has(options.length)
       ) {
-        error = createValidationError(`RSA key length must be one of ${quoteValues(DomainsDkim.RSA_LENGTH_VALUES)}.`);
+        error = createValidationError(
+          `RSA key length must be one of ${quoteValues(DomainsDkim.RSA_LENGTH_VALUES)}.`
+        );
         return { data: null, error };
       }
     }
@@ -64,14 +109,17 @@ export class DomainsDkim {
       selector: options.selector
     };
 
-    const response = await this.mailchannels.post<DomainsDkimCreateApiResponse>(`/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys`, {
-      body: payload,
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.Conflict]: "Key pair already created for domain, and selector."
-        });
+    const response = await this.mailchannels.post<DomainsDkimCreateApiResponse>(
+      `/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys`,
+      {
+        body: payload,
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.Conflict]: "Key pair already created for domain, and selector."
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to create DKIM key.");
       return null;
     });
@@ -109,7 +157,9 @@ export class DomainsDkim {
     }
 
     if (options?.status !== undefined && !DomainsDkim.STATUS_VALUES.has(options.status)) {
-      error = createValidationError(`Status must be one of ${quoteValues(DomainsDkim.STATUS_VALUES)}.`);
+      error = createValidationError(
+        `Status must be one of ${quoteValues(DomainsDkim.STATUS_VALUES)}.`
+      );
       return { data: null, error };
     }
 
@@ -124,12 +174,15 @@ export class DomainsDkim {
       include_dns_record: options?.includeDnsRecord
     };
 
-    const response = await this.mailchannels.get<{ keys: DomainsDkimCreateApiResponse[] }>(`/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys`, {
-      query: payload,
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response);
+    const response = await this.mailchannels.get<{ keys: DomainsDkimCreateApiResponse[] }>(
+      `/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys`,
+      {
+        query: payload,
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response);
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch DKIM keys.");
       return null;
     });
@@ -153,7 +206,10 @@ export class DomainsDkim {
    *   status: 'retired'
    * })
    */
-  async updateStatus (domain: string, options: DomainsDkimUpdateStatusOptions): Promise<SuccessResponse> {
+  async updateStatus (
+    domain: string,
+    options: DomainsDkimUpdateStatusOptions
+  ): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
     if (!domain) {
@@ -167,7 +223,9 @@ export class DomainsDkim {
     }
 
     if (options?.status !== undefined && !DomainsDkim.UPDATE_STATUS_VALUES.has(options.status)) {
-      error = createValidationError(`Status must be one of ${quoteValues(DomainsDkim.UPDATE_STATUS_VALUES)}.`);
+      error = createValidationError(
+        `Status must be one of ${quoteValues(DomainsDkim.UPDATE_STATUS_VALUES)}.`
+      );
       return { success: false, error };
     }
 
@@ -175,14 +233,17 @@ export class DomainsDkim {
       status: options.status
     };
 
-    await this.mailchannels.patch(`/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys/${encodeURIComponent(options.selector)}`, {
-      body: payload,
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: "Specified key pair not found, or no active key for rotation. This may also occur if the DKIM domain or selector path parameter is missing."
-        });
+    await this.mailchannels.patch(
+      `/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys/${encodeURIComponent(options.selector)}`,
+      {
+        body: payload,
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.NotFound]: "Specified key pair not found, or no active key for rotation. This may also occur if the DKIM domain or selector path parameter is missing."
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to update status of DKIM key.");
     });
 
@@ -205,7 +266,11 @@ export class DomainsDkim {
    * })
    * ```
    */
-  async rotate (domain: string, selector: string, options: DomainsDkimRotateOptions): Promise<DomainsDkimRotateResponse> {
+  async rotate (
+    domain: string,
+    selector: string,
+    options: DomainsDkimRotateOptions
+  ): Promise<DomainsDkimRotateResponse> {
     let error: ErrorResponse | null = null;
 
     if (!domain) {
@@ -229,15 +294,18 @@ export class DomainsDkim {
       }
     };
 
-    const response = await this.mailchannels.post<DomainsDkimRotateApiResponse>(`/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys/${encodeURIComponent(selector)}/rotate`, {
-      body: payload,
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: "Specified key pair not found.",
-          [ErrorCode.Conflict]: "Key pair already created for domain, and provided new key selector."
-        });
+    const response = await this.mailchannels.post<DomainsDkimRotateApiResponse>(
+      `/tx/v1/domains/${encodeURIComponent(domain)}/dkim-keys/${encodeURIComponent(selector)}/rotate`,
+      {
+        body: payload,
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.NotFound]: "Specified key pair not found.",
+            [ErrorCode.Conflict]: "Key pair already created for domain, and provided new key selector."
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to rotate DKIM key.");
       return null;
     });

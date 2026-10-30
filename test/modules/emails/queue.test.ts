@@ -69,10 +69,11 @@ describe("queue", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: ErrorCode.Forbidden } });
-        reject();
-      }))
+      post: vi.fn().mockImplementationOnce(
+        async (url, { onResponseError }) => new Promise((_, reject) => {
+          onResponseError({ response: { status: ErrorCode.Forbidden } });
+          reject();
+        }))
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);

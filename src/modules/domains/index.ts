@@ -1,7 +1,12 @@
 import { DomainsDkim } from "./dkim";
 import { DomainsCustomTracking } from "./custom-tracking";
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError } from "../../internal/errors";
+import {
+  ErrorCode,
+  createValidationError,
+  getResultError,
+  getStatusError
+} from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import { stripPemHeaders } from "../../internal/strip-pem-headers";
 import type { ErrorResponse } from "../../types/responses";
@@ -42,16 +47,24 @@ export class Domains {
       return { data: null, error };
     }
 
-    const dkimOptions = options?.dkim ? Array.isArray(options.dkim) ? options.dkim : [options.dkim] : undefined;
+    const dkimOptions = options?.dkim
+      ? Array.isArray(options.dkim)
+        ? options.dkim
+        : [options.dkim]
+      : undefined;
 
     if (dkimOptions && dkimOptions.length > 10) {
       error = createValidationError("A maximum of 10 DKIM settings can be provided.");
       return { data: null, error };
     }
 
-    const invalidDkimSetting = dkimOptions?.find(({ privateKey, selector }) => privateKey && !selector);
+    const invalidDkimSetting = dkimOptions?.find(
+      ({ privateKey, selector }) => privateKey && !selector
+    );
     if (invalidDkimSetting) {
-      error = createValidationError("DKIM settings with a privateKey must also include a selector.");
+      error = createValidationError(
+        "DKIM settings with a privateKey must also include a selector."
+      );
       return { data: null, error };
     }
 

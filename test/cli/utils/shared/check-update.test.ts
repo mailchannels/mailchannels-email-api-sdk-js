@@ -4,7 +4,11 @@ import { checkUpdate } from "~/cli/utils/shared/check-update";
 
 describe("checkUpdate", () => {
   const stdoutTTYDescriptor = Object.getOwnPropertyDescriptor(process.stdout, "isTTY");
-  const [currentMajor, currentMinor, currentPatch] = pkg.version.split(".").map(Number) as [number, number, number];
+  const [currentMajor, currentMinor, currentPatch] = pkg.version.split(".").map(Number) as [
+    number,
+    number,
+    number
+  ];
   const originalEnvironment = {
     CI: process.env.CI,
     NO_UPDATE: process.env.NO_UPDATE,
@@ -59,8 +63,12 @@ describe("checkUpdate", () => {
     await checkUpdate();
 
     expect(fetchMock).toHaveBeenCalled();
-    expect(stderrWrite).toHaveBeenCalledWith(expect.stringContaining("npm install -g @mailchannels/sdk"));
-    expect(stderrWrite).toHaveBeenCalledWith(expect.stringContaining("npx @mailchannels/sdk@latest"));
+    expect(stderrWrite).toHaveBeenCalledWith(
+      expect.stringContaining("npm install -g @mailchannels/sdk")
+    );
+    expect(stderrWrite).toHaveBeenCalledWith(
+      expect.stringContaining("npx @mailchannels/sdk@latest")
+    );
   });
 
   it.each([

@@ -2,12 +2,25 @@ import { SubAccountsApiKeys } from "./api-keys";
 import { SubAccountsSmtpPasswords } from "./smtp-passwords";
 import { SubAccountsLimits } from "./limits";
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import {
+  ErrorCode,
+  createValidationError,
+  getResultError,
+  getStatusError,
+  validatePagination
+} from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { SubAccountsCreateApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../../types/sub-accounts/internal";
+import type {
+  SubAccountsCreateApiResponse,
+  SubAccountsListApiResponse,
+  SubAccountsUsageApiResponse
+} from "../../types/sub-accounts/internal";
 import type { SubAccountsCreateResponse } from "../../types/sub-accounts/create";
-import type { SubAccountsListOptions, SubAccountsListResponse } from "../../types/sub-accounts/list";
+import type {
+  SubAccountsListOptions,
+  SubAccountsListResponse
+} from "../../types/sub-accounts/list";
 import type { SubAccountsUsageResponse } from "../../types/sub-accounts/usage";
 
 export class SubAccounts {
@@ -39,30 +52,37 @@ export class SubAccounts {
 
     const isValidCompany = SubAccounts.COMPANY_PATTERN.test(companyName);
     if (!isValidCompany) {
-      error = createValidationError("Invalid company name. Company name must be between 3 and 128 characters.");
+      error = createValidationError(
+        "Invalid company name. Company name must be between 3 and 128 characters."
+      );
       return { data: null, error };
     }
 
     if (handle) {
       const isValidHandle = SubAccounts.HANDLE_PATTERN.test(handle);
       if (!isValidHandle) {
-        error = createValidationError("Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.");
+        error = createValidationError(
+          "Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers."
+        );
         return { data: null, error };
       }
     }
 
-    const response = await this.mailchannels.post<SubAccountsCreateApiResponse>("/tx/v1/sub-account", {
-      body: {
-        company_name: companyName,
-        handle
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.Forbidden]: "The parent account does not have permission to create sub-accounts.",
-          [ErrorCode.Conflict]: `Sub-account with handle '${handle}' already exists.`
-        });
+    const response = await this.mailchannels.post<SubAccountsCreateApiResponse>(
+      "/tx/v1/sub-account",
+      {
+        body: {
+          company_name: companyName,
+          handle
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.Forbidden]: "The parent account does not have permission to create sub-accounts.",
+            [ErrorCode.Conflict]: `Sub-account with handle '${handle}' already exists.`
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to create sub-account.");
       return null;
     });
@@ -189,14 +209,17 @@ export class SubAccounts {
       return { success: false, error };
     }
 
-    await this.mailchannels.post<void>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/activate`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.Forbidden]: "The parent account does not have permission to activate the sub-account.",
-          [ErrorCode.NotFound]: `The specified sub-account '${handle}' does not exist.`
-        });
+    await this.mailchannels.post<void>(
+      `/tx/v1/sub-account/${encodeURIComponent(handle)}/activate`,
+      {
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.Forbidden]: "The parent account does not have permission to activate the sub-account.",
+            [ErrorCode.NotFound]: `The specified sub-account '${handle}' does not exist.`
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to activate sub-account.");
     });
 
@@ -220,13 +243,16 @@ export class SubAccounts {
       return { data: null, error };
     }
 
-    const response = await this.mailchannels.get<SubAccountsUsageApiResponse>(`/tx/v1/sub-account/${encodeURIComponent(handle)}/usage`, {
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response, {
-          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
-        });
+    const response = await this.mailchannels.get<SubAccountsUsageApiResponse>(
+      `/tx/v1/sub-account/${encodeURIComponent(handle)}/usage`,
+      {
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response, {
+            [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+          });
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch sub-account usage.");
       return null;
     });

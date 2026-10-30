@@ -78,7 +78,11 @@ const getHeaders = async (body: string) => {
   const signingString = `"content-digest": ${contentDigest}
 "@signature-params": ${signatureInputValues}`;
 
-  const signatureBuffer = await subtle.sign(ED25519.name, privateKey, encoder.encode(signingString));
+  const signatureBuffer = await subtle.sign(
+    ED25519.name,
+    privateKey,
+    encoder.encode(signingString)
+  );
   const signature = `sig_123456=:${Buffer.from(signatureBuffer).toString("base64")}:`;
 
   return { contentDigest, signature, signatureInput };
@@ -214,7 +218,12 @@ describe("verify", () => {
 
   it.each([
     { signature: fake.options.headers.signature.replace("sig_123456=", "sig_654321=") },
-    { "signature-input": fake.options.headers["signature-input"].replace("\"content-digest\"", "\"x-other\"") },
+    {
+      "signature-input": fake.options.headers["signature-input"].replace(
+        "\"content-digest\"",
+        "\"x-other\""
+      )
+    },
     { "signature-input": fake.options.headers["signature-input"].replace("created=", "created=0") }
   ])("rejects modified signature metadata: %j", async (changed) => {
     const { data, error } = await Webhooks.verify({
@@ -228,7 +237,10 @@ describe("verify", () => {
   it("selects the signature entry matching the input label", async () => {
     const { data, error } = await Webhooks.verify({
       ...fake.options,
-      headers: { ...fake.options.headers, signature: `sig_999=:AAAA:, ${fake.options.headers.signature}` }
+      headers: {
+        ...fake.options.headers,
+        signature: `sig_999=:AAAA:, ${fake.options.headers.signature}`
+      }
     });
     expect(error).toBeNull();
     expect(data).toEqual(fake.expectedResponse.data);
@@ -253,7 +265,11 @@ describe("verify", () => {
     const expiredSignatureInput = `sig_123456=${expiredSignatureInputValues}`;
     const expiredSigningString = `"content-digest": ${headers.contentDigest}
 "@signature-params": ${expiredSignatureInputValues}`;
-    const expiredSignatureBuffer = await subtle.sign(ED25519.name, privateKey, encoder.encode(expiredSigningString));
+    const expiredSignatureBuffer = await subtle.sign(
+      ED25519.name,
+      privateKey,
+      encoder.encode(expiredSigningString)
+    );
     const expiredSignature = `sig_123456=:${Buffer.from(expiredSignatureBuffer).toString("base64")}:`;
 
     const { data, error } = await Webhooks.verify({

@@ -1,15 +1,40 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError, validatePagination } from "../../internal/errors";
+import {
+  ErrorCode,
+  createValidationError,
+  getResultError,
+  getStatusError,
+  validatePagination
+} from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import { parseDateInputs } from "../../internal/parse-date-inputs";
 import { quoteValues } from "../../internal/quote-values";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
-import type { SuppressionsCreateEntry, SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../../types/suppressions";
-import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../../types/suppressions/internal";
+import type {
+  SuppressionsCreateEntry,
+  SuppressionsCreateOptions,
+  SuppressionsListOptions,
+  SuppressionsListResponse,
+  SuppressionsSource
+} from "../../types/suppressions";
+import type {
+  SuppressionsCreatePayload,
+  SuppressionsListApiResponse,
+  SuppressionsListPayload
+} from "../../types/suppressions/internal";
 
 export class Suppressions {
-  private static readonly SOURCE_VALUES = new Set<SuppressionsSource>(["api", "unsubscribe_link", "list_unsubscribe", "hard_bounce", "spam_complaint"]);
-  private static readonly DELETE_SOURCE_VALUES = new Set<SuppressionsSource | "all">([...Suppressions.SOURCE_VALUES, "all"]);
+  private static readonly SOURCE_VALUES = new Set<SuppressionsSource>([
+    "api",
+    "unsubscribe_link",
+    "list_unsubscribe",
+    "hard_bounce",
+    "spam_complaint"
+  ]);
+  private static readonly DELETE_SOURCE_VALUES = new Set<SuppressionsSource | "all">([
+    ...Suppressions.SOURCE_VALUES,
+    "all"
+  ]);
 
   constructor (protected mailchannels: MailChannelsClient) {}
 
@@ -28,11 +53,17 @@ export class Suppressions {
    *   }
    * ], { addToSubAccounts: false });
    */
-  async create (entries: SuppressionsCreateEntry[], options?: Omit<SuppressionsCreateOptions, "entries">): Promise<SuccessResponse>;
+  async create (
+    entries: SuppressionsCreateEntry[],
+    options?: Omit<SuppressionsCreateOptions, "entries">
+  ): Promise<SuccessResponse>;
   /** @deprecated Use positional params `create(entries, options?)` instead. */
   async create (options: SuppressionsCreateOptions): Promise<SuccessResponse>;
   /** @deprecated Use positional params `create(entries, options?)` instead. */
-  async create (entriesOrOptions: SuppressionsCreateEntry[] | SuppressionsCreateOptions, options?: Omit<SuppressionsCreateOptions, "entries">): Promise<SuccessResponse> {
+  async create (
+    entriesOrOptions: SuppressionsCreateEntry[] | SuppressionsCreateOptions,
+    options?: Omit<SuppressionsCreateOptions, "entries">
+  ): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
     const entries = Array.isArray(entriesOrOptions) ? entriesOrOptions : entriesOrOptions.entries;
@@ -78,22 +109,30 @@ export class Suppressions {
    * const { success, error } = await mailchannels.suppressions.delete('name@example.com', 'api');
    * ```
    */
-  async delete (recipient: string, source?: SuppressionsSource | "all"): Promise<SuccessResponse> {
+  async delete (
+    recipient: string,
+    source?: SuppressionsSource | "all"
+  ): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
     if (source !== undefined && !Suppressions.DELETE_SOURCE_VALUES.has(source)) {
-      error = createValidationError(`Source must be one of ${quoteValues(Suppressions.DELETE_SOURCE_VALUES)}.`);
+      error = createValidationError(
+        `Source must be one of ${quoteValues(Suppressions.DELETE_SOURCE_VALUES)}.`
+      );
       return { success: false, error };
     }
 
-    await this.mailchannels.delete(`/tx/v1/suppression-list/recipients/${encodeURIComponent(recipient)}`, {
-      query: {
-        source
-      },
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response);
+    await this.mailchannels.delete(
+      `/tx/v1/suppression-list/recipients/${encodeURIComponent(recipient)}`,
+      {
+        query: {
+          source
+        },
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response);
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to delete suppression entry.");
     });
 
@@ -118,7 +157,9 @@ export class Suppressions {
     }
 
     if (options?.source !== undefined && !Suppressions.SOURCE_VALUES.has(options.source)) {
-      error = createValidationError(`Source must be one of ${quoteValues(Suppressions.SOURCE_VALUES)}.`);
+      error = createValidationError(
+        `Source must be one of ${quoteValues(Suppressions.SOURCE_VALUES)}.`
+      );
       return { data: null, error };
     }
 
@@ -141,26 +182,31 @@ export class Suppressions {
       offset: options?.offset
     };
 
-    const response = await this.mailchannels.get<SuppressionsListApiResponse>("/tx/v1/suppression-list", {
-      query: payload,
-      onResponseError: async ({ response }) => {
-        error = getStatusError(response);
+    const response = await this.mailchannels.get<SuppressionsListApiResponse>(
+      "/tx/v1/suppression-list",
+      {
+        query: payload,
+        onResponseError: async ({ response }) => {
+          error = getStatusError(response);
+        }
       }
-    }).catch((e) => {
+    ).catch((e) => {
       error ||= getResultError(e, "Failed to fetch suppression entries.");
       return null;
     });
 
     if (!response) return { data: null, error: error! };
 
-    const data = clean(response.suppression_list.map(entry => ({
-      createdAt: entry.created_at,
-      notes: entry.notes,
-      recipient: entry.recipient,
-      sender: entry.sender,
-      source: entry.source,
-      types: entry.suppression_types
-    })));
+    const data = clean(
+      response.suppression_list.map(entry => ({
+        createdAt: entry.created_at,
+        notes: entry.notes,
+        recipient: entry.recipient,
+        sender: entry.sender,
+        source: entry.source,
+        types: entry.suppression_types
+      }))
+    );
 
     return { data, error: null };
   }

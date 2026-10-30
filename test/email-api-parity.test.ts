@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 import { MailChannels } from "~/mailchannels";
 import emailParityFixture from "./fixtures/email-api-endpoints.json";
 
-type EmailApiModuleName = keyof Pick<MailChannels, "emails" | "domains" | "webhooks" | "subAccounts" | "metrics" | "suppressions">;
+type EmailApiModuleName = keyof Pick<
+  MailChannels,
+  "emails" | "domains" | "webhooks" | "subAccounts" | "metrics" | "suppressions"
+>;
 
 type ParityFixture = {
   version: string;
@@ -22,7 +25,12 @@ const mailchannels = new MailChannels("test-api-key");
 
 const INTERNAL_PROPERTIES = new Set(["mailchannels"]);
 
-const getPublicApiMethods = (value: object, excludedMethods: string[] = [], prefix = "", depth = 0): string[] => {
+const getPublicApiMethods = (
+  value: object,
+  excludedMethods: string[] = [],
+  prefix = "",
+  depth = 0
+): string[] => {
   const excluded = new Set(["constructor", ...excludedMethods]);
   const methods = Object.getOwnPropertyNames(Object.getPrototypeOf(value))
     .filter(name => !excluded.has(name) && !name.startsWith("_"))
@@ -35,8 +43,20 @@ const getPublicApiMethods = (value: object, excludedMethods: string[] = [], pref
       if (INTERNAL_PROPERTIES.has(key)) continue;
       const descriptor = Object.getOwnPropertyDescriptor(value, key);
       const val = descriptor?.value;
-      if (val && typeof val === "object" && !Array.isArray(val) && Object.getPrototypeOf(val) !== Object.prototype) {
-        nested.push(...getPublicApiMethods(val as object, excludedMethods, prefix ? `${prefix}.${key}` : key, depth + 1));
+      if (
+        val
+        && typeof val === "object"
+        && !Array.isArray(val)
+        && Object.getPrototypeOf(val) !== Object.prototype
+      ) {
+        nested.push(
+          ...getPublicApiMethods(
+            val as object,
+            excludedMethods,
+            prefix ? `${prefix}.${key}` : key,
+            depth + 1
+          )
+        );
       }
     }
   }
@@ -67,7 +87,10 @@ const assertParityFixture = (
       for (const entry of fixture.endpoints) {
         const methods = actualByModule[entry.module];
         expect(methods, `Missing module ${entry.module}`).toBeDefined();
-        expect(methods?.includes(entry.method), `Missing method ${entry.module}.${entry.method} for ${entry.httpMethod} ${entry.path}`).toBe(true);
+        expect(
+          methods?.includes(entry.method),
+          `Missing method ${entry.module}.${entry.method} for ${entry.httpMethod} ${entry.path}`
+        ).toBe(true);
       }
     });
 
@@ -80,7 +103,9 @@ const assertParityFixture = (
 
       for (const [module, methods] of Object.entries(actualByModule)) {
         const modulePrefix = `${module}.`;
-        const comparableMethods = methods.filter(m => !deprecatedMethods.has(modulePrefix + m)).sort();
+        const comparableMethods = methods
+          .filter(m => !deprecatedMethods.has(modulePrefix + m))
+          .sort();
         const fixtureMethods = fixtureByModule[module] ? [...fixtureByModule[module]].sort() : [];
         expect(fixtureMethods, `Fixture mismatch for module ${module}`).toEqual(comparableMethods);
       }

@@ -46,12 +46,16 @@ describe("custom-tracking delete", () => {
     await runCommand(deleteCommand, { rawArgs: fake.args });
 
     expect(mockDelete).toHaveBeenCalledWith(fake.hostname, fake.scope);
-    expect(console.info).toHaveBeenCalledWith("[Custom Tracking] Custom tracking domain deleted successfully.");
+    expect(console.info).toHaveBeenCalledWith(
+      "[Custom Tracking] Custom tracking domain deleted successfully."
+    );
   });
 
   it("should exit with error when hostname or scope is missing", async () => {
     await expect(
-      runCommand(deleteCommand, { rawArgs: ["--api-key", "test-api-key", "--hostname", fake.hostname] })
+      runCommand(deleteCommand, {
+        rawArgs: ["--api-key", "test-api-key", "--hostname", fake.hostname]
+      })
     ).rejects.toThrow();
 
     expect(mockDelete).not.toHaveBeenCalled();

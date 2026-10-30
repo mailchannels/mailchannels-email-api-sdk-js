@@ -1,5 +1,10 @@
 import type { MailChannelsClient } from "../../client";
-import { ErrorCode, createValidationError, getResultError, getStatusError } from "../../internal/errors";
+import {
+  ErrorCode,
+  createValidationError,
+  getResultError,
+  getStatusError
+} from "../../internal/errors";
 import { clean } from "../../internal/clean";
 import type { ErrorResponse } from "../../types/responses";
 import type { EmailsQueueApiResponse, EmailsSendApiResponse } from "../../types/emails/internal";
@@ -23,7 +28,9 @@ export class Emails {
     }
 
     const endpoint = flags.async ? "/tx/v1/send-async" : "/tx/v1/send";
-    const response = await this.mailchannels.post<EmailsSendApiResponse | EmailsQueueApiResponse>(endpoint, {
+    const response = await this.mailchannels.post<
+      EmailsSendApiResponse | EmailsQueueApiResponse
+    >(endpoint, {
       query: { "dry-run": flags.dryRun },
       body: payload,
       onResponseError: async ({ response }) => {

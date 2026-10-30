@@ -3,7 +3,10 @@ import type { MailChannelsClient } from "~/client";
 import { Domains } from "~/modules/domains";
 import { ErrorCode } from "~/internal/errors";
 import type { DomainsDkimCreateApiResponse } from "~/types/domains/internal";
-import type { DomainsDkimCreateOptions, DomainsDkimCreateResponse } from "~/types/domains/dkim-create";
+import type {
+  DomainsDkimCreateOptions,
+  DomainsDkimCreateResponse
+} from "~/types/domains/dkim-create";
 
 const fake = {
   options: {
@@ -83,10 +86,11 @@ describe("dkim.create", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: ErrorCode.BadRequest } });
-        reject();
-      }))
+      post: vi.fn().mockImplementationOnce(
+        async (url, { onResponseError }) => new Promise((_, reject) => {
+          onResponseError({ response: { status: ErrorCode.BadRequest } });
+          reject();
+        }))
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);

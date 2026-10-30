@@ -2,7 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { ErrorCode } from "~/internal/errors";
 import { Suppressions } from "~/modules/suppressions";
-import type { SuppressionsCreateEntry, SuppressionsCreateOptions } from "~/types/suppressions/create";
+import type {
+  SuppressionsCreateEntry,
+  SuppressionsCreateOptions
+} from "~/types/suppressions/create";
 
 const fake = {
   entries: [
@@ -28,7 +31,8 @@ describe("create", () => {
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/suppression-list",
+    expect(mockClient.post).toHaveBeenCalledWith(
+      "/tx/v1/suppression-list",
       expect.objectContaining({
         body: {
           add_to_sub_accounts: fake.options.addToSubAccounts,
@@ -65,7 +69,9 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { success, error } = await suppressions.create(Array.from({ length: 1001 }, (_, i) => ({ recipient: `test${i}@example.com` })));
+    const { success, error } = await suppressions.create(
+      Array.from({ length: 1001 }, (_, i) => ({ recipient: `test${i}@example.com` }))
+    );
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);

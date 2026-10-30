@@ -14,7 +14,10 @@ describe("customTracking.delete", () => {
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.delete).toHaveBeenCalledWith("/tx/v1/custom-tracking-domains/open.example.com/open", expect.any(Object));
+    expect(mockClient.delete).toHaveBeenCalledWith(
+      "/tx/v1/custom-tracking-domains/open.example.com/open",
+      expect.any(Object)
+    );
   });
 
   it("should contain error for missing hostname", async () => {
@@ -32,8 +35,11 @@ describe("customTracking.delete", () => {
     const mockClient = { delete: vi.fn() } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    // @ts-expect-error Testing invalid scope
-    const { success, error } = await domains.customTracking.delete("open.example.com", "invalid-scope");
+    const { success, error } = await domains.customTracking.delete(
+      "open.example.com",
+      // @ts-expect-error Testing invalid scope
+      "invalid-scope"
+    );
 
     expect(success).toBe(false);
     expect(error).toBeTruthy();
@@ -42,10 +48,11 @@ describe("customTracking.delete", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: ErrorCode.BadRequest } });
-        reject();
-      }))
+      delete: vi.fn().mockImplementationOnce(
+        async (url, { onResponseError }) => new Promise((_, reject) => {
+          onResponseError({ response: { status: ErrorCode.BadRequest } });
+          reject();
+        }))
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);

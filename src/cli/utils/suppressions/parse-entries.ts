@@ -16,7 +16,9 @@ export const parseEntries = async (
 ) => {
   if (rawEntries) {
     if (recipient) {
-      console.warn("[Suppressions] Warning: both '--entries' and '--recipient' are provided. Using '--entries'.");
+      console.warn(
+        "[Suppressions] Warning: both '--entries' and '--recipient' are provided. Using '--entries'."
+      );
     }
 
     if (types || notes) {

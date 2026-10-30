@@ -113,7 +113,9 @@ describe("create", () => {
   });
 
   it("should error on TTY when entries are expected", async () => {
-    vi.spyOn(process, "stdin", "get").mockReturnValueOnce({ isTTY: true } as NodeJS.ReadStream & { fd: 0 });
+    vi.spyOn(process, "stdin", "get").mockReturnValueOnce({
+      isTTY: true
+    } as NodeJS.ReadStream & { fd: 0 });
 
     await expect(
       runCommand(create, {

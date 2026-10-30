@@ -96,11 +96,16 @@ describe("dkim.rotate", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels-test", fake.options);
+    const { data, error } = await domains.dkim.rotate(
+      "example.com",
+      "mailchannels-test",
+      fake.options
+    );
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/domains/example.com/dkim-keys/mailchannels-test/rotate",
+    expect(mockClient.post).toHaveBeenCalledWith(
+      "/tx/v1/domains/example.com/dkim-keys/mailchannels-test/rotate",
       expect.objectContaining({
         body: {
           new_key: {
@@ -152,14 +157,19 @@ describe("dkim.rotate", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: ErrorCode.BadRequest } });
-        reject();
-      }))
+      post: vi.fn().mockImplementationOnce(
+        async (url, { onResponseError }) => new Promise((_, reject) => {
+          onResponseError({ response: { status: ErrorCode.BadRequest } });
+          reject();
+        }))
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels-test", fake.options);
+    const { data, error } = await domains.dkim.rotate(
+      "example.com",
+      "mailchannels-test",
+      fake.options
+    );
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -172,7 +182,11 @@ describe("dkim.rotate", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels-test", fake.options);
+    const { data, error } = await domains.dkim.rotate(
+      "example.com",
+      "mailchannels-test",
+      fake.options
+    );
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();
@@ -185,7 +199,11 @@ describe("dkim.rotate", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data, error } = await domains.dkim.rotate("example.com", "mailchannels-test", fake.options);
+    const { data, error } = await domains.dkim.rotate(
+      "example.com",
+      "mailchannels-test",
+      fake.options
+    );
 
     expect(error).toBeTruthy();
     expect(data).toBeNull();

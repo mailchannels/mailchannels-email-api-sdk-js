@@ -15,7 +15,9 @@ export const parseAddress = (address: SendMailOptions["from"]): EmailsSendRecipi
   return { email: address.address, name: address.name };
 };
 
-export const parseAddresses = (addresses?: SendMailOptions["to"]): (EmailsSendRecipient | string)[] => {
+export const parseAddresses = (
+  addresses?: SendMailOptions["to"]
+): (EmailsSendRecipient | string)[] => {
   if (!addresses) return [];
 
   if (typeof addresses === "string") {
@@ -33,7 +35,9 @@ export const parseAddresses = (addresses?: SendMailOptions["to"]): (EmailsSendRe
   return [];
 };
 
-export const parseAttachments = (attachments: SendMailOptions["attachments"]): EmailsSendAttachment[] | undefined => {
+export const parseAttachments = (
+  attachments: SendMailOptions["attachments"]
+): EmailsSendAttachment[] | undefined => {
   if (!attachments) return;
 
   return attachments.map((attachment): EmailsSendAttachment => {
@@ -45,7 +49,9 @@ export const parseAttachments = (attachments: SendMailOptions["attachments"]): E
       const encoding = attachment.encoding as BufferEncoding || "utf-8";
 
       return {
-        content: encoding === "base64" ? attachment.content : Buffer.from(attachment.content, encoding).toString("base64"),
+        content: encoding === "base64"
+          ? attachment.content
+          : Buffer.from(attachment.content, encoding).toString("base64"),
         filename: decodeURIComponent(attachment.filename),
         type: attachment.contentType,
         contentId: attachment.cid
@@ -90,7 +96,9 @@ export const parseDkim = (dkim: SendMailOptions["dkim"]): EmailsSendDkim | undef
   };
 };
 
-export const parseHeaders = (headers: SendMailOptions["headers"]): Record<string, string> | undefined => {
+export const parseHeaders = (
+  headers: SendMailOptions["headers"]
+): Record<string, string> | undefined => {
   if (!headers) return;
 
   if (Array.isArray(headers)) {
@@ -104,9 +112,13 @@ export const parseHeaders = (headers: SendMailOptions["headers"]): Record<string
   return Object.fromEntries(
     Object.entries(headers).map(([key, value]) => [
       key,
-      Array.isArray(value) ? value.join(",") : value
+      Array.isArray(value)
+        ? value.join(",")
+        : value
         && typeof value === "object"
-        && "value" in value ? String((value as { value: unknown }).value) : String(value)
+        && "value" in value
+          ? String((value as { value: unknown }).value)
+          : String(value)
     ])
   );
 };

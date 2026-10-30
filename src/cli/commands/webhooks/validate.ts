@@ -33,6 +33,8 @@ export default defineCommand({
         status: response?.status
       }))
     ));
-    console.info("[Webhooks] Total webhooks validated:", data.results.length, "all passed?:", data.allPassed);
+    console.info(
+      "[Webhooks] Total webhooks validated:", data.results.length, "all passed?:", data.allPassed
+    );
   }
 });

@@ -12,4 +12,5 @@ export interface DomainsCustomTrackingUpdateOptions {
   status?: "active" | "disabled";
 }
 
-export type DomainsCustomTrackingUpdateResponse = DataResponse<DomainsCustomTrackingWithDnsSetupRequired>;
+export type DomainsCustomTrackingUpdateResponse =
+  DataResponse<DomainsCustomTrackingWithDnsSetupRequired>;

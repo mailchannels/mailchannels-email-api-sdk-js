@@ -10,7 +10,11 @@ const fake = {
   invalidCompanyName: "a",
   validHandle: "validhandle123",
   invalidHandle: "Invalid_Handle!",
-  apiResponse: { company_name: "My Company", enabled: true, handle: "validhandle123" } satisfies SubAccountsCreateApiResponse,
+  apiResponse: {
+    company_name: "My Company",
+    enabled: true,
+    handle: "validhandle123"
+  } satisfies SubAccountsCreateApiResponse,
   expectedResponse: {
     data: { companyName: "My Company", enabled: true, handle: "validhandle123" },
     error: null

@@ -81,9 +81,11 @@ interface WebhookEventWithStatus {
   reason?: string;
 }
 
-export interface WebhookEventHardBounced extends WebhookEventBase<"hard-bounced">, WebhookEventWithStatus {}
+export interface WebhookEventHardBounced
+  extends WebhookEventBase<"hard-bounced">, WebhookEventWithStatus {}
 
-export interface WebhookEventSoftBounced extends WebhookEventBase<"soft-bounced">, WebhookEventWithStatus {}
+export interface WebhookEventSoftBounced
+  extends WebhookEventBase<"soft-bounced">, WebhookEventWithStatus {}
 
 export interface WebhookEventDropped extends WebhookEventBase<"dropped">, WebhookEventWithStatus {}
 
@@ -91,7 +93,8 @@ export interface WebhookEventComplained extends WebhookEventBase<"complained"> {
 
 export interface WebhookEventUnsubscribed extends WebhookEventBase<"unsubscribed"> {}
 
-export interface WebhookEventTest extends Omit<WebhookEventBase<"test">, "recipients" | "campaignId"> {}
+export interface WebhookEventTest
+  extends Omit<WebhookEventBase<"test">, "recipients" | "campaignId"> {}
 
 export type WebhookEvent =
   | WebhookEventProcessed

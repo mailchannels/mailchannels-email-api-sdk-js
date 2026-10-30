@@ -14,6 +14,18 @@ export default defineConfig({
     "import/no-mutable-exports": "error",
     "import/no-named-default": "error",
     "import/no-self-import": "error",
+    "@stylistic/max-len": ["error", {
+      code: 100,
+      ignoreComments: true,
+      ignorePattern: [
+        // Standalone strings, assignments, and return statements
+        "^\\s*(?:(?:const|let|var)\\s+\\w+\\s*=\\s*|return\\s+)?(['\"`]).*\\1\\s*[,;]?$",
+        // Object properties, including computed enum keys
+        "^\\s*(?:\\w+|\\[[\\w$.]+\\])\\s*:\\s*(['\"`]).*\\1\\s*,?\\s*$",
+        // Test descriptions
+        "\\b(?:it|test|describe)\\s*\\(\\s*(['\"`]).*?\\1\\s*,"
+      ].join("|")
+    }],
     "@stylistic/indent": ["error", 2, { SwitchCase: 1 }],
     "@stylistic/linebreak-style": ["error", process.platform === "win32" ? "windows" : "unix"],
     "@stylistic/quotes": ["error", "double"],
@@ -21,8 +33,11 @@ export default defineConfig({
     "@stylistic/no-extra-semi": "error",
     "@stylistic/comma-dangle": ["error", "never"],
     "@stylistic/space-before-function-paren": ["error", "always"],
-    "@stylistic/multiline-ternary": ["error", "never"],
-    "@stylistic/member-delimiter-style": ["error", { multiline: { delimiter: "semi" }, singleline: { delimiter: "comma" } }],
+    "@stylistic/multiline-ternary": ["error", "always-multiline"],
+    "@stylistic/member-delimiter-style": ["error", {
+      multiline: { delimiter: "semi" },
+      singleline: { delimiter: "comma" }
+    }],
     "@stylistic/arrow-spacing": ["error", { before: true, after: true }],
     "@stylistic/brace-style": ["error", "stroustrup", { allowSingleLine: true }],
     "@stylistic/no-multi-spaces": "error",

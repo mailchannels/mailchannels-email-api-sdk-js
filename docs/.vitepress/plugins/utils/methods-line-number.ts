@@ -1,7 +1,15 @@
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { pascalCase } from "scule";
-import { type Node, ScriptTarget, SyntaxKind, createSourceFile, forEachChild, isClassDeclaration, isMethodDeclaration } from "typescript";
+import {
+  type Node,
+  ScriptTarget,
+  SyntaxKind,
+  createSourceFile,
+  forEachChild,
+  isClassDeclaration,
+  isMethodDeclaration
+} from "typescript";
 
 const methodLineCache = new Map<string, Map<string, number>>();
 const moduleSubclassCache = new Map<string, string[]>();
@@ -59,9 +67,15 @@ export const getModuleSubclassSlugs = (moduleName: string): string[] => {
   }
 };
 
-export const getMethodLineNumber = (moduleName: string, methodName: string, className?: string) => {
+export const getMethodLineNumber = (
+  moduleName: string,
+  methodName: string,
+  className?: string
+) => {
   const subclassSlug = resolveSubclassSlug(moduleName, className);
-  const targetClass = subclassSlug ? pascalCase(`${moduleName}-${subclassSlug}`) : pascalCase(moduleName);
+  const targetClass = subclassSlug
+    ? pascalCase(`${moduleName}-${subclassSlug}`)
+    : pascalCase(moduleName);
   const cacheKey = `${moduleName}:${targetClass}`;
 
   if (methodLineCache.has(cacheKey)) {
@@ -70,7 +84,9 @@ export const getMethodLineNumber = (moduleName: string, methodName: string, clas
 
   try {
     const projectDir = process.cwd();
-    const sourceFilePath = subclassSlug ? path.join(projectDir, `src/modules/${moduleName}/${subclassSlug}.ts`) : path.join(projectDir, `src/modules/${moduleName}/index.ts`);
+    const sourceFilePath = subclassSlug
+      ? path.join(projectDir, `src/modules/${moduleName}/${subclassSlug}.ts`)
+      : path.join(projectDir, `src/modules/${moduleName}/index.ts`);
     const code = readFileSync(sourceFilePath, "utf8");
     const sourceFile = createSourceFile(sourceFilePath, code, ScriptTarget.Latest, true);
 
@@ -84,12 +100,15 @@ export const getMethodLineNumber = (moduleName: string, methodName: string, clas
         }
         for (const member of node.members) {
           if (isMethodDeclaration(member)) {
-            const isPrivate = member.modifiers?.some(modifier => modifier.kind === SyntaxKind.PrivateKeyword);
+            const isPrivate = member.modifiers?.some(
+              modifier => modifier.kind === SyntaxKind.PrivateKeyword
+            );
             if (isPrivate) continue;
 
             const name = member.name?.getText(sourceFile);
             if (name) {
-              const lineNumber = sourceFile.getLineAndCharacterOfPosition(member.getStart(sourceFile)).line + 1;
+              const lineNumber =
+                sourceFile.getLineAndCharacterOfPosition(member.getStart(sourceFile)).line + 1;
               methodLines.set(name, lineNumber);
             }
           }

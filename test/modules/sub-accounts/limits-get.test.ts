@@ -25,7 +25,10 @@ describe("limits.get", () => {
 
     expect(data).toStrictEqual(fake.expectedResponse.data);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalledWith(`/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/limit`, expect.any(Object));
+    expect(mockClient.get).toHaveBeenCalledWith(
+      `/tx/v1/sub-account/${encodeURIComponent(fake.validHandle)}/limit`,
+      expect.any(Object)
+    );
   });
 
   it("should contain error when handle is not provided", async () => {

@@ -70,7 +70,16 @@ describe("custom-tracking update", () => {
 
   it("should allow updating status without a new name", async () => {
     await runCommand(update, {
-      rawArgs: ["--api-key", "test-api-key", "--hostname", fake.hostname, "--scope", fake.scope, "--status", "active"]
+      rawArgs: [
+        "--api-key",
+        "test-api-key",
+        "--hostname",
+        fake.hostname,
+        "--scope",
+        fake.scope,
+        "--status",
+        "active"
+      ]
     });
 
     expect(mockUpdate).toHaveBeenCalledWith(fake.hostname, fake.scope, {

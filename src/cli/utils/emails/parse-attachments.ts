@@ -26,7 +26,9 @@ export const parseAttachments = async (rawAttachments: boolean) => {
 
   const attachments: EmailsSendAttachment[] = inputAttachments.map((attachment, index) => {
     if (!attachment.content || !attachment.filename) {
-      console.error("[Emails] Attachment at index " + index + " is missing required fields 'content' or 'filename'.");
+      console.error(
+        `[Emails] Attachment at index ${index} is missing required fields 'content' or 'filename'.`
+      );
       process.exit(1);
     }
 

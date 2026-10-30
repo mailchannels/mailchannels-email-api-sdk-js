@@ -21,7 +21,11 @@ const fake = {
   response: {
     data: {
       algorithm: "rsa",
-      dnsRecords: [{ name: "mailchannels._domainkey.example.com", type: "TXT", value: "public-key" }],
+      dnsRecords: [{
+        name: "mailchannels._domainkey.example.com",
+        type: "TXT",
+        value: "public-key"
+      }],
       domain: "example.com",
       length: 2048,
       publicKey: "public-key",

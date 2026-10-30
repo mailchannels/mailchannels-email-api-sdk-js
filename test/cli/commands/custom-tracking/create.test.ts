@@ -87,7 +87,16 @@ describe("custom-tracking create", () => {
 
   it("should exit with error when required arguments are missing", async () => {
     await expect(
-      runCommand(create, { rawArgs: ["--api-key", "test-api-key", "--hostname", fake.hostname, "--scope", fake.scope] })
+      runCommand(create, {
+        rawArgs: [
+          "--api-key",
+          "test-api-key",
+          "--hostname",
+          fake.hostname,
+          "--scope",
+          fake.scope
+        ]
+      })
     ).rejects.toThrow();
 
     expect(mockCreate).not.toHaveBeenCalled();
