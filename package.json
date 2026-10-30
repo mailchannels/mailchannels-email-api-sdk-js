@@ -16,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js.git"
+    "url": "git+https://github.com/mailchannels/mailchannels-email-api-sdk-js.git"
   },
   "homepage": "https://docs.mailchannels.com/email-api/javascript/quickstart",
   "author": {
