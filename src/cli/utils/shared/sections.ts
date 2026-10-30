@@ -23,7 +23,7 @@ export const tabulatedSections = (records: object | object[]) => {
   const isArray = Array.isArray(records);
   const arr = isArray ? records : [records];
   return arr.map((record, i) => {
-    const content = tabulate(record);
+    const content = typeof record === "string" ? record : tabulate(record);
     return `\n${isArray ? separatorWithIndex(i) : separator}\n${content}${ i < arr.length - 1 ? "" : "\n" + separator }`;
   }).join("");
 };
