@@ -1,9 +1,10 @@
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import emails from "~/cli/commands/emails";
+import { tabulatedSections } from "~/cli/utils/shared/sections";
 import type { EmailsSendResponse } from "~/types/emails/send";
 
 // @ts-expect-error defineCommand does not handle well sub command types
@@ -51,6 +52,10 @@ describe("send", () => {
     vi.spyOn(console, "warn").mockImplementation(() => {});
   });
 
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   afterAll(() => {
     vi.restoreAllMocks();
   });
@@ -58,6 +63,67 @@ describe("send", () => {
   it("should send an email with valid arguments", async () => {
     await runCommand(send, { rawArgs: fake.args });
     expect(mockSend).toHaveBeenCalledWith(expect.objectContaining(fake.options), false);
+    expect(console.info).toHaveBeenCalledWith("[Emails] Request ID: test-request-id");
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining("[Emails] Email sent successfully."
+        + tabulatedSections(fake.response.data.results ?? [])
+      )
+    );
+  });
+
+  it("should display rendered output for a dry run", async () => {
+    mockSend.mockResolvedValueOnce({
+      data: {
+        requestId: "dry-run-request-id",
+        rendered: ["Rendered email body"]
+      },
+      error: null
+    });
+
+    await runCommand(send, { rawArgs: [...fake.args, "--dry-run"] });
+
+    expect(mockSend).toHaveBeenCalledWith(expect.objectContaining(fake.options), true);
+    expect(console.info).toHaveBeenCalledWith(
+      "[Emails] Dry run performed, no email was actually sent."
+    );
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining("[Emails] Rendered output:"
+        + tabulatedSections(["Rendered email body"])
+      )
+    );
+  });
+
+  it.each([
+    {
+      description: "omitted",
+      data: { requestId: "dry-run-request-id" }
+    },
+    {
+      description: "empty",
+      data: { requestId: "dry-run-request-id", rendered: [] }
+    }
+  ])("should omit rendered output when it is $description", async ({ data }) => {
+    mockSend.mockResolvedValueOnce({ data, error: null });
+
+    await runCommand(send, { rawArgs: [...fake.args, "--dry-run"] });
+
+    expect(mockSend).toHaveBeenCalledWith(expect.objectContaining(fake.options), true);
+    expect(console.info).toHaveBeenCalledWith(
+      "[Emails] Dry run performed, no email was actually sent."
+    );
+  });
+
+  it.each([
+    { description: "omitted", data: { requestId: "no-results-request-id" } },
+    { description: "empty", data: { requestId: "no-results-request-id", results: [] } }
+  ])("should report when send results are $description", async ({ data }) => {
+    mockSend.mockResolvedValueOnce({ data, error: null });
+
+    await runCommand(send, { rawArgs: fake.args });
+
+    expect(console.info).toHaveBeenCalledWith(
+      "[Emails] Email sent successfully. No results returned"
+    );
   });
 
   it("should send an email with file content", async () => {
@@ -286,10 +352,12 @@ describe("send", () => {
   });
 
   it("should exit with error on API send failure", async () => {
+    vi.mocked(console.error).mockClear();
     mockSend.mockResolvedValueOnce({ error: { message: "API Error" } });
 
     await expect(
       runCommand(send, { rawArgs: fake.args })
     ).rejects.toThrow();
+    expect(console.error).toHaveBeenCalledWith("[Emails] API Error");
   });
 });
