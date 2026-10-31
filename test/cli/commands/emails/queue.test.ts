@@ -1,6 +1,7 @@
-import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import emails from "~/cli/commands/emails";
+import { tabulatedSections } from "~/cli/utils/shared/sections";
 import type { EmailsQueueResponse } from "~/types/emails/queue";
 
 // @ts-expect-error defineCommand does not handle well sub command types
@@ -43,6 +44,10 @@ describe("queue", () => {
     vi.spyOn(console, "info").mockImplementation(() => {});
   });
 
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   afterAll(() => {
     vi.restoreAllMocks();
   });
@@ -50,6 +55,19 @@ describe("queue", () => {
   it("should send an email with valid arguments", async () => {
     await runCommand(queue, { rawArgs: fake.args });
     expect(mockQueue).toHaveBeenCalledWith(expect.objectContaining(fake.options));
+    expect(console.info).toHaveBeenCalledWith(
+      expect.stringContaining("[Emails] Email queued successfully."
+        + tabulatedSections(fake.response.data)
+      )
+    );
+  });
+
+  it("should report when the queue response has no data", async () => {
+    mockQueue.mockResolvedValueOnce({ data: null, error: null });
+
+    await runCommand(queue, { rawArgs: fake.args });
+
+    expect(console.info).toHaveBeenCalledWith("[Emails] Email queued successfully.");
   });
 
   it("should exit with error on API send failure", async () => {

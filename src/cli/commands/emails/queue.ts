@@ -2,6 +2,7 @@ import { defineCommand } from "citty";
 import { getApiKey } from "../../utils/shared/get-api-key";
 import { emailArgs } from "../../utils/emails/args";
 import { parseOptions } from "../../utils/emails/parse-options";
+import { tabulatedSections } from "../../utils/shared/sections";
 import { Emails, MailChannelsClient } from "../../../mailchannels";
 
 export default defineCommand({
@@ -16,13 +17,15 @@ export default defineCommand({
     const emails = new Emails(client);
 
     const sendOptions = await parseOptions(args);
-    const { error } = await emails.queue(sendOptions);
+    const { data, error } = await emails.queue(sendOptions);
 
     if (error) {
       console.error(`[Emails] ${error.message}`);
       process.exit(1);
     }
 
-    console.info("[Emails] Email queued successfully.");
+    console.info("[Emails] Email queued successfully."
+      + (data ? tabulatedSections(data) : "")
+    );
   }
 });
