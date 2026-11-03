@@ -27,7 +27,7 @@ new MailChannels('')   // throws Error: "Missing MailChannels API key."
 | --- | --- | --- | --- |
 | `baseUrl` | `string` | `https://api.mailchannels.net` | Only override if MailChannels gives you a specific alternate endpoint (sandbox, regional URL). |
 | `timeout` | `number \| false` | `120000` (ms) | Pass `false` to disable the timeout entirely. |
-| `retry` | `boolean \| number \| RetryOptions` | `false` | `ofetch` retry options. |
+| `retry` | `number \| false` | `false` | Number of retries for network errors and retryable HTTP responses. |
 | `signal` | `AbortSignal` | `undefined` | Propagated to every fetch call made by this instance. |
 
 ## Multi-Tenant: One Client Per Credential

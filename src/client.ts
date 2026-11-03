@@ -1,5 +1,6 @@
-import { $fetch, type FetchOptions } from "ofetch";
+import { $fetch } from "./internal/fetch";
 import type { MailChannelsClientOptions } from "./types/client";
+import type { MailChannelsFetchOptions } from "./types/fetch";
 import { version } from "../package.json";
 
 export class MailChannelsClient {
@@ -28,7 +29,7 @@ export class MailChannelsClient {
     };
   }
 
-  protected async _fetch<T>(path: string, options: FetchOptions<"json">) {
+  protected async _fetch<T>(path: string, options: MailChannelsFetchOptions) {
     const { headers, signal = this.options.signal, ...fetchOptions } = options;
 
     return $fetch<T>(path, {
@@ -44,23 +45,23 @@ export class MailChannelsClient {
     });
   }
 
-  async post<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
+  async post<T>(path: string, options?: Omit<MailChannelsFetchOptions, "method">) {
     return this._fetch<T>(path, { method: "POST", ...options });
   }
 
-  async get<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
+  async get<T>(path: string, options?: Omit<MailChannelsFetchOptions, "method">) {
     return this._fetch<T>(path, { method: "GET", ...options });
   }
 
-  async delete<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
+  async delete<T>(path: string, options?: Omit<MailChannelsFetchOptions, "method">) {
     return this._fetch<T>(path, { method: "DELETE", ...options });
   }
 
-  async put<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
+  async put<T>(path: string, options?: Omit<MailChannelsFetchOptions, "method">) {
     return this._fetch<T>(path, { method: "PUT", ...options });
   }
 
-  async patch<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
+  async patch<T>(path: string, options?: Omit<MailChannelsFetchOptions, "method">) {
     return this._fetch<T>(path, { method: "PATCH", ...options });
   }
 }

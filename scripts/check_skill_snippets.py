@@ -99,7 +99,7 @@ import { mailchannelsTransport, type MailChannelsTransportSendMode } from '@mail
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
 // process, Buffer, and FetchOptions are stubbed rather than imported so the
-// checker works without a full node_modules install (@types/node / ofetch absent).
+// checker works without a full node_modules install (@types/node absent).
 // TODO: Update this script to work correctly with node install so we don't have to stub
 declare const process: { env: Record<string, string> }
 declare const Buffer: {
@@ -374,7 +374,7 @@ def _filter_snippet_errors(output: str, label: str) -> str:
     """Return only error lines that belong to the snippet file.
 
     tsc follows import chains and emits errors from ``src/*.ts`` (e.g.
-    unresolved ``ofetch`` when node_modules aren't fully installed). Those
+    unresolved dependencies when node_modules aren't fully installed). Those
     are noise for doc checking. Keep only lines whose filename is *label*
     (the Markdown path, after path-replacement and line-number remapping),
     plus any indented context lines that follow a kept primary error line.

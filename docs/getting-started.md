@@ -114,7 +114,7 @@ const mailchannels = new MailChannels('your-api-key', {
   >
   > `408`, `409`, `425`, `429`, `500`, `502`, `503`, `504`.
   >
-  > See [ofetch](https://github.com/unjs/ofetch) documentation for more details on retry behavior.
+  > Network errors are also retried when retries remain.
 - `timeout` `number | false` <Badge type="info">optional</Badge>: Request timeout in milliseconds. Set to `false` or `0` to disable timeout handling. Default is `120000` (120 seconds/2 minutes).
 - `signal` `AbortSignal` <Badge type="info">optional</Badge>: Abort signal applied to requests made by the client.
 

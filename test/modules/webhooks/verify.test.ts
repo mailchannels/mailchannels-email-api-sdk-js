@@ -149,7 +149,7 @@ const fake = {
 };
 
 const $fetch = vi.hoisted(() => vi.fn());
-vi.mock("ofetch", () => ({ $fetch }));
+vi.mock("~/internal/fetch", () => ({ $fetch }));
 
 describe("verify", () => {
   it("should successfully verify the webhook and return event types for valid webhook request", async () => {

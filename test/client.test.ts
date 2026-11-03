@@ -25,7 +25,7 @@ const fake = {
 };
 
 const $fetch = vi.hoisted(() => vi.fn());
-vi.mock("ofetch", () => ({ $fetch }));
+vi.mock("~/internal/fetch", () => ({ $fetch }));
 
 describe("MailChannelsClient", () => {
   it("should throw an error if no API key is provided", () => {
