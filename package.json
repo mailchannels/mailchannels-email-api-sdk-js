@@ -90,5 +90,8 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@12.15.0"
+  "packageManager": "pnpm@12.15.0",
+  "changelog": {
+    "repo": "https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js"
+  }
 }
