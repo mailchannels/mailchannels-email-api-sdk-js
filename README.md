@@ -255,7 +255,6 @@ The MailChannels Nodemailer transport maps a subset of Nodemailer features to th
 - Only a single `replyTo` address is supported
 - Multiple DKIM signatures are not supported
 - For async sends (`sendMode: 'async'`), the response will have a `messageId` of `null`, and both the `accepted` and `rejected` arrays will be empty
-- Attachment `path`, `href` and other URL fields are not supported
 - MailChannels-specific send options must be passed via the augmented `mailchannels` field in the `sendMail` options
 - Some advanced Nodemailer behaviors may be ignored or transformed when mapped to the SDK
 

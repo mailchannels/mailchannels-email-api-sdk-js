@@ -164,6 +164,13 @@ export default [
         ]
       },
       {
+        text: "Integrations",
+        collapsed: true,
+        items: [
+          { text: "Nodemailer", link: "/guides/integrations/nodemailer" }
+        ]
+      },
+      {
         text: "Examples",
         link: "/guides/examples"
       }
