@@ -114,31 +114,47 @@ const mapPersonalization = (
   index: number,
   rootTemplateData?: EmailsSendTemplate["data"]
 ) => {
+  const from = parseRecipient(personalization.from);
+  if (from === null) {
+    return `Personalization at index ${index} contains an invalid email address in the 'from' field.`;
+  }
+
+  const envelopeFrom = parseRecipient(personalization.envelopeFrom);
+  if (envelopeFrom === null) {
+    return `Personalization at index ${index} contains an invalid email address in the 'envelopeFrom' field.`;
+  }
+
+  const replyTo = parseRecipient(personalization.replyTo);
+  if (replyTo === null) {
+    return `Personalization at index ${index} contains an invalid email address in the 'replyTo' field.`;
+  }
+
   const to = parseArrayRecipients(personalization.to);
+  if (to === null) {
+    return `Personalization at index ${index} contains an invalid email address in the 'to' field.`;
+  }
   if (!to || !to.length) {
-    return (
-      `Personalization at index ${index} must include at least one recipient in the 'to' field.`
-    );
+    return `Personalization at index ${index} must include at least one recipient in the 'to' field.`;
   }
 
   if (to.length > MAX_RECIPIENTS) {
-    return (
-      `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'to' recipients.`
-    );
+    return `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'to' recipients.`;
   }
 
   const cc = parseArrayRecipients(personalization.cc);
+  if (cc === null) {
+    return `Personalization at index ${index} contains an invalid email address in the 'cc' field.`;
+  }
   if (cc && cc.length > MAX_RECIPIENTS) {
-    return (
-      `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'cc' recipients.`
-    );
+    return `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'cc' recipients.`;
   }
 
   const bcc = parseArrayRecipients(personalization.bcc);
+  if (bcc === null) {
+    return `Personalization at index ${index} contains an invalid email address in the 'bcc' field.`;
+  }
   if (bcc && bcc.length > MAX_RECIPIENTS) {
-    return (
-      `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'bcc' recipients.`
-    );
+    return `Personalization at index ${index} cannot include more than ${MAX_RECIPIENTS} 'bcc' recipients.`;
   }
 
   const headerError = validateHeaderMap(
@@ -174,10 +190,10 @@ const mapPersonalization = (
     cc,
     ...mapDkim(personalization.dkim),
     dynamic_template_data,
-    envelope_from: parseRecipient(personalization.envelopeFrom),
-    from: parseRecipient(personalization.from),
+    envelope_from: envelopeFrom,
+    from,
     headers: personalization.headers,
-    reply_to: parseRecipient(personalization.replyTo),
+    reply_to: replyTo,
     subject: personalization.subject,
     to
   } satisfies EmailsSendPayloadPersonalization;
@@ -201,8 +217,21 @@ export const buildSendPayload = async (
     : undefined;
 
   const parsedFrom = parseRecipient(from);
-  if (!parsedFrom || !parsedFrom.email) {
+  if (parsedFrom === undefined) {
     return "No sender provided. Use the 'from' option to specify a sender.";
+  }
+  if (parsedFrom === null) {
+    return "The 'from' field contains an invalid email address.";
+  }
+
+  const envelopeFrom = parseRecipient(options.envelopeFrom);
+  if (envelopeFrom === null) {
+    return "The 'envelopeFrom' field contains an invalid email address.";
+  }
+
+  const replyTo = parseRecipient(options.replyTo);
+  if (replyTo === null) {
+    return "The 'replyTo' field contains an invalid email address.";
   }
 
   if (!options.subject || typeof options.subject !== "string" || !options.subject.trim()) {
@@ -285,6 +314,9 @@ export const buildSendPayload = async (
   }
   else {
     const parsedTo = parseArrayRecipients(options.to);
+    if (parsedTo === null) {
+      return "The 'to' field contains an invalid email address.";
+    }
     if (!parsedTo || !parsedTo.length) {
       return "No recipients provided. Use the 'to' option to specify at least one recipient";
     }
@@ -294,11 +326,17 @@ export const buildSendPayload = async (
     }
 
     const parsedCc = parseArrayRecipients(options.cc);
+    if (parsedCc === null) {
+      return "The 'cc' field contains an invalid email address.";
+    }
     if (parsedCc && parsedCc.length > MAX_RECIPIENTS) {
       return `The maximum number of 'cc' recipients is ${MAX_RECIPIENTS}.`;
     }
 
     const parsedBcc = parseArrayRecipients(options.bcc);
+    if (parsedBcc === null) {
+      return "The 'bcc' field contains an invalid email address.";
+    }
     if (parsedBcc && parsedBcc.length > MAX_RECIPIENTS) {
       return `The maximum number of 'bcc' recipients is ${MAX_RECIPIENTS}.`;
     }
@@ -381,10 +419,10 @@ export const buildSendPayload = async (
     attachments: resolvedAttachments?.map(a => mapAttachment(a)),
     campaign_id: options.campaignId,
     ...mapDkim(options.dkim),
-    envelope_from: parseRecipient(options.envelopeFrom),
+    envelope_from: envelopeFrom,
     personalizations,
     headers: options.headers,
-    reply_to: parseRecipient(options.replyTo),
+    reply_to: replyTo,
     from: parsedFrom,
     subject: options.subject,
     content,

@@ -40,6 +40,9 @@ const { data, error } = await mailchannels.emails.send({
 ```
 :::
 
+Every supplied email address is validated before sending. If any address in a list is invalid, the
+entire send is rejected.
+
 ### Send Attachments
 
 To include attachments in your email, add an `attachments` array property to your send request.

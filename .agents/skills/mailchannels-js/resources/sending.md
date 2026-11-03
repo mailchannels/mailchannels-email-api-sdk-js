@@ -38,6 +38,9 @@ const r3 = { email: 'recipient@example.net', name: 'Jane Smith' }          // ob
 const r4 = ['a@example.net', { email: 'b@example.net', name: 'Bob' }]      // array
 ```
 
+Every supplied email address is validated before sending. If any address in a list is invalid, the
+entire send is rejected.
+
 ## Per-Recipient Personalization
 
 `personalizations` is the advanced form — each entry is one fully-rendered outgoing message
