@@ -93,6 +93,7 @@ These produce `error.type === 'validation_error'` and `error.statusCode === null
 any HTTP call:
 
 - Missing `from`, `to` / `personalizations`, `subject`, body content.
+- Invalid email addresses in sender, reply-to, envelope sender, or recipient fields.
 - Empty collections.
 - Reserved headers in `headers`.
 - Non-string header values.

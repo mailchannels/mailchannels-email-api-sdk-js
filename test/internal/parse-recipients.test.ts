@@ -22,34 +22,38 @@ describe("parseRecipient", () => {
     expect(recipient).toStrictEqual(fake.object);
   });
 
+  it("should return undefined when recipient is omitted", () => {
+    expect(parseRecipient()).toBeUndefined();
+  });
+
   it("should parse email without name", () => {
     const recipient = parseRecipient(fake.object.email);
     expect(recipient).toStrictEqual({ email: fake.object.email });
   });
 
-  it("should return undefined on no email string", () => {
+  it("should return null on an invalid email string", () => {
     const recipient = parseRecipient(fake.object.name);
-    expect(recipient).toBeUndefined();
+    expect(recipient).toBeNull();
   });
 
-  it("should return undefined on empty email in name-address pair", () => {
+  it("should return null on empty email in name-address pair", () => {
     const recipient = parseRecipient("Name <>");
-    expect(recipient).toBeUndefined();
+    expect(recipient).toBeNull();
   });
 
-  it("should return undefined on malformed name-address pair", () => {
+  it("should return null on malformed name-address pair", () => {
     const recipient = parseRecipient("Name <name@test.com> extra");
-    expect(recipient).toBeUndefined();
+    expect(recipient).toBeNull();
   });
 
-  it("should return undefined on incomplete name-address pair", () => {
+  it("should return null on incomplete name-address pair", () => {
     const recipient = parseRecipient("Name <name@test.com");
-    expect(recipient).toBeUndefined();
+    expect(recipient).toBeNull();
   });
 
-  it("should return undefined if email is not provided", () => {
+  it("should return null if email is not provided", () => {
     const recipient = parseRecipient({ email: "", name: fake.object.name });
-    expect(recipient).toBeUndefined();
+    expect(recipient).toBeNull();
   });
 });
 
@@ -67,6 +71,15 @@ describe("parseArrayRecipients", () => {
   it("should parse array of recipients with mixed formats", () => {
     const recipient = parseArrayRecipients([fake.pair, fake.object, fake.object.email]);
     expect(recipient).toStrictEqual([fake.object, fake.object, { email: fake.object.email }]);
+  });
+
+  it("should return null for the entire list when a single recipient is invalid", () => {
+    const recipient = parseArrayRecipients([fake.object.email, "invalid"]);
+    expect(recipient).toBeNull();
+  });
+
+  it("should return null for an empty string recipient", () => {
+    expect(parseArrayRecipients("")).toBeNull();
   });
 
   it("should return undefined if array is empty", () => {

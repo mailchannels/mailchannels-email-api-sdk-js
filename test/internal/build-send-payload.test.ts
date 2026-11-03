@@ -351,6 +351,42 @@ describe("buildSendPayload", async () => {
     expect(payload).toBe("The maximum number of 'bcc' recipients is 1000.");
   });
 
+  it("should reject invalid root recipient fields", async () => {
+    const cases = [
+      {
+        options: { to: ["recipient@example.com", "invalid"] },
+        expected: "The 'to' field contains an invalid email address."
+      },
+      {
+        options: { cc: ["cc@example.com", "invalid"] },
+        expected: "The 'cc' field contains an invalid email address."
+      },
+      {
+        options: { bcc: ["bcc@example.com", "invalid"] },
+        expected: "The 'bcc' field contains an invalid email address."
+      },
+      {
+        options: { from: "invalid" },
+        expected: "The 'from' field contains an invalid email address."
+      },
+      {
+        options: { replyTo: "invalid" },
+        expected: "The 'replyTo' field contains an invalid email address."
+      },
+      {
+        options: { envelopeFrom: "invalid" },
+        expected: "The 'envelopeFrom' field contains an invalid email address."
+      }
+    ] satisfies { options: Partial<EmailsSendOptions>, expected: string }[];
+
+    for (const { options, expected } of cases) {
+      expect(await buildSendPayload({
+        ...fake.options,
+        ...options
+      })).toBe(expected);
+    }
+  });
+
   it("should contain error when transactional is false without DKIM", async () => {
     const payload = await buildSendPayload({ ...fake.options, transactional: false });
 
@@ -433,7 +469,7 @@ describe("buildSendPayload", async () => {
       html,
       text,
       tracking,
-      personalizations: [{ to: "" }]
+      personalizations: [{ to: [] }]
     });
 
     expect(typeof payload).toBe("string");
@@ -503,6 +539,49 @@ describe("buildSendPayload", async () => {
     expect(payload).toBe(
       "Personalization at index 0 cannot include more than 1000 'bcc' recipients."
     );
+  });
+
+  it("should reject invalid personalization recipient fields", async () => {
+    const { from, subject, html, text } = fake.options;
+    const cases = [
+      {
+        personalizations: [{ to: "recipient@example.com", from: "invalid" }],
+        expected: "Personalization at index 0 contains an invalid email address in the 'from' field."
+      },
+      {
+        personalizations: [{ to: "recipient@example.com", replyTo: "invalid" }],
+        expected: "Personalization at index 0 contains an invalid email address in the 'replyTo' field."
+      },
+      {
+        personalizations: [{ to: "recipient@example.com", envelopeFrom: "invalid" }],
+        expected: "Personalization at index 0 contains an invalid email address in the 'envelopeFrom' field."
+      },
+      {
+        personalizations: [{ to: ["recipient@example.com", "invalid"] }],
+        expected: "Personalization at index 0 contains an invalid email address in the 'to' field."
+      },
+      {
+        personalizations: [{ to: "recipient@example.com", cc: ["cc@example.com", "invalid"] }],
+        expected: "Personalization at index 0 contains an invalid email address in the 'cc' field."
+      },
+      {
+        personalizations: [{
+          to: "recipient@example.com",
+          bcc: ["bcc@example.com", "invalid"]
+        }],
+        expected: "Personalization at index 0 contains an invalid email address in the 'bcc' field."
+      }
+    ] satisfies { personalizations: EmailsSendOptions["personalizations"], expected: string }[];
+
+    for (const { personalizations, expected } of cases) {
+      expect(await buildSendPayload({
+        from,
+        subject,
+        html,
+        text,
+        personalizations
+      })).toBe(expected);
+    }
   });
 
   it("should contain error when personalization headers include a reserved header", async () => {

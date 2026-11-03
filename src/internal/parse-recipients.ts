@@ -30,11 +30,13 @@ export const parseRecipientString = (input: string): EmailsSendRecipient | undef
  * Parses any recipient format to MailChannels format
  */
 export const parseRecipient = (recipient?: EmailsSendRecipient | string) => {
+  if (recipient === undefined) return undefined;
+
   if (typeof recipient === "string") {
-    return parseRecipientString(recipient);
+    return parseRecipientString(recipient) ?? null;
   }
 
-  if (!recipient?.email || !isValidEmail(recipient.email)) return undefined;
+  if (!isValidEmail(recipient?.email)) return null;
 
   return { email: recipient.email, name: recipient.name };
 };
@@ -43,17 +45,16 @@ export const parseRecipient = (recipient?: EmailsSendRecipient | string) => {
  * Parses any array of recipients format to MailChannels format
  */
 export const parseArrayRecipients = (recipients?: EmailsSendRecipientInput) => {
-  if (!recipients) return undefined;
+  if (recipients === undefined) return undefined;
 
-  const arr = typeof recipients === "string"
-    ? [parseRecipientString(recipients)]
-    : Array.isArray(recipients)
-      ? recipients.map(parseRecipient)
-      : [recipients];
+  const arr = Array.isArray(recipients) ? recipients : [recipients];
 
-  const filtered = arr.filter(
-    (recipient): recipient is NonNullable<typeof recipient> => Boolean(recipient)
-  );
+  const parsed: EmailsSendRecipient[] = [];
+  for (const recipient of arr) {
+    const validRecipient = parseRecipient(recipient);
+    if (!validRecipient) return null;
+    parsed.push(validRecipient);
+  }
 
-  return filtered.length > 0 ? filtered : undefined;
+  return parsed.length > 0 ? parsed : undefined;
 };
