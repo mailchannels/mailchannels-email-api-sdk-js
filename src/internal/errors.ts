@@ -1,4 +1,4 @@
-import type { FetchResponse } from "ofetch";
+import type { MailChannelsFetchResponse } from "../types/fetch";
 import type { ErrorResponse, ErrorType } from "../types/responses";
 
 export const enum ErrorCode {
@@ -52,7 +52,7 @@ type MailChannelsErrorResponse =
 
 /** Create an error response based on the HTTP response status code and payload. */
 export const getStatusError = (
-  response: FetchResponse<MailChannelsErrorResponse>,
+  response: MailChannelsFetchResponse<MailChannelsErrorResponse>,
   errors: Record<number, string> = {}
 ) => {
   const statusText = errors[response.status]
@@ -60,7 +60,7 @@ export const getStatusError = (
     || "Unknown error.";
   const contentType = response.headers?.get("content-type")?.toLowerCase();
 
-  const payload = response._data ?? (response as { data?: MailChannelsErrorResponse }).data;
+  const payload = response._data;
 
   let details: string | undefined;
   let errorResponse: Record<string, unknown> | null = null;
