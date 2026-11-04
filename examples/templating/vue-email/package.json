@@ -2,13 +2,13 @@
   "name": "mailchannels-vue-email-example",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "license": "MIT",
-  "sideEffects": false,
-  "main": "./dist/index.js",
   "files": [
     "dist/**"
   ],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
@@ -21,9 +21,9 @@
     "vue": "^3.5.44"
   },
   "devDependencies": {
-    "tsdown": "0.23.1",
+    "tsdown": "0.23.5",
     "typescript": "7.0.2",
-    "unplugin-vue": "^8.0.0",
-    "vue-tsc": "^3.3.13"
+    "unplugin-vue": "^8.0.1",
+    "vue-tsc": "^3.3.14"
   }
 }
