@@ -7,6 +7,7 @@ import {
   parseHeaders,
   parseIcalEvent
 } from "./utils";
+import { MailChannelsTransportError } from "./errors";
 import type {
   MailChannelsTransportInfo,
   MailChannelsTransportOptions,
@@ -74,7 +75,7 @@ export const mailchannelsTransport = <T extends MailChannelsTransportSendMode = 
             : EmailsQueueResponse;
 
           if (sdkResponse.error) {
-            callback(new Error(sdkResponse.error.message), sentMessageInfo);
+            callback(new MailChannelsTransportError(sdkResponse.error), sentMessageInfo);
             return;
           }
 

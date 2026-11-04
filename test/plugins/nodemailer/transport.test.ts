@@ -1,7 +1,15 @@
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { Readable } from "node:stream";
 import { describe, expect, it, vi } from "vitest";
 import nodemailer, { type SendMailOptions } from "nodemailer";
 import MailMessage, { type MailMessageDataCallback } from "nodemailer/lib/mailer/mail-message";
-import { type MailChannelsTransportInfo, mailchannelsTransport } from "~/plugins/nodemailer";
+import {
+  MailChannelsTransportError,
+  type MailChannelsTransportInfo,
+  mailchannelsTransport
+} from "~/plugins/nodemailer";
 import type { EmailsQueueResponse } from "~/types/emails/queue";
 import type { EmailsSendResponse } from "~/types/emails/send";
 import { Emails } from "~/modules/emails";
@@ -296,6 +304,120 @@ describe("transport", () => {
     await expect(transport.sendMail(fake.options)).rejects.toThrow(
       "Internal Server Error"
     );
+  });
+
+  it("should expose the API status, type and response on the rejected error", async () => {
+    const response = { errors: ["invalid from address"] };
+    vi.spyOn(Emails.prototype, "queue").mockResolvedValueOnce({
+      data: null,
+      error: {
+        statusCode: 400,
+        message: "Bad request. invalid from address",
+        type: "invalid_request_error",
+        response
+      } satisfies ErrorResponse
+    });
+
+    const transport = nodemailer.createTransport(
+      mailchannelsTransport({
+        apiKey: fake.apiKey
+      })
+    );
+
+    const error = await transport.sendMail(fake.options).catch((error: unknown) => error);
+
+    expect(error).toBeInstanceOf(MailChannelsTransportError);
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toMatchObject({
+      name: "MailChannelsTransportError",
+      message: "Bad request. invalid from address",
+      code: "invalid_request_error",
+      statusCode: 400,
+      responseCode: 400,
+      response: JSON.stringify(response),
+      apiResponse: response
+    });
+  });
+
+  it("should leave responseCode and response unset when the API was not reached", async () => {
+    vi.spyOn(Emails.prototype, "queue").mockResolvedValueOnce({
+      data: null,
+      error: {
+        statusCode: null,
+        message: "fetch failed",
+        type: "api_error",
+        response: null
+      } satisfies ErrorResponse
+    });
+
+    const transport = nodemailer.createTransport(
+      mailchannelsTransport({
+        apiKey: fake.apiKey
+      })
+    );
+
+    const error = await transport
+      .sendMail(fake.options)
+      .catch((error: unknown) => error) as MailChannelsTransportError;
+
+    expect(error).toBeInstanceOf(MailChannelsTransportError);
+    expect(error.statusCode).toBeNull();
+    expect(error.apiResponse).toBeNull();
+    expect(error).not.toHaveProperty("responseCode");
+    expect(error).not.toHaveProperty("response");
+  });
+
+  it("should send buffer, path and stream attachments as base64 content", async () => {
+    const queueSpy = vi.spyOn(Emails.prototype, "queue").mockResolvedValueOnce(fake.queueResponse);
+    const dir = await mkdtemp(join(tmpdir(), "mc-nodemailer-"));
+    const path = join(dir, "report.csv");
+    await writeFile(path, "a,b\n1,2\n");
+
+    const transport = nodemailer.createTransport(
+      mailchannelsTransport({
+        apiKey: fake.apiKey
+      })
+    );
+
+    try {
+      await transport.sendMail({
+        from: fake.options.from,
+        to: fake.options.to,
+        subject: fake.options.subject,
+        text: fake.options.text,
+        attachments: [
+          { filename: "buffer.txt", content: Buffer.from("from buffer") },
+          { filename: "report.csv", path },
+          { filename: "stream.txt", content: Readable.from([Buffer.from("from stream")]) }
+        ]
+      });
+    }
+    finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+
+    expect(queueSpy).toHaveBeenCalledWith(expect.objectContaining({
+      attachments: [
+        {
+          content: Buffer.from("from buffer").toString("base64"),
+          filename: "buffer.txt",
+          type: "text/plain",
+          contentId: undefined
+        },
+        {
+          content: Buffer.from("a,b\n1,2\n").toString("base64"),
+          filename: "report.csv",
+          type: "text/csv",
+          contentId: undefined
+        },
+        {
+          content: Buffer.from("from stream").toString("base64"),
+          filename: "stream.txt",
+          type: "text/plain",
+          contentId: undefined
+        }
+      ]
+    }));
   });
 
   it("should return an empty envelope when the mail message is missing", async () => {
