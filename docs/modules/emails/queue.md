@@ -44,6 +44,9 @@ const { data, error } = await mailchannels.emails.queue({
 ```
 :::
 
+Every supplied email address is validated before sending. If any address in a list is invalid, the
+entire send is rejected.
+
 ## Params
 
 <!-- @include: ../_parts/emails-send-params.md#options -->
