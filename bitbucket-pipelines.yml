@@ -44,17 +44,6 @@ definitions:
           - pnpm install
           - pnpm test
 
-    - step: &release
-        name: Publish to npm
-        caches:
-          - pnpm
-        script:
-          - pnpm runtime set node lts -g
-          - pnpm config set registry https://registry.npmjs.org
-          - pnpm config set '//registry.npmjs.org/:_authToken' "$NPM_TOKEN"
-          - pnpm install
-          - pnpm publish --access public --no-git-checks
-
 pipelines:
   default:
     - step: *checks
@@ -70,4 +59,3 @@ pipelines:
   tags:
     'v*':
       - step: *checks
-      - step: *release
