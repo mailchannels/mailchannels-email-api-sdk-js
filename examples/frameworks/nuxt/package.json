@@ -11,7 +11,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@mailchannels/sdk": "^1.8.0",
+    "@mailchannels/sdk": "^1.9.0",
     "nuxt": "^4.6.4"
   },
   "devDependencies": {
