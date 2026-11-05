@@ -3,7 +3,10 @@ import { Buffer } from "node:buffer";
 import type { SendMailOptions } from "nodemailer";
 import type { EmailsSendAttachment, EmailsSendDkim, EmailsSendRecipient } from "../../mailchannels";
 
-export const parseAddress = (address: SendMailOptions["from"]): EmailsSendRecipient | string => {
+export const parseAddress = (
+  address: SendMailOptions["from"]
+): EmailsSendRecipient | string | undefined => {
+  if (address === undefined) return;
   if (!address) return "";
 
   if (Array.isArray(address)) return parseAddress(address[0]);
@@ -17,22 +20,18 @@ export const parseAddress = (address: SendMailOptions["from"]): EmailsSendRecipi
 
 export const parseAddresses = (
   addresses?: SendMailOptions["to"]
-): (EmailsSendRecipient | string)[] => {
-  if (!addresses) return [];
+): (EmailsSendRecipient | string)[] | undefined => {
+  if (!addresses) return;
 
   if (typeof addresses === "string") {
     return addresses.split(",").map(s => s.trim()).filter(Boolean);
   }
 
   if (Array.isArray(addresses)) {
-    return addresses.map(address => parseAddress(address));
+    return addresses.map(address => parseAddress(address)!);
   }
 
-  if (typeof addresses === "object" && addresses.address) {
-    return [{ email: addresses.address, name: addresses.name || undefined }];
-  }
-
-  return [];
+  return [{ email: addresses.address || "", name: addresses.name || undefined }];
 };
 
 export const parseAttachments = (
