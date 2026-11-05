@@ -60,7 +60,7 @@ entirely delegated to the SDK `MailChannelsClient`.
 | `text` | `text` |
 | `html` | `html` |
 | `headers` | `headers` (converted to a `Record<string,string>`) |
-| `attachments` | `attachments` (only inline buffers/strings supported — `path`/`href` are not supported) |
+| `attachments` | `attachments` (buffers, strings, streams and file `path`s; Nodemailer reads the content before sending) |
 | `icalEvent` | added as an attachment |
 | `dkim` | `dkim` (see DKIM notes below) |
 | `mailchannels` (augmented field on the send options) | merged into the SDK send params |
@@ -100,12 +100,22 @@ interface MailChannelsTransportInfo<T extends MailChannelsTransportSendMode> {
 }
 ```
 
+API errors are passed as `MailChannelsTransportError` (exported from
+`@mailchannels/sdk/nodemailer`), an `Error` with:
+
+- `message`: the API error message
+- `statusCode`: the HTTP status, or `null` without a response
+- `responseCode`: the HTTP status, as on Nodemailer SMTP errors (unset without a response)
+- `code`: the SDK `ErrorType`, e.g. `invalid_request_error`
+- `response`: the API response body as JSON text (unset without a body)
+- `apiResponse`: the parsed API response body, or `null`
+
+Runtime failures (for example an invalid attachment) are passed through as plain `Error`s.
+
 ## Limitations
 
 - Only a single `replyTo` address is supported.
 - Multiple DKIM signatures are not supported; the API only supports RSA private keys.
-- Attachment `path`, `href`, and other URL-based attachment sources are not supported;
-  attachments should be provided as buffers or strings.
 - For async sends (`sendMode: 'async'`) the transport returns a `messageId` of `null`
   and empty `accepted` / `rejected` arrays — this is an API limitation for queued sends.
 - MailChannels-specific options must be passed using the `mailchannels` augmentation on

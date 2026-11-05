@@ -1,6 +1,46 @@
 # Changelog
 
 
+## v1.9.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.9.0%0Dv1.8.0)
+
+### 🚀 Enhancements
+
+- **nodemailer:** Expose API status on transport errors ([4474f0b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/4474f0b))
+
+### 🩹 Fixes
+
+- **cli:** Show email send and queue details ([56f4201](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/56f4201))
+- **emails:** Prevent silently dropping invalid email addresses ([7de02a8](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7de02a8))
+
+### 💅 Refactors
+
+- **package:** Move SDK to scoped npm name ([e31c950](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/e31c950))
+- Replace ofetch with native fetch ([6d1eaa8](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/6d1eaa8))
+
+### 📖 Documentation
+
+- **agents:** Add a 'mailchannels-cli' AI skill ([#133](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/133))
+
+### 🏡 Chore
+
+- Configure changelog repository ([0ee246f](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/0ee246f))
+- Update all deps ([0b41c24](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/0b41c24))
+
+### 🎨 Styles
+
+- Enforce max line length ([6086b88](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/6086b88))
+
+### 🤖 CI
+
+- Remove npm publish step and update repo url ([d1188b4](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d1188b4))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+- Ken Simpson [ksimpson@mailchannels.com](mailto:ksimpson@mailchannels.com)
+
 ## v1.8.0
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.8.0%0Dv1.7.0)

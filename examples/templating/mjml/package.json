@@ -2,19 +2,19 @@
   "name": "mailchannels-mjml-example",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "license": "MIT",
+  "type": "module",
   "sideEffects": false,
   "main": "./src/index.ts",
   "scripts": {
     "send": "tsx src/index.ts"
   },
   "dependencies": {
-    "@mailchannels/sdk": "^1.8.0",
+    "@mailchannels/sdk": "^1.9.0",
     "mjml": "^5.4.1"
   },
   "devDependencies": {
-    "@types/mjml": "^5.4.0",
+    "@types/mjml": "^5.4.2",
     "tsx": "^4.23.15",
     "typescript": "7.0.2"
   }

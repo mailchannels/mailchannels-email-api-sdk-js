@@ -1,6 +1,6 @@
 {
   "name": "@mailchannels/sdk",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Official MailChannels Email API SDK for sending transactional email from server-side JavaScript and TypeScript applications.",
   "type": "module",
   "license": "MIT",
@@ -16,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js.git"
+    "url": "git+https://github.com/mailchannels/mailchannels-email-api-sdk-js.git"
   },
   "homepage": "https://docs.mailchannels.com/email-api/javascript/quickstart",
   "author": {
@@ -68,26 +68,29 @@
   },
   "dependencies": {
     "citty": "^0.2.2",
-    "mime": "^4.1.1"
+    "mime": "^4.1.2"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/markdown-it": "^14.2.0",
-    "@types/node": "^26.6.5",
-    "@vitest/coverage-v8": "^5.0.5",
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^5.1.0",
     "changelogen": "^0.6.2",
-    "nodemailer": "^10.1.7",
+    "nodemailer": "^10.3.1",
     "obuild": "^0.4.45",
-    "oxlint": "^1.89.0",
+    "oxlint": "^1.91.0",
     "scule": "^1.3.0",
     "typescript": "^6.0.3",
-    "vitepress": "^2.0.0-alpha.20",
+    "vitepress": "^2.0.0-alpha.21",
     "vitepress-plugin-group-icons": "^1.8.1",
     "vitepress-plugin-llms": "^1.14.0",
-    "vitest": "^5.0.5"
+    "vitest": "^5.1.0"
   },
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@12.15.0"
+  "packageManager": "pnpm@12.16.1",
+  "changelog": {
+    "repo": "https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js"
+  }
 }
