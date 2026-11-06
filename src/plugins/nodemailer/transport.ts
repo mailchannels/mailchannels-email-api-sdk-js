@@ -57,9 +57,9 @@ export const mailchannelsTransport = <T extends MailChannelsTransportSendMode = 
 
           const sdkResponse = await sendMail({
             ...data.mailchannels,
-            from: parseAddress(data.from),
+            from: parseAddress(data.from)!,
             replyTo: parseAddress(data.replyTo),
-            to: parseAddresses(data.to),
+            to: parseAddresses(data.to)!,
             cc: parseAddresses(data.cc),
             bcc: parseAddresses(data.bcc),
             subject: data.subject || "",

@@ -35,9 +35,17 @@ const normalize = async (raw: SendMailOptions): Promise<SendMailOptions> => {
 };
 
 describe("parseAddress", () => {
-  it("should return empty string for falsy input", () => {
-    expect(parseAddress(undefined)).toBe("");
+  it("should return undefined for undefined input", () => {
+    expect(parseAddress(undefined)).toBeUndefined();
+  });
+
+  it("should return empty string for an address without an email", () => {
+    expect(parseAddress("")).toBe("");
     expect(parseAddress({ name: "name" })).toBe("");
+  });
+
+  it("should return undefined for an empty address array", () => {
+    expect(parseAddress([])).toBeUndefined();
   });
 
   it("should return string address unchanged", () => {
@@ -67,8 +75,8 @@ describe("parseAddress", () => {
 });
 
 describe("parseAddresses", () => {
-  it("should return empty array for falsy input", () => {
-    expect(parseAddresses(undefined)).toEqual([]);
+  it("should return undefined for undefined input", () => {
+    expect(parseAddresses(undefined)).toBeUndefined();
   });
 
   it("should wrap string address in an array", () => {
@@ -93,8 +101,10 @@ describe("parseAddresses", () => {
     ]);
   });
 
-  it("should return empty array if address property is empty string", () => {
-    expect(parseAddresses({ name: "No Address", address: "" })).toEqual([]);
+  it("should return array with empty email for address object with empty address", () => {
+    expect(
+      parseAddresses({ name: "No Address", address: "" })
+    ).toEqual([{ name: "No Address", email: "" }]);
   });
 
   it("should parse object address with missing name into undefined name", () => {
