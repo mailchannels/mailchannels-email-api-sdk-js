@@ -16,7 +16,7 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },
   "dependencies": {
-    "@mailchannels/sdk": "^1.9.0"
+    "@mailchannels/sdk": "^1.9.1"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^8.0.0",

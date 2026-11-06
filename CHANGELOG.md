@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.9.1
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.9.1%0Dv1.9.0)
+
+### 🩹 Fixes
+
+- **nodemailer:** Preserve undefined recipient values passed to the SDK ([7f992f8](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/7f992f8))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+
 ## v1.9.0
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.9.0%0Dv1.8.0)
