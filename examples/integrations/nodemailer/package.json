@@ -1,0 +1,19 @@
+{
+  "name": "mailchannels-nodemailer-example",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "send": "tsx src/app.ts"
+  },
+  "dependencies": {
+    "@mailchannels/sdk": "^1.9.1",
+    "nodemailer": "^10.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "dotenv": "^18.0.10",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
