@@ -4,6 +4,7 @@ packages:
   - frameworks/*
   - serverless/*
   - templating/*
+  - integrations/*
 
 allowBuilds:
   '@parcel/watcher': false
