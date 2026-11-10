@@ -22,13 +22,13 @@ jobs:
         github.event.workflow_run.head_repository.full_name == github.repository))
 
     permissions:
-      contents: read
+      contents: write
       id-token: write
 
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: main
           fetch-depth: 0
@@ -103,3 +103,11 @@ jobs:
       - name: Publish npm package
         if: steps.check.outputs.published == 'false'
         run: pnpm publish --access public --no-git-checks
+
+      - name: Create release notes
+        if: steps.check.outputs.published == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          printf '{"repo":"https://github.com/%s"}\n' "$GITHUB_REPOSITORY" > changelog.config.json
+          pnpm exec changelogen gh release
