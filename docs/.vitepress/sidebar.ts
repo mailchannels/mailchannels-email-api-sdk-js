@@ -141,7 +141,8 @@ export default [
           { text: "Astro", link: "/guides/frameworks/astro" },
           { text: "SvelteKit", link: "/guides/frameworks/sveltekit" },
           { text: "Hono", link: "/guides/frameworks/hono" },
-          { text: "Bun", link: "/guides/frameworks/bun" }
+          { text: "Bun", link: "/guides/frameworks/bun" },
+          { text: "NestJS", link: "/guides/frameworks/nestjs" }
         ]
       },
       {
