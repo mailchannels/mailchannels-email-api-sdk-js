@@ -22,6 +22,7 @@ jobs:
         github.event.workflow_run.head_repository.full_name == github.repository))
 
     permissions:
+      actions: write
       contents: write
       id-token: write
 
@@ -111,3 +112,10 @@ jobs:
         run: |
           printf '{"repo":"https://github.com/%s"}\n' "$GITHUB_REPOSITORY" > changelog.config.json
           pnpm exec changelogen gh release
+
+      - name: Dispatch build for CLI binaries
+        if: steps.check.outputs.published == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: gh workflow run build-cli-binaries.yml --ref main --repo "$GITHUB_REPOSITORY" --field "release_tag=$TAG"

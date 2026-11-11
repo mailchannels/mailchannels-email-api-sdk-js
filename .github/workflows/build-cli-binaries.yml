@@ -1,0 +1,140 @@
+name: build-cli-binaries
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Release tag to build and upload assets to
+        required: true
+        type: string
+
+concurrency:
+  group: mirror-build-cli-binaries
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-cli-macos:
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: refs/tags/${{ inputs.release_tag }}
+      - uses: pnpm/setup@v3
+        with:
+          runtime: node@lts
+          cache: true
+          
+      - name: Build CLI Bundle
+        run: |
+          node --run build
+          pnpx rolldown dist/cli/index.mjs -o dist/cli/index.cjs -f cjs -m
+
+      - name: Build Binaries
+        run: |
+          pnpx @yao-pkg/pkg dist/cli/index.cjs -C Brotli -t node24-macos-arm64 --output dist/mailchannels-darwin-arm64
+          pnpx @yao-pkg/pkg dist/cli/index.cjs -C Brotli -t node24-macos-x64 --output dist/mailchannels-darwin-x64
+
+      - name: Package archives
+        run: |
+          cd dist
+          for bin in mailchannels-darwin-arm64 mailchannels-darwin-x64; do
+            cp "$bin" mailchannels
+            chmod +x mailchannels
+            tar -czf "${bin}.tar.gz" mailchannels
+            rm mailchannels
+          done
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          retention-days: 1
+          name: macos-artifacts
+          path: |
+            dist/mailchannels-darwin-arm64.tar.gz
+            dist/mailchannels-darwin-x64.tar.gz
+
+  build-cli-linux-windows:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: refs/tags/${{ inputs.release_tag }}
+      - uses: pnpm/setup@v3
+        with:
+          runtime: node@lts
+          cache: true
+          
+      - name: Build CLI Bundle
+        run: |
+          node --run build
+          pnpx rolldown dist/cli/index.mjs -o dist/cli/index.cjs -f cjs -m
+      
+      - name: Build Binaries
+        run: |
+          pnpx @yao-pkg/pkg dist/cli/index.cjs -C Brotli -t node24-linux-x64 --output dist/mailchannels-linux-x64
+          pnpx @yao-pkg/pkg dist/cli/index.cjs -C Brotli -t node24-linux-arm64 --output dist/mailchannels-linux-arm64 --no-bytecode --public-packages "*" --public
+          pnpx @yao-pkg/pkg dist/cli/index.cjs -C Brotli -t node24-win-x64 --output dist/mailchannels-windows-x64.exe
+
+      - name: Package archives
+        run: |
+          cd dist
+          for bin in mailchannels-linux-x64 mailchannels-linux-arm64; do
+            cp "$bin" mailchannels
+            chmod +x mailchannels
+            tar -czf "${bin}.tar.gz" mailchannels
+            rm mailchannels
+          done
+          cp mailchannels-windows-x64.exe mailchannels.exe
+          zip mailchannels-windows-x64.zip mailchannels.exe
+          rm mailchannels.exe
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          retention-days: 1
+          name: linux-windows-artifacts
+          path: |
+            dist/mailchannels-linux-x64.tar.gz
+            dist/mailchannels-linux-arm64.tar.gz
+            dist/mailchannels-windows-x64.zip
+
+  assets:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [build-cli-macos, build-cli-linux-windows]
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: |
+          cd dist
+          sha256sum \
+            mailchannels-darwin-arm64.tar.gz \
+            mailchannels-darwin-x64.tar.gz \
+            mailchannels-linux-x64.tar.gz \
+            mailchannels-linux-arm64.tar.gz \
+            mailchannels-windows-x64.zip > mailchannels-cli-checksums.txt
+
+      - name: Publish assets
+        uses: softprops/action-gh-release@v3
+        with:
+          fail_on_unmatched_files: true
+          tag_name: ${{ inputs.release_tag }}
+          files: |
+            dist/mailchannels-darwin-arm64.tar.gz
+            dist/mailchannels-darwin-x64.tar.gz
+            dist/mailchannels-linux-x64.tar.gz
+            dist/mailchannels-linux-arm64.tar.gz
+            dist/mailchannels-windows-x64.zip
+            dist/mailchannels-cli-checksums.txt
