@@ -8,7 +8,10 @@ JavaScript quickstart: https://docs.mailchannels.com/email-api/javascript/quicks
 This repository mirrors public upstream main and release tags daily. Only `.github/` is
 mirror-specific; SDK code, README, license and version tags retain upstream content.
 A sync is not a new package release or a fresh SDK test run. Issues and changes belong
-upstream; see its canonical repository. No package publication runs here.
+upstream; see its canonical repository.
+
+Package releases are published from this mirror. After each successful scheduled or
+manual sync, the release workflow publishes a newly mirrored release tag to npm.
 
 The workflow runs Git operations only, never upstream package scripts. It refuses
 upstream `.github/` content or source divergence, does not overwrite tags or delete refs,
