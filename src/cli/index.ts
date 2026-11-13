@@ -16,7 +16,7 @@ import { checkUpdate } from "./utils/shared/check-update";
 
 const main = defineCommand({
   meta: {
-    name: pkg.name,
+    name: "pkg" in process ? "mailchannels" : pkg.name,
     description: "MailChannels CLI",
     version: pkg.version
   },
