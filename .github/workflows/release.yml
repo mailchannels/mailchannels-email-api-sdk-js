@@ -97,6 +97,14 @@ jobs:
             exit 1
           fi
 
+      - name: Lint, Types, Tests
+        if: steps.check.outputs.published == 'false'
+        run: |
+          pnpm lint
+          pnpm test:types
+          pnpm test
+          pnpm test:package
+
       - name: Configure npm registry
         if: steps.check.outputs.published == 'false'
         run: pnpm config set registry https://registry.npmjs.org
