@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { defineCommand, runMain } from "citty";
+import { defineCommand, runMain, showUsage } from "citty";
 import pkg from "../../package.json";
 import simulate from "./commands/simulate";
 import emails from "./commands/emails";
@@ -38,6 +38,9 @@ const main = defineCommand({
     console.error = console.error.bind(console, LOGGER_NAME);
   },
   run () {
+    if (process.argv.length <= 2) {
+      return showUsage(main);
+    }
     checkUpdate().catch(() => {});
   }
 });
