@@ -6,15 +6,22 @@
 #   -Version | Release version (default: latest)
 
 param(
-  [string]$Version
+  [string]$Version,
+  [Parameter(DontShow)]
+  [switch]$LoadFunctionsOnly
 )
 
 # Keep installer helpers and settings out of the caller's scope when piped to iex.
-& {
-  param([AllowNull()][string]$RequestedVersion)
+$installer = {
+  param(
+    [AllowNull()][string]$RequestedVersion,
+    [switch]$LoadFunctionsOnly
+  )
 
-  Set-StrictMode -Version Latest
-  $ErrorActionPreference = 'Stop'
+  if (-not $LoadFunctionsOnly) {
+    Set-StrictMode -Version Latest
+    $ErrorActionPreference = 'Stop'
+  }
   $repositoryUrl = 'https://github.com/mailchannels/mailchannels-email-api-sdk-js'
   $target = 'windows-x64'
 
@@ -179,6 +186,16 @@ param(
   }
 
   # --- PATH setup ---
+  function Get-UserPath {
+    return [Environment]::GetEnvironmentVariable('PATH', 'User')
+  }
+
+  function Set-UserPath {
+    param([AllowNull()][string]$Value)
+
+    [Environment]::SetEnvironmentVariable('PATH', $Value, 'User')
+  }
+
   function ConvertTo-ComparablePath {
     param([AllowNull()][string]$Value)
 
@@ -225,14 +242,14 @@ param(
     $userPathUpdated = $false
     $userPathError = $null
     try {
-      $userPath = [Environment]::GetEnvironmentVariable('PATH', 'User')
+      $userPath = Get-UserPath
       if (-not (Test-PathContainsDirectory -PathValue $userPath -Directory $Directory)) {
         $userEntries = @(
           $userPath -split ';' |
             Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
         )
         $userPath = (@($userEntries + $Directory) -join ';')
-        [Environment]::SetEnvironmentVariable('PATH', $userPath, 'User')
+        Set-UserPath -Value $userPath
         $userPathUpdated = $true
       }
     }
@@ -403,6 +420,10 @@ param(
       [System.Guid]::NewGuid().ToString('N')
     $stagedInstallPath = $null
     try {
+      if (Test-Path -LiteralPath $Context.ExecutablePath -PathType Container) {
+        throw "The executable path '$($Context.ExecutablePath)' is a directory."
+      }
+
       New-Item -ItemType Directory -Path $Context.BinDirectory -Force | Out-Null
       $stagedInstallPath = Join-Path $Context.BinDirectory $stagedInstallName
       Copy-Item `
@@ -504,12 +525,26 @@ param(
       -PathResult $pathResult
   }
 
-  try {
-    Install-MailChannelsCli -RequestedVersion $RequestedVersion
+  if (-not $LoadFunctionsOnly) {
+    try {
+      Install-MailChannelsCli -RequestedVersion $RequestedVersion
+    }
+    catch {
+      Write-Host ''
+      Write-Host "Installation failed: $($_.Exception.Message)" -ForegroundColor Red
+      throw
+    }
   }
-  catch {
-    Write-Host ''
-    Write-Host "Installation failed: $($_.Exception.Message)" -ForegroundColor Red
-    throw
+}
+
+try {
+  if ($LoadFunctionsOnly) {
+    . $installer $Version -LoadFunctionsOnly
   }
-} $Version
+  else {
+    & $installer $Version
+  }
+}
+finally {
+  Remove-Variable -Name installer -ErrorAction SilentlyContinue
+}

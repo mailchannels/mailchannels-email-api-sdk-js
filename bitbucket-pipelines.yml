@@ -53,9 +53,21 @@ definitions:
           - pnpm install
           - pnpm test
 
+    - step: &cli-installer-pwsh
+        name: CLI Installer Tests (PowerShell)
+        image: mcr.microsoft.com/dotnet/sdk:10.0
+        script:
+          - |
+            pwsh -NoProfile -Command '
+              $ErrorActionPreference = "Stop"
+              Install-Module Pester -RequiredVersion 6.2.0 -Scope CurrentUser -Force
+              Invoke-Pester -Configuration @{ Run = @{ Path = "./test/cli/install.Tests.ps1"; Exit = $true } }
+            '
+
 pipelines:
   default:
     - step: *checks
+    - step: *cli-installer-pwsh
 
   branches:
     main:
@@ -65,7 +77,9 @@ pipelines:
           - step: *node22
           - step: *node24
           - step: *node26
+          - step: *cli-installer-pwsh
 
   tags:
     'v*':
       - step: *checks
+      - step: *cli-installer-pwsh
