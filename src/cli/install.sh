@@ -121,8 +121,21 @@ reject_musl_linux() {
 # --- PATH setup ---
 shell_quote() {
   printf "'"
-  printf '%s' "$1" | sed "s/'/'\\''/g"
+  printf '%s' "$1" | sed "s/'/'\\\\''/g"
   printf "'"
+}
+
+fish_quote() {
+  printf '"'
+  printf '%s' "$1" | sed 's/[\\"$]/\\&/g'
+  printf '"'
+}
+
+quote_for_shell() {
+  case "$shell_name" in
+    fish) fish_quote "$1" ;;
+    *) shell_quote "$1" ;;
+  esac
 }
 
 append_path_line() {
@@ -145,6 +158,9 @@ main() {
   trap 'exit 1' HUP INT TERM
 
   parse_arguments "$@"
+
+  local shell_name=${SHELL:-}
+  shell_name=${shell_name##*/}
 
   require_command curl
   require_command tar
@@ -354,11 +370,9 @@ main() {
   if [ -z "${HOME:-}" ]; then
     warning '  Could not update PATH automatically: HOME is not set.'
     warning "  Add this folder to PATH manually: $bin_directory"
-    info "  Run directly: $(shell_quote "$executable_path") --help"
+    info "  Run directly: $(quote_for_shell "$executable_path") --help"
     path_update_failed=true
   else
-    shell_name=${SHELL:-}
-    shell_name=${shell_name##*/}
     additional_profile_path=''
     case "$shell_name" in
       fish)
@@ -366,7 +380,7 @@ main() {
         if [ "$use_home_path" = true ]; then
           path_entry='fish_add_path "$HOME/.mailchannels/bin"'
         else
-          path_entry="fish_add_path $(shell_quote "$bin_directory")"
+          path_entry="fish_add_path $(fish_quote "$bin_directory")"
         fi
       ;;
       zsh)
@@ -429,10 +443,10 @@ main() {
       if [ "$shell_name" = 'fish' ]; then
         warning '  Could not update PATH automatically for fish.'
         warning "  Add this folder to PATH manually with fish_add_path: $bin_directory"
-        info "  Run directly: $(shell_quote "$executable_path") --help"
+        info "  Run directly: $(quote_for_shell "$executable_path") --help"
       else
         warning "  Add this folder to PATH manually: $bin_directory"
-        info "  Run directly: $(shell_quote "$executable_path") --help"
+        info "  Run directly: $(quote_for_shell "$executable_path") --help"
       fi
     fi
   fi
