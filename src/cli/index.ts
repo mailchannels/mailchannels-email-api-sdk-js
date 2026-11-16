@@ -11,6 +11,7 @@ import subAccounts from "./commands/sub-accounts";
 import usage from "./commands/usage";
 import webhooks from "./commands/webhooks";
 import docs from "./commands/docs";
+import dashboard from "./commands/dashboard";
 import { checkUpdate } from "./utils/shared/check-update";
 
 const main = defineCommand({
@@ -29,7 +30,8 @@ const main = defineCommand({
     "sub-accounts": subAccounts,
     usage,
     webhooks,
-    docs
+    docs,
+    dashboard
   },
   setup () {
     const LOGGER_NAME = "[MailChannels-CLI]";
