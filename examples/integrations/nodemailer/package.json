@@ -7,7 +7,7 @@
     "send": "tsx src/app.ts"
   },
   "dependencies": {
-    "@mailchannels/sdk": "^1.9.1",
+    "@mailchannels/sdk": "^1.10.0",
     "nodemailer": "^10.6.0"
   },
   "devDependencies": {

@@ -10,7 +10,7 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
-    "@mailchannels/sdk": "^1.9.1"
+    "@mailchannels/sdk": "^1.10.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
