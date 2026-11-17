@@ -101,6 +101,8 @@ These apply to every command. Read them before running anything.
 - **Unknown flags are ignored silently.** A typo, or a flag the command doesn't have, does not
   error — for example `--dry-run` on `emails queue` is ignored and queues a *real* message. Check
   `<command> --help` when unsure.
+- **Update notices are distribution-aware.** Interactive notices show npm/`npx` commands for the
+  npm package, or a platform-specific installer command for standalone builds.
 - **Output is for humans.** There is no JSON mode, and ANSI color codes are always emitted. When
   you need structured results, use the SDK instead.
 

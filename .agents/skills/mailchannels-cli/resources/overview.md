@@ -21,6 +21,39 @@ mailchannels --help
 The resources write `mailchannels …`; `npx @mailchannels/sdk …` behaves identically. The CLI
 requires Node.js 20 or newer.
 
+## Standalone Executable Installation
+
+A standalone executable can be installed without Node.js on Windows, macOS, and Linux.
+
+### Windows Installation
+
+On Windows x64, install a standalone executable with PowerShell:
+
+```sh
+irm https://github.com/mailchannels/mailchannels-email-api-sdk-js/raw/main/src/cli/install.ps1 | iex
+```
+
+It verifies the release checksum, installs under `$HOME\.mailchannels\bin`, and adds the binary
+folder to User PATH.
+
+By default, it installs the latest release.
+
+### macOS and Linux Installation
+
+On macOS (Apple Silicon or Intel) and Linux (x64 or ARM64), install a standalone binary with Bash:
+
+```sh
+curl -fsSL https://github.com/mailchannels/mailchannels-email-api-sdk-js/raw/main/src/cli/install.sh | bash
+```
+
+The installer selects the matching target, verifies its checksum, and installs under
+`$HOME/.mailchannels/bin`. It adds that directory to the detected bash/zsh startup file or
+`~/.profile`; for fish, it writes a `fish_add_path` command to
+`$XDG_CONFIG_HOME/fish/conf.d/mailchannels.fish` (or `~/.config/fish/conf.d/mailchannels.fish` by
+default).
+
+By default, it installs the latest release.
+
 ## Command Inventory
 
 | Command | What it does | Resource |

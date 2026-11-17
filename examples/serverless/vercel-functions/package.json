@@ -10,8 +10,8 @@
     "deploy": "vercel"
   },
   "dependencies": {
-    "@mailchannels/sdk": "^1.9.1",
-    "next": "^16.4.5",
+    "@mailchannels/sdk": "^1.10.0",
+    "next": "^16.4.6",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

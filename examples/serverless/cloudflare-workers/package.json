@@ -10,11 +10,11 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
-    "@mailchannels/sdk": "^1.9.1"
+    "@mailchannels/sdk": "^1.10.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
     "typescript": "^7.0.2",
-    "wrangler": "^4.157.0"
+    "wrangler": "^4.164.0"
   }
 }

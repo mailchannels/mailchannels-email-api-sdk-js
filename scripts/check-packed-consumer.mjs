@@ -66,8 +66,7 @@ void sdk.emails.send({
     module: "NodeNext",
     moduleResolution: "NodeNext",
     types: ["node"]
-  },
-  files: ["consumer.ts"] }));
+  }, files: ["consumer.ts"] }));
   execFileSync(
     process.execPath,
     [join(temporary, "node_modules/typescript/bin/tsc"), "-p", join(temporary, "tsconfig.json")],

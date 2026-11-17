@@ -1,6 +1,37 @@
 # Changelog
 
 
+## v1.10.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.10.0%0Dv1.9.1)
+
+### 🚀 Enhancements
+
+- **cli:** Add dashboard command ([89fac55](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/89fac55))
+- **cli:** Add standalone installers ([#159](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/159))
+
+### 🩹 Fixes
+
+- **cli:** Show help info when invoked without arguments ([21de093](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/21de093))
+
+### 🏡 Chore
+
+- **examples:** Add nestjs example app ([b59f0fd](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/b59f0fd))
+- **examples:** Add nodemailer example ([5d7f18b](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/5d7f18b))
+- **cli:** Show distro-specific install commands in update checks ([91c94eb](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/91c94eb))
+
+### 🎨 Styles
+
+- Replace deprecated stylistic lint rules with list-style ([fb53c69](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/fb53c69))
+
+### 🤖 CI
+
+- Test on Node.js 26 ([9fc6b99](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/9fc6b99))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+
 ## v1.9.1
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.9.1%0Dv1.9.0)

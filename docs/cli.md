@@ -4,6 +4,22 @@ The `@mailchannels/sdk` package includes a command-line interface for sending em
 
 ## Installation
 
+::: code-group
+
+```sh [cURL ~vscode-icons:file-type-shell~]
+curl -fsSL https://github.com/mailchannels/mailchannels-email-api-sdk-js/raw/main/src/cli/install.sh | bash
+```
+
+```sh [npm]
+npm install @mailchannels/sdk -g
+```
+
+```sh [PowerShell (Windows) ~vscode-icons:file-type-powershell~]
+irm https://github.com/mailchannels/mailchannels-email-api-sdk-js/raw/main/src/cli/install.ps1 | iex
+```
+
+:::
+
 For one-off use, run the CLI with `npx`.
 
 ```sh
