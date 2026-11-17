@@ -128,8 +128,7 @@ describe("dkim.create", () => {
 
     const domains = new Domains(mockClient);
     const { data, error } = await domains.dkim.create("example.com", {
-      selector:
-      "mailchannels-test",
+      selector: "mailchannels-test",
       // @ts-expect-error Testing unsupported algorithm
       algorithm: "ed25519"
     });
