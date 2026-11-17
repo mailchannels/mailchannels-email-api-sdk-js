@@ -37,9 +37,10 @@ requires Node.js 20 or newer.
 | `webhooks create`, `list`, `delete-all`, `validate`, `batches`, `resend-batch` | Manage delivery-event webhooks. | [webhooks](webhooks.md) |
 | `simulate` | Start the local API simulator. | [simulator](simulator.md) |
 | `docs` | Open https://docs.mailchannels.com in the default browser. | — |
+| `dashboard` | Open https://dash.mailchannels.com/ in the default browser. | — |
 
-`docs` launches a GUI browser (`cmd /c start`, `open`, or `xdg-open`). Skip it in headless or
-agent sessions.
+`docs` and `dashboard` launch a GUI browser (`cmd /c start`, `open`, or `xdg-open`). Skip them in
+headless or agent sessions.
 
 ## Getting Help
 

@@ -25,7 +25,7 @@ definitions:
           - pnpm runtime set node 20 -g
           - pnpm install
           - pnpm test
-    
+
     - step: &node22
         name: Tests (Node 22)
         caches:
@@ -44,6 +44,15 @@ definitions:
           - pnpm install
           - pnpm test
 
+    - step: &node26
+        name: Tests (Node 26)
+        caches:
+          - pnpm
+        script:
+          - pnpm runtime set node 26 -g
+          - pnpm install
+          - pnpm test
+
 pipelines:
   default:
     - step: *checks
@@ -55,6 +64,7 @@ pipelines:
           - step: *node20
           - step: *node22
           - step: *node24
+          - step: *node26
 
   tags:
     'v*':

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { defineCommand, runMain } from "citty";
+import { defineCommand, runMain, showUsage } from "citty";
 import pkg from "../../package.json";
 import simulate from "./commands/simulate";
 import emails from "./commands/emails";
@@ -11,6 +11,7 @@ import subAccounts from "./commands/sub-accounts";
 import usage from "./commands/usage";
 import webhooks from "./commands/webhooks";
 import docs from "./commands/docs";
+import dashboard from "./commands/dashboard";
 import { checkUpdate } from "./utils/shared/check-update";
 
 const main = defineCommand({
@@ -29,7 +30,8 @@ const main = defineCommand({
     "sub-accounts": subAccounts,
     usage,
     webhooks,
-    docs
+    docs,
+    dashboard
   },
   setup () {
     const LOGGER_NAME = "[MailChannels-CLI]";
@@ -38,6 +40,9 @@ const main = defineCommand({
     console.error = console.error.bind(console, LOGGER_NAME);
   },
   run () {
+    if (process.argv.length <= 2) {
+      return showUsage(main);
+    }
     checkUpdate().catch(() => {});
   }
 });
