@@ -55,11 +55,32 @@ export const checkUpdate = async () => {
 
   if (isNewerVersion(pkg.version, latestVersion)) {
     const messageLines = [
-      `Update available: ${styleText("yellow", "v" + pkg.version)} -> ${styleText("cyan", "v" + latestVersion)}`,
-      `Install globally: ${styleText("cyan", `npm install -g ${pkg.name}`)}`,
-      `Or run with npx: ${styleText("cyan", `npx ${pkg.name}@latest`)}`
+      `Update available: ${styleText("yellow", "v" + pkg.version)} -> ${styleText("cyan", "v" + latestVersion)}`
     ];
 
-    process.stderr.write(`\n${styleText("dim", messageLines.join("\n"))}`);
+    const isPackaged = "pkg" in process;
+    const platform = process.platform;
+    const isStandalone = isPackaged && (["win32", "darwin", "linux"].includes(platform));
+
+    if (isStandalone) {
+      const repoUrl = "https://github.com/mailchannels/mailchannels-email-api-sdk-js";
+      const installerUrl = `${repoUrl}/raw/main/src/cli`;
+
+      const installCommand = platform === "win32"
+        ? `irm ${installerUrl}/install.ps1 | iex`
+        : `curl -fsSL ${installerUrl}/install.sh | bash`;
+      messageLines.push(
+        `Install: ${styleText("cyan", installCommand)}`,
+        `Or download from ${styleText("cyan", `${repoUrl}/releases/latest`)}`
+      );
+    }
+    else {
+      messageLines.push(
+        `Install globally: ${styleText("cyan", `npm install -g ${pkg.name}`)}`,
+        `Or run with npx: ${styleText("cyan", `npx ${pkg.name}@latest`)}`
+      );
+    }
+
+    process.stderr.write(`\n${styleText("dim", messageLines.join("\n"))}\n`);
   }
 };

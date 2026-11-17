@@ -1,9 +1,17 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import pkg from "../../../../package.json";
 import { checkUpdate } from "~/cli/utils/shared/check-update";
+import { styleText } from "~/cli/utils/shared/style";
+
+const repoUrl = "https://github.com/mailchannels/mailchannels-email-api-sdk-js";
+const installerUrl = `${repoUrl}/raw/main/src/cli`;
+const releaseUrl = `${repoUrl}/releases/latest`;
 
 describe("checkUpdate", () => {
   const stdoutTTYDescriptor = Object.getOwnPropertyDescriptor(process.stdout, "isTTY");
+  const platformDescriptor = Object.getOwnPropertyDescriptor(process, "platform");
+  const pkgDescriptor = Object.getOwnPropertyDescriptor(process, "pkg");
+
   const [currentMajor, currentMinor, currentPatch] = pkg.version.split(".").map(Number) as [
     number,
     number,
@@ -31,6 +39,16 @@ describe("checkUpdate", () => {
     return fetchMock;
   };
 
+  const setRuntime = (platform: NodeJS.Platform, packaged: boolean) => {
+    Object.defineProperty(process, "platform", { configurable: true, value: platform });
+    if (packaged) {
+      Object.defineProperty(process, "pkg", { configurable: true, value: {} });
+    }
+    else {
+      Reflect.deleteProperty(process, "pkg");
+    }
+  };
+
   afterEach(() => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
@@ -40,6 +58,20 @@ describe("checkUpdate", () => {
     }
     else {
       Reflect.deleteProperty(process.stdout, "isTTY");
+    }
+
+    if (platformDescriptor) {
+      Object.defineProperty(process, "platform", platformDescriptor);
+    }
+    else {
+      Reflect.deleteProperty(process, "platform");
+    }
+
+    if (pkgDescriptor) {
+      Object.defineProperty(process, "pkg", pkgDescriptor);
+    }
+    else {
+      Reflect.deleteProperty(process, "pkg");
     }
 
     for (const key of ["CI", "NO_UPDATE", "GITHUB_ACTIONS"] as const) {
@@ -55,6 +87,7 @@ describe("checkUpdate", () => {
 
   it("should print update info when a newer version is available", async () => {
     enableUpdateChecks();
+    setRuntime("win32", false);
 
     const fetchMock = mockLatestVersion(`${currentMajor}.${currentMinor}.${currentPatch + 1}`);
     vi.spyOn(console, "warn").mockImplementation(() => {});
@@ -64,10 +97,59 @@ describe("checkUpdate", () => {
 
     expect(fetchMock).toHaveBeenCalled();
     expect(stderrWrite).toHaveBeenCalledWith(
-      expect.stringContaining("npm install -g @mailchannels/sdk")
+      expect.stringContaining(styleText("cyan", "npm install -g @mailchannels/sdk"))
     );
     expect(stderrWrite).toHaveBeenCalledWith(
-      expect.stringContaining("npx @mailchannels/sdk@latest")
+      expect.stringContaining(styleText("cyan", "npx @mailchannels/sdk@latest"))
+    );
+  });
+
+  it.each([
+    {
+      platform: "win32",
+      installCommand: `irm ${installerUrl}/install.ps1 | iex`
+    },
+    {
+      platform: "darwin",
+      installCommand: `curl -fsSL ${installerUrl}/install.sh | bash`
+    },
+    {
+      platform: "linux",
+      installCommand: `curl -fsSL ${installerUrl}/install.sh | bash`
+    }
+  ])("should show the standalone installer for $platform", async ({ platform, installCommand }) => {
+    enableUpdateChecks();
+    setRuntime(platform as NodeJS.Platform, true);
+    mockLatestVersion(`${currentMajor}.${currentMinor}.${currentPatch + 1}`);
+    const stderrWrite = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+    await checkUpdate();
+
+    expect(stderrWrite).toHaveBeenCalledWith(
+      expect.stringContaining(`Install: ${styleText("cyan", installCommand)}`)
+    );
+    expect(stderrWrite).toHaveBeenCalledWith(
+      expect.stringContaining(`Or download from ${styleText("cyan", releaseUrl)}`)
+    );
+  });
+
+  it("should use npm for unsupported standalone platforms", async () => {
+    enableUpdateChecks();
+    setRuntime("freebsd", true);
+    mockLatestVersion(`${currentMajor}.${currentMinor}.${currentPatch + 1}`);
+    const stderrWrite = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+    await checkUpdate();
+
+    expect(stderrWrite).toHaveBeenCalledWith(
+      expect.stringContaining(
+        styleText("cyan", "npm install -g @mailchannels/sdk")
+      )
+    );
+    expect(stderrWrite).toHaveBeenCalledWith(
+      expect.stringContaining(
+        styleText("cyan", "npx @mailchannels/sdk@latest")
+      )
     );
   });
 
