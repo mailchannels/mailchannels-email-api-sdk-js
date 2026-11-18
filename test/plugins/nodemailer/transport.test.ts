@@ -167,7 +167,8 @@ describe("transport", () => {
       headers: fake.options.headers,
       subject: fake.options.subject,
       text: fake.options.text,
-      html: fake.options.html
+      html: fake.options.html,
+      envelopeFrom: undefined
     }));
     expect(info).toStrictEqual({
       messageId: fake.sendResponse.data.results[0]!.messageId,
@@ -187,6 +188,78 @@ describe("transport", () => {
       },
       response: fake.sendResponse
     } satisfies MailChannelsTransportInfo<"sync">);
+  });
+
+  it("should set a custom envelope sender correctly", async () => {
+    const queueSpy = vi.spyOn(Emails.prototype, "queue").mockResolvedValueOnce(fake.queueResponse);
+
+    const transport = nodemailer.createTransport(
+      mailchannelsTransport({
+        apiKey: fake.apiKey,
+        sendMode: "async"
+      })
+    );
+
+    const envelopeFrom = {
+      address: "bounce@example.com",
+      name: "Bounce"
+    };
+
+    await transport.sendMail({
+      ...fake.options,
+      envelope: {
+        from: envelopeFrom
+      }
+    });
+
+    expect(queueSpy).toHaveBeenCalledWith(expect.objectContaining({
+      envelopeFrom: envelopeFrom.address
+    }));
+  });
+
+  it("should reject a null envelope sender without sending", async () => {
+    const queueSpy = vi.spyOn(Emails.prototype, "queue").mockResolvedValueOnce(fake.queueResponse);
+
+    const transport = nodemailer.createTransport(
+      mailchannelsTransport({
+        apiKey: fake.apiKey,
+        sendMode: "async"
+      })
+    );
+
+    await expect(
+      transport.sendMail({
+        ...fake.options,
+        envelope: { from: false }
+      })
+    ).rejects.toThrow("A null envelope sender is not supported");
+
+    expect(queueSpy).not.toHaveBeenCalled();
+    queueSpy.mockRestore();
+  });
+
+  it("should reject explicit envelope recipients without sending", async () => {
+    const queueSpy = vi.spyOn(Emails.prototype, "queue");
+
+    const transport = nodemailer.createTransport(
+      mailchannelsTransport({
+        apiKey: fake.apiKey,
+        sendMode: "async"
+      })
+    );
+
+    await expect(
+      transport.sendMail({
+        ...fake.options,
+        envelope: {
+          from: "bounce@example.com",
+          to: ["override@example.com"]
+        }
+      })
+    ).rejects.toThrow("Overriding envelope recipients is not supported");
+
+    expect(queueSpy).not.toHaveBeenCalled();
+    queueSpy.mockRestore();
   });
 
   it("should have rejected recipients if the SDK returns a failed result", async () => {
@@ -340,7 +413,7 @@ describe("transport", () => {
   });
 
   it("should leave responseCode and response unset when the API was not reached", async () => {
-    vi.spyOn(Emails.prototype, "queue").mockResolvedValueOnce({
+    const queueSpy = vi.spyOn(Emails.prototype, "queue").mockResolvedValueOnce({
       data: null,
       error: {
         statusCode: null,
@@ -365,6 +438,7 @@ describe("transport", () => {
     expect(error.apiResponse).toBeNull();
     expect(error).not.toHaveProperty("responseCode");
     expect(error).not.toHaveProperty("response");
+    queueSpy.mockRestore();
   });
 
   it("should send buffer, path and stream attachments as base64 content", async () => {

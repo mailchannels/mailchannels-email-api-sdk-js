@@ -55,6 +55,7 @@ entirely delegated to the SDK `MailChannelsClient`.
 | --- | --- |
 | `from` | `from` |
 | `to`, `cc`, `bcc` | `to`, `cc`, `bcc` (parsed into SDK `EmailsSendRecipient` objects or strings) |
+| `envelope.from` | `envelopeFrom` (custom envelope sender; only the email address is used) |
 | `replyTo` | `replyTo` (if array, only the first address is used) |
 | `subject` | `subject` |
 | `text` | `text` |
@@ -115,6 +116,10 @@ Runtime failures (for example an invalid attachment) are passed through as plain
 ## Limitations
 
 - Only a single `replyTo` address is supported.
+- A custom `envelope.from` is passed to the API as `envelopeFrom`. A null sender
+  (`envelope.from: false`) is rejected, and explicit envelope recipients (`envelope.to`,
+  `envelope.cc`, `envelope.bcc`) are rejected because the API uses the message's `to`, `cc`, and
+  `bcc` fields.
 - Multiple DKIM signatures are not supported; the API only supports RSA private keys.
 - For async sends (`sendMode: 'async'`) the transport returns a `messageId` of `null`
   and empty `accepted` / `rejected` arrays — this is an API limitation for queued sends.
