@@ -121,5 +121,9 @@ try {
 ## Limitations
 
 - Only a single `replyTo` address is used.
+- A custom `envelope.from` is passed to the Email API as `envelopeFrom`. A null sender
+  (`envelope.from: false`) is unsupported, and custom envelope recipients (`envelope.to`,
+  `envelope.cc`, `envelope.bcc`) are rejected because the Email API uses the message's `to`, `cc`,
+  and `bcc` recipients.
 - Only one DKIM signature, with an RSA key, is supported.
 - MailChannels-specific options go in the `mailchannels` field of the `sendMail` options.

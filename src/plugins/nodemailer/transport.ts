@@ -41,6 +41,12 @@ export const mailchannelsTransport = <T extends MailChannelsTransportSendMode = 
         response: null
       };
 
+      const hasExplicitEnvelopeFrom = mail.data?.envelope?.from !== undefined;
+      const hasExplicitEnvelopeRecipients =
+        mail.data?.envelope?.to !== undefined ||
+        mail.data?.envelope?.cc !== undefined ||
+        mail.data?.envelope?.bcc !== undefined;
+
       mail.normalize(async (err, data) => {
         if (!data || err)
           return callback(
@@ -55,6 +61,16 @@ export const mailchannelsTransport = <T extends MailChannelsTransportSendMode = 
             attachments = attachments ? [...attachments, icalAttachment] : [icalAttachment];
           }
 
+          if (data.envelope?.from === false) {
+            callback(new Error("A null envelope sender is not supported"), sentMessageInfo);
+            return;
+          }
+
+          if (hasExplicitEnvelopeRecipients) {
+            callback(new Error("Overriding envelope recipients is not supported"), sentMessageInfo);
+            return;
+          }
+
           const sdkResponse = await sendMail({
             ...data.mailchannels,
             from: parseAddress(data.from)!,
@@ -67,7 +83,8 @@ export const mailchannelsTransport = <T extends MailChannelsTransportSendMode = 
             html: data.html?.toString() || "",
             headers: parseHeaders(data.headers),
             attachments,
-            dkim: parseDkim(data.dkim)
+            dkim: parseDkim(data.dkim),
+            envelopeFrom: hasExplicitEnvelopeFrom ? parseAddress(data.envelope?.from) : undefined
           });
 
           sentMessageInfo.response = sdkResponse as T extends "sync"
