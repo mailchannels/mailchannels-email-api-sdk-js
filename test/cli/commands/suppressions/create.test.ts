@@ -1,3 +1,4 @@
+import { PassThrough } from "node:stream";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import suppressions from "~/cli/commands/suppressions";
@@ -37,9 +38,12 @@ vi.mock("~/mailchannels", async () => ({
 }));
 
 describe("create", () => {
+  let stdin: PassThrough & { isTTY: boolean };
+
   beforeEach(() => {
     vi.clearAllMocks();
-    mockCreate.mockClear();
+    stdin = Object.assign(new PassThrough({ readableObjectMode: true }), { isTTY: false });
+    vi.spyOn(process, "stdin", "get").mockReturnValue(stdin as unknown as typeof process.stdin);
   });
 
   beforeAll(() => {
@@ -59,19 +63,32 @@ describe("create", () => {
   });
 
   it("should create entries from a JSON array piped to stdin", async () => {
-    const input = JSON.stringify(fake.entries);
-
-    vi.spyOn(process.stdin, Symbol.asyncIterator).mockImplementationOnce(
-      async function* (): AsyncGenerator<string, undefined, unknown> {
-        yield input;
-      }
-    );
+    stdin.end(JSON.stringify(fake.entries));
 
     await runCommand(create, {
       rawArgs: ["--api-key", "test-api-key", "--entries"]
     });
 
     expect(mockCreate).toHaveBeenCalledWith(fake.entries, { addToSubAccounts: false });
+  });
+
+  it("should parse UTF-8 suppression JSON split across stdin chunks", async () => {
+    const entries = [{
+      recipient: "recipient@example.com",
+      notes: "Désabonné"
+    }];
+
+    const input = Buffer.from(JSON.stringify(entries));
+
+    const split = input.indexOf("é") + 1;
+    stdin.write(input.subarray(0, split));
+    stdin.end(input.subarray(split));
+
+    await runCommand(create, {
+      rawArgs: ["--api-key", "test-api-key", "--entries"]
+    });
+
+    expect(mockCreate).toHaveBeenCalledWith(entries, { addToSubAccounts: false });
   });
 
   it("should create a single entry without optional fields", async () => {
@@ -85,13 +102,7 @@ describe("create", () => {
   });
 
   it("should warn when entries and recipient are both provided", async () => {
-    const input = JSON.stringify(fake.entries);
-
-    vi.spyOn(process.stdin, Symbol.asyncIterator).mockImplementationOnce(
-      async function* (): AsyncGenerator<string, undefined, unknown> {
-        yield input;
-      }
-    );
+    stdin.end(JSON.stringify(fake.entries));
 
     await runCommand(create, {
       rawArgs: [
@@ -113,37 +124,46 @@ describe("create", () => {
   });
 
   it("should error on TTY when entries are expected", async () => {
-    vi.spyOn(process, "stdin", "get").mockReturnValueOnce({
-      isTTY: true
-    } as NodeJS.ReadStream & { fd: 0 });
+    stdin.isTTY = true;
 
     await expect(
       runCommand(create, {
         rawArgs: ["--api-key", "test-api-key", "--entries"]
       })
     ).rejects.toThrow();
+
+    expect(stdin.readableDidRead).toBe(false);
   });
 
   it("should exit with error on invalid entries JSON", async () => {
-    vi.spyOn(process.stdin, Symbol.asyncIterator).mockImplementationOnce(
-      async function* (): AsyncGenerator<string, undefined, unknown> {
-        yield "invalid-json";
-      }
-    );
+    stdin.end("invalid-json");
 
     await expect(
       runCommand(create, {
         rawArgs: ["--api-key", "test-api-key", "--entries"]
       })
     ).rejects.toThrow();
+
+    expect(console.error).toHaveBeenCalledWith(
+      "[Suppressions] JSON input for '--entries' is not valid."
+    );
+  });
+
+  it("should propagate stdin read errors when reading entries", async () => {
+    const readError = Object.assign(new Error("I/O error reading stdin"), { code: "EIO" });
+    vi.spyOn(stdin, "_read").mockImplementationOnce(() => {
+      stdin.destroy(readError);
+    });
+
+    await expect(runCommand(create, {
+      rawArgs: ["--api-key", "test-api-key", "--entries"]
+    })).rejects.toBe(readError);
+
+    expect(mockCreate).not.toHaveBeenCalled();
   });
 
   it("should exit with error when entries contain an invalid value", async () => {
-    vi.spyOn(process.stdin, Symbol.asyncIterator).mockImplementationOnce(
-      async function* (): AsyncGenerator<string, undefined, unknown> {
-        yield JSON.stringify([null]);
-      }
-    );
+    stdin.end(JSON.stringify([null]));
 
     await expect(
       runCommand(create, {
@@ -153,11 +173,7 @@ describe("create", () => {
   });
 
   it("should reject entries when types is not an array", async () => {
-    vi.spyOn(process.stdin, Symbol.asyncIterator).mockImplementationOnce(
-      async function* (): AsyncGenerator<string, undefined, unknown> {
-        yield JSON.stringify([{ recipient: "person@example.com", types: {} }]);
-      }
-    );
+    stdin.end(JSON.stringify([{ recipient: "person@example.com", types: {} }]));
 
     await expect(
       runCommand(create, {

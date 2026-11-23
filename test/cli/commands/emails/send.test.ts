@@ -1,6 +1,7 @@
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { PassThrough } from "node:stream";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
 import emails from "~/cli/commands/emails";
@@ -46,6 +47,8 @@ vi.mock("~/mailchannels", async () => ({
 }));
 
 describe("send", () => {
+  let stdin: PassThrough & { isTTY: boolean };
+
   beforeAll(() => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.spyOn(console, "info").mockImplementation(() => {});
@@ -54,6 +57,8 @@ describe("send", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    stdin = Object.assign(new PassThrough({ readableObjectMode: true }), { isTTY: false });
+    vi.spyOn(process, "stdin", "get").mockReturnValue(stdin as unknown as typeof process.stdin);
   });
 
   afterAll(() => {
@@ -234,11 +239,7 @@ describe("send", () => {
       }
     ]);
 
-    vi.spyOn(process.stdin, Symbol.asyncIterator).mockImplementationOnce(
-      async function* (): AsyncGenerator<string, undefined, unknown> {
-        yield input;
-      }
-    );
+    stdin.end(input);
 
     await runCommand(send, {
       rawArgs: [
@@ -264,12 +265,35 @@ describe("send", () => {
     }), false);
   });
 
-  it("should error on invalid attachments JSON", async () => {
-    vi.spyOn(process.stdin, Symbol.asyncIterator).mockImplementationOnce(
-      async function* (): AsyncGenerator<string, undefined, unknown> {
-        yield "invalid-json";
-      }
+  it("should parse UTF-8 attachment JSON split across stdin chunks", async () => {
+    const input = Buffer.from(
+      JSON.stringify([{
+        filename: "café.txt",
+        content: "dGVzdA=="
+      }])
     );
+
+    const split = input.indexOf("é") + 1;
+    stdin.write(input.subarray(0, split));
+    stdin.end(input.subarray(split));
+
+    await runCommand(send, {
+      rawArgs: [...fake.args, "--attachments"]
+    });
+
+    expect(mockSend).toHaveBeenCalledWith(expect.objectContaining({
+      attachments: [
+        {
+          filename: "café.txt",
+          content: "dGVzdA==",
+          type: "text/plain"
+        }
+      ]
+    }), false);
+  });
+
+  it("should error on invalid attachments JSON", async () => {
+    stdin.end("invalid-json");
 
     await expect(
       runCommand(send, {
@@ -279,6 +303,23 @@ describe("send", () => {
         ]
       })
     ).rejects.toThrow();
+
+    expect(console.error).toHaveBeenCalledWith(
+      "[Emails] JSON input for '--attachments' is not valid."
+    );
+  });
+
+  it("should propagate stdin read errors when reading attachments", async () => {
+    const readError = Object.assign(new Error("I/O error reading stdin"), { code: "EIO" });
+    vi.spyOn(stdin, "_read").mockImplementationOnce(() => {
+      stdin.destroy(readError);
+    });
+
+    await expect(runCommand(send, {
+      rawArgs: [...fake.args, "--attachments"]
+    })).rejects.toBe(readError);
+
+    expect(mockSend).not.toHaveBeenCalled();
   });
 
   it("should error on missing required fields in attachments", async () => {
@@ -288,11 +329,7 @@ describe("send", () => {
       }
     ]);
 
-    vi.spyOn(process.stdin, Symbol.asyncIterator).mockImplementationOnce(
-      async function* (): AsyncGenerator<string, undefined, unknown> {
-        yield input;
-      }
-    );
+    stdin.end(input);
 
     await expect(
       runCommand(send, {
@@ -305,9 +342,7 @@ describe("send", () => {
   });
 
   it("should error on TTY when attachments are expected", async () => {
-    vi.spyOn(process, "stdin", "get").mockReturnValueOnce({
-      isTTY: true
-    } as NodeJS.ReadStream & { fd: 0 });
+    stdin.isTTY = true;
 
     await expect(
       runCommand(send, {
@@ -317,6 +352,8 @@ describe("send", () => {
         ]
       })
     ).rejects.toThrow();
+
+    expect(stdin.readableDidRead).toBe(false);
   });
 
   it("should parse headers", async () => {
