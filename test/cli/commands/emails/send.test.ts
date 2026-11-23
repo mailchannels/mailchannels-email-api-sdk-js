@@ -34,7 +34,21 @@ const fake = {
       }]
     },
     error: null
-  } satisfies EmailsSendResponse
+  } satisfies EmailsSendResponse,
+  failedResults: [
+    {
+      index: 0,
+      messageId: "failed-message-id",
+      status: "failed" as const,
+      reason: "Message rejected"
+    },
+    {
+      index: 1,
+      messageId: "another-failed-message-id",
+      status: "failed" as const,
+      reason: "Message rejected"
+    }
+  ]
 };
 
 const mockSend = vi.fn().mockResolvedValue(fake.response);
@@ -68,6 +82,31 @@ describe("send", () => {
       expect.stringContaining("[Emails] Email sent successfully."
         + tabulatedSections(fake.response.data.results ?? [])
       )
+    );
+  });
+
+  it.each([
+    {
+      outcome: "partially failed",
+      failedCount: "2 of 3",
+      results: [
+        ...fake.response.data.results,
+        ...fake.failedResults
+      ]
+    }
+  ])("should report a send that $outcome on stdout", async ({ outcome, failedCount, results }) => {
+    mockSend.mockResolvedValueOnce({
+      data: { requestId: "test-request-id", results },
+      error: null
+    });
+
+    await runCommand(send, { rawArgs: fake.args });
+
+    expect(console.info).toHaveBeenCalledTimes(2);
+    expect(console.info).toHaveBeenNthCalledWith(1, "[Emails] Request ID: test-request-id");
+    expect(console.info).toHaveBeenNthCalledWith(2,
+      `[Emails] Email send ${outcome}. ${failedCount} results failed.`
+      + tabulatedSections(results)
     );
   });
 
