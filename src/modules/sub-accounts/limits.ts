@@ -74,7 +74,12 @@ export class SubAccountsLimits {
       return { success: false, error };
     }
 
-    if (!Number.isInteger(options.sends) || options.sends < 0) {
+    if (!Number.isInteger(options.sends)) {
+      error = createValidationError("The sends value must be a valid integer.");
+      return { success: false, error };
+    }
+
+    if (options.sends < 0) {
       error = createValidationError("The sends value must be at least 0.");
       return { success: false, error };
     }
