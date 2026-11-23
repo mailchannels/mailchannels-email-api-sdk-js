@@ -18,6 +18,11 @@ export default defineCommand({
     const client = new MailChannelsClient(apiKey);
     const subAccounts = new SubAccounts(client);
 
+    if (!/^[+-]?\d+(?:\.0+)?$/.test(args["sends"])) {
+      console.error("[Sub-Accounts] '--sends' must be an integer value.");
+      process.exit(1);
+    }
+
     const { error } = await subAccounts.limits.set(args["handle"], {
       sends: Number(args["sends"])
     });
