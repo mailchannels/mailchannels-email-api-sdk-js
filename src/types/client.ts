@@ -20,7 +20,7 @@ export interface MailChannelsClientOptions {
    */
   retry?: number | false;
   /**
-   * Request timeout in milliseconds.
+   * Request timeout per attempt in milliseconds.
    * Set to `false` or `0` to disable timeout handling.
    * @default 120000
    */
