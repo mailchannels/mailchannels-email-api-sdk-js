@@ -6,6 +6,9 @@ import { styleText } from "~/cli/utils/shared/style";
 const repoUrl = "https://github.com/mailchannels/mailchannels-email-api-sdk-js";
 const installerUrl = `${repoUrl}/raw/main/src/cli`;
 const releaseUrl = `${repoUrl}/releases/latest`;
+const fake = {
+  deprecationNotice: "This version has vulnerabilities."
+};
 
 describe("checkUpdate", () => {
   const stdoutTTYDescriptor = Object.getOwnPropertyDescriptor(process.stdout, "isTTY");
@@ -17,6 +20,7 @@ describe("checkUpdate", () => {
     number,
     number
   ];
+  const newerVersion = `${currentMajor}.${currentMinor}.${currentPatch + 1}`;
   const originalEnvironment = {
     CI: process.env.CI,
     NO_UPDATE: process.env.NO_UPDATE,
@@ -30,10 +34,13 @@ describe("checkUpdate", () => {
     delete process.env.GITHUB_ACTIONS;
   };
 
-  const mockLatestVersion = (version: string) => {
+  const mockLatestVersion = (
+    version: string,
+    versions: Record<string, { deprecated?: string }> = { [pkg.version]: {}, [version]: {} }
+  ) => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ version })
+      json: async () => ({ "dist-tags": { latest: version }, "versions": versions })
     });
     vi.stubGlobal("fetch", fetchMock);
     return fetchMock;
@@ -89,13 +96,19 @@ describe("checkUpdate", () => {
     enableUpdateChecks();
     setRuntime("win32", false);
 
-    const fetchMock = mockLatestVersion(`${currentMajor}.${currentMinor}.${currentPatch + 1}`);
+    const fetchMock = mockLatestVersion(newerVersion);
     vi.spyOn(console, "warn").mockImplementation(() => {});
     const stderrWrite = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
 
     await checkUpdate();
 
-    expect(fetchMock).toHaveBeenCalled();
+    expect(fetchMock).toHaveBeenCalledExactlyOnceWith(
+      `https://registry.npmjs.org/${encodeURIComponent(pkg.name)}`,
+      {
+        headers: { Accept: "application/vnd.npm.install-v1+json" },
+        signal: expect.any(AbortSignal)
+      }
+    );
     expect(stderrWrite).toHaveBeenCalledWith(
       expect.stringContaining(styleText("cyan", "npm install -g @mailchannels/sdk"))
     );
@@ -177,11 +190,37 @@ describe("checkUpdate", () => {
     expect(stderrWrite).not.toHaveBeenCalled();
   });
 
+  it("should show the standalone deprecation warning alongside the available update", async () => {
+    enableUpdateChecks();
+    setRuntime("win32", true);
+    mockLatestVersion(newerVersion, {
+      [pkg.version]: { deprecated: fake.deprecationNotice },
+      [newerVersion]: {}
+    });
+    const stderrWrite = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+    await checkUpdate();
+
+    expect(stderrWrite).toHaveBeenCalledOnce();
+    expect(stderrWrite).toHaveBeenCalledWith(
+      expect.stringContaining(
+        `Version v${pkg.version} is deprecated: ${styleText("yellow", fake.deprecationNotice)}`
+      )
+    );
+    expect(stderrWrite).toHaveBeenCalledWith(
+      expect.stringContaining(
+        `Install: ${styleText("cyan", `irm ${installerUrl}/install.ps1 | iex`)}`
+      )
+    );
+    expect(stderrWrite).toHaveBeenCalledWith(
+      expect.stringContaining(`Or download from ${styleText("cyan", releaseUrl)}`)
+    );
+  });
+
   it.each([
-    { name: "a non-OK response", ok: false, result: { version: "2.0.0" } },
+    { name: "a non-OK response", ok: false },
     { name: "a non-object response body", ok: true, result: "invalid" },
-    { name: "a null response body", ok: true, result: null },
-    { name: "a non-string version", ok: true, result: { version: 2 } }
+    { name: "a null response body", ok: true, result: null }
   ])("should not report an update for $name", async ({ ok, result }) => {
     enableUpdateChecks();
     const fetchMock = vi.fn().mockResolvedValue({
