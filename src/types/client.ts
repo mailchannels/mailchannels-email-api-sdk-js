@@ -21,6 +21,8 @@ export interface MailChannelsClientOptions {
   retry?: number | false;
   /**
    * Allow retries after the request timeout expires when retries remain.
+   * A GET body-read timeout after a `2xx` or retryable HTTP status can trigger a retry even when
+   * `retryOnTimeout` is `false`, provided retries remain.
    * Retrying after a timeout can duplicate an operation the server already accepted.
    * @default false
    */
