@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "~/client";
 import { ErrorCode } from "~/internal/errors";
+import { MailChannels } from "~/mailchannels";
 import { Suppressions } from "~/modules/suppressions";
 import type {
   SuppressionsCreateEntry,
@@ -8,6 +9,7 @@ import type {
 } from "~/types/suppressions/create";
 
 const fake = {
+  apiKey: "test-api-key",
   entries: [
     {
       recipient: "test@example.com",
@@ -44,6 +46,22 @@ describe("create", () => {
         }
       })
     );
+  });
+
+  it("should report success when suppression creation succeeds after a 503", async () => {
+    const fetchMock = vi.fn<typeof fetch>()
+      .mockResolvedValueOnce(Response.json({ message: "try again" }, { status: 503 }))
+      .mockResolvedValueOnce(new Response(null, { status: 204 }));
+
+    vi.stubGlobal("fetch", fetchMock);
+
+    const mailchannels = new MailChannels(fake.apiKey, { retry: 1 });
+    const result = await mailchannels.suppressions.create(fake.entries, fake.options);
+
+    vi.unstubAllGlobals();
+
+    expect(result).toEqual({ success: true, error: null });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it("should default suppression type to non-transactional when types is not provided", async () => {
