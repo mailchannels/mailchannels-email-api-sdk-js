@@ -87,6 +87,13 @@ describe("send", () => {
 
   it.each([
     {
+      outcome: "failed",
+      failedCount: "2 of 2",
+      results: [
+        ...fake.failedResults
+      ]
+    },
+    {
       outcome: "partially failed",
       failedCount: "2 of 3",
       results: [
