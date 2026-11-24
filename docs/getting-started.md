@@ -101,10 +101,12 @@ import { MailChannels } from '@mailchannels/sdk'
 const mailchannels = new MailChannels('your-api-key', {
   baseUrl: 'http://localhost:8787', // default: 'https://api.mailchannels.net'
   retry: 1, // default: false (no retries)
+  retryOnTimeout: false, // default: false
   timeout: 30000, // default: 120000 (120 seconds)
   signal: undefined // default: undefined (no abort signal)
 })
 ```
+
 <div class="vp-doc _modules">
 
 - `baseUrl` `string` <Badge type="info">optional</Badge>: Override the MailChannels client base URL. Useful for local testing against a [simulator](/simulator).
@@ -114,9 +116,11 @@ const mailchannels = new MailChannels('your-api-key', {
   >
   > `408`, `409`, `425`, `429`, `500`, `502`, `503`, `504`.
   >
-  > Network errors are also retried when retries remain.
-- `timeout` `number | false` <Badge type="info">optional</Badge>: Request timeout in milliseconds. Set to `false` or `0` to disable timeout handling. Default is `120000` (120 seconds/2 minutes).
-- `signal` `AbortSignal` <Badge type="info">optional</Badge>: Abort signal applied to requests made by the client.
+  > Network errors are also retried when retries remain. For GET requests, this includes timeouts
+  > and other body-read failures after a `2xx` response or a retryable HTTP status.
+- `timeout` `number | false` <Badge type="info">optional</Badge>: Request timeout per attempt in milliseconds. Set to `false` or `0` to disable timeout handling. Default is `120000` (120 seconds/2 minutes).
+- `retryOnTimeout` `boolean` <Badge type="info">optional</Badge>: Enables retries on SDK timeouts. Defaults to `false`. A GET can retry a body-read timeout after a `2xx` or retryable HTTP status with either setting. Both cases require a remaining `retry` budget. Retrying a timed-out write can duplicate an operation the server already accepted.
+- `signal` `AbortSignal` <Badge type="info">optional</Badge>: Cancels requests made by the client and stops further retries.
 
 </div>
 

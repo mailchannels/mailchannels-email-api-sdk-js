@@ -73,13 +73,11 @@ const withQuery = (input: string, query?: QueryObject) => {
   return queryString ? `${base}?${queryString}` : base;
 };
 
-const parseResponse = async (
+const parseResponse = (
   response: Response,
+  text: string,
   responseType?: MailChannelsFetchResponseType
 ) => {
-  if (responseType === "arrayBuffer") return response.arrayBuffer();
-
-  const text = await response.text();
   if (responseType === "text") return text;
   if (!text) return undefined;
 
@@ -99,22 +97,27 @@ const getRetryCount = <R extends MailChannelsFetchResponseType>(
   return 1;
 };
 
-const abortSignalAny = (signals: AbortSignal[]): AbortSignal => {
-  if (typeof AbortSignal.any === "function") return AbortSignal.any(signals);
+const abortSignalAny = (signals: AbortSignal[]): { signal: AbortSignal, cleanup?: () => void } => {
+  if (typeof AbortSignal.any === "function") return { signal: AbortSignal.any(signals) };
 
+  // Remove fallback and cleanup once all runtimes support AbortSignal.any() (Node.js >= 20.3.0)
   const controller = new AbortController();
   const signalList = Array.from(signals);
 
   for (const signal of signalList) {
     if (signal.aborted) {
       controller.abort(signal.reason);
-      return controller.signal;
+      return { signal: controller.signal };
     }
   }
 
   const onAbort = (event: Event) => {
     const signal = event.target as AbortSignal;
     controller.abort(signal.reason);
+    cleanup();
+  };
+
+  const cleanup = () => {
     for (const s of signalList) {
       s.removeEventListener("abort", onAbort);
     }
@@ -123,7 +126,7 @@ const abortSignalAny = (signals: AbortSignal[]): AbortSignal => {
   for (const signal of signalList) {
     signal.addEventListener("abort", onAbort, { once: true });
   }
-  return controller.signal;
+  return { signal: controller.signal, cleanup };
 };
 
 const fetchAttempt = async <T, R extends MailChannelsFetchResponseType>(
@@ -133,14 +136,6 @@ const fetchAttempt = async <T, R extends MailChannelsFetchResponseType>(
   retriesRemaining: number
 ) => {
   const headers = new Headers(options.headers);
-
-  if (options.timeout) {
-    const timeoutSignal = AbortSignal.timeout(options.timeout);
-    options.signal = options.signal
-      ? abortSignalAny([timeoutSignal, options.signal])
-      : timeoutSignal;
-  }
-
   const { body, ...reqOptions } = options;
   const init: RequestInit = { ...reqOptions, method, headers };
 
@@ -148,43 +143,68 @@ const fetchAttempt = async <T, R extends MailChannelsFetchResponseType>(
     init.body = JSON.stringify(body);
   }
 
-  const errorOptions: Record<string, unknown> = { ...reqOptions, method, headers };
+  const timeoutSignal = options.timeout ? AbortSignal.timeout(options.timeout) : undefined;
+  let cleanup: VoidFunction | undefined;
+  if (timeoutSignal) {
+    const combined = options.signal ? abortSignalAny([timeoutSignal, options.signal]) : undefined;
+    init.signal = combined?.signal ?? timeoutSignal;
+    cleanup = combined?.cleanup;
+  }
+
+  const errorOptions: Record<string, unknown> = { ...init };
   delete errorOptions.query;
   if (body !== undefined) {
     errorOptions.body = PAYLOAD_METHODS.has(method) ? init.body : body;
   }
 
-  let response: Response;
+  let response: Response | undefined;
+  let responseBody: string | ArrayBuffer;
   try {
+    options.signal?.throwIfAborted();
     response = await globalThis.fetch(request, init);
+    responseBody = options.responseType === "arrayBuffer"
+      ? await response.arrayBuffer()
+      : await response.text();
   }
   catch (e) {
+    cleanup?.();
     const error = e as Error;
-    const isAbort = (error && error.name === "AbortError" && !options.timeout) || false;
-    if (retriesRemaining > 0 && !isAbort) {
+    const isAbort = options.signal?.aborted || (error?.name === "AbortError" && !options.timeout);
+    const timedOut = timeoutSignal?.aborted;
+    const retryableStatus = response !== undefined && RETRY_STATUS_CODES.has(response.status);
+    const retryable = timedOut
+      ? options.retryOnTimeout && (!response || retryableStatus)
+      : !response;
+    const retryableGetBody = method === "GET" && (response?.ok || retryableStatus);
+
+    if (retriesRemaining > 0 && !isAbort && (retryable || retryableGetBody)) {
       return fetchAttempt<T, R>(request, options, method, retriesRemaining - 1);
     }
 
+    if (response) throw e;
     throw createFetchError(request, method, errorOptions, undefined, error);
   }
 
-  let fetchResponse: MailChannelsFetchResponse<T>;
-  let shouldRetry = false;
+  cleanup?.();
 
-  const data = await parseResponse(response, options.responseType);
+  const data = typeof responseBody === "string"
+    ? parseResponse(response, responseBody, options.responseType)
+    : responseBody;
+
   Object.defineProperty(response, "_data", { configurable: true, value: data });
-  fetchResponse = response as MailChannelsFetchResponse<T>;
+  const fetchResponse = response as MailChannelsFetchResponse<T>;
   const context: MailChannelsFetchContext<T> = { request, response: fetchResponse };
   await options.onResponse?.(context);
 
   if (response.status >= 400 && response.status < 600) {
-    await options.onResponseError?.(context);
-    shouldRetry = retriesRemaining > 0 && RETRY_STATUS_CODES.has(response.status);
+    if (retriesRemaining > 0 && RETRY_STATUS_CODES.has(response.status)) {
+      return fetchAttempt<T, R>(request, options, method, retriesRemaining - 1);
+    }
 
-    if (!shouldRetry) throw createFetchError(request, method, errorOptions, response);
+    await options.onResponseError?.(context);
+    throw createFetchError(request, method, errorOptions, response);
   }
 
-  if (shouldRetry) return fetchAttempt<T, R>(request, options, method, retriesRemaining - 1);
   return fetchResponse;
 };
 

@@ -80,9 +80,10 @@ console.log(data.requestId)
 
 ```ts
 const mc = new MailChannels('YOUR-API-KEY', {
-  baseUrl: 'https://api.mailchannels.net', // rarely needed
+  baseUrl: 'https://api.mailchannels.net',  // rarely needed
   timeout: 120000,                          // ms, default 120s; false to disable
   retry: false,                             // retries network errors and retryable HTTP statuses
+  retryOnTimeout: false,                    // allow retries after a timeout if retries remain
   signal: controller.signal                 // AbortSignal for cancellation
 })
 ```
