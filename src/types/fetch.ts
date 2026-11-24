@@ -20,6 +20,7 @@ export interface MailChannelsFetchOptions<R extends MailChannelsFetchResponseTyp
   baseURL?: string;
   query?: Record<string, any>;
   retry?: number | false;
+  retryOnTimeout?: boolean;
   timeout?: number;
   responseType?: R;
   onResponse?: MailChannelsFetchResponseHook;

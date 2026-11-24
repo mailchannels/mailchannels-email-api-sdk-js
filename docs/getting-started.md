@@ -101,10 +101,12 @@ import { MailChannels } from '@mailchannels/sdk'
 const mailchannels = new MailChannels('your-api-key', {
   baseUrl: 'http://localhost:8787', // default: 'https://api.mailchannels.net'
   retry: 1, // default: false (no retries)
+  retryOnTimeout: false, // default: false
   timeout: 30000, // default: 120000 (120 seconds)
   signal: undefined // default: undefined (no abort signal)
 })
 ```
+
 <div class="vp-doc _modules">
 
 - `baseUrl` `string` <Badge type="info">optional</Badge>: Override the MailChannels client base URL. Useful for local testing against a [simulator](/simulator).
@@ -116,6 +118,7 @@ const mailchannels = new MailChannels('your-api-key', {
   >
   > Network errors are also retried when retries remain.
 - `timeout` `number | false` <Badge type="info">optional</Badge>: Request timeout per attempt in milliseconds. Set to `false` or `0` to disable timeout handling. Default is `120000` (120 seconds/2 minutes).
+- `retryOnTimeout` `boolean` <Badge type="info">optional</Badge>: Allow retries when the SDK timeout expires while waiting for a response. Retrying after a timeout can duplicate an operation the server already accepted. Requires a retry budget. Defaults to `false`.
 - `signal` `AbortSignal` <Badge type="info">optional</Badge>: Cancels requests made by the client and stops further retries.
 
 </div>

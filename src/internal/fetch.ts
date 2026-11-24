@@ -102,7 +102,7 @@ const getRetryCount = <R extends MailChannelsFetchResponseType>(
 const abortSignalAny = (signals: AbortSignal[]): { signal: AbortSignal, cleanup?: () => void } => {
   if (typeof AbortSignal.any === "function") return { signal: AbortSignal.any(signals) };
 
-  // Remove fallback and its cleanup once all supported runtimes provide AbortSignal.any() (Node.js >= 20.3.0)
+  // Remove fallback and cleanup once all runtimes support AbortSignal.any() (Node.js >= 20.3.0)
   const controller = new AbortController();
   const signalList = Array.from(signals);
 
@@ -145,9 +145,9 @@ const fetchAttempt = async <T, R extends MailChannelsFetchResponseType>(
     init.body = JSON.stringify(body);
   }
 
+  const timeoutSignal = options.timeout ? AbortSignal.timeout(options.timeout) : undefined;
   let cleanup: VoidFunction | undefined;
-  if (options.timeout) {
-    const timeoutSignal = AbortSignal.timeout(options.timeout);
+  if (timeoutSignal) {
     const combined = options.signal ? abortSignalAny([timeoutSignal, options.signal]) : undefined;
     init.signal = combined?.signal ?? timeoutSignal;
     cleanup = combined?.cleanup;
@@ -159,23 +159,30 @@ const fetchAttempt = async <T, R extends MailChannelsFetchResponseType>(
     errorOptions.body = PAYLOAD_METHODS.has(method) ? init.body : body;
   }
 
-  let response: Response;
+  let response: Response | undefined;
+  let data: unknown;
   try {
     options.signal?.throwIfAborted();
     response = await globalThis.fetch(request, init);
+    data = await parseResponse(response, options.responseType);
   }
   catch (e) {
     cleanup?.();
     const error = e as Error;
     const isAbort = options.signal?.aborted || (error?.name === "AbortError" && !options.timeout);
-    if (retriesRemaining > 0 && !isAbort) {
+    const timedOut = timeoutSignal?.aborted;
+    const retryable = timedOut
+      ? options.retryOnTimeout && (!response || RETRY_STATUS_CODES.has(response.status))
+      : !response;
+    if (retriesRemaining > 0 && !isAbort && retryable) {
       return fetchAttempt<T, R>(request, options, method, retriesRemaining - 1);
     }
 
+    if (response) throw e;
     throw createFetchError(request, method, errorOptions, undefined, error);
   }
 
-  const data = await parseResponse(response, options.responseType).finally(cleanup);
+  cleanup?.();
   Object.defineProperty(response, "_data", { configurable: true, value: data });
   const fetchResponse = response as MailChannelsFetchResponse<T>;
   const context: MailChannelsFetchContext<T> = { request, response: fetchResponse };

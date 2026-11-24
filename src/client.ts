@@ -17,6 +17,7 @@ export class MailChannelsClient {
     this.options = {
       baseUrl: options.baseUrl || MailChannelsClient.DEFAULT_BASE_URL,
       retry: options.retry ?? false,
+      retryOnTimeout: options.retryOnTimeout ?? false,
       signal: options.signal,
       timeout: options.timeout ?? MailChannelsClient.DEFAULT_TIMEOUT
     };
@@ -35,6 +36,7 @@ export class MailChannelsClient {
     return $fetch<T>(path, {
       baseURL: this.options.baseUrl,
       retry: this.options.retry,
+      retryOnTimeout: this.options.retryOnTimeout,
       signal,
       timeout: this.options.timeout === false ? undefined : this.options.timeout,
       ...fetchOptions,

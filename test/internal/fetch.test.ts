@@ -16,6 +16,16 @@ const jsonResponse = (data: unknown, status = 200): Response => new Response(JSO
   headers: { "content-type": "application/json" }
 });
 
+const stalledResponse = (status: number, signal?: AbortSignal | null): Response => {
+  const body = new ReadableStream({
+    start (controller) {
+      signal?.addEventListener("abort", () => controller.error(signal.reason), { once: true });
+    }
+  });
+
+  return new Response(body, { status });
+};
+
 const fetchMock = vi.fn<typeof fetch>();
 type FetchErrorShape<T = unknown> = Error & {
   request?: string;
@@ -198,7 +208,8 @@ describe("fetch adapter", () => {
       const result = $fetch(fake.path, {
         baseURL: fake.baseURL,
         signal: controller.signal,
-        timeout: 10000
+        timeout: 10000,
+        retryOnTimeout: true
       });
       controller.abort(new Error("caller cancelled"));
 
@@ -265,12 +276,56 @@ describe("fetch adapter", () => {
     const result = await $fetch(fake.path, {
       baseURL: fake.baseURL,
       timeout: 1,
-      retry: 1
+      retry: 1,
+      retryOnTimeout: true
     });
 
     expect(result).toStrictEqual(fake.response);
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(signalAbortedAtStart).toEqual([false, false]);
+  });
+
+  it("does not retry a POST that times out before headers by default", async () => {
+    fetchMock.mockImplementationOnce((_input, init) => new Promise((_resolve, reject) => {
+      const signal = init?.signal;
+      signal?.addEventListener("abort", () => reject(signal.reason), { once: true });
+    }));
+
+    await expect($fetch(fake.path, {
+      baseURL: fake.baseURL,
+      method: "POST",
+      timeout: 1,
+      retry: 1
+    })).rejects.toMatchObject({ cause: { name: "TimeoutError" } });
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
+  it("retries a stalled body after a retryable status with retryOnTimeout", async () => {
+    fetchMock.mockImplementationOnce(async (_input, init) => stalledResponse(503, init?.signal));
+
+    const result = $fetch(fake.path, {
+      method: "POST",
+      timeout: 1,
+      retry: 1,
+      retryOnTimeout: true
+    });
+
+    await expect(result).resolves.toStrictEqual(fake.response);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it.each([202, 401])("does not retry a stalled POST body after status %i", async (status) => {
+    fetchMock.mockImplementationOnce(async (_input, init) => stalledResponse(status, init?.signal));
+
+    await expect($fetch(fake.path, {
+      method: "POST",
+      timeout: 1,
+      retry: 1,
+      retryOnTimeout: true
+    })).rejects.toMatchObject({ name: "TimeoutError" });
+
+    expect(fetchMock).toHaveBeenCalledOnce();
   });
 
   it("runs the response hook with parsed data", async () => {

@@ -16,7 +16,7 @@ const transport = nodemailer.createTransport(
   mailchannelsTransport({
     apiKey: 'YOUR-API-KEY',
     sendMode: 'async', // 'async' or 'sync'. Default is 'async'
-    // SDK client options: `baseUrl`, `timeout`, `signal`, `retry`
+    // SDK client options: `baseUrl`, `timeout`, `signal`, `retry`, `retryOnTimeout`
   })
 )
 
@@ -40,7 +40,7 @@ transport.sendMail({
 ## Transport Options
 
 The transport accepts `apiKey` and `sendMode` options, as well as any SDK client
-options (`baseUrl`, `timeout`, `signal`, `retry`).
+options (`baseUrl`, `timeout`, `signal`, `retry`, `retryOnTimeout`).
 
 Refer to the [clients-and-transport](../clients-and-transport.md) documentation for
 details and full explanations of each client option.
