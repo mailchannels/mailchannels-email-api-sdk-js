@@ -301,6 +301,19 @@ describe("fetch adapter", () => {
     expect(fetchMock).toHaveBeenCalledOnce();
   });
 
+  it("retries a GET when a successful response body stalls", async () => {
+    fetchMock.mockImplementationOnce(async (_input, init) => stalledResponse(200, init?.signal));
+
+    const result = await $fetch(fake.path, {
+      method: "GET",
+      timeout: 1,
+      retry: 1
+    });
+
+    expect(result).toStrictEqual(fake.response);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
   it("retries a stalled body after a retryable status with retryOnTimeout", async () => {
     fetchMock.mockImplementationOnce(async (_input, init) => stalledResponse(503, init?.signal));
 

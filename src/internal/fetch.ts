@@ -73,13 +73,11 @@ const withQuery = (input: string, query?: QueryObject) => {
   return queryString ? `${base}?${queryString}` : base;
 };
 
-const parseResponse = async (
+const parseResponse = (
   response: Response,
+  text: string,
   responseType?: MailChannelsFetchResponseType
 ) => {
-  if (responseType === "arrayBuffer") return response.arrayBuffer();
-
-  const text = await response.text();
   if (responseType === "text") return text;
   if (!text) return undefined;
 
@@ -160,11 +158,13 @@ const fetchAttempt = async <T, R extends MailChannelsFetchResponseType>(
   }
 
   let response: Response | undefined;
-  let data: unknown;
+  let responseBody: string | ArrayBuffer;
   try {
     options.signal?.throwIfAborted();
     response = await globalThis.fetch(request, init);
-    data = await parseResponse(response, options.responseType);
+    responseBody = options.responseType === "arrayBuffer"
+      ? await response.arrayBuffer()
+      : await response.text();
   }
   catch (e) {
     cleanup?.();
@@ -174,7 +174,8 @@ const fetchAttempt = async <T, R extends MailChannelsFetchResponseType>(
     const retryable = timedOut
       ? options.retryOnTimeout && (!response || RETRY_STATUS_CODES.has(response.status))
       : !response;
-    if (retriesRemaining > 0 && !isAbort && retryable) {
+
+    if (retriesRemaining > 0 && !isAbort && (retryable || (response && method === "GET"))) {
       return fetchAttempt<T, R>(request, options, method, retriesRemaining - 1);
     }
 
@@ -183,6 +184,11 @@ const fetchAttempt = async <T, R extends MailChannelsFetchResponseType>(
   }
 
   cleanup?.();
+
+  const data = typeof responseBody === "string"
+    ? parseResponse(response, responseBody, options.responseType)
+    : responseBody;
+
   Object.defineProperty(response, "_data", { configurable: true, value: data });
   const fetchResponse = response as MailChannelsFetchResponse<T>;
   const context: MailChannelsFetchContext<T> = { request, response: fetchResponse };
