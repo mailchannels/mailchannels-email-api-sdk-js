@@ -13,6 +13,7 @@ const fake = {
   defaults: {
     baseURL: "https://api.mailchannels.net",
     retry: false,
+    retryOnTimeout: false,
     timeout: 120000,
     signal: undefined,
     headers: {
@@ -122,16 +123,20 @@ describe("MailChannelsClient", () => {
     });
   });
 
-  it("should allow overriding the timeout", async () => {
+  it("should allow configuring the timeout and opting into timeout retries", async () => {
     $fetch.mockResolvedValueOnce({});
 
-    const client = new MailChannelsClient(fake.apiKey, { timeout: fake.options.timeout });
+    const client = new MailChannelsClient(fake.apiKey, {
+      timeout: fake.options.timeout,
+      retryOnTimeout: true
+    });
     await client.get(fake.path);
 
     expect($fetch).toHaveBeenCalledWith(fake.path, {
       ...fake.defaults,
       method: "GET",
-      timeout: fake.options.timeout
+      timeout: fake.options.timeout,
+      retryOnTimeout: true
     });
   });
 

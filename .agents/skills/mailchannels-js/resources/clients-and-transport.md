@@ -28,7 +28,12 @@ new MailChannels('')   // throws Error: "Missing MailChannels API key."
 | `baseUrl` | `string` | `https://api.mailchannels.net` | Only override if MailChannels gives you a specific alternate endpoint (sandbox, regional URL). |
 | `timeout` | `number \| false` | `120000` (ms) | Timeout per attempt. Pass `false` or `0` to disable it. |
 | `retry` | `number \| false` | `false` | Number of retries for network errors and retryable HTTP responses. |
+| `retryOnTimeout` | `boolean` | `false` | Allow retries after an SDK timeout when retries remain. |
 | `signal` | `AbortSignal` | `undefined` | Cancels requests from this instance and stops further retries. |
+
+With `retryOnTimeout` enabled, timeouts before headers arrive can trigger a retry. Once headers
+arrive, a stalled body can trigger a retry only for a retryable HTTP status. Retrying after a
+timeout can duplicate an operation the server already accepted.
 
 ## Multi-Tenant: One Client Per Credential
 

@@ -20,6 +20,12 @@ export interface MailChannelsClientOptions {
    */
   retry?: number | false;
   /**
+   * Allow retries after the request timeout expires when retries remain.
+   * Retrying after a timeout can duplicate an operation the server already accepted.
+   * @default false
+   */
+  retryOnTimeout?: boolean;
+  /**
    * Request timeout per attempt in milliseconds.
    * Set to `false` or `0` to disable timeout handling.
    * @default 120000
