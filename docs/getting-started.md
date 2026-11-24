@@ -117,7 +117,7 @@ const mailchannels = new MailChannels('your-api-key', {
   > `408`, `409`, `425`, `429`, `500`, `502`, `503`, `504`.
   >
   > Network errors are also retried when retries remain. For GET requests, this includes timeouts
-  > and other I/O failures while reading the response body.
+  > and other body-read failures after a `2xx` response or a retryable HTTP status.
 - `timeout` `number | false` <Badge type="info">optional</Badge>: Request timeout per attempt in milliseconds. Set to `false` or `0` to disable timeout handling. Default is `120000` (120 seconds/2 minutes).
 - `retryOnTimeout` `boolean` <Badge type="info">optional</Badge>: Allow retries when the SDK timeout expires while waiting for a response. Retrying after a timeout can duplicate an operation the server already accepted. Requires a retry budget. Defaults to `false`.
 - `signal` `AbortSignal` <Badge type="info">optional</Badge>: Cancels requests made by the client and stops further retries.

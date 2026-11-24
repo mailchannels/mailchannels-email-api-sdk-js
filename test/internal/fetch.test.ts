@@ -301,8 +301,8 @@ describe("fetch adapter", () => {
     expect(fetchMock).toHaveBeenCalledOnce();
   });
 
-  it("retries a GET when a successful response body stalls", async () => {
-    fetchMock.mockImplementationOnce(async (_input, init) => stalledResponse(200, init?.signal));
+  it.each([200, 503])("retries a stalled GET body after status %i", async (status) => {
+    fetchMock.mockImplementationOnce(async (_input, init) => stalledResponse(status, init?.signal));
 
     const result = await $fetch(fake.path, {
       method: "GET",
@@ -328,11 +328,16 @@ describe("fetch adapter", () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  it.each([202, 401])("does not retry a stalled POST body after status %i", async (status) => {
+  it.each([
+    { method: "POST", status: 202 },
+    { method: "POST", status: 401 },
+    { method: "GET", status: 401 },
+    { method: "GET", status: 404 }
+  ] as const)("does not retry a stalled $method $status body", async ({ method, status }) => {
     fetchMock.mockImplementationOnce(async (_input, init) => stalledResponse(status, init?.signal));
 
     await expect($fetch(fake.path, {
-      method: "POST",
+      method,
       timeout: 1,
       retry: 1,
       retryOnTimeout: true

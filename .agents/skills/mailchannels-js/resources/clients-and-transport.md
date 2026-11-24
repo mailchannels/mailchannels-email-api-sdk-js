@@ -31,10 +31,10 @@ new MailChannels('')   // throws Error: "Missing MailChannels API key."
 | `retryOnTimeout` | `boolean` | `false` | Allow retries after an SDK timeout when retries remain. |
 | `signal` | `AbortSignal` | `undefined` | Cancels requests from this instance and stops further retries. |
 
-GET response-body I/O failures, including timeouts, can trigger a retry when retries remain. With
-`retryOnTimeout` enabled, timeouts before headers arrive can trigger a retry. For write requests, a
-stalled body can trigger a retry only for a retryable HTTP status. Retrying after a timeout can
-duplicate an operation the server already accepted.
+GET response-body I/O failures, including timeouts, can trigger a retry after a `2xx` response or a
+retryable HTTP status. With `retryOnTimeout` enabled, timeouts before headers arrive can trigger a
+retry. For write requests, a stalled body can trigger a retry only for a retryable HTTP status.
+Retrying after a timeout can duplicate an operation the server already accepted.
 
 ## Multi-Tenant: One Client Per Credential
 

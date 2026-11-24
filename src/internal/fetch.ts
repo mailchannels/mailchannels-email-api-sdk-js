@@ -171,11 +171,13 @@ const fetchAttempt = async <T, R extends MailChannelsFetchResponseType>(
     const error = e as Error;
     const isAbort = options.signal?.aborted || (error?.name === "AbortError" && !options.timeout);
     const timedOut = timeoutSignal?.aborted;
+    const retryableStatus = response !== undefined && RETRY_STATUS_CODES.has(response.status);
     const retryable = timedOut
-      ? options.retryOnTimeout && (!response || RETRY_STATUS_CODES.has(response.status))
+      ? options.retryOnTimeout && (!response || retryableStatus)
       : !response;
+    const retryableGetBody = method === "GET" && (response?.ok || retryableStatus);
 
-    if (retriesRemaining > 0 && !isAbort && (retryable || (response && method === "GET"))) {
+    if (retriesRemaining > 0 && !isAbort && (retryable || retryableGetBody)) {
       return fetchAttempt<T, R>(request, options, method, retriesRemaining - 1);
     }
 
