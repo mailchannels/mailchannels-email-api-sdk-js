@@ -1,3 +1,4 @@
+import { text } from "node:stream/consumers";
 import type { SuppressionsCreateEntry, SuppressionsTypes } from "../../../mailchannels";
 
 const isValidEntry = (value: unknown): value is SuppressionsCreateEntry => {
@@ -25,32 +26,30 @@ export const parseEntries = async (
       console.warn("[Suppressions] Warning: '--entries' ignores '--types' and '--notes'.");
     }
 
-    if (process.stdin.isTTY) {
+    const stdin = process.stdin;
+
+    if (stdin.isTTY) {
       console.error("[Suppressions] '--entries' requires JSON input piped to stdin.");
       process.exit(1);
     }
 
-    let input = "";
-    for await (const chunk of process.stdin) {
-      input += chunk;
-    }
-
-    let parsed: SuppressionsCreateEntry[];
+    const input = await text(stdin);
+    let parsedEntries: SuppressionsCreateEntry[];
 
     try {
-      parsed = JSON.parse(input);
+      parsedEntries = JSON.parse(input);
     }
     catch {
       console.error("[Suppressions] JSON input for '--entries' is not valid.");
       process.exit(1);
     }
 
-    if (!Array.isArray(parsed) || !parsed.every(isValidEntry)) {
+    if (!Array.isArray(parsedEntries) || !parsedEntries.every(isValidEntry)) {
       console.error("[Suppressions] '--entries' must be a JSON array of suppression entries.");
       process.exit(1);
     }
 
-    return parsed;
+    return parsedEntries;
   }
 
   if (!recipient) {
