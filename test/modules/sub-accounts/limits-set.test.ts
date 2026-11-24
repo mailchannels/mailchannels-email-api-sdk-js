@@ -49,7 +49,10 @@ describe("limits.set", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.limits.set(fake.validHandle, { sends: -1 });
 
-    expect(error).toBeTruthy();
+    expect(error).toMatchObject({
+      message: "The sends value must be at least 0.",
+      type: "validation_error"
+    });
     expect(success).toBe(false);
     expect(mockClient.put).not.toHaveBeenCalled();
   });
@@ -68,7 +71,10 @@ describe("limits.set", () => {
     // @ts-expect-error Testing invalid sends values
     const { success, error } = await subAccounts.limits.set(fake.validHandle, { sends });
 
-    expect(error).toBeTruthy();
+    expect(error).toMatchObject({
+      message: "The sends value must be a valid integer.",
+      type: "validation_error"
+    });
     expect(success).toBe(false);
     expect(mockClient.put).not.toHaveBeenCalled();
   });

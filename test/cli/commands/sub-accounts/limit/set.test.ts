@@ -35,12 +35,33 @@ describe("limits set", () => {
     vi.restoreAllMocks();
   });
 
-  it("should set a sub-account limit", async () => {
+  it.each(
+    [fake.sends, 0, "+1", "1.00"]
+  )("should set a sub-account limit of %i sends", async (sends) => {
     await runCommand(set, {
-      rawArgs: [...fake.args, "--handle", fake.handle, "--sends", String(fake.sends)]
+      rawArgs: [...fake.args, "--handle", fake.handle, "--sends", String(sends)]
     });
 
-    expect(mockSet).toHaveBeenCalledWith(fake.handle, { sends: fake.sends });
+    expect(mockSet).toHaveBeenCalledWith(fake.handle, { sends: Number(sends) });
+  });
+
+  it.each([
+    { input: "a bare flag", args: ["--sends"] },
+    { input: "an empty value", args: ["--sends", ""] },
+    { input: "an empty inline value", args: ["--sends="] },
+    { input: "whitespace", args: ["--sends", "  "] },
+    { input: "a negated flag", args: ["--no-sends"] },
+    { input: "a fraction", args: ["--sends", "1.5"] },
+    { input: "non-decimal notation", args: ["--sends", "0x10"] }
+  ])("should reject $input for sends before calling the SDK", async ({ args }) => {
+    await expect(
+      runCommand(set, { rawArgs: [...fake.args, "--handle", fake.handle, ...args] })
+    ).rejects.toThrow();
+
+    expect(mockSet).not.toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalledWith(
+      "[Sub-Accounts] '--sends' must be an integer value."
+    );
   });
 
   it("should exit with error when setting a sub-account limit fails", async () => {
