@@ -230,6 +230,16 @@ describe("parseAttachments", () => {
     ]);
   });
 
+  it("should decode URL-encoded attachment filenames", () => {
+    const out = parseAttachments([{ filename: "my%20file.txt", content: "hi" }])!;
+    expect(out[0]!.filename).toBe("my file.txt");
+  });
+
+  it("should keep the original filename when it is not valid URI encoding", () => {
+    const out = parseAttachments([{ filename: "100% complete.txt", content: "hi" }])!;
+    expect(out[0]!.filename).toBe("100% complete.txt");
+  });
+
   it("should throw when content is not string or Buffer", () => {
     expect(() => parseAttachments([{ filename: "x", content: new Readable() }])).toThrow(
       "Attachment content must be a string or Buffer"

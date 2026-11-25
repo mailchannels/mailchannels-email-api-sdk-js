@@ -15,10 +15,10 @@
     "send": "node dist/index.js"
   },
   "dependencies": {
-    "@mailchannels/sdk": "^1.10.0",
+    "@mailchannels/sdk": "^1.11.0",
     "@vue-email/components": "^0.0.21",
     "@vue-email/render": "^0.0.9",
-    "vue": "^3.5.45"
+    "vue": "^3.5.46"
   },
   "devDependencies": {
     "tsdown": "0.23.7",

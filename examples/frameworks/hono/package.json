@@ -7,12 +7,12 @@
     "start": "tsx src/index.ts"
   },
   "dependencies": {
-    "@hono/node-server": "^2.1.9",
-    "@mailchannels/sdk": "^1.10.0",
-    "hono": "^4.13.19"
+    "@hono/node-server": "^2.1.11",
+    "@mailchannels/sdk": "^1.11.0",
+    "hono": "^4.13.22"
   },
   "devDependencies": {
-    "@types/node": "^26.6.6",
+    "@types/node": "^26.6.10",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }

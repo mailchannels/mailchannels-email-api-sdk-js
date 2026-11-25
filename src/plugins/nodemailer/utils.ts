@@ -2,6 +2,7 @@ import { createPrivateKey } from "node:crypto";
 import { Buffer } from "node:buffer";
 import type { SendMailOptions } from "nodemailer";
 import type { EmailsSendAttachment, EmailsSendDkim, EmailsSendRecipient } from "../../mailchannels";
+import { decodeFilename } from "../../internal/decode-filename";
 
 export const parseAddress = (
   address: SendMailOptions["from"]
@@ -51,7 +52,7 @@ export const parseAttachments = (
         content: encoding === "base64"
           ? attachment.content
           : Buffer.from(attachment.content, encoding).toString("base64"),
-        filename: decodeURIComponent(attachment.filename),
+        filename: decodeFilename(attachment.filename),
         type: attachment.contentType,
         contentId: attachment.cid
       };

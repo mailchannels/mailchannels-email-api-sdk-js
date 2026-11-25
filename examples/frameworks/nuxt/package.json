@@ -11,11 +11,11 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@mailchannels/sdk": "^1.10.0",
-    "nuxt": "^4.6.4"
+    "@mailchannels/sdk": "^1.11.0",
+    "nuxt": "^4.7.0"
   },
   "devDependencies": {
-    "@types/node": "^26.6.6",
+    "@types/node": "^26.6.10",
     "typescript": "^6.0.3"
   }
 }
