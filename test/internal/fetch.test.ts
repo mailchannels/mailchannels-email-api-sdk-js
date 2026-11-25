@@ -1,3 +1,4 @@
+import { getEventListeners } from "node:events";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { $fetch } from "~/internal/fetch";
 import type { MailChannelsFetchResponse } from "~/types/fetch";
@@ -14,6 +15,16 @@ const jsonResponse = (data: unknown, status = 200): Response => new Response(JSO
   status,
   headers: { "content-type": "application/json" }
 });
+
+const stalledResponse = (status: number, signal?: AbortSignal | null): Response => {
+  const body = new ReadableStream({
+    start (controller) {
+      signal?.addEventListener("abort", () => controller.error(signal.reason), { once: true });
+    }
+  });
+
+  return new Response(body, { status });
+};
 
 const fetchMock = vi.fn<typeof fetch>();
 type FetchErrorShape<T = unknown> = Error & {
@@ -191,18 +202,28 @@ describe("fetch adapter", () => {
     fetchMock.mockImplementationOnce((_input, init) => new Promise((_resolve, reject) => {
       const signal = init?.signal;
       signal?.addEventListener("abort", () => reject(signal.reason), { once: true });
-    })).mockImplementationOnce((_input, init) => Promise.reject(init?.signal?.reason));
+    }));
 
     try {
       const result = $fetch(fake.path, {
         baseURL: fake.baseURL,
         signal: controller.signal,
-        timeout: 10000
+        timeout: 10000,
+        retryOnTimeout: true
       });
       controller.abort(new Error("caller cancelled"));
 
       await expect(result).rejects.toThrow("caller cancelled");
-      expect(fetchMock).toHaveBeenCalledTimes(2);
+      await expect($fetch(fake.path, {
+        baseURL: fake.baseURL,
+        signal: controller.signal,
+        timeout: 10000
+      })).rejects.toMatchObject({
+        options: {
+          signal: expect.objectContaining({ aborted: true, reason: controller.signal.reason })
+        }
+      });
+      expect(fetchMock).toHaveBeenCalledOnce();
     }
     finally {
       if (originalDescriptor) Object.defineProperty(AbortSignal, "any", originalDescriptor);
@@ -210,45 +231,119 @@ describe("fetch adapter", () => {
     }
   });
 
-  it("carries the composed timeout signal into retries", async () => {
+  it("composes a new timeout signal for each retry and releases fallback listeners", async () => {
+    vi.stubGlobal("AbortSignal", { timeout: AbortSignal.timeout });
     const controller = new AbortController();
     const options = {
       baseURL: fake.baseURL,
-      retry: 1,
+      retry: 2,
       signal: controller.signal,
       timeout: 10000
     };
     fetchMock
+      .mockRejectedValueOnce(new Error("connection reset"))
       .mockResolvedValueOnce(jsonResponse({ message: "try again" }, 503))
-      .mockResolvedValueOnce(jsonResponse(fake.response));
+      .mockImplementationOnce(async () => {
+        expect(getEventListeners(controller.signal, "abort")).toHaveLength(1);
+        return jsonResponse(fake.response);
+      });
 
-    await expect($fetch(fake.path, options)).resolves.toEqual(fake.response);
-
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const result = await $fetch(fake.path, options);
     const firstSignal = fetchMock.mock.calls[0]?.[1]?.signal;
     const secondSignal = fetchMock.mock.calls[1]?.[1]?.signal;
+
+    expect(result).toStrictEqual(fake.response);
+    expect(fetchMock).toHaveBeenCalledTimes(3);
     expect(firstSignal).not.toBe(controller.signal);
     expect(secondSignal).not.toBe(firstSignal);
     expect(options.signal).toBe(controller.signal);
+    expect(getEventListeners(controller.signal, "abort")).toHaveLength(0);
   });
 
-  it("retries timed out requests with the inherited aborted signal", async () => {
+  it("retries timed out requests with a fresh timeout signal", async () => {
     const signalAbortedAtStart: boolean[] = [];
-    fetchMock.mockImplementation(async (_input, init) => new Promise((_resolve, reject) => {
+    fetchMock.mockImplementationOnce(async (_input, init) => new Promise((_resolve, reject) => {
       const signal = init?.signal;
       if (!signal) return;
       signalAbortedAtStart.push(signal.aborted);
       if (signal.aborted) reject(signal.reason);
       else signal.addEventListener("abort", () => reject(signal.reason), { once: true });
+    })).mockImplementationOnce(async (_input, init) => {
+      signalAbortedAtStart.push(init?.signal?.aborted ?? true);
+      return jsonResponse(fake.response);
+    });
+
+    const result = await $fetch(fake.path, {
+      baseURL: fake.baseURL,
+      timeout: 1,
+      retry: 1,
+      retryOnTimeout: true
+    });
+
+    expect(result).toStrictEqual(fake.response);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(signalAbortedAtStart).toEqual([false, false]);
+  });
+
+  it("does not retry a POST that times out before headers by default", async () => {
+    fetchMock.mockImplementationOnce((_input, init) => new Promise((_resolve, reject) => {
+      const signal = init?.signal;
+      signal?.addEventListener("abort", () => reject(signal.reason), { once: true });
     }));
 
     await expect($fetch(fake.path, {
       baseURL: fake.baseURL,
+      method: "POST",
       timeout: 1,
-      retry: 2
-    })).rejects.toThrow("The operation was aborted due to timeout");
-    expect(fetchMock).toHaveBeenCalledTimes(3);
-    expect(signalAbortedAtStart).toEqual([false, true, true]);
+      retry: 1
+    })).rejects.toMatchObject({ cause: { name: "TimeoutError" } });
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
+  it.each([200, 503])("retries a stalled GET body after status %i", async (status) => {
+    fetchMock.mockImplementationOnce(async (_input, init) => stalledResponse(status, init?.signal));
+
+    const result = await $fetch(fake.path, {
+      method: "GET",
+      timeout: 1,
+      retry: 1
+    });
+
+    expect(result).toStrictEqual(fake.response);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("retries a stalled body after a retryable status with retryOnTimeout", async () => {
+    fetchMock.mockImplementationOnce(async (_input, init) => stalledResponse(503, init?.signal));
+
+    const result = $fetch(fake.path, {
+      method: "POST",
+      timeout: 1,
+      retry: 1,
+      retryOnTimeout: true
+    });
+
+    await expect(result).resolves.toStrictEqual(fake.response);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it.each([
+    { method: "POST", status: 202 },
+    { method: "POST", status: 401 },
+    { method: "GET", status: 401 },
+    { method: "GET", status: 404 }
+  ] as const)("does not retry a stalled $method $status body", async ({ method, status }) => {
+    fetchMock.mockImplementationOnce(async (_input, init) => stalledResponse(status, init?.signal));
+
+    await expect($fetch(fake.path, {
+      method,
+      timeout: 1,
+      retry: 1,
+      retryOnTimeout: true
+    })).rejects.toMatchObject({ name: "TimeoutError" });
+
+    expect(fetchMock).toHaveBeenCalledOnce();
   });
 
   it("runs the response hook with parsed data", async () => {
@@ -381,21 +476,19 @@ describe("fetch adapter", () => {
     expect(fetchMock).toHaveBeenCalledOnce();
   });
 
-  it("retries HTTP failures before honoring an abort on the caller signal", async () => {
+  it("honors caller cancellation before retrying HTTP failures", async () => {
     const controller = new AbortController();
     const abortError = new DOMException("caller cancelled", "AbortError");
-    const onResponseError = vi.fn(() => controller.abort(abortError));
-    fetchMock
-      .mockResolvedValueOnce(jsonResponse({ message: "unavailable" }, 503))
-      .mockImplementationOnce((_input, init) => Promise.reject(init?.signal?.reason));
+    const onResponse = vi.fn(() => controller.abort(abortError));
+    fetchMock.mockResolvedValueOnce(jsonResponse({ message: "unavailable" }, 503));
 
     await expect($fetch(fake.path, {
       baseURL: fake.baseURL,
       retry: 1,
       signal: controller.signal,
-      onResponseError
+      onResponse
     })).rejects.toThrow("caller cancelled");
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenCalledOnce();
   });
 
   it("retries network failures by default for GET", async () => {
@@ -432,16 +525,26 @@ describe("fetch adapter", () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  it("does not retry rejected requests when the caller signal is aborted", async () => {
+  it("does not retry an AbortError without a configured timeout", async () => {
+    fetchMock.mockRejectedValueOnce(new DOMException("Request aborted", "AbortError"));
+
+    await expect($fetch(fake.path, {
+      baseURL: fake.baseURL,
+      retry: 2
+    })).rejects.toThrow("Request aborted");
+    expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
+  it("does not fetch when the caller signal is already aborted", async () => {
     const controller = new AbortController();
     controller.abort();
-    fetchMock.mockRejectedValueOnce(controller.signal.reason);
 
     await expect($fetch(fake.path, {
       baseURL: fake.baseURL,
       retry: 2,
       signal: controller.signal
     })).rejects.toThrow();
-    expect(fetchMock).toHaveBeenCalledOnce();
+
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

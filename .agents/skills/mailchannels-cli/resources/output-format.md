@@ -129,7 +129,7 @@ page returns fewer than `--limit` rows.
 | `metrics senders` | 10 | 1000 |
 | `webhooks batches` | 500 | 500 |
 
-## Update Notices
+## Update and Deprecation Notices
 
 After an interactive run, the CLI may check the npm registry for a newer release and write a
 notice to stderr:
@@ -143,6 +143,9 @@ Or run with npx: npx @mailchannels/sdk@latest
 The check is skipped when stdout is not a terminal or when `CI`, `GITHUB_ACTIONS`, or
 `NO_UPDATE` is set. It is best-effort (5-second timeout, failures ignored) and never changes the
 exit code. Set `NO_UPDATE=1` in automated or offline sessions to avoid the network call.
+
+Standalone binaries show platform-specific upgrade instructions. If the running version is
+deprecated, the CLI displays the npm message in plain text, even when no newer release is available.
 
 ## Exit Codes
 

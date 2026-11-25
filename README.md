@@ -227,7 +227,7 @@ const transport = nodemailer.createTransport(
   mailchannelsTransport({
     apiKey: 'your-api-key',
     sendMode: 'async', // 'async' or 'sync'. Default is 'async'
-    // SDK client options: `baseUrl`, `timeout`, `signal`, `retry`
+    // SDK client options: `baseUrl`, `timeout`, `signal`, `retry`, `retryOnTimeout`
   })
 )
 
