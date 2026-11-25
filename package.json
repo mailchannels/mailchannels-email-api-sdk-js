@@ -1,6 +1,6 @@
 {
   "name": "@mailchannels/sdk",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Official MailChannels Email API SDK for sending transactional email from server-side JavaScript and TypeScript applications.",
   "type": "module",
   "license": "MIT",
@@ -52,7 +52,6 @@
     "build": "obuild",
     "parity:fixtures": "node scripts/generate-parity-fixtures.ts",
     "prepack": "pnpm build",
-    "release": "pnpm lint && pnpm test && pnpm build && changelogen --bump && node scripts/update-examples-sdk-version.ts",
     "release": "pnpm lint && pnpm test && pnpm test:types && pnpm build && changelogen --bump && node scripts/update-examples-sdk-version.ts",
     "cli": "pnpx jiti src/cli/index.ts",
     "simulate": "pnpx jiti src/cli/index.ts simulate",

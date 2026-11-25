@@ -1,6 +1,33 @@
 # Changelog
 
 
+## v1.11.0
+
+[compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.11.0%0Dv1.10.0)
+
+### 🚀 Enhancements
+
+- **client:** Add timeout retry opt-in ([777a2ec](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/777a2ec))
+
+### 🩹 Fixes
+
+- **nodemailer:** Handle custom envelope ([0a152c7](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/0a152c7))
+- **sub-accounts:** Separate integer and negative-value validation checks ([d243997](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/d243997))
+- **cli:** Require an explicit integer for sub-account send limit ([674b533](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/674b533))
+- **cli:** Use node's stream consumer to read piped files as utf-8 ([2989155](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/2989155))
+- **cli:** Report failed email results ([0f4de75](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/0f4de75))
+- **cli:** Show npm deprecation notices ([48633bd](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/48633bd))
+- **client:** Report the final retry outcome ([#174](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/pull-requests/174))  
+- **attachments:** Keep filenames that are not valid URI encoding ([9d55efa](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/9d55efa))
+
+### 🏡 Chore
+
+- Update all deps ([a335126](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/commits/a335126))
+
+### ❤️ Contributors
+
+- Yizack Rangel [yizack@mailchannels.com](mailto:yizack@mailchannels.com)
+
 ## v1.10.0
 
 [compare changes](https://bitbucket.org/mailchannels/mailchannels-email-api-sdk-js/branches/compare/v1.10.0%0Dv1.9.1)
