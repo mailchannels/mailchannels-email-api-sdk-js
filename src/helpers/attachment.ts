@@ -1,5 +1,6 @@
 import { Buffer } from "node:buffer";
 import mime from "mime";
+import { decodeFilename } from "../internal/decode-filename";
 import type { EmailsSendAttachment } from "../types/emails/send";
 
 const base64Content = (data: ArrayBuffer | Uint8Array): string => {
@@ -22,7 +23,7 @@ export class Attachment {
 
     return {
       content: base64Content(data),
-      filename: decodeURIComponent(filename) || "attachment",
+      filename: decodeFilename(filename) || "attachment",
       type: type || guessContentType(filename),
       contentId
     };
