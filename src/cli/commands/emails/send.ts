@@ -36,6 +36,17 @@ export default defineCommand({
     }
     else {
       console.info(`[Emails] Request ID: ${requestId}`);
+
+      const failedCount = results?.filter(result => result.status === "failed").length ?? 0;
+      if (results && failedCount > 0) {
+        const outcome = failedCount === results.length ? "failed" : "partially failed";
+        console.info(
+          `[Emails] Email send ${outcome}. ${failedCount} of ${results.length} results failed.`
+          + tabulatedSections(results)
+        );
+        return;
+      }
+
       console.info("[Emails] Email sent successfully."
         + (results && results.length > 0 ? tabulatedSections(results) : " No results returned")
       );

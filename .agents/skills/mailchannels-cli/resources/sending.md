@@ -35,6 +35,9 @@ message was delivered; delivery outcomes arrive through [webhooks](webhooks.md).
 | `emails send` | Synchronous — full per-recipient processing inside the request. | Small numbers of messages. |
 | `emails send --dry-run` | The API validates and renders the message without delivering it. | Checking a payload before a real send. |
 
+When the API request succeeds, `emails send` exits `0`. It reports partial and full send failures on
+stdout, including the status and any reason supplied by the API for each result.
+
 ### Dry Run
 
 ```sh
