@@ -10,12 +10,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/node": "^11.1.13",
+    "@astrojs/node": "^11.1.14",
     "@mailchannels/sdk": "^1.10.0",
-    "astro": "^7.4.12"
+    "astro": "^7.4.13"
   },
   "devDependencies": {
-    "@types/node": "^26.6.6",
+    "@types/node": "^26.6.10",
     "typescript": "^7.0.2"
   },
   "engines": {
