@@ -42,6 +42,14 @@ describe("Attachment", () => {
     expect(result.contentId).toBeUndefined();
   });
 
+  it("should keep the original filename in fromBytes when it is not valid URI encoding", () => {
+    const buffer = new Uint8Array([68, 69, 70]).buffer;
+    const result = Attachment.fromBytes(buffer, { filename: "100% complete.txt" });
+
+    expect(result.filename).toBe("100% complete.txt");
+    expect(result.type).toBe("text/plain");
+  });
+
   it("should set type undefined in fromBytes if content type cannot be guessed", () => {
     const bytes = new Uint8Array([65, 66, 67]);
     const result = Attachment.fromBytes(bytes, { filename: "abc" });
