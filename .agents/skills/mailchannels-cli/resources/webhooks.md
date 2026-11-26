@@ -10,16 +10,31 @@ All commands live under `mailchannels webhooks`.
 ## Enroll And Manage
 
 ```sh
-mailchannels webhooks create --endpoint "https://example.com/mailchannels/webhook"
+mailchannels webhooks create \
+  --endpoint "https://example.com/mailchannels/webhook" \
+  --failure-threshold 1
 mailchannels webhooks list
 mailchannels webhooks delete-all
 ```
 
 | Command | Flags | Output |
 | --- | --- | --- |
-| `create` | `--endpoint <url>`, `-e` (required; at most 8000 characters) | `[Webhooks] Webhook created successfully.` |
+| `create` | `--endpoint <url>`, `-e` (required), `--failure-threshold <number>` (optional) | `[Webhooks] Webhook created successfully.` |
 | `list` | none | A table of enrolled endpoints, or `[Webhooks] No registered webhooks found.` |
 | `delete-all` | none | `[Webhooks] All webhooks deleted successfully.` |
+
+`create` can succeed in enrolling the webhook without setting the threshold (the API answers 201
+instead of 204). The CLI returns normally in both cases, so check `mailchannels webhooks list`
+afterwards and call `mailchannels webhooks update` if the threshold is missing.
+
+Endpoint URLs can be at most 8000 characters. On `create`, omit `--failure-threshold` or pass `0` to
+enroll with failure alerts disabled. Pass a positive integer to enable alerts.
+
+The list table includes a `Failure Threshold` column when any endpoint has a threshold configured.
+It shows how many consecutive failed deliveries trigger an alert. A value of `1` means every failed
+delivery triggers an alert. A missing threshold means alerts are disabled for that endpoint.
+Enrollment can succeed without setting the requested threshold. After creating a webhook with a
+positive threshold, check `list` and use `update` if the threshold is missing.
 
 There is no per-URL delete — `delete-all` removes **every** enrolled webhook for the account.
 Accounts can have only one registered webhook, so swapping URLs requires this order: confirm the
@@ -29,7 +44,24 @@ change with the user, run `mailchannels webhooks delete-all`, enroll the replace
 endpoint is successfully enrolled, so plan the change accordingly.
 
 Enrolling an endpoint that already exists fails with
-`Endpoint '<url>' is already enrolled to receive notifications.`
+`There is already an endpoint enrolled to receive notifications.`
+
+## Manage Failure Alerts
+
+Use the exact endpoint URL from `webhooks list`. Both commands require `--endpoint <url>` (`-e`).
+`update` also requires `--failure-threshold <number>` with an integer of at least `1`.
+
+```sh
+mailchannels webhooks update \
+  --endpoint "https://example.com/mailchannels/webhook" \
+  --failure-threshold 2
+mailchannels webhooks delete-failure-threshold \
+  --endpoint "https://example.com/mailchannels/webhook"
+```
+
+`update` prints `[Webhooks] Webhook updated successfully.` on success. `delete-failure-threshold`
+disables failure alerts while continuing event delivery to the endpoint and prints
+`[Webhooks] Failure threshold removed successfully.`
 
 ## Validate
 

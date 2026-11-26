@@ -10,14 +10,24 @@ export default defineCommand({
   },
   args: {
     ...sharedArgs,
-    endpoint: { type: "string", alias: "e", required: true, valueHint: "url" }
+    "endpoint": { type: "string", alias: "e", required: true, valueHint: "url" },
+    "failure-threshold": { type: "string", required: false, valueHint: "number" }
   },
   async run ({ args }) {
     const apiKey = getApiKey(args["api-key"]);
     const client = new MailChannelsClient(apiKey);
     const webhooks = new Webhooks(client);
 
-    const { error } = await webhooks.create(args["endpoint"]);
+    const failureThreshold = args["failure-threshold"];
+
+    if (failureThreshold !== undefined && !/^[+-]?\d+(?:\.0+)?$/.test(failureThreshold)) {
+      console.error("[Webhooks] '--failure-threshold' must be an integer value.");
+      process.exit(1);
+    }
+
+    const { error } = await webhooks.create(args["endpoint"], {
+      failureThreshold: failureThreshold !== undefined ? Number(failureThreshold) : undefined
+    });
 
     if (error) {
       console.error(`[Webhooks] ${error.message}`);

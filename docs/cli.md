@@ -720,12 +720,18 @@ Register a webhook endpoint:
 
 ```sh
 mailchannels webhooks create \
-  --endpoint "https://example.com/mailchannels/webhook"
+  --endpoint "https://example.com/mailchannels/webhook" \
+  --failure-threshold 1
 ```
 
-| Flag                      | Description          | Required |
-| ------------------------- | -------------------- | -------- |
-| `--endpoint <url>` (`-e`) | Webhook endpoint URL | Yes      |
+| Flag                           | Description                       | Required |
+| ------------------------------ | --------------------------------- | -------- |
+| `--endpoint <url>` (`-e`)      | Webhook endpoint URL              | Yes      |
+| `--failure-threshold <number>` | Failure threshold for the webhook | No       |
+
+Create can succeed in enrolling the webhook without setting the threshold (the API answers 201
+instead of 204). The CLI returns normally in both cases, so check `mailchannels webhooks list`
+afterwards and call `mailchannels webhooks update` if the threshold is missing.
 
 ### List webhooks
 
@@ -733,7 +739,11 @@ mailchannels webhooks create \
 mailchannels webhooks list
 ```
 
-Registered endpoints are printed as a table. If none are registered, the CLI reports that no webhooks were found.
+Registered endpoints are printed as a table. If any endpoint has a failure threshold configured,
+the table includes a `Failure Threshold` column. The value is the number of consecutive failed
+deliveries that triggers an alert. A value of `1` triggers an alert on every failed delivery.
+A missing threshold means alerts are disabled for that endpoint. If no endpoints are registered,
+the CLI reports that no webhooks were found.
 
 ### Delete all webhooks
 
@@ -744,6 +754,38 @@ Delete all registered webhook endpoints:
 ```sh
 mailchannels webhooks delete-all
 ```
+
+### Update webhook settings
+
+`mailchannels webhooks update`
+
+Update the failure threshold for an enrolled webhook:
+
+```sh
+mailchannels webhooks update \
+  --endpoint "https://example.com/mailchannels/webhook" \
+  --failure-threshold 2
+```
+
+| Flag                           | Description                       | Required |
+| ------------------------------ | --------------------------------- | -------- |
+| `--endpoint <url>` (`-e`)      | Webhook endpoint URL              | Yes      |
+| `--failure-threshold <number>` | Failure threshold for the webhook | Yes      |
+
+### Delete webhook failure threshold
+
+`mailchannels webhooks delete-failure-threshold`
+
+Delete the failure threshold for an enrolled webhook:
+
+```sh
+mailchannels webhooks delete-failure-threshold \
+  --endpoint "https://example.com/mailchannels/webhook"
+```
+
+| Flag                      | Description          | Required |
+| ------------------------- | -------------------- | -------- |
+| `--endpoint <url>` (`-e`) | Webhook endpoint URL | Yes      |
 
 ### Validate webhooks
 
