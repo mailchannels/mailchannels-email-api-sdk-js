@@ -11,6 +11,7 @@ import { isValidWebhook } from "../../internal/webhook-validator";
 import { parseDateInputs } from "../../internal/parse-date-inputs";
 import { quoteValues } from "../../internal/quote-values";
 import type { ErrorResponse, SuccessResponse } from "../../types/responses";
+import type { WebhooksCreateOptions } from "../../types/webhooks/create";
 import type { WebhooksListResponse } from "../../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../../types/webhooks/signing-key";
 import type { WebhooksValidateResponse } from "../../types/webhooks/validate";
@@ -24,6 +25,7 @@ import type { WebhooksResendBatchResponse } from "../../types/webhooks/resend-ba
 import type {
   WebhookEventReceived,
   WebhooksBatchesApiResponse,
+  WebhooksListApiResponse,
   WebhooksResendBatchApiResponse,
   WebhooksValidateApiResponse
 } from "../../types/webhooks/internal";
@@ -43,13 +45,14 @@ export class Webhooks {
   /**
    * Enrolls the customer to receive event notifications via webhooks.
    * @param endpoint - The URL to receive event notifications. Must be no longer than `8000` characters.
+   * @param options - The options for webhook creation.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
    * const { success, error } = await mailchannels.webhooks.create('https://example.com/api/webhooks/mailchannels')
    * ```
    */
-  async create (endpoint: string): Promise<SuccessResponse> {
+  async create (endpoint: string, options?: WebhooksCreateOptions): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
     if (!endpoint) {
@@ -62,19 +65,27 @@ export class Webhooks {
       return { success: false, error };
     }
 
-    await this.mailchannels.post<void>(
-      "/tx/v1/webhook",
-      {
-        query: {
-          endpoint
-        },
-        onResponseError: async ({ response }) => {
-          error = getStatusError(response, {
-            [ErrorCode.Conflict]: `Endpoint '${endpoint}' is already enrolled to receive notifications.`
-          });
-        }
+    if (
+      options?.failureThreshold != null
+      && (!Number.isInteger(options?.failureThreshold) || options?.failureThreshold < 0)
+    ) {
+      error = createValidationError("Failure threshold must be a non-negative integer.");
+      return { success: false, error };
+    }
+
+    await this.mailchannels.post<void>("/tx/v1/webhook", {
+      query: {
+        endpoint
+      },
+      body: {
+        failure_threshold: options?.failureThreshold
+      },
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.Conflict]: "There is already an endpoint enrolled to receive notifications."
+        });
       }
-    ).catch((e) => {
+    }).catch((e) => {
       error ||= getResultError(e, "Failed to create webhook.");
     });
 
@@ -92,7 +103,7 @@ export class Webhooks {
   async list (): Promise<WebhooksListResponse> {
     let error: ErrorResponse | null = null;
 
-    const response = await this.mailchannels.get<{ webhook: string }[]>("/tx/v1/webhook", {
+    const response = await this.mailchannels.get<WebhooksListApiResponse>("/tx/v1/webhook", {
       onResponseError: async ({ response }) => {
         error = getStatusError(response);
       }
@@ -104,7 +115,8 @@ export class Webhooks {
     if (!response) return { data: null, error: error! };
 
     const data = clean(response.map(webhooks => ({
-      webhook: webhooks.webhook
+      webhook: webhooks.webhook,
+      failureThreshold: webhooks.failure_threshold
     })));
 
     return { data, error: null };
@@ -127,6 +139,91 @@ export class Webhooks {
       }
     }).catch((e) => {
       error ||= getResultError(e, "Failed to delete webhooks.");
+    });
+
+    return { success: !error, error };
+  }
+
+  /**
+   * Updates settings on an enrolled webhook.
+   * To remove the threshold and disable failure alerts, use `webhooks.deleteFailureThreshold(endpoint)`.
+   * @param endpoint - The URL of the webhook endpoint to update.
+   * @param failureThreshold - The new failure threshold for the webhook.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success, error } = await mailchannels.webhooks.update('https://example.com/webhook', 2)
+   * ```
+   */
+  async update (endpoint: string, failureThreshold: number): Promise<SuccessResponse> {
+    let error: ErrorResponse | null = null;
+
+    if (!endpoint) {
+      error = createValidationError("No endpoint provided.");
+      return { success: false, error };
+    }
+
+    if (endpoint.length > 8000) {
+      error = createValidationError("The endpoint exceeds the maximum length of 8000 characters.");
+      return { success: false, error };
+    }
+
+    if (!Number.isInteger(failureThreshold) || failureThreshold < 1) {
+      error = createValidationError("Failure threshold must be 1 or greater.");
+      return { success: false, error };
+    }
+
+    await this.mailchannels.patch<void>("/tx/v1/webhook", {
+      query: {
+        endpoint
+      },
+      body: {
+        failure_threshold: failureThreshold
+      },
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.NotFound]: `Endpoint '${endpoint}' is not enrolled.`
+        });
+      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to update webhook.");
+    });
+
+    return { success: !error, error };
+  }
+
+  /**
+   * Removes the `failureThreshold` from an enrolled webhook, disabling failure alerts for that webhook.
+   * The webhook itself remains enrolled and continues to receive events.
+   * @param endpoint - The URL of the webhook endpoint to remove the failure threshold from.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success, error } = await mailchannels.webhooks.deleteFailureThreshold('https://example.com/webhook')
+   * ```
+   */
+  async deleteFailureThreshold (endpoint: string): Promise<SuccessResponse> {
+    let error: ErrorResponse | null = null;
+
+    if (!endpoint) {
+      error = createValidationError("No endpoint provided.");
+      return { success: false, error };
+    }
+
+    if (endpoint.length > 8000) {
+      error = createValidationError("The endpoint exceeds the maximum length of 8000 characters.");
+      return { success: false, error };
+    }
+
+    await this.mailchannels.delete<void>("/tx/v1/webhook/failure-threshold", {
+      query: { endpoint },
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.NotFound]: `Endpoint '${endpoint}' is not enrolled.`
+        });
+      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete webhook failure threshold.");
     });
 
     return { success: !error, error };

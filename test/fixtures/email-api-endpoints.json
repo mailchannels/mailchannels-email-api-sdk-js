@@ -1,5 +1,5 @@
 {
-  "version": "1.8.0",
+  "version": "1.9.0",
   "endpoints": [
     {
       "module": "domains",
@@ -225,6 +225,12 @@
     },
     {
       "module": "webhooks",
+      "method": "update",
+      "httpMethod": "PATCH",
+      "path": "/webhook"
+    },
+    {
+      "module": "webhooks",
       "method": "create",
       "httpMethod": "POST",
       "path": "/webhook"
@@ -240,6 +246,12 @@
       "method": "resendBatch",
       "httpMethod": "POST",
       "path": "/webhook-batch/{batch_id}/resend"
+    },
+    {
+      "module": "webhooks",
+      "method": "deleteFailureThreshold",
+      "httpMethod": "DELETE",
+      "path": "/webhook/failure-threshold"
     },
     {
       "module": "webhooks",
