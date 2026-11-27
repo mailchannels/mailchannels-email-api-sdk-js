@@ -1,7 +1,8 @@
 import { defineCommand } from "citty";
 import { getApiKey } from "../../utils/shared/get-api-key";
 import { sharedArgs } from "../../utils/shared/args";
-import { MailChannelsClient, Suppressions, type SuppressionsSource } from "../../../mailchannels";
+import { Suppressions, type SuppressionsSource } from "../../../mailchannels";
+import { MailChannelsCliClient } from "../../client";
 
 export default defineCommand({
   meta: {
@@ -15,7 +16,7 @@ export default defineCommand({
   },
   async run ({ args }) {
     const apiKey = getApiKey(args["api-key"]);
-    const client = new MailChannelsClient(apiKey);
+    const client = new MailChannelsCliClient(apiKey);
     const suppressions = new Suppressions(client);
 
     const { error } = await suppressions.delete(

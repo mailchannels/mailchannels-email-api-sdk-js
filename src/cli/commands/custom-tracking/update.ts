@@ -6,9 +6,9 @@ import { styleText } from "../../utils/shared/style";
 import {
   Domains,
   type DomainsCustomTrackingScope,
-  type DomainsCustomTrackingUpdateOptions,
-  MailChannelsClient
+  type DomainsCustomTrackingUpdateOptions
 } from "../../../mailchannels";
+import { MailChannelsCliClient } from "../../client";
 
 export default defineCommand({
   meta: {
@@ -24,7 +24,7 @@ export default defineCommand({
   },
   async run ({ args }) {
     const apiKey = getApiKey(args["api-key"]);
-    const client = new MailChannelsClient(apiKey);
+    const client = new MailChannelsCliClient(apiKey);
     const domains = new Domains(client);
 
     const { data, error } = await domains.customTracking.update(

@@ -4,7 +4,8 @@ import { sharedArgs } from "../../utils/shared/args";
 import { parsePagination } from "../../utils/shared/parse-pagination";
 import { tabulatedSections } from "../../utils/shared/sections";
 import { styleText } from "../../utils/shared/style";
-import { Domains, MailChannelsClient } from "../../../mailchannels";
+import { Domains } from "../../../mailchannels";
+import { MailChannelsCliClient } from "../../client";
 import type { DomainsDkimKeyStatus } from "../../../types/domains/dkim-create";
 
 export default defineCommand({
@@ -23,7 +24,7 @@ export default defineCommand({
   },
   async run ({ args }) {
     const apiKey = getApiKey(args["api-key"]);
-    const client = new MailChannelsClient(apiKey);
+    const client = new MailChannelsCliClient(apiKey);
     const domains = new Domains(client);
 
     const { data, error } = await domains.dkim.list(args["domain"], {
