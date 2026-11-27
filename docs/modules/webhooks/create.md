@@ -10,6 +10,9 @@ Enrolls the user to receive event notifications via webhooks.
 An optional `failureThreshold` may be supplied in the `options` object to enable failure alerts for
 the new webhook. If it is not supplied, no failure threshold is set for the webhook.
 
+Once the threshold is reached, MailChannels sends at most one failure alert every 24 hours. With
+`failureThreshold` set to `1`, a single failed delivery is enough to trigger an alert.
+
 If a webhook is already enrolled for this customer, the request returns 409, even when the endpoint
 is the same, and the existing webhook is not changed. To set or change the threshold on an enrolled
 webhook, use `webhooks.update()`.
@@ -50,9 +53,9 @@ const { success, error } = await mailchannels.webhooks.create('https://example.c
 - `options` `WebhooksCreateOptions` <Badge type="info">optional</Badge>: The options for webhook
   creation.
   - `failureThreshold` `number | null` <Badge type="info">optional</Badge>: The number of
-    consecutive failed deliveries to this webhook before a failure alert is triggered.integer. Must
-    be 1 or greater to enable failure alerts. If omitted, `null`, or `0`, no failure threshold is
-    set for the webhook.
+    consecutive failed deliveries to this webhook before a failure alert is triggered. Must be 1 or
+    greater to enable failure alerts. If omitted, `null`, or `0`, no failure threshold is set for
+    the webhook.
 
 ## Response
 

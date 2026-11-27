@@ -30,18 +30,17 @@ If the endpoint is already enrolled, `create()` returns `conflict_error` and lea
 intact.
 
 `create(endpoint, options?)` accepts an optional `failureThreshold` in the `options` object. Set it
-to a positive integer to trigger an alert after that many consecutive failed deliveries. Omit it, or
-pass `0` or `null`, to leave the threshold unset. Other values return `validation_error` before
-the SDK sends a request.
+to a positive integer to trigger an alert after that many consecutive failed deliveries.
+MailChannels sends at most one alert every 24 hours. A value of `1` reaches the threshold after a
+single failed delivery. Omit the value or pass `0` or `null` to leave the threshold unset. Other
+values return `validation_error` before the SDK sends a request.
 
 `create()` can succeed in enrolling the webhook without setting the threshold (the API answers 201
 instead of 204). The SDK returns normally in both cases, so check `list()` afterwards and call
 `update()` if the threshold is missing.
 
 `list()` returns each enrolled URL as `webhook` and includes `failureThreshold` when configured.
-The threshold counts consecutive failed deliveries before an alert. A value of `1` triggers an
-alert on every failed delivery. An omitted `failureThreshold` means alerts are disabled for that
-webhook.
+An omitted `failureThreshold` means alerts are disabled for that webhook.
 
 ## Update The Failure Threshold
 
