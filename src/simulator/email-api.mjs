@@ -1,5 +1,6 @@
 import { randomBytes, randomUUID } from "node:crypto";
 
+const MAX_WEBHOOK_ENDPOINT_LENGTH = 8000;
 const SIMULATOR_SIGNING_KEY_ID = "simulator-default";
 const JSON_HEADERS = {
   "content-type": "application/json"
@@ -84,6 +85,7 @@ const createAccountState = apiKey => ({
   subAccounts: new Map(),
   suppressionEntries: [],
   webhookBatches: [],
+  webhookFailureThresholds: new Map(),
   webhooks: new Set(),
   webhookSigningKeys: new Map([
     [SIMULATOR_SIGNING_KEY_ID, "SIMULATOR_PUBLIC_SIGNING_KEY"]
@@ -556,24 +558,87 @@ export const createEmailApiHandler = ({ logRequests = true } = {}) => {
           return;
         }
 
+        if (endpoint.length > MAX_WEBHOOK_ENDPOINT_LENGTH) {
+          sendJson(response, 400, {
+            error: `Endpoint exceeds ${MAX_WEBHOOK_ENDPOINT_LENGTH} characters.`
+          });
+          return;
+        }
+
         if (account.webhooks.has(endpoint)) {
           sendJson(response, 409, { error: "Webhook already enrolled." });
           return;
         }
 
+        const failureThreshold = body?.failure_threshold;
+        if (
+          failureThreshold != null && (!Number.isInteger(failureThreshold) || failureThreshold < 0)
+        ) {
+          sendJson(response, 400, { error: "failure_threshold must be an integer of 0 or more." });
+          return;
+        }
+
         account.webhooks.add(endpoint);
-        response.writeHead(201);
-        response.end();
+        if (failureThreshold) {
+          account.webhookFailureThresholds.set(endpoint, failureThreshold);
+        }
+
+        sendNoContent(response);
         return;
       }
 
       if (url.pathname === "/tx/v1/webhook" && method === "GET") {
-        sendJson(response, 200, Array.from(account.webhooks).map(webhook => ({ webhook })));
+        sendJson(response, 200, Array.from(account.webhooks, webhook => ({
+          webhook,
+          failure_threshold: account.webhookFailureThresholds.get(webhook)
+        })));
+        return;
+      }
+
+      if (
+        (url.pathname === "/tx/v1/webhook" && method === "PATCH")
+        || (url.pathname === "/tx/v1/webhook/failure-threshold" && method === "DELETE")
+      ) {
+        const endpoint = url.searchParams.get("endpoint");
+        if (!endpoint) {
+          sendJson(response, 400, { error: "Missing endpoint query parameter." });
+          return;
+        }
+
+        if (method === "PATCH" && endpoint.length > MAX_WEBHOOK_ENDPOINT_LENGTH) {
+          sendJson(response, 400, {
+            error: `Endpoint exceeds ${MAX_WEBHOOK_ENDPOINT_LENGTH} characters.`
+          });
+          return;
+        }
+
+        if (!account.webhooks.has(endpoint)) {
+          sendJson(response, 404, { error: "Webhook not found." });
+          return;
+        }
+
+        if (method === "PATCH") {
+          const failureThreshold = body?.failure_threshold;
+          if (!Number.isInteger(failureThreshold) || failureThreshold < 1) {
+            sendJson(response, 400, {
+              error: "failure_threshold must be an integer of 1 or more."
+            });
+            return;
+          }
+
+          account.webhookFailureThresholds.set(endpoint, failureThreshold);
+        }
+        else {
+          account.webhookFailureThresholds.delete(endpoint);
+        }
+
+        sendNoContent(response);
         return;
       }
 
       if (url.pathname === "/tx/v1/webhook" && method === "DELETE") {
         account.webhooks.clear();
+        account.webhookFailureThresholds.clear();
         sendNoContent(response);
         return;
       }
