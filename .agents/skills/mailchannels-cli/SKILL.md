@@ -60,8 +60,8 @@ You're about to run a MailChannels CLI command. What does it need to do?
 ├── Manage the suppression list (list, create, delete)
 │   → resources/suppressions.md
 │
-├── Manage delivery-event webhooks (enroll, validate, inspect and
-│   resend batches)
+├── Manage delivery-event webhooks (enroll, configure failure alerts,
+│   validate, inspect and resend batches)
 │   → resources/webhooks.md
 │
 ├── Run the local API simulator
