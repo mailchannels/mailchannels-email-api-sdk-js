@@ -71,6 +71,11 @@ export default [
               { text: "Create Webhook", link: "/modules/webhooks/create" },
               { text: "List Webhooks", link: "/modules/webhooks/list" },
               { text: "Delete All Webhooks", link: "/modules/webhooks/delete-all" },
+              { text: "Update Webhook", link: "/modules/webhooks/update" },
+              {
+                text: "Remove Webhook Failure Threshold",
+                link: "/modules/webhooks/delete-failure-threshold"
+              },
               { text: "Get Signing Key", link: "/modules/webhooks/get-signing-key" },
               { text: "Validate Webhooks", link: "/modules/webhooks/validate" },
               { text: "Verify a message", link: "/modules/webhooks/verify" },

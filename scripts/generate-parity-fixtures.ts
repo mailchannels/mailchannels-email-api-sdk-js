@@ -161,6 +161,14 @@ const methodMap = {
     module: "webhooks",
     method: "create"
   },
+  "PATCH /webhook": {
+    module: "webhooks",
+    method: "update"
+  },
+  "DELETE /webhook/failure-threshold": {
+    module: "webhooks",
+    method: "deleteFailureThreshold"
+  },
   "GET /webhook-batch": {
     module: "webhooks",
     method: "batches"

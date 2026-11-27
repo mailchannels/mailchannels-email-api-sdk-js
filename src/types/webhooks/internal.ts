@@ -1,5 +1,10 @@
 import type { WebhookEventType } from "./events";
 
+export type WebhooksListApiResponse = {
+  webhook: string;
+  failure_threshold?: number;
+}[];
+
 export interface WebhooksValidateApiResponse {
   all_passed: boolean;
   results: {

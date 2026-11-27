@@ -32,6 +32,8 @@ This page provides a mapping between the MailChannels SDK module methods and the
   | [`Webhooks.create()`](/modules/webhooks/create) | [Enroll for Webhook Notifications](https://docs.mailchannels.com/api-reference/webhooks/enroll-for-webhook-notifications) |
   | [`Webhooks.list()`](/modules/webhooks/list) | [Retrieve Customer Webhooks](https://docs.mailchannels.com/api-reference/webhooks/retrieve-customer-webhooks) |
   | [`Webhooks.deleteAll()`](/modules/webhooks/delete-all) | [Delete Customer Webhooks](https://docs.mailchannels.com/api-reference/webhooks/delete-customer-webhooks) |
+  | [`Webhooks.update()`](/modules/webhooks/update) | [Update Webhook Settings](https://docs.mailchannels.com/api-reference/webhooks/update-webhook-settings) |
+  | [`Webhooks.deleteFailureThreshold()`](/modules/webhooks/delete-failure-threshold) | [Remove Webhook Failure Threshold](https://docs.mailchannels.com/api-reference/webhooks/remove-webhook-failure-threshold) |
   | [`Webhooks.getSigningKey()`](/modules/webhooks/get-signing-key) | [Retrieve Webhook Signing Key](https://docs.mailchannels.com/api-reference/webhooks/retrieve-webhook-signing-key) |
   | [`Webhooks.validate()`](/modules/webhooks/validate) | [Validate Enrolled Webhook](https://docs.mailchannels.com/api-reference/webhooks/validate-enrolled-webhook) |
   | [`Webhooks.verify()`](/modules/webhooks/verify) | SDK only |

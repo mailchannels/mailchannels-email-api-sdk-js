@@ -1,17 +1,14 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { runCommand } from "citty";
-import webhooks from "~/cli/commands/webhooks";
+import list from "~/cli/commands/webhooks/list";
 import type { WebhooksListResponse } from "~/types/webhooks/list";
 
-// @ts-expect-error defineCommand does not handle well sub command types
-const list = await webhooks.subCommands?.list;
-
+const webhook = "https://example.com/webhook";
 const fake = {
   args: ["--api-key", "test-api-key"],
+  webhook,
   response: {
-    data: [
-      { webhook: "https://example.com/webhook" }
-    ],
+    data: [{ webhook }],
     error: null
   } satisfies WebhooksListResponse
 };
@@ -44,6 +41,20 @@ describe("list", () => {
     await runCommand(list, { rawArgs: fake.args });
 
     expect(mockList).toHaveBeenCalledWith();
+    expect(console.table).toHaveBeenCalledWith([{ Webhook: fake.webhook }]);
+  });
+
+  it("should display the failure threshold when configured", async () => {
+    mockList.mockResolvedValueOnce({
+      data: [{ webhook: fake.webhook, failureThreshold: 1 }],
+      error: null
+    });
+
+    await runCommand(list, { rawArgs: fake.args });
+
+    expect(console.table).toHaveBeenCalledWith([
+      { "Webhook": fake.webhook, "Failure Threshold": 1 }
+    ]);
   });
 
   it("should report when no webhooks are registered", async () => {

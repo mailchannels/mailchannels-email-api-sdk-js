@@ -68,6 +68,7 @@ By default, it installs the latest release.
 | `sub-accounts create`, `list`, `delete`, `suspend`, `activate`, `usage` | Manage sub-accounts. | [sub-accounts](sub-accounts.md) |
 | `sub-accounts api-keys`, `smtp-passwords`, `limit` | Sub-account credentials and monthly send caps. | [sub-accounts](sub-accounts.md) |
 | `webhooks create`, `list`, `delete-all`, `validate`, `batches`, `resend-batch` | Manage delivery-event webhooks. | [webhooks](webhooks.md) |
+| `webhooks update`, `delete-failure-threshold` | Set or remove webhook failure alerts. | [webhooks](webhooks.md#manage-failure-alerts) |
 | `simulate` | Start the local API simulator. | [simulator](simulator.md) |
 | `docs` | Open https://docs.mailchannels.com in the default browser. | — |
 | `dashboard` | Open https://dash.mailchannels.com/ in the default browser. | — |
@@ -156,6 +157,7 @@ Only run these when the user has asked for the effect. Several cannot be undone.
 | `emails send`, `emails queue` | Delivers real email. Not idempotent — re-running sends again. |
 | `suppressions delete` | Re-enables sending to a recipient. Don't remove entries unless the recipient explicitly opted back in. |
 | `webhooks delete-all` | Removes **every** enrolled webhook. There is no per-URL delete. |
+| `webhooks update`, `webhooks delete-failure-threshold` | Changes or disables failure alerts for an enrolled endpoint. |
 | `webhooks resend-batch` | Re-delivers a batch of events to your endpoint, so your handler sees duplicates. |
 | `sub-accounts delete`, `sub-accounts suspend` | Deletes a sub-account, or blocks it from sending until `activate`. |
 | `sub-accounts api-keys delete`, `sub-accounts smtp-passwords delete` | Revokes a credential; anything using it starts failing. |

@@ -10,10 +10,13 @@ import { MailChannels } from '@mailchannels/sdk'
 
 const mc = new MailChannels('YOUR-API-KEY')
 
-const { error: createError } = await mc.webhooks.create('https://example.com/mailchannels/events')
+const { error: createError } = await mc.webhooks.create('https://example.com/mailchannels/events', {
+  failureThreshold: 1
+})
+
 if (createError) { /*...*/ }
 
-const { data: webhooks, error: listError } = await mc.webhooks.list() // enrolled URLs
+const { data: webhooks, error: listError } = await mc.webhooks.list() // enrolled webhooks
 if (listError) { /*...*/ }
 
 const { error: deleteError } = await mc.webhooks.deleteAll() // removes ALL enrolled webhooks
@@ -23,7 +26,46 @@ if (deleteError) { /*...*/ }
 There is no per-URL delete — `deleteAll()` removes every enrolled webhook for the account.
 Enroll the replacement first if you're swapping URLs.
 
-If the endpoint is already enrolled, `create()` returns `conflict_error`.
+If the endpoint is already enrolled, `create()` returns `conflict_error` and leaves its settings
+intact.
+
+`create(endpoint, options?)` accepts an optional `failureThreshold` in the `options` object. Set it
+to a positive integer to trigger an alert after that many consecutive failed deliveries.
+MailChannels sends at most one alert every 24 hours. A value of `1` reaches the threshold after a
+single failed delivery. Omit the value or pass `0` or `null` to leave the threshold unset. Other
+values return `validation_error` before the SDK sends a request.
+
+`create()` can succeed in enrolling the webhook without setting the threshold (the API answers 201
+instead of 204). The SDK returns normally in both cases, so check `list()` afterwards and call
+`update()` if the threshold is missing.
+
+`list()` returns each enrolled URL as `webhook` and includes `failureThreshold` when configured.
+An omitted `failureThreshold` means alerts are disabled for that webhook.
+
+## Update The Failure Threshold
+
+Use `update(endpoint, failureThreshold)` to set the alert threshold for an enrolled webhook. Pass
+the exact `webhook` URL returned by `list()` and a positive integer as the second argument. The SDK
+returns `validation_error` for an invalid threshold and `not_found` if the URL is unenrolled.
+
+```ts
+const { error: updateError } = await mc.webhooks.update('https://example.com/mailchannels/events', 2)
+if (updateError) { /*...*/ }
+```
+
+## Remove The Failure Threshold
+
+Use `deleteFailureThreshold(endpoint)` to disable failure alerts for an enrolled webhook. Pass the
+exact `webhook` URL returned by `list()`. The webhook stays enrolled and continues receiving events.
+The SDK returns `not_found` for an unenrolled URL.
+
+```ts
+const endpoint = 'https://example.com/mailchannels/events'
+const { error: thresholdError } = await mc.webhooks.deleteFailureThreshold(endpoint)
+if (thresholdError) {
+  /*...*/
+}
+```
 
 ## Validate
 

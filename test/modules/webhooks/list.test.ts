@@ -3,16 +3,17 @@ import type { MailChannelsClient } from "~/client";
 import { Webhooks } from "~/modules/webhooks";
 import { ErrorCode } from "~/internal/errors";
 import type { WebhooksListResponse } from "~/types/webhooks/list";
+import type { WebhooksListApiResponse } from "~/types/webhooks/internal";
 
 const fake = {
   apiResponse: [
     { webhook: "https://example.com/webhook1" },
-    { webhook: "https://example.com/webhook2" }
-  ],
+    { webhook: "https://example.com/webhook2", failure_threshold: 1 }
+  ] satisfies WebhooksListApiResponse,
   expectedResponse: {
     data: [
       { webhook: "https://example.com/webhook1" },
-      { webhook: "https://example.com/webhook2" }
+      { webhook: "https://example.com/webhook2", failureThreshold: 1 }
     ],
     error: null
   } satisfies WebhooksListResponse

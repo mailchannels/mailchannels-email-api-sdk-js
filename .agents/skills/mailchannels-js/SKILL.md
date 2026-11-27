@@ -65,8 +65,8 @@ You're about to write JS/TS SDK code. What does it need to do?
 ├── Manage the suppression list (list, create, delete)
 │   → resources/suppressions.md
 │
-├── Receive or manage delivery-event webhooks (enroll, validate,
-│   inspect batches, verify signatures)
+├── Receive or manage delivery-event webhooks (enroll, manage thresholds,
+│   validate, inspect batches, verify signatures)
 │   → resources/webhooks.md
 │
 ├── Catch / log / retry SDK or API errors
