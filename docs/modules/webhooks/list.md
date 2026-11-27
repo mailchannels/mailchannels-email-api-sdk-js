@@ -32,6 +32,10 @@ const { data, error } = await mailchannels.webhooks.list()
 
 - `data` `object[] | null` <Badge type="warning">nullable</Badge>
   - `webhook` `string` <Badge>guaranteed</Badge>: A customer's webhook that events will be sent to.
+  - `failureThreshold` `number | null` <Badge type="info">optional</Badge>: The number of consecutive
+    failed deliveries to this webhook before a failure alert is triggered. No value means failure
+    alerts are disabled for this webhook. A value of `1` means an alert is triggered on every
+    failure.
 <!-- @include: ../_parts/error-response.md -->
 
 ## Type declarations

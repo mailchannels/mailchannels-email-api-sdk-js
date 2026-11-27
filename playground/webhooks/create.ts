@@ -11,6 +11,8 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { success, error } = await mailchannels.webhooks.create("https://example.com/webhook");
+const { success, error } = await mailchannels.webhooks.create("https://example.com/webhook", {
+  failureThreshold: 1
+});
 
 console.info(JSON.stringify({ success, error }, null, 2));
