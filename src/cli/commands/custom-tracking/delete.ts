@@ -1,11 +1,8 @@
 import { defineCommand } from "citty";
 import { getApiKey } from "../../utils/shared/get-api-key";
 import { sharedArgs } from "../../utils/shared/args";
-import {
-  Domains,
-  type DomainsCustomTrackingScope,
-  MailChannelsClient
-} from "../../../mailchannels";
+import { Domains, type DomainsCustomTrackingScope } from "../../../mailchannels";
+import { MailChannelsCliClient } from "../../client";
 
 export default defineCommand({
   meta: {
@@ -19,7 +16,7 @@ export default defineCommand({
   },
   async run ({ args }) {
     const apiKey = getApiKey(args["api-key"]);
-    const client = new MailChannelsClient(apiKey);
+    const client = new MailChannelsCliClient(apiKey);
     const domains = new Domains(client);
 
     const { error } = await domains.customTracking.delete(
