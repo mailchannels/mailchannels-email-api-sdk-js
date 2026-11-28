@@ -3,7 +3,8 @@ import { getApiKey } from "../../utils/shared/get-api-key";
 import { emailArgs } from "../../utils/emails/args";
 import { parseOptions } from "../../utils/emails/parse-options";
 import { tabulatedSections } from "../../utils/shared/sections";
-import { Emails, MailChannelsClient } from "../../../mailchannels";
+import { Emails } from "../../../mailchannels";
+import { MailChannelsCliClient } from "../../client";
 
 export default defineCommand({
   meta: {
@@ -13,7 +14,7 @@ export default defineCommand({
   args: emailArgs,
   async run ({ args }) {
     const apiKey = getApiKey(args["api-key"]);
-    const client = new MailChannelsClient(apiKey);
+    const client = new MailChannelsCliClient(apiKey);
     const emails = new Emails(client);
 
     const sendOptions = await parseOptions(args);

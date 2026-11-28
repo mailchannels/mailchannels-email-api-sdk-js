@@ -4,7 +4,8 @@ import { sharedArgs } from "../../utils/shared/args";
 import { parsePagination } from "../../utils/shared/parse-pagination";
 import { tabulatedSections } from "../../utils/shared/sections";
 import { styleText } from "../../utils/shared/style";
-import { MailChannelsClient, Suppressions, type SuppressionsSource } from "../../../mailchannels";
+import { Suppressions, type SuppressionsSource } from "../../../mailchannels";
+import { MailChannelsCliClient } from "../../client";
 
 export default defineCommand({
   meta: {
@@ -22,7 +23,7 @@ export default defineCommand({
   },
   async run ({ args }) {
     const apiKey = getApiKey(args["api-key"]);
-    const client = new MailChannelsClient(apiKey);
+    const client = new MailChannelsCliClient(apiKey);
     const suppressions = new Suppressions(client);
 
     const { data, error } = await suppressions.list({

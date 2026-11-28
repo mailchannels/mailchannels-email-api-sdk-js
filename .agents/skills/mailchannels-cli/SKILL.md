@@ -82,10 +82,11 @@ You're about to run a MailChannels CLI command. What does it need to do?
 
 These apply to every command. Read them before running anything.
 
-- **Commands hit the live API.** Apart from `simulate` and `docs`, every command calls
+- **Commands hit the live API.** Apart from `simulate`, `docs` and `dashboard`, every command calls
   `https://api.mailchannels.net` with the key in use, and no flag or environment variable
   redirects it — the simulator is unreachable from CLI commands. Sends, deletions, and key
   rotations are real.
+- **Email API requests identify the CLI.** The HTTP `User-Agent` is `mailchannels-cli/<version>`.
 - **Only change what the user asked you to change.** Sending email, deleting webhooks,
   suppressions, sub-accounts, credentials, or tracking domains, and changing DKIM key status or
   send limits all have consequences. Confirm before running them; the list is in

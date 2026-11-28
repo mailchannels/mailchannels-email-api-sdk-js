@@ -2,7 +2,8 @@ import { defineCommand } from "citty";
 import { getApiKey } from "../../utils/shared/get-api-key";
 import { sharedArgs } from "../../utils/shared/args";
 import { tabulatedSections } from "../../utils/shared/sections";
-import { Domains, MailChannelsClient } from "../../../mailchannels";
+import { Domains } from "../../../mailchannels";
+import { MailChannelsCliClient } from "../../client";
 import type { DomainsDkimCreateOptions } from "../../../types/domains/dkim-create";
 
 export default defineCommand({
@@ -19,7 +20,7 @@ export default defineCommand({
   },
   async run ({ args }) {
     const apiKey = getApiKey(args["api-key"]);
-    const client = new MailChannelsClient(apiKey);
+    const client = new MailChannelsCliClient(apiKey);
     const domains = new Domains(client);
 
     const { data, error } = await domains.dkim.create(args["domain"], {

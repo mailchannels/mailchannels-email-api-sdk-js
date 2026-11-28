@@ -3,7 +3,8 @@ import { getApiKey } from "../../../utils/shared/get-api-key";
 import { sharedArgs } from "../../../utils/shared/args";
 import { parsePagination } from "../../../utils/shared/parse-pagination";
 import { styleText, toWordsKeys } from "../../../utils/shared/style";
-import { MailChannelsClient, SubAccounts } from "../../../../mailchannels";
+import { SubAccounts } from "../../../../mailchannels";
+import { MailChannelsCliClient } from "../../../client";
 
 export default defineCommand({
   meta: {
@@ -18,7 +19,7 @@ export default defineCommand({
   },
   async run ({ args }) {
     const apiKey = getApiKey(args["api-key"]);
-    const client = new MailChannelsClient(apiKey);
+    const client = new MailChannelsCliClient(apiKey);
     const subAccounts = new SubAccounts(client);
 
     const { data, error } = await subAccounts.apiKeys.list(args["handle"], {

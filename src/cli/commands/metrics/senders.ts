@@ -5,11 +5,11 @@ import { tabulatedSections } from "../../utils/shared/sections";
 import { toWordsKeys } from "../../utils/shared/style";
 import { sharedArgs } from "../../utils/shared/args";
 import {
-  MailChannelsClient,
   Metrics,
   type MetricsSendersOptions,
   type MetricsSendersType
 } from "../../../mailchannels";
+import { MailChannelsCliClient } from "../../client";
 
 export default defineCommand({
   meta: {
@@ -27,7 +27,7 @@ export default defineCommand({
   },
   async run ({ args }) {
     const apiKey = getApiKey(args["api-key"]);
-    const client = new MailChannelsClient(apiKey);
+    const client = new MailChannelsCliClient(apiKey);
     const metrics = new Metrics(client);
 
     const { data, error } = await metrics.senders(args["type"] as MetricsSendersType, {

@@ -2,7 +2,8 @@ import { defineCommand } from "citty";
 import { getApiKey } from "../../utils/shared/get-api-key";
 import { sharedArgs } from "../../utils/shared/args";
 import { tabulatedSections } from "../../utils/shared/sections";
-import { MailChannelsClient, Webhooks } from "../../../mailchannels";
+import { Webhooks } from "../../../mailchannels";
+import { MailChannelsCliClient } from "../../client";
 
 export default defineCommand({
   meta: {
@@ -15,7 +16,7 @@ export default defineCommand({
   },
   async run ({ args }) {
     const apiKey = getApiKey(args["api-key"]);
-    const client = new MailChannelsClient(apiKey);
+    const client = new MailChannelsCliClient(apiKey);
     const webhooks = new Webhooks(client);
 
     const { data, error } = await webhooks.resendBatch(Number(args["batch-id"]));

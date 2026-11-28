@@ -222,6 +222,40 @@ describe("Email API simulator", () => {
     expect(deleteWebhooksResult.success).toBe(true);
   });
 
+  it("should create, update, and remove a webhook failure threshold", async () => {
+    const { webhooks } = new MailChannels(parentApiKey, { baseUrl });
+
+    const createWebhookResult = await webhooks.create(webhookEndpoint, { failureThreshold: 1 });
+    expect(createWebhookResult.success).toBe(true);
+
+    const createdWebhooks = await webhooks.list();
+    expect(createdWebhooks.data).toEqual([{ webhook: webhookEndpoint, failureThreshold: 1 }]);
+
+    const updateWebhookResult = await webhooks.update(webhookEndpoint, 2);
+    expect(updateWebhookResult.success).toBe(true);
+
+    const updatedWebhooks = await webhooks.list();
+    expect(updatedWebhooks.data).toEqual([{ webhook: webhookEndpoint, failureThreshold: 2 }]);
+
+    const deleteThresholdResult = await webhooks.deleteFailureThreshold(webhookEndpoint);
+    expect(deleteThresholdResult.success).toBe(true);
+
+    const webhooksWithoutThreshold = await webhooks.list();
+    expect(webhooksWithoutThreshold.data).toEqual([{ webhook: webhookEndpoint }]);
+
+    const restoreThresholdResult = await webhooks.update(webhookEndpoint, 3);
+    expect(restoreThresholdResult.success).toBe(true);
+
+    const deleteWebhooksResult = await webhooks.deleteAll();
+    expect(deleteWebhooksResult.success).toBe(true);
+
+    const recreateWebhookResult = await webhooks.create(webhookEndpoint);
+    expect(recreateWebhookResult.success).toBe(true);
+
+    const recreatedWebhooks = await webhooks.list();
+    expect(recreatedWebhooks.data).toEqual([{ webhook: webhookEndpoint }]);
+  });
+
   it("should support sub-account, metrics, and suppression workflows against a local server", async () => {
     const mailchannels = new MailChannels(parentApiKey, { baseUrl });
     const parentSendResult = await mailchannels.emails.send({
